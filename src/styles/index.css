@@ -1,5 +1,35 @@
 @import "tailwindcss";
 
+@theme {
+  /* ---- Branding / Primary ---- */
+  --color-primary: #2563eb;              /* Bleu principal (boutons, liens, accents) */
+  --color-primary-plus: #1d4ed8;        /* Variante hover/focus */
+  --color-primary-soft: #e7f0fd;         /* Fond bleu très clair, surface, hover soft */
+
+  /* ---- Neutres ---- */
+  --color-bg: #ffffff;                   /* Fond global (clair) */
+  --color-surface: #f4f6fa;              /* Fond surface (cards, panels) */
+  --color-neutral-900: #1e293b;          /* Textes principaux (quasi-noir, dark blue) */
+  --color-neutral-700: #54575c;          /* Textes secondaires, icônes, border */
+  --color-border: #e2e8f0;               /* Couleurs de border discrètes */
+
+  /* ---- Feedback / Alerts ---- */
+  --color-success: #22c55e;              /* Succès/valide */
+  --color-success-bg: #e7fbe9;           /* Fond de succès */
+  --color-warning: #facc15;              /* Avertissement */
+  --color-warning-bg: #fef9c3;
+  --color-error: #ef4444;                /* Erreur */
+  --color-error-bg: #ffe7e7;
+  --color-info: #2563eb;                 /* Info (même que primary ici) */
+  --color-info-bg: #e7f0fd;
+
+  /* ---- Autres couleurs d’appui ---- */
+  --color-blue-dark: #1e40af;            /* Pour états dark, gradient, etc. */
+  --color-blue-light: #93c5fd;           /* Accent léger */
+  --color-grey-light: #f1f5f9;           /* Gris très clair pour backgrounds */
+}
+
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

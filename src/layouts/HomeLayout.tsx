@@ -11,7 +11,7 @@ export function HomeLayout({ children }: HomeLayoutProps) {
   usePageTitle("StockS");
 
   return (
-    <div className="flex flex-col bg-primary">
+    <div className="flex flex-col bg-primary-soft">
       <HomeHeader />
       {children ?? <Outlet />}
     </div>
