@@ -7,7 +7,8 @@ export const ROUTES: Record<string, RouteMeta> = {
     page: 'Home',
     icon: 'home',
     restricted: false,
-    layout: 'app',
+    layout: 'home',
+    title: 'StockS',
   },
   LOGIN: {
     path: '/login',
@@ -16,6 +17,7 @@ export const ROUTES: Record<string, RouteMeta> = {
     layout: 'auth',
     restricted: false,
     hiddenInMenu: true,
+    title: 'StockS - Connexion',
   },
   DASHBOARD: {
     path: '/dashboard',
@@ -25,6 +27,7 @@ export const ROUTES: Record<string, RouteMeta> = {
     restricted: true,
     roles: ['admin', 'manager'],
     layout: 'app',
+    title: 'StockS - Dashboard',
   },
   USERS: {
     path: '/users',
@@ -34,6 +37,7 @@ export const ROUTES: Record<string, RouteMeta> = {
     restricted: true,
     roles: ['admin'],
     layout: 'app',
+    title: 'StockS - Utilisateurs',
   },
   NOTFOUND: {
     path: '*',
@@ -41,5 +45,6 @@ export const ROUTES: Record<string, RouteMeta> = {
     page: 'NotFound',
     layout: 'app',
     restricted: false,
+    title: 'StockS - Page non trouvée',
   }
 };

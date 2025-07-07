@@ -1,3 +1,4 @@
+import { usePageTitle } from '@/hooks/usePageTitle';
 import type { ReactNode } from 'react';
 import { Outlet } from 'react-router-dom';
 
@@ -6,6 +7,8 @@ type AppLayoutProps = {
 };
 
 export function AppLayout({ children }: AppLayoutProps) {
+  usePageTitle("StockS - Dashboard");
+
   return (
     <div className="flex h-screen">
       <aside className="w-64 bg-gray-800 text-white p-4">

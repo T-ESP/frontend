@@ -5,6 +5,7 @@ export type RouteMeta = {
   icon?: string;
   restricted?: boolean;
   roles?: string[];
-  layout?: 'app' | 'auth';
+  layout?: 'app' | 'auth' | 'home';
   hiddenInMenu?: boolean;
+  title?: string;
 };

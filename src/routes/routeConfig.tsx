@@ -4,13 +4,14 @@ import { ProtectedRoute } from './ProtectedRoute';
 import { AppLayout } from '@/layouts/AppLayout';
 import { AuthLayout } from '@/layouts/AuthLayout';
 import { PAGES } from '@/pages/pages';
+import { HomeLayout } from '@/layouts/HomeLayout';
 
 
 export const routes: RouteObject[] = Object.values(ROUTES).map((route) => {
 
   const Page = PAGES[route.page as keyof typeof PAGES];
 
-  const Layout = route.layout === 'auth' ? AuthLayout : AppLayout;
+  const Layout = route.layout === 'auth' ? AuthLayout : route.layout === 'home' ? HomeLayout : AppLayout;
 
   const element = route.restricted
     ? (
