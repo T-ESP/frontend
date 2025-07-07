@@ -3,21 +3,24 @@ import type { RouteMeta } from "./types";
 export const ROUTES: Record<string, RouteMeta> = {
   HOME: {
     path: '/',
-    label: 'Accueil',
+    label: 'Home',
+    page: 'Home',
     icon: 'home',
     restricted: false,
     layout: 'app',
   },
   LOGIN: {
     path: '/login',
-    label: 'Connexion',
+    label: 'Login',
+    page: 'Login',
     layout: 'auth',
     restricted: false,
     hiddenInMenu: true,
   },
   DASHBOARD: {
     path: '/dashboard',
-    label: 'Tableau de bord',
+    label: 'Dashboard',
+    page: 'Dashboard',
     icon: 'dashboard',
     restricted: true,
     roles: ['admin', 'manager'],
@@ -25,10 +28,18 @@ export const ROUTES: Record<string, RouteMeta> = {
   },
   USERS: {
     path: '/users',
-    label: 'Utilisateurs',
+    label: 'Users',
+    page: 'Users',
     icon: 'users',
     restricted: true,
     roles: ['admin'],
     layout: 'app',
   },
+  NOTFOUND: {
+    path: '*',
+    label: 'NotFound',
+    page: 'NotFound',
+    layout: 'app',
+    restricted: false,
+  }
 };

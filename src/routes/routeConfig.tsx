@@ -1,12 +1,14 @@
-import { lazy } from 'react';
 import type { RouteObject } from 'react-router-dom';
 import { ROUTES } from './metaRoutes';
 import { ProtectedRoute } from './ProtectedRoute';
 import { AppLayout } from '@/layouts/AppLayout';
 import { AuthLayout } from '@/layouts/AuthLayout';
+import { PAGES } from '@/pages/pages';
+
 
 export const routes: RouteObject[] = Object.values(ROUTES).map((route) => {
-  const Page = lazy(() => import(`@/pages/${route.label}Page`));
+
+  const Page = PAGES[route.page as keyof typeof PAGES];
 
   const Layout = route.layout === 'auth' ? AuthLayout : AppLayout;
 
