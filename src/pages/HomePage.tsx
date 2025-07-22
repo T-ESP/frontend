@@ -1,9 +1,10 @@
-import LogoLoader from "@/components/icons/LogoLoader";
+import Logo from "@/components/icons/Logo";
+
 
 export default function HomePage() {
   return (
     <div>
-      <LogoLoader className="w-40 h-40" />
+      <Logo className="w-40 h-40" />
     </div>
   );
 }
