@@ -1,33 +1,36 @@
 @import "tailwindcss";
 
 @theme {
-  /* ---- Branding / Primary ---- */
-  --color-primary: #2563eb;              /* Bleu principal (boutons, liens, accents) */
-  --color-primary-plus: #1d4ed8;        /* Variante hover/focus */
-  --color-primary-soft: #e7f0fd;         /* Fond bleu très clair, surface, hover soft */
+  /* ---- Branding / Violet ---- */
+  --color-primary: #bba6ff;            /* Violet principal (boutons, accents majeurs) */
+  --color-primary-plus: #a08ef9;       /* Hover, focus, accents secondaires */
+  --color-primary-dark: #6b5e8a;       /* Variant foncé (texte, hover dark) */
+  --color-primary-deep: #574576;       /* AppBar, fond profond, footer, dark section */
+  --color-primary-night: #35275d;      /* Pour borders, focus state, ou dark très poussé */
 
   /* ---- Neutres ---- */
-  --color-bg: #ffffff;                   /* Fond global (clair) */
-  --color-surface: #f4f6fa;              /* Fond surface (cards, panels) */
-  --color-neutral-900: #1e293b;          /* Textes principaux (quasi-noir, dark blue) */
-  --color-neutral-700: #54575c;          /* Textes secondaires, icônes, border */
-  --color-border: #e2e8f0;               /* Couleurs de border discrètes */
+  --color-bg: #ffffff;                 /* Fond global (clair) */
+  --color-surface: #f4f6fa;            /* Fond surface (cards, panels) */
+  --color-neutral-900: #1e293b;        /* Texte principal (noir/bleu) */
+  --color-neutral-700: #54575c;        /* Texte secondaire, border, icons */
+  --color-border: #e2e8f0;             /* Bordures discrètes */
 
   /* ---- Feedback / Alerts ---- */
-  --color-success: #22c55e;              /* Succès/valide */
-  --color-success-bg: #e7fbe9;           /* Fond de succès */
-  --color-warning: #facc15;              /* Avertissement */
+  --color-success: #22c55e;            /* Succès/valide */
+  --color-success-bg: #e7fbe9;         /* Fond de succès */
+  --color-warning: #facc15;            /* Avertissement */
   --color-warning-bg: #fef9c3;
-  --color-error: #ef4444;                /* Erreur */
+  --color-error: #ef4444;              /* Erreur */
   --color-error-bg: #ffe7e7;
-  --color-info: #2563eb;                 /* Info (même que primary ici) */
-  --color-info-bg: #e7f0fd;
+  --color-info: #a08ef9;               /* Info = violet secondaire */
+  --color-info-bg: #f4f0fd;            /* Fond info, violet très clair */
 
-  /* ---- Autres couleurs d’appui ---- */
-  --color-blue-dark: #1e40af;            /* Pour états dark, gradient, etc. */
-  --color-blue-light: #93c5fd;           /* Accent léger */
-  --color-grey-light: #f1f5f9;           /* Gris très clair pour backgrounds */
+  /* ---- Autres ---- */
+  --color-blue-dark: #1e40af;          /* Ancienne palette bleu, gardée pour compat éventuelle */
+  --color-blue-light: #93c5fd;
+  --color-grey-light: #f1f5f9;         /* Gris très clair pour backgrounds */
 }
+
 
 
 :root {
@@ -85,6 +88,23 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+@keyframes bar-fill-1 {
+  from { transform: translateY(0); }
+  to { transform: translateY(300px); }
+}
+@keyframes bar-fill-2 {
+  from { transform: translateY(0); }
+  to { transform: translateY(180px); }
+}
+@keyframes bar-fill-3 {
+  from { transform: translateY(0); }
+  to { transform: translateY(210px); }
+}
+@keyframes bar-fill-4 {
+  from { transform: translateY(0); }
+  to { transform: translateY(50px); }
 }
 
 @media (prefers-color-scheme: light) {

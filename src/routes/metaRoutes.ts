@@ -46,5 +46,13 @@ export const ROUTES: Record<string, RouteMeta> = {
     layout: 'app',
     restricted: false,
     title: 'StockS - Page non trouvée',
-  }
+  },
+  PLAYGROUND: {
+    path: '/playground',
+    label: 'Playground',
+    page: 'Playground',
+    layout: 'app',
+    restricted: false,
+    title: 'StockS - Playground',
+  },
 };

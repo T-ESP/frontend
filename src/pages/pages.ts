@@ -6,4 +6,5 @@ export const PAGES = {
   Dashboard: lazy(() => import("@/pages/DashboardPage")),
   Users: lazy(() => import("@/pages/UsersPage")),
   NotFound: lazy(() => import("@/pages/NotFoundPage")),
+  Playground: lazy(() => import("@/pages/PlaygroundPage")),
 };
