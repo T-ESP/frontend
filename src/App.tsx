@@ -6,7 +6,9 @@ export default function App() {
   const routing = useRoutes(routes);
 
   return (
-    <Suspense fallback={<div className="p-8">Chargement...</div>}>
+    <Suspense
+    // fallback={<div className="p-8">Chargement...</div>}
+    >
       {routing}
     </Suspense>
   );
