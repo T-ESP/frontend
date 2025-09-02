@@ -13,7 +13,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   return (
     <div className="flex h-screen">
       <Sidebar />
-      <div className="flex-1 p-6">
+      <div className="flex-1">
         {/* <HomeHeader /> */}
         {/* C'est ICI que tu dois rendre children */}
         {children ?? <Outlet />}
