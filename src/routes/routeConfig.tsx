@@ -6,12 +6,19 @@ import { AuthLayout } from '@/layouts/AuthLayout';
 import { PAGES } from '@/pages/pages';
 import { HomeLayout } from '@/layouts/HomeLayout';
 
-
 export const routes: RouteObject[] = Object.values(ROUTES).map((route) => {
 
   const Page = PAGES[route.page as keyof typeof PAGES];
 
-  const Layout = route.layout === 'auth' ? AuthLayout : route.layout === 'home' ? HomeLayout : AppLayout;
+  const Layout =
+  route.layout === 'auth'
+    ? AuthLayout
+    : route.layout === 'home'
+    ? HomeLayout
+    : route.layout === 'none'
+    ? ({ children }: { children: React.ReactNode }) => <>{children}</>
+    : AppLayout;
+
 
   const element = route.restricted
     ? (
@@ -26,6 +33,8 @@ export const routes: RouteObject[] = Object.values(ROUTES).map((route) => {
         <Page />
       </Layout>
     );
+
+    
 
   return {
     path: route.path,

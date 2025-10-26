@@ -7,4 +7,5 @@ export const PAGES = {
   Users: lazy(() => import("@/pages/UsersPage")),
   NotFound: lazy(() => import("@/pages/NotFoundPage")),
   Playground: lazy(() => import("@/pages/PlaygroundPage")),
+  DisplaySite: lazy(() => import("@/pages/DisplaySite/Index")),
 };

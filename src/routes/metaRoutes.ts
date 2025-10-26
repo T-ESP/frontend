@@ -55,4 +55,12 @@ export const ROUTES: Record<string, RouteMeta> = {
     restricted: false,
     title: 'StockS - Playground',
   },
+  displaySite: {
+  path: '/DisplaySite',
+  label: 'Display Site',
+  page: 'DisplaySite',
+  layout: 'none', // or 'none' if you want NO layout at all
+  restricted: false,
+},
+
 };

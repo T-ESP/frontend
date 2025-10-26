@@ -5,7 +5,7 @@ export type RouteMeta = {
   icon?: string;
   restricted?: boolean;
   roles?: string[];
-  layout?: 'app' | 'auth' | 'home';
+  layout?: 'app' | 'auth' | 'home' | 'none';
   hiddenInMenu?: boolean;
   title?: string;
 };
