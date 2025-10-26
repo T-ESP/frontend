@@ -1,8 +1,12 @@
+// src/pages/DisplaySite/index.tsx
+
+import Hero from './Hero';
+import './hero.css'; // We’ll style just the hero for now
+
 export default function DisplaySite() {
   return (
-    <div>
-      <h1>Display Site (Landing Page)</h1>
-      {/* Later: Replace with <Hero />, <Features />, etc. */}
-    </div>
-  )
+    <main className="display-site">
+      <Hero />
+    </main>
+  );
 }
