@@ -1,33 +1,50 @@
-// src/pages/DisplaySite/Hero.tsx
-
 export default function Hero() {
   return (
-    <section className="hero-section">
-      <nav className="hero-nav">
-        <div className="logo">StockS</div>
-        <div className="nav-links">
-          <a href="#features">Features</a>
-          <a href="#pricing">Pricing</a>
-          <a href="#company">Company</a>
-          <button className="nav-btn">Try Demo</button>
-          <button className="nav-btn solid">Get Started</button>
+    <section className="min-h-screen bg-[radial-gradient(circle_at_top_left,#121827,#0f0f1b)] text-white px-8 md:px-16 py-12 flex flex-col justify-between">
+      
+      {/* Nav */}
+      <nav className="flex justify-between items-center">
+        <div className="text-2xl font-bold">StockS</div>
+        <div className="hidden md:flex items-center gap-4">
+          <a href="#features" className="text-white hover:text-purple-300 transition">Features</a>
+          <a href="#pricing" className="text-white hover:text-purple-300 transition">Pricing</a>
+          <a href="#company" className="text-white hover:text-purple-300 transition">Company</a>
+          <button className="border border-gray-500 text-white px-4 py-2 rounded-md hover:border-purple-400 transition">
+            Try Demo
+          </button>
+          <button className="bg-[#6a00f4] text-white px-4 py-2 rounded-md font-semibold hover:bg-purple-700 transition">
+            Get Started
+          </button>
         </div>
       </nav>
 
-      <div className="hero-content">
-        <div className="hero-left">
-          <h1>
+      {/* Hero Content */}
+      <div className="flex flex-col-reverse lg:flex-row items-center justify-between flex-1 mt-16 gap-10">
+        
+        {/* Left Side */}
+        <div className="w-full lg:w-1/2 max-w-[50%] text-center lg:text-left">
+          <h1 className="text-4xl md:text-[3rem] leading-tight font-extrabold">
             Smarter Stock Management <br />
-            with <span className="highlight">AI Precision</span>
+            with{" "}
+            <span className="bg-linear-to-r from-[#6a00f4] to-[#ff6ec7] bg-clip-text text-transparent">
+              AI Precision
+            </span>
           </h1>
-          <p>
+          <p className="mt-6 text-base md:text-lg text-gray-300">
             Say goodbye to overstock, shortages, and guesswork. StockS gives you real-time insights and smart predictions to boost profits.
           </p>
-          <button className="cta">Get Started Free</button>
+          <button className="mt-8 bg-[#6a00f4] text-white px-6 py-3 rounded-md font-bold text-base hover:bg-purple-700 transition">
+            Get Started Free
+          </button>
         </div>
 
-        <div className="hero-right">
-          <img src="/your-hero-image.png" alt="3D AI Assistant Box" />
+        {/* Right Side */}
+        <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
+          <img
+            src="/your-hero-image.png"
+            alt="3D AI Assistant Box"
+            className="w-[500px] max-w-full object-contain"
+          />
         </div>
       </div>
     </section>
