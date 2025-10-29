@@ -3,7 +3,9 @@ import Logo from '../../assets/images/logo/Sleek-logo.png';
 export default function Hero() {
   return (
     <section className="min-h-screen bg-[radial-gradient(circle_at_top_left,#121827,#0f0f1b)] text-white px-8 md:px-16 py-12 flex flex-col justify-between">
-      
+       {/* Background Glow */}
+      <div className="absolute -top-32 -left-32 w-[600px] h-[600px] bg-purple-700 opacity-30 rounded-full blur-[200px] z-0" />
+      <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-purple-500 opacity-20 rounded-full blur-[100px] z-0" />
       {/* Nav */}
       <nav className="flex justify-between items-center">
         <div className="text-2xl font-bold">StockS</div>

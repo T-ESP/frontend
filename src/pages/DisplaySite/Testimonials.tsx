@@ -14,6 +14,7 @@ export default function Testimonials() {
       id="testimonials"
       className="min-h-screen bg-black text-white px-6 md:px-20 py-24"
     >
+        
       {/* Heading */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16">
         <div>
