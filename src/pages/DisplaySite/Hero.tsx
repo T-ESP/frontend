@@ -21,7 +21,7 @@ export default function Hero() {
       </nav>
 
       {/* Hero Content */}
-      <div className="flex flex-col-reverse lg:flex-row items-center justify-between flex-1 px-24 mt-16 gap-10">
+      <div className="flex flex-col-reverse lg:flex-row items-center justify-between flex-1 mt-16 gap-10 mx-auto">
         
         {/* Left Side */}
         <div className="w-full lg:w-1/2 max-w-[50%] text-center lg:text-left">

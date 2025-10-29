@@ -37,7 +37,7 @@ export default function Features() {
   return (
     <section
       id="features"
-      className="bg-[#0f0f1b] text-white px-6 md:px-20 py-24"
+      className="bg-[#0f0f1b] min-h-screen text-white px-6 md:px-20 py-24"
     >
       <div className="max-w-6xl mx-auto text-center">
         <h2 className="text-4xl md:text-5xl font-bold mb-6">
