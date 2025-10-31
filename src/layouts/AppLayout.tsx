@@ -1,3 +1,4 @@
+import { HomeHeader } from '@/components/layout/HomeHeader';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import type { ReactNode } from 'react';
@@ -14,7 +15,7 @@ export function AppLayout({ children }: AppLayoutProps) {
     <div className="flex h-screen">
       <Sidebar />
       <div className="flex-1">
-        {/* <HomeHeader /> */}
+        <HomeHeader />
         {/* C'est ICI que tu dois rendre children */}
         {children ?? <Outlet />}
       </div>
