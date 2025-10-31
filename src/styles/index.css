@@ -1,8 +1,14 @@
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
+html, body, #root {
+  font-family: 'Nunito Sans', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+}
+
 @theme {
   /* ---- Branding / Violet ---- */
-  --color-primary: #bba6ff;            /* Violet principal (boutons, accents majeurs) */
+  --color-primary: #6D4E98;            /* Violet principal (boutons, accents majeurs) */
   --color-primary-plus: #a08ef9;       /* Hover, focus, accents secondaires */
   --color-primary-dark: #6b5e8a;       /* Variant foncé (texte, hover dark) */
   --color-primary-deep: #574576;       /* AppBar, fond profond, footer, dark section */
@@ -14,6 +20,7 @@
   --color-neutral-900: #1e293b;        /* Texte principal (noir/bleu) */
   --color-neutral-700: #54575c;        /* Texte secondaire, border, icons */
   --color-border: #e2e8f0;             /* Bordures discrètes */
+  --color-black: #202224;
 
   /* ---- Feedback / Alerts ---- */
   --color-success: #22c55e;            /* Succès/valide */
