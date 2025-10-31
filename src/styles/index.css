@@ -1,2 +1,68 @@
 @import "tailwindcss";
-@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
+html, body, #root {
+  font-family: 'Nunito Sans', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+}
+
+@theme {
+  /* ---- Branding / Violet ---- */
+  --color-primary: #6D4E98;            /* Violet principal (boutons, accents majeurs) */
+  --color-primary-plus: #a08ef9;       /* Hover, focus, accents secondaires */
+  --color-primary-dark: #6b5e8a;       /* Variant foncé (texte, hover dark) */
+  --color-primary-deep: #574576;       /* AppBar, fond profond, footer, dark section */
+  --color-primary-night: #35275d;      /* Pour borders, focus state, ou dark très poussé */
+
+  /* ---- Neutres ---- */
+  --color-bg: #ffffff;                 /* Fond global (clair) */
+  --color-surface: #f4f6fa;            /* Fond surface (cards, panels) */
+  --color-neutral-900: #1e293b;        /* Texte principal (noir/bleu) */
+  --color-neutral-700: #54575c;        /* Texte secondaire, border, icons */
+  --color-border: #e2e8f0;             /* Bordures discrètes */
+  --color-black: #202224;
+
+  /* ---- Feedback / Alerts ---- */
+  --color-success: #22c55e;            /* Succès/valide */
+  --color-success-bg: #e7fbe9;         /* Fond de succès */
+  --color-warning: #facc15;            /* Avertissement */
+  --color-warning-bg: #fef9c3;
+  --color-error: #ef4444;              /* Erreur */
+  --color-error-bg: #ffe7e7;
+  --color-info: #a08ef9;               /* Info = violet secondaire */
+  --color-info-bg: #f4f0fd;            /* Fond info, violet très clair */
+
+  /* ---- Autres ---- */
+  --color-blue-dark: #1e40af;          /* Ancienne palette bleu, gardée pour compat éventuelle */
+  --color-blue-light: #93c5fd;
+  --color-grey-light: #f1f5f9;         /* Gris très clair pour backgrounds */
+}
+
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.25s ease-out;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes toast-out {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(10px) scale(0.98); }
+}
+.animate-toast-in { animation: toast-in 0.2s ease-out forwards; }
+.animate-toast-out { animation: toast-out 0.2s ease-in forwards; }
+
+

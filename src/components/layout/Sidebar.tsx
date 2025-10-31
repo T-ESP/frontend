@@ -9,6 +9,7 @@ import {
   ChevronLeft,
   LogOut,
 } from "lucide-react";
+import Logo from "../icons/Logo";
 
 type Item = {
   label: string;
@@ -29,18 +30,18 @@ export function Sidebar() {
 
   return (
     <aside
-      className={`relative h-screen bg-gray-800 text-white transition-[width] duration-300
+      className={`relative h-screen bg-white text-white transition-[width] duration-300
       ${isOpen ? "w-64" : "w-16"} flex flex-col`}
     >
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-4">
-        <button
-          onClick={() => navigate("/")}
-          className="flex items-center gap-2"
-          aria-label="Accueil"
-        >
-          {isOpen && <h2 className="text-xl font-bold truncate">Menu</h2>}
-        </button>
+
+        <div className="flex items-center gap-2">
+
+          <Logo className="w-10 h-10" />
+          {isOpen && <span className="text-xl font-bold text-primary">Stock<span className="text-black">S</span></span>}
+        </div>
+
 
         <button
           onClick={() => setIsOpen((v) => !v)}
@@ -54,19 +55,29 @@ export function Sidebar() {
       </div>
 
       {/* Nav */}
-      <ul className="flex-1 space-y-1 px-2">
+      <ul className="flex-1 space-y-1
+      flex flex-col items-center
+      ">
         {items.map(({ label, to, icon: Icon }) => (
-          <li key={to}>
+          <li
+            key={to}
+            className="w-full relative"
+          >
             <NavLink
               to={to}
               className={({ isActive }) =>
-                `flex items-center rounded transition px-2 py-2
-                 hover:bg-gray-700 ${isActive ? "bg-gray-700" : ""} ${isOpen ? "gap-3" : "justify-center"
+                `flex items-center transition mx-[20%] px-2 py-2 rounded-md
+                  ${isActive ? "bg-primary" : ""} ${isOpen ? "gap-3" : "justify-center"
                 }`
               }
             >
-              <Icon className="h-5 w-5 shrink-0" />
-              {isOpen && <span className="truncate">{label}</span>}
+              {({ isActive }) => (
+                <>
+                  {isActive && <div className="w-2 h-full bg-primary rounded-md absolute top-0 -left-1" />}
+                  <Icon className={`h-5 w-5 shrink-0 ${isActive ? "text-white" : "text-black"}`} />
+                  {isOpen && <span className={`truncate ${isActive ? "text-white" : "text-black"}`}>{label}</span>}
+                </>
+              )}
             </NavLink>
           </li>
         ))}
