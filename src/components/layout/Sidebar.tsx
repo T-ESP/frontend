@@ -1,32 +1,27 @@
 // components/layout/Sidebar.tsx
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import {
-  LayoutDashboard,
-  Users,
-  Package,
-  ShoppingCart,
-  ChevronLeft,
-  LogOut,
-} from "lucide-react";
+import { NavLink } from "react-router-dom";
+import { ChevronLeft } from "lucide-react";
 import Logo from "../icons/Logo";
-
-type Item = {
-  label: string;
-  to: string;
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-};
+import { items } from "@/constants/sidebar/sidebarItem";
 
 export function Sidebar() {
-  const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(min-width: 768px)").matches
+      : true
+  );
 
-  const items: Item[] = [
-    { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
-    { label: "Utilisateurs", to: "/users", icon: Users },
-    { label: "Produits", to: "/products", icon: Package },
-    { label: "Commandes", to: "/orders", icon: ShoppingCart },
-  ];
+  // Dashboard, invetory, sales, insights, clients
+
+  // pricing news & alerts, siplliers, ai assistant, team
+
+  // Setting, logout
+
+
+
+  const topSections = items.slice(0, 2);
+  const bottomSection = items[2] ?? [];
 
   return (
     <aside
@@ -34,9 +29,9 @@ export function Sidebar() {
       ${isOpen ? "w-64" : "w-16"} flex flex-col`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-3 py-4">
+      <div className="flex justify-between items-center px-3 py-4">
 
-        <div className="flex items-center gap-2">
+        <div className="flex gap-2 items-center">
 
           <Logo className="w-10 h-10" />
           {isOpen && <span className="text-xl font-bold text-primary">Stock<span className="text-black">S</span></span>}
@@ -45,7 +40,7 @@ export function Sidebar() {
 
         <button
           onClick={() => setIsOpen((v) => !v)}
-          className="p-1 text-gray-400 hover:text-white transition"
+          className="p-1 text-gray-400 transition hover:text-white"
           aria-label={isOpen ? "Replier la sidebar" : "Déplier la sidebar"}
         >
           <ChevronLeft
@@ -54,46 +49,77 @@ export function Sidebar() {
         </button>
       </div>
 
-      {/* Nav */}
-      <ul className="flex-1 space-y-1
-      flex flex-col items-center
-      ">
-        {items.map(({ label, to, icon: Icon }) => (
-          <li
-            key={to}
-            className="w-full relative"
-          >
-            <NavLink
-              to={to}
-              className={({ isActive }) =>
-                `flex items-center transition mx-[20%] px-2 py-2 rounded-md
-                  ${isActive ? "bg-primary" : ""} ${isOpen ? "gap-3" : "justify-center"
-                }`
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  {isActive && <div className="w-2 h-full bg-primary rounded-md absolute top-0 -left-1" />}
-                  <Icon className={`h-5 w-5 shrink-0 ${isActive ? "text-white" : "text-black"}`} />
-                  {isOpen && <span className={`truncate ${isActive ? "text-white" : "text-black"}`}>{label}</span>}
-                </>
-              )}
-            </NavLink>
-          </li>
+      {/* Nav (sections du haut) */}
+      <div className="overflow-y-auto flex-1">
+        {topSections.map((section, index) => (
+          <div key={index} className="px-2">
+            <ul className="flex flex-col items-center space-y-1">
+              {section.map(({ label, to, icon: Icon }) => (
+                <li key={to} className="relative w-full">
+                  <NavLink
+                    to={to}
+                    className={({ isActive }) =>
+                      `flex items-center transition mx-[20%] px-2 py-2 rounded-md
+                        ${isActive ? "bg-primary" : ""} ${isOpen ? "gap-3" : "justify-center"}`
+                    }
+                  >
+                    {({ isActive }) => (
+                      <>
+                        {isActive && (
+                          <div className="absolute top-0 -left-1 w-2 h-full rounded-md bg-primary" />
+                        )}
+                        <Icon
+                          className={`h-5 w-5 shrink-0 ${isActive ? "text-white" : "text-black"}`}
+                        />
+                        {isOpen && (
+                          <span className={`truncate ${isActive ? "text-white" : "text-black"}`}>
+                            {label}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+            {index < topSections.length - 1 && (
+              <div className="mx-4 my-3 h-px bg-gray-200" />
+            )}
+          </div>
         ))}
-      </ul>
+      </div>
 
-      {/* Logout */}
-      <div className="px-2 py-4 border-t border-gray-700">
-        <button
-          onClick={() => console.log("Déconnexion")}
-          className={`flex items-center w-full rounded transition
-            text-red-400 hover:text-red-300 hover:bg-gray-700
-            ${isOpen ? "gap-3 px-2 py-2" : "justify-center p-2"}`}
-        >
-          <LogOut className="h-5 w-5 shrink-0" />
-          {isOpen && <span className="truncate">Déconnexion</span>}
-        </button>
+      {/* Section du bas (3e section) */}
+      <div className="px-2 py-4 border-t border-gray-200">
+        <ul className="flex flex-col items-center space-y-1">
+          {bottomSection.map(({ label, to, icon: Icon }) => (
+            <li key={to} className="relative w-full">
+              <NavLink
+                to={to}
+                className={({ isActive }) =>
+                  `flex items-center transition mx-[20%] px-2 py-2 rounded-md
+                    ${isActive ? "bg-primary" : ""} ${isOpen ? "gap-3" : "justify-center"}`
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    {isActive && (
+                      <div className="absolute top-0 -left-1 w-2 h-full rounded-md bg-primary" />
+                    )}
+                    <Icon
+                      className={`h-5 w-5 shrink-0 ${isActive ? "text-white" : "text-black"}`}
+                    />
+                    {isOpen && (
+                      <span className={`truncate ${isActive ? "text-white" : "text-black"}`}>
+                        {label}
+                      </span>
+                    )}
+                  </>
+                )}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
       </div>
     </aside>
   );

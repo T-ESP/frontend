@@ -12,7 +12,6 @@ export function HomeLayout({ children }: HomeLayoutProps) {
 
   return (
     <div className="flex flex-col bg-primary-soft">
-      <HomeHeader />
       {children ?? <Outlet />}
     </div>
   );
