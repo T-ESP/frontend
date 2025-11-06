@@ -3,6 +3,7 @@ import { lazy } from "react";
 export const PAGES = {
   Home: lazy(() => import("@/pages/HomePage")),
   Login: lazy(() => import("@/pages/LoginPage")),
+  Register: lazy(() => import("@/pages/RegisterPage")),
   Dashboard: lazy(() => import("@/pages/DashboardPage")),
   Users: lazy(() => import("@/pages/UsersPage")),
   NotFound: lazy(() => import("@/pages/NotFoundPage")),

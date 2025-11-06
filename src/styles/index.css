@@ -13,6 +13,7 @@ html, body, #root {
   --color-primary-dark: #6b5e8a;       /* Variant foncé (texte, hover dark) */
   --color-primary-deep: #574576;       /* AppBar, fond profond, footer, dark section */
   --color-primary-night: #35275d;      /* Pour borders, focus state, ou dark très poussé */
+  --color-primary-bg: #f4f6fa;
 
   /* ---- Neutres ---- */
   --color-bg: #ffffff;                 /* Fond global (clair) */

@@ -20,7 +20,7 @@ export default function Hero() {
           <button className="px-4 py-2 text-white rounded-md border border-gray-500 transition cursor-pointer hover:border-purple-400">
             Try Demo
           </button>
-          <Link to="/login" className="bg-[#7B5FA2] cursor-pointer text-white px-4 py-2 rounded-md font-semibold hover:bg-purple-700 transition">
+          <Link to="/register" className="bg-[#7B5FA2] cursor-pointer text-white px-4 py-2 rounded-md font-semibold hover:bg-purple-700 transition">
             Get Started
           </Link>
         </div>
