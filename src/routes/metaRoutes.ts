@@ -142,7 +142,7 @@ export const ROUTES: Record<string, RouteMeta> = {
     path: '*',
     label: 'NotFound',
     page: 'NotFound',
-    layout: 'app',
+    layout: 'none',
     restricted: false,
     title: 'StockS - Page non trouvée',
   },
