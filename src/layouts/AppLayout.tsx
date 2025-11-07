@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { HomeHeader } from '@/components/layout/HomeHeader';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { usePageTitle } from '@/hooks/usePageTitle';
@@ -11,11 +12,19 @@ type AppLayoutProps = {
 export function AppLayout({ children }: AppLayoutProps) {
   usePageTitle("StockS - Dashboard");
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(min-width: 768px)").matches
+      : true
+  );
+
+  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
+
   return (
     <div className="flex h-screen">
-      <Sidebar />
+      <Sidebar isOpen={isSidebarOpen} />
       <div className="flex-1">
-        <HomeHeader />
+        <HomeHeader onMenuClick={toggleSidebar} isSidebarOpen={isSidebarOpen} />
         {/* C'est ICI que tu dois rendre children */}
         {children ?? <Outlet />}
       </div>

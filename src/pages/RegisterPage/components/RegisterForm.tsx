@@ -26,8 +26,6 @@ export function RegisterForm() {
         placeholder="you@example.com"
       />
 
-
-
       <FormField
         label="Password"
         labelRight={
@@ -60,4 +58,4 @@ export function RegisterForm() {
       </Button>
     </form>
   );
-}
+} 

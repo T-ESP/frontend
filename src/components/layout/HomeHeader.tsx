@@ -1,12 +1,24 @@
 import { Bell, ChevronDown, Menu, Search } from "lucide-react";
 import avatarImg from "@/assets/images/BOT.png";
 
-export function HomeHeader() {
+type HomeHeaderProps = {
+  onMenuClick?: () => void;
+  isSidebarOpen?: boolean;
+};
+
+export function HomeHeader(props: HomeHeaderProps): JSX.Element {
+  const { onMenuClick, isSidebarOpen } = props;
   return (
     <header className="flex sticky top-0 z-30 justify-between items-center px-3 h-16 bg-white border-b border-primary-soft md:px-5">
       {/* Menu + Recherche */}
       <div className="flex gap-3 items-center min-w-0 md:gap-4">
-        <button className="inline-flex justify-center items-center w-9 h-9 text-gray-700 rounded-md hover:bg-gray-100">
+        <button
+          type="button"
+          className="inline-flex justify-center items-center w-9 h-9 text-gray-700 rounded-md hover:bg-gray-100"
+          onClick={onMenuClick}
+          aria-label={(isSidebarOpen ?? false) ? "Replier la sidebar" : "Déplier la sidebar"}
+          aria-pressed={isSidebarOpen ?? false}
+        >
           <Menu className="w-5 h-5" />
         </button>
         <div className="hidden sm:flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-full px-3 py-1.5 w-[260px] md:w-[360px]">

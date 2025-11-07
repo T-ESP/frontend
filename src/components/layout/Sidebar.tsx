@@ -1,16 +1,13 @@
 // components/layout/Sidebar.tsx
-import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { ChevronLeft } from "lucide-react";
 import Logo from "../icons/Logo";
 import { items } from "@/constants/sidebar/sidebarItem";
 
-export function Sidebar() {
-  const [isOpen, setIsOpen] = useState(() =>
-    typeof window !== "undefined"
-      ? window.matchMedia("(min-width: 768px)").matches
-      : true
-  );
+type SidebarProps = {
+  isOpen: boolean;
+};
+
+export function Sidebar({ isOpen }: SidebarProps) {
 
   // Dashboard, invetory, sales, insights, clients
 
@@ -30,23 +27,14 @@ export function Sidebar() {
     >
       {/* Header */}
       <div className="flex justify-between items-center px-3 py-4">
-
         <div className="flex gap-2 items-center">
-
           <Logo className="w-10 h-10" />
-          {isOpen && <span className="text-xl font-bold text-primary">Stock<span className="text-black">S</span></span>}
+          {isOpen && (
+            <span className="text-xl font-bold text-primary">
+              Stock<span className="text-black">S</span>
+            </span>
+          )}
         </div>
-
-
-        <button
-          onClick={() => setIsOpen((v) => !v)}
-          className="p-1 text-gray-400 transition hover:text-white"
-          aria-label={isOpen ? "Replier la sidebar" : "Déplier la sidebar"}
-        >
-          <ChevronLeft
-            className={`h-4 w-4 transition-transform ${isOpen ? "" : "rotate-180"}`}
-          />
-        </button>
       </div>
 
       {/* Nav (sections du haut) */}
