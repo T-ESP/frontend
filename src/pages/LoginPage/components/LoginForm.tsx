@@ -4,19 +4,9 @@ import { FormField } from "@/components/ui/FormField";
 import { Input } from "@/components/ui/Input";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 
-export function RegisterForm() {
+export function LoginForm() {
   return (
     <form className="space-y-4 sm:space-y-5">
-
-      <Input
-        id="Username"
-        name="Username"
-        type="text"
-        label="Username"
-        autoComplete="Username"
-        placeholder="yourusername"
-      />
-
       <Input
         id="email"
         name="email"
@@ -26,38 +16,43 @@ export function RegisterForm() {
         placeholder="you@example.com"
       />
 
-
+      {/* <Input
+        id="username"
+        name="username"
+        type="text"
+        label="Username"
+        autoComplete="username"
+        placeholder="yourusername"
+      /> */}
 
       <FormField
         label="Password"
-        labelRight={
-          <a
-            href="#"
-            tabIndex={-1}
-            className="text-xs sm:text-sm text-primary hover:text-primaryDark"
-          >
-            Forget password?
-          </a>
-        }
+      // labelRight={
+      //   <a href="#" tabIndex={-1} className="text-xs sm:text-sm text-primary hover:text-primaryDark">
+      //     Forget password?
+      //   </a>
+      // }
       >
         <PasswordInput
           id="password"
-          name="Password"
-          autoComplete="new-password"
+          name="password"
+          autoComplete="current-password"
           placeholder="••••••••"
         />
       </FormField>
 
       <Checkbox
-        id="terms"
-        name="terms"
-        label="I accept terms and conditions"
+        id="remember"
+        name="remember"
+        label="Remember me"
         className="pt-2"
       />
 
       <Button type="submit" fullWidth className="mt-2 sm:mt-3">
-        Sign up
+        Log in
       </Button>
     </form>
   );
 }
+
+
