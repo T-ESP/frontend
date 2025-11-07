@@ -48,7 +48,7 @@ export default function DashboardPage() {
 
   return (
     <div className="w-full h-auto md:h-screen">
-      <div className="grid grid-cols-12 grid-rows-12 w-full h-full">
+      <div className="grid grid-cols-12 w-full h-full grid-rows-12">
         {Array.from({ length: 144 }).map((_, i) => {
           const isPreview = previewSelection.includes(i);
           const isSelected = selection.includes(i);
@@ -59,7 +59,7 @@ export default function DashboardPage() {
               className={`
               flex items-center justify-center text-sm
               border border-gray-300
-              ${isSelected ? "bg-blue-500 text-white" : ""}
+              ${isSelected ? "text-white bg-blue-500" : ""}
               ${!isSelected && isPreview ? "bg-blue-200" : "bg-gray-200 text-gray-600"}
             `}
               onMouseDown={() => handleMouseDown(i)}
