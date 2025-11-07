@@ -4,15 +4,39 @@ import StatCard from "@/components/ui/StatCard";
 
 export default function SalesPage() {
   return (
-    <div className="p-6 space-y-8">
-      <h1 className="text-2xl font-bold mb-4">Sales Overview</h1>
+    <div className="bg-[#f9fafc] min-h-screen px-6 py-8 space-y-10">
+      <h1 className="text-2xl font-bold text-gray-800">Sales</h1>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Total Sales" value="€21,340" />
-        <StatCard title="Revenue This Month" value="€4,920" />
-        <StatCard title="Average Order Value" value="€53.30" />
-        <StatCard title="Conversion Rate" value="2.4%" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatCard
+          title="Total Clients"
+          value="40,689"
+          growth="+8.5%"
+          status="up"
+          description="Up from yesterday"
+        />
+        <StatCard
+          title="Total Orders"
+          value="10,293"
+          growth="+1.3%"
+          status="up"
+          description="Up from past week"
+        />
+        <StatCard
+          title="Total Sales"
+          value="$89,000"
+          growth="-4.3%"
+          status="down"
+          description="Down from yesterday"
+        />
+        <StatCard
+          title="Total Pending"
+          value="2,040"
+          growth="+1.8%"
+          status="up"
+          description="Up from yesterday"
+        />
       </div>
 
       {/* Chart */}
