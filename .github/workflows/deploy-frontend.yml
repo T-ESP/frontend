@@ -17,11 +17,6 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           path: devops
 
-      - name: Installer Ansible
-        run: |
-          sudo apt update -y
-          sudo apt install -y ansible
-
       - name: Ajouter clé SSH
         run: |
           mkdir -p ~/.ssh
