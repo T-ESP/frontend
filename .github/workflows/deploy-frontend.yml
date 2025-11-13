@@ -10,14 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Cloner stocks-devops
+      - name: Checkout frontend repo
+        uses: actions/checkout@v4
+
+      - name: Checkout devops repo
         uses: actions/checkout@v4
         with:
           repository: T-ESP/devops
           token: ${{ secrets.GH_TOKEN }}
           path: devops
 
-      - name: Ajouter clé SSH
+      - name: Install Ansible
+        run: |
+          sudo apt update -y
+          sudo apt install -y ansible
+
+      - name: Setup SSH private key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
@@ -25,7 +33,7 @@ jobs:
           echo "Host *" >> ~/.ssh/config
           echo "  StrictHostKeyChecking no" >> ~/.ssh/config
 
-      - name: Lancer redeploiement frontend
-        working-directory: devops/ansible
+      - name: Deploy frontend with Ansible
+        working-directory: devops
         run: |
           ansible-playbook -i inventory.ini deploy-frontend.yml
