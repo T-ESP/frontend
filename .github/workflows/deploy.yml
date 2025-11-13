@@ -38,7 +38,7 @@ jobs:
           name: known-hosts
           path: ~/.ssh/known_hosts
 
-    # ========== JOB 2 : DEPLOYMENT ==mm========
+    # ========== JOB 2 : DEPLOYMENT ==mm========ss
   deploy:
     runs-on: ubuntu-latest
     container:
