@@ -67,3 +67,11 @@ export default tseslint.config([
   },
 ])
 ```
+
+### Note : 
+
+Layered Folder Structure for Clean Architecture.
+  domain/
+  application/
+  infrastructure/
+  ui/
