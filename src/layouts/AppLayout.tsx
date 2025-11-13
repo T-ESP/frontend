@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { HomeHeader } from '@/components/layout/HomeHeader';
-import { Sidebar } from '@/components/layout/Sidebar';
+import { Sidebar } from '@/ui/components/layouts/Sidebar/Sidebar';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import type { ReactNode } from 'react';
 import { Outlet } from 'react-router-dom';
+import { HomeHeader } from '@/ui/components/layouts/HomeHeader/HomeHeader';
 
 type AppLayoutProps = {
   children?: ReactNode;

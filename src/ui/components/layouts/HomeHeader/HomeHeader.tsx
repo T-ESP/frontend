@@ -1,14 +1,12 @@
 import { Bell, ChevronDown, Menu, Search } from "lucide-react";
 import avatarImg from "@/assets/images/BOT.png";
 import type { JSX } from "react";
+import type { HomeHeaderProps } from "./HomeHeader.types";
 
-type HomeHeaderProps = {
-  onMenuClick?: () => void;
-  isSidebarOpen?: boolean;
-};
 
-export function HomeHeader(props: HomeHeaderProps): JSX.Element {
-  const { onMenuClick, isSidebarOpen } = props;
+export function HomeHeader({ onMenuClick, isSidebarOpen }: HomeHeaderProps): JSX.Element {
+
+
   return (
     <header className="flex sticky top-0 z-30 justify-between items-center px-3 h-16 bg-white border-b border-gray-200 md:px-5">
       {/* Menu + Recherche */}
