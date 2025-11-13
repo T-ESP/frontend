@@ -1,13 +1,10 @@
 import PageLayout from "@/layouts/PageLayout";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  LineChart, Line, Legend, PieChart, Pie, Cell, BarChart, Bar
+  Legend, PieChart, Pie, Cell
 } from "recharts";
 import {
-  FiChevronLeft,
-  FiChevronRight,
   FiTrendingUp,
-  FiTrendingDown,
   FiDollarSign,
   FiUsers,
   FiShoppingCart,
@@ -19,7 +16,6 @@ import {
   FiDownload,
   FiMoreVertical,
   FiStar,
-  FiHeart
 } from "react-icons/fi";
 
 // Enhanced data with more realistic values and better formatting
@@ -321,10 +317,10 @@ export default function DashboardPage() {
           </div>
         </div>
         <div className="divide-y divide-gray-100">
-          {topProducts.map((product, index) => (
+          {topProducts.map((product) => (
             <div key={product.id} className="p-6 hover:bg-gray-50/50 transition-colors group">
               <div className="flex items-center gap-4">
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <img
                     src={product.image}
                     alt={product.name}
@@ -364,7 +360,7 @@ export default function DashboardPage() {
                     </div>
                   </div>
                 </div>
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-white rounded-lg transition-colors opacity-0 group-hover:opacity-100">
                     <FiEye size={16} />
                   </button>

@@ -1,5 +1,5 @@
 // src/components/layouts/PageLayout.tsx
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export default function PageLayout({
   title,
@@ -13,7 +13,7 @@ export default function PageLayout({
   children: ReactNode;
 }) {
   return (
-    <div className="px-8 py-10 max-w-screen-xl mx-auto">
+    <div className="px-8 py-10 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">{title}</h1>

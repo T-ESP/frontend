@@ -1,4 +1,3 @@
-import { HomeHeader } from '@/components/layout/HomeHeader';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import type { ReactNode } from 'react';
 import { Outlet } from 'react-router-dom';

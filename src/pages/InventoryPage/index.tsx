@@ -88,7 +88,7 @@ export default function InventoryPage() {
     >
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-gradient-to-r from-emerald-50 to-emerald-100 p-4 rounded-xl border border-emerald-200">
+        <div className="bg-linear-to-r from-emerald-50 to-emerald-100 p-4 rounded-xl border border-emerald-200">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-emerald-600 text-sm font-medium">In Stock</p>
@@ -97,7 +97,7 @@ export default function InventoryPage() {
             <FiPackage className="w-8 h-8 text-emerald-600" />
           </div>
         </div>
-        <div className="bg-gradient-to-r from-amber-50 to-amber-100 p-4 rounded-xl border border-amber-200">
+        <div className="bg-linear-to-r from-amber-50 to-amber-100 p-4 rounded-xl border border-amber-200">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-amber-600 text-sm font-medium">Low Stock</p>
@@ -106,7 +106,7 @@ export default function InventoryPage() {
             <FiTrendingUp className="w-8 h-8 text-amber-600" />
           </div>
         </div>
-        <div className="bg-gradient-to-r from-rose-50 to-rose-100 p-4 rounded-xl border border-rose-200">
+        <div className="bg-linear-to-r from-rose-50 to-rose-100 p-4 rounded-xl border border-rose-200">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-rose-600 text-sm font-medium">Out of Stock</p>
@@ -115,7 +115,7 @@ export default function InventoryPage() {
             <FiPackage className="w-8 h-8 text-rose-600" />
           </div>
         </div>
-        <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200">
+        <div className="bg-linear-to-r from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-blue-600 text-sm font-medium">Total Products</p>
@@ -129,7 +129,7 @@ export default function InventoryPage() {
       {/* Table Container - Same as SalesTable */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         {/* Header - Same as SalesTable */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 bg-linear-to-r from-gray-50 to-white">
           <div>
             <h3 className="text-lg font-semibold text-gray-900">Product Inventory</h3>
             <p className="text-sm text-gray-500 mt-0.5">Manage your products and stock levels</p>
@@ -219,8 +219,8 @@ export default function InventoryPage() {
                   <td className="py-4 px-6">
                     <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full ${statusStyles[item.status as keyof typeof statusStyles]}`}>
                       <span className={`w-1.5 h-1.5 rounded-full ${item.status === 'In Stock' ? 'bg-emerald-500' :
-                          item.status === 'Low Stock' ? 'bg-amber-500' :
-                            'bg-rose-500'
+                        item.status === 'Low Stock' ? 'bg-amber-500' :
+                          'bg-rose-500'
                         }`}></span>
                       {item.status}
                     </span>

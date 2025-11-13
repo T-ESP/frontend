@@ -1,4 +1,5 @@
-import { ButtonHTMLAttributes, forwardRef } from "react";
+import type { ButtonHTMLAttributes } from "react";
+import { forwardRef } from "react";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "primary" | "secondary" | "outline";
