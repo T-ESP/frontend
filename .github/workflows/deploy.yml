@@ -18,7 +18,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
+
+      - name: Install SSH client
+        run: |
+          apt-get update
+          apt-get install -y openssh-client
 
       - name: Setup SSH
         run: |
@@ -33,7 +38,8 @@ jobs:
           name: known-hosts
           path: ~/.ssh/known_hosts
 
-  # ========== JOB 2 : DEPLOYMENT ==========
+
+    # ========== JOB 2 : DEPLOYMENT ==========
   deploy:
     runs-on: ubuntu-latest
     container:
