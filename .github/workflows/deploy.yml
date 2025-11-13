@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup SSH
         run: |
@@ -28,7 +28,7 @@ jobs:
           ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
 
       - name: Upload SSH known_hosts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: known-hosts
           path: ~/.ssh/known_hosts
@@ -42,7 +42,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup SSH
         run: |
@@ -51,7 +51,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
 
       - name: Download known_hosts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: known-hosts
           path: ~/.ssh
@@ -73,7 +73,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup SSH
         run: |
@@ -82,7 +82,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
 
       - name: Download known_hosts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: known-hosts
           path: ~/.ssh
