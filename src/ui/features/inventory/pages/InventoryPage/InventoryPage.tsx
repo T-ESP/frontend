@@ -3,7 +3,7 @@ import { InventoryStats } from "./InventoryStats";
 import { InventoryTable } from "./InventoryTable";
 import { PageActions } from "./PageActions";
 
-export function InventoryPage() {
+export default function InventoryPage() {
   return (
     <PageLayout
       title="Inventory"

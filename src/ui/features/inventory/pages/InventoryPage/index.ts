@@ -1,0 +1,2 @@
+export { defaultg} from "./InventoryPage";
+
