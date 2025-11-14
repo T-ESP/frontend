@@ -77,10 +77,10 @@ export function SimpleModal({
         `}
       >
         {/* Header */}
-        <div className="flex items-start justify-between p-6 pb-4">
+        <div className="flex justify-between items-start p-6 pb-4">
           <div className="flex-1 min-w-0">
             {title && (
-              <h2 className="text-lg font-semibold text-neutral-900 leading-6">
+              <h2 className="text-lg font-semibold leading-6 text-neutral-900">
                 {title}
               </h2>
             )}
@@ -90,7 +90,7 @@ export function SimpleModal({
           </div>
           <button
             onClick={onClose}
-            className="ml-4 text-neutral-700 hover:text-neutral-900 transition-colors p-1 rounded-sm hover:bg-neutral-100"
+            className="p-1 ml-4 rounded-sm transition-colors text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100"
           >
             <X size={16} />
           </button>
@@ -101,11 +101,11 @@ export function SimpleModal({
 
         {/* Footer */}
         {(cancelText || acceptText) && (
-          <div className="flex items-center justify-end gap-3 px-6 py-4 bg-neutral-50 rounded-b-lg border-t border-border">
+          <div className="flex gap-3 justify-end items-center px-6 py-4 rounded-b-lg border-t bg-neutral-50 border-border">
             {cancelText && (
               <button
                 onClick={handleCancel}
-                className="px-4 py-2 text-sm font-medium text-neutral-700 bg-white border border-border rounded-md hover:bg-neutral-50 transition-colors"
+                className="px-4 py-2 text-sm font-medium bg-white rounded-md border transition-colors text-neutral-700 border-border hover:bg-neutral-50"
               >
                 {cancelText}
               </button>
@@ -117,7 +117,7 @@ export function SimpleModal({
                   backgroundColor: "var(--color-primary)",
                   borderColor: "var(--color-primary)",
                 }}
-                className="px-4 py-2 text-sm font-medium text-white border rounded-md transition-all hover:opacity-90"
+                className="px-4 py-2 text-sm font-medium text-white rounded-md border transition-all hover:opacity-90"
               >
                 {acceptText}
               </button>

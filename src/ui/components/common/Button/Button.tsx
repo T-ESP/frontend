@@ -1,10 +1,5 @@
-import type { ButtonHTMLAttributes } from "react";
 import { forwardRef } from "react";
-
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "secondary" | "outline";
-  fullWidth?: boolean;
-};
+import type { ButtonProps } from "./Button.types";
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (

@@ -1,5 +1,5 @@
 import Logo from "@/components/icons/Logo";
-import { items } from "@/constants/sidebar/sidebarItem";
+import { items } from "@/ui/constants/sidebar/sidebarItem";
 import { SidebarSection } from "./SidebarSection";
 import type { SidebarProps } from "./Sidebar.types";
 

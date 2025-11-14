@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/Button";
-import { Checkbox } from "@/components/ui/Checkbox";
-import { FormField } from "@/components/ui/FormField";
-import { Input } from "@/components/ui/Input";
-import { PasswordInput } from "@/components/ui/PasswordInput";
+import { Button } from "@/ui/components/common/Button/Button";
+import { Checkbox } from "@/ui/components/common/Checkbox/Checkbox";
+import { FormField } from "@/ui/components/common/FormField/FormField";
+import { Input } from "@/ui/components/common/Input/Input";
+import { PasswordInput } from "@/ui/components/common/PasswordInput/PasswordInput";
 
 export function RegisterForm() {
   return (
