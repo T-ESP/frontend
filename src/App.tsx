@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { useRoutes } from 'react-router-dom';
-import { routes } from './routes/routeConfig';
 import { ToastProvider } from './components/ui/Toast';
+import { routes } from './app/routes/routeConfig';
 
 export default function App() {
   const routing = useRoutes(routes);
