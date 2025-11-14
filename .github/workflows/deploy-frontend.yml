@@ -20,10 +20,14 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           path: devops
 
-      - name: Install Ansible
+      - name: Install Ansible and dependencies
         run: |
           sudo apt update -y
-          sudo apt install -y ansible
+          sudo apt install -y ansible python3-pip
+
+      - name: Install Ansible docker collection
+        run: |
+          ansible-galaxy collection install community.docker
 
       - name: Setup SSH private key
         run: |

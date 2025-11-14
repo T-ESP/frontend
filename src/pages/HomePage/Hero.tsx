@@ -32,7 +32,7 @@ export default function Hero() {
         {/* Left Side */}
         <div className="w-full lg:w-1/2 max-w-[50%] text-center lg:text-left">
           <h1 className="text-4xl md:text-[3rem] leading-tight font-extrabold">
-            IdrisSmarter Stock Management <br />
+            Idris Smarter Stock Management <br />
             with{" "}
             <span className="bg-linear-to-r from-[#7B5FA2] to-[#ff6ec7] bg-clip-text text-transparent">
               AI Precision
