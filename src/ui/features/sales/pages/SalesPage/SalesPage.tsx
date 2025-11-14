@@ -1,6 +1,6 @@
-import SalesChart from "@/components/sales/SalesChart";
-import SalesTable from "@/components/sales/SalesTable";
 import StatCard from "@/components/ui/StatCard";
+import SalesChart from "@/ui/features/sales/pages/SalesPage/SalesChart";
+import { SalesTable } from "@/ui/features/sales/pages/SalesPage/SalesTable";
 
 export default function SalesPage() {
   return (
@@ -8,7 +8,7 @@ export default function SalesPage() {
       <h1 className="text-2xl font-bold text-gray-800">Sales</h1>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Total Clients"
           value="40,689"
