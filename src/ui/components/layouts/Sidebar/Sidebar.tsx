@@ -1,4 +1,4 @@
-import Logo from "@/components/icons/Logo";
+import { Logo } from "@/ui/components/common/Logo";
 import { items } from "@/ui/constants/sidebar/sidebarItem";
 import { SidebarSection } from "./SidebarSection";
 import type { SidebarProps } from "./Sidebar.types";

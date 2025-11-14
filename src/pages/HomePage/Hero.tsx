@@ -1,4 +1,4 @@
-import Logo from "@/components/icons/Logo";
+import { Logo } from "@/ui/components/common/Logo";
 import { Link } from "react-router-dom";
 
 export default function Hero() {

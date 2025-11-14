@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Logo({ className, animate = false, ...rest }: { className?: string, animate?: boolean } & React.SVGProps<SVGSVGElement>) {
+export function Logo({ className, animate = false, ...rest }: { className?: string, animate?: boolean } & React.SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} width="1014" height="889" viewBox="0 0 1014 889" fill="none" xmlns="http://www.w3.org/2000/svg" {...rest}>
       <path
