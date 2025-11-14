@@ -1,11 +1,5 @@
-import type { InputHTMLAttributes } from "react";
 import { forwardRef, useState } from "react";
-
-type PasswordInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & {
-  label?: string;
-  error?: string;
-  showToggle?: boolean;
-};
+import type { PasswordInputProps } from "./index";
 
 export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
   ({ label, error, showToggle = true, className = "", id, ...props }, ref) => {

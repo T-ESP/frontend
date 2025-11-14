@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import type { ButtonProps } from "./Button.types";
+import type { ButtonProps } from "./index";
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (

@@ -1,10 +1,5 @@
 import { forwardRef } from "react";
-import type { InputHTMLAttributes } from "react";
-
-type CheckboxProps = InputHTMLAttributes<HTMLInputElement> & {
-  label?: string;
-  error?: string;
-};
+import type { CheckboxProps } from "./index";
 
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   ({ label, error, className = "", id, onKeyDown, ...props }, ref) => {

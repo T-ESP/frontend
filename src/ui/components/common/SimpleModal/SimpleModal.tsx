@@ -1,18 +1,6 @@
 import { X } from "lucide-react";
 import { useState, useEffect } from "react";
-
-type SimpleModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  title?: string;
-  subtitle?: string;
-  children?: React.ReactNode;
-  cancelText?: string;
-  acceptText?: string;
-  onCancel?: () => void;
-  onAccept?: () => void;
-  size?: "sm" | "md" | "lg";
-};
+import type { SimpleModalProps } from "./index";
 
 export function SimpleModal({
   isOpen,

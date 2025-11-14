@@ -1,12 +1,4 @@
-import type { ReactNode } from "react";
-
-type FormFieldProps = {
-  label?: string;
-  labelRight?: ReactNode;
-  error?: string;
-  children: ReactNode;
-  className?: string;
-};
+import type { FormFieldProps } from "./index";
 
 export function FormField({
   label,

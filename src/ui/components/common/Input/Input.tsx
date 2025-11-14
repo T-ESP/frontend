@@ -1,10 +1,5 @@
-import type { InputHTMLAttributes } from "react";
 import { forwardRef } from "react";
-
-type InputProps = InputHTMLAttributes<HTMLInputElement> & {
-  label?: string;
-  error?: string;
-};
+import type { InputProps } from "./Input.types";
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, className = "", id, ...props }, ref) => {
