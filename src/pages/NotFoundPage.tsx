@@ -25,7 +25,7 @@ export default function NotFoundPage() {
         </p>
         <Link
           to="/"
-          className="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-medium text-white shadow-sm transition hover:opacity-90"
+          className="inline-flex justify-center items-center px-6 mt-8 h-11 text-sm font-medium text-white rounded-md shadow-sm transition bg-primary hover:opacity-90"
         >
           Retour au tableau de bord
         </Link>

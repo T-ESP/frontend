@@ -1,2 +1,2 @@
-export { defaultg} from "./InventoryPage";
+export { default} from "./InventoryPage";
 
