@@ -1,7 +1,7 @@
-import type { Item } from "@/types/sidebar";
+import type { SidebarItemType } from "@/ui/components/layouts/Sidebar/Sidebar.types";
 import { Bell, Box, Brain, ChartLine, LayoutDashboard, LogOut, Settings, ShoppingCartIcon, Truck, Users } from "lucide-react";
 
-export const items: Item[][] = [
+export const items: SidebarItemType[][] = [
   [
     { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
     { label: "Inventory", to: "/inventory", icon: Box },
