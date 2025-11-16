@@ -34,10 +34,12 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          echo "Host *" >> ~/.ssh/config
-          echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+          ssh-keyscan -H 51.68.123.179 >> ~/.ssh/known_hosts
 
       - name: Deploy frontend with Ansible
         working-directory: devops
         run: |
-          ansible-playbook -i inventory.ini deploy-frontend.yml
+          ansible-playbook -i inventory.ini deploy-frontend.yml \
+            -e "gh_token=${{ secrets.GH_TOKEN }}"
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: False
