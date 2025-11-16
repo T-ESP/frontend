@@ -42,7 +42,7 @@ export default function Hero() {
             Say goodbye to overstock, shortages, and guesswork. StockS gives you real-time insights and smart predictions to boost profits.
           </p>
           <button className="mt-8 bg-[#7B5FA2] text-white px-6 py-3 rounded-md font-bold text-base hover:bg-purple-700 transition">
-            Get Started Free
+            Idris Get Started Free
           </button>
         </div>
 
