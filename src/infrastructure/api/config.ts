@@ -33,6 +33,9 @@ export const API_ENDPOINTS = {
   orders: {
     getAll: '/orders',
     getById: (id: number) => `/orders/${id}`,
+    getItems: (id: number) => `/orders/${id}/items`,
+    getByUser: (userId: number) => `/orders/user/${userId}`,
+    getStats: '/orders/stats',
     create: '/orders',
     update: (id: number) => `/orders/${id}`,
     delete: (id: number) => `/orders/${id}`,

@@ -14,6 +14,7 @@ export const PAGES = {
   Clients: lazy(() => import("@/pages/ClientsPage")),
   PricingNewsAlerts: lazy(() => import("@/pages/PricingNewsAlertsPage")),
   Suppliers: lazy(() => import("@/pages/SuppliersPage")),
+  Orders: lazy(() => import("@/pages/OrdersPage")),
   AIAssistant: lazy(() => import("@/ui/features/ai-assistant/pages/AIAssistantPage")),
   Team: lazy(() => import("@/pages/TeamPage")),
   Settings: lazy(() => import("@/pages/SettingsPage")),
