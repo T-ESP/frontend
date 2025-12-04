@@ -1,0 +1,48 @@
+// API Configuration
+export const API_CONFIG = {
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8090',
+  timeout: 10000,
+} as const;
+
+export const API_ENDPOINTS = {
+  products: {
+    getAll: '/products',
+    getById: (id: number) => `/products/${id}`,
+    getByReference: (ref: string) => `/products/reference/${ref}`,
+    create: '/products',
+    update: (id: number) => `/products/${id}`,
+    delete: (id: number) => `/products/${id}`,
+    updateStock: (id: number) => `/products/${id}/stock`,
+    lowStock: '/products/low-stock',
+    withSupplier: '/products/with-supplier',
+  },
+  suppliers: {
+    getAll: '/suppliers',
+    getById: (id: number) => `/suppliers/${id}`,
+    create: '/suppliers',
+    update: (id: number) => `/suppliers/${id}`,
+    delete: (id: number) => `/suppliers/${id}`,
+  },
+  users: {
+    getAll: '/users',
+    getById: (id: number) => `/users/${id}`,
+    create: '/users',
+    update: (id: number) => `/users/${id}`,
+    delete: (id: number) => `/users/${id}`,
+  },
+  orders: {
+    getAll: '/orders',
+    getById: (id: number) => `/orders/${id}`,
+    create: '/orders',
+    update: (id: number) => `/orders/${id}`,
+    delete: (id: number) => `/orders/${id}`,
+  },
+  sales: {
+    getAll: '/sales',
+    stats: '/sales/stats',
+  },
+  stocks: {
+    getAll: '/stocks',
+    update: (id: number) => `/stocks/${id}`,
+  },
+} as const;
