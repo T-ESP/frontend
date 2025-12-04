@@ -41,8 +41,11 @@ export const API_ENDPOINTS = {
     delete: (id: number) => `/orders/${id}`,
   },
   sales: {
-    getAll: '/sales',
-    stats: '/sales/stats',
+    totalRevenue: '/sales/total',
+    evolution: '/sales/evolution',
+    comparison: '/sales/comparison',
+    averageBasket: '/sales/average-basket',
+    averageBasketByClientType: '/sales/average-basket-by-client-type',
   },
   stocks: {
     getAll: '/stocks',
