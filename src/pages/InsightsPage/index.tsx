@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import PageLayout from "@/layouts/PageLayout";
 import {
   Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -13,10 +14,16 @@ import {
   FiCalendar,
   FiDownload,
   FiMoreVertical,
-
   FiZap,
-  FiRefreshCw
+  FiRefreshCw,
+  FiShoppingCart,
+  FiPackage,
+  FiCheckCircle,
+  FiXCircle
 } from "react-icons/fi";
+import { orderService } from "@/infrastructure/api/services/orderService";
+import { productService } from "@/infrastructure/api/services/productService";
+import type { OrderStats } from "@/domain/models/Order";
 
 // Mock data for analytics
 const inventoryTurnoverData = [
@@ -135,6 +142,78 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export default function InsightsPage() {
+  const [orderStats, setOrderStats] = useState<OrderStats | null>(null);
+  const [lowStockCount, setLowStockCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadGlobalKPIs();
+  }, []);
+
+  const loadGlobalKPIs = async () => {
+    try {
+      setLoading(true);
+      const [stats, products] = await Promise.all([
+        orderService.getStats(),
+        productService.getAll(),
+      ]);
+      setOrderStats(stats);
+      setLowStockCount(products.filter(p => p.stock_quantity < 10).length);
+    } catch (error) {
+      console.error('Error loading global KPIs:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('fr-FR', {
+      style: 'currency',
+      currency: 'EUR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value);
+  };
+
+  const globalKPIs = orderStats ? [
+    {
+      title: "Total Orders",
+      value: orderStats.total_orders.toString(),
+      change: `${orderStats.delivered_orders} delivered`,
+      trend: "up",
+      icon: FiShoppingCart,
+      color: "blue",
+      description: "All time"
+    },
+    {
+      title: "Pending Orders",
+      value: orderStats.pending_orders.toString(),
+      change: `${orderStats.confirmed_orders} confirmed`,
+      trend: orderStats.pending_orders > 10 ? "down" : "up",
+      icon: FiPackage,
+      color: "amber",
+      description: "Awaiting processing"
+    },
+    {
+      title: "Total Revenue",
+      value: formatCurrency(orderStats.total_amount),
+      change: `Avg: ${formatCurrency(orderStats.avg_order_value)}`,
+      trend: "up",
+      icon: FiDollarSign,
+      color: "emerald",
+      description: "All orders"
+    },
+    {
+      title: "Low Stock Alert",
+      value: lowStockCount.toString(),
+      change: lowStockCount > 5 ? "High priority" : "Normal",
+      trend: lowStockCount > 5 ? "down" : "up",
+      icon: FiAlertTriangle,
+      color: lowStockCount > 5 ? "rose" : "purple",
+      description: "Products < 10 units"
+    },
+  ] : [];
+
   return (
     <PageLayout 
       title="Business Insights" 
@@ -152,6 +231,77 @@ export default function InsightsPage() {
         </div>
       }
     >
+      {/* Global KPIs Section - Real Data */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">Global KPIs</h2>
+            <p className="text-sm text-gray-500 mt-1">Real-time business metrics</p>
+          </div>
+          {orderStats && (
+            <div className="flex items-center gap-6 text-sm">
+              <div className="flex items-center gap-2">
+                <FiCheckCircle className="text-emerald-500" />
+                <span className="text-gray-600">{orderStats.delivered_orders} Delivered</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <FiXCircle className="text-rose-500" />
+                <span className="text-gray-600">{orderStats.cancelled_orders} Cancelled</span>
+              </div>
+            </div>
+          )}
+        </div>
+        
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-40 bg-white rounded-2xl animate-pulse border border-gray-100" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {globalKPIs.map((kpi, index) => (
+              <div 
+                key={index}
+                className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group"
+              >
+                <div className="flex items-center justify-between">
+                  <div className={`p-3 rounded-xl bg-${kpi.color}-50 group-hover:bg-${kpi.color}-100 transition-colors`}>
+                    <kpi.icon className={`w-6 h-6 text-${kpi.color}-600`} />
+                  </div>
+                  <div className="flex items-center gap-1 text-sm">
+                    {kpi.trend === 'up' ? (
+                      <FiArrowUpRight className="w-4 h-4 text-emerald-500" />
+                    ) : (
+                      <FiArrowDownLeft className="w-4 h-4 text-rose-500" />
+                    )}
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <h3 className="text-sm font-medium text-gray-600">{kpi.title}</h3>
+                  <p className="text-3xl font-bold text-gray-900 mt-1">{kpi.value}</p>
+                  <p className="text-xs text-gray-500 mt-1">{kpi.change}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{kpi.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Separator */}
+      <div className="border-t border-gray-200 my-8"></div>
+
+      {/* AI Analytics Section - Keep as mock data */}
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-4">
+          <FiZap className="w-5 h-5 text-purple-600" />
+          <h2 className="text-xl font-bold text-gray-900">AI-Powered Analytics</h2>
+          <span className="px-2 py-1 text-xs font-medium text-purple-600 bg-purple-50 rounded-full">Beta</span>
+        </div>
+        <p className="text-sm text-gray-500">Predictive insights and recommendations</p>
+      </div>
+
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {kpiData.map((kpi, index) => (

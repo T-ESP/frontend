@@ -7,8 +7,7 @@ export const items: SidebarItemType[][] = [
     { label: "Inventory", to: "/inventory", icon: Box },
     { label: "Orders", to: "/orders", icon: Package },
     { label: "Insights", to: "/insights", icon: ChartLine },
-    { label: "Sales", to: "/sales", icon: ShoppingCartIcon },
-    { label: "Clients", to: "/clients", icon: Users }
+    { label: "Sales", to: "/sales", icon: ShoppingCartIcon }
   ],
   [
     { label: "Pricing News & Alerts", to: "/pricing-news-alerts", icon: Bell },

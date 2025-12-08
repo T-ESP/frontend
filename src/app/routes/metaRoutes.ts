@@ -75,15 +75,6 @@ export const ROUTES: Record<string, RouteMeta> = {
     roles: ['admin', 'manager'],
     title: 'StockS - Sales',
   },
-  CLIENTS: {
-    path: '/clients',
-    label: 'Clients',
-    page: 'Clients',
-    layout: 'app',
-    restricted: true,
-    roles: ['admin', 'manager'],
-    title: 'StockS - Clients',
-  },
   PRICING_NEWS_ALERTS: {
     path: '/pricing-news-alerts',
     label: 'Pricing News & Alerts',
