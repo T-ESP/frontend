@@ -13,16 +13,16 @@ export default function PageLayout({
   children: ReactNode;
 }) {
   return (
-    <div className="px-8 py-10 max-w-7xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+    <div className="px-8 py-8 max-w-[1400px] mx-auto">
+      <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
-          {subtitle && <p className="text-gray-500 mt-1">{subtitle}</p>}
+          {subtitle && <p className="text-gray-500 mt-2 text-base">{subtitle}</p>}
         </div>
         {actions && <div>{actions}</div>}
       </div>
 
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+      <div className="space-y-6">
         {children}
       </div>
     </div>
