@@ -4,7 +4,7 @@ import type {
   LoginUserGateway,
 } from "@/application/usecases/LoginUser/LoginUser.types";
 
-const DEFAULT_API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+const DEFAULT_API_URL = import.meta.env.VITE_API_URL || "http://localhost:8090";
 
 type RawLoginApiResponse = {
   success: boolean;
