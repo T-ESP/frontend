@@ -13,8 +13,8 @@ services:
     restart: always
 
     # Expose seulement pour debug local
-    ports:
-      - "3001:80"
+    # ports:
+    #   - "3001:80"
 
     networks:
       - monitoring_net

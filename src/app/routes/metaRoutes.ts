@@ -129,6 +129,15 @@ export const ROUTES: Record<string, RouteMeta> = {
     roles: ['admin', 'manager'],
     title: 'StockS - Settings',
   },
+  PROFILE: {
+    path: '/profile',
+    label: 'Profile',
+    page: 'Profile',
+    layout: 'app',
+    restricted: true,
+    roles: ['admin', 'manager'],
+    title: 'StockS - Profil',
+  },
   LOGOUT: {
     path: '/logout',
     label: 'Logout',

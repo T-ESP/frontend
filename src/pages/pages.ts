@@ -17,5 +17,6 @@ export const PAGES = {
   AIAssistant: lazy(() => import("@/ui/features/ai-assistant/pages/AIAssistantPage")),
   Team: lazy(() => import("@/pages/TeamPage")),
   Settings: lazy(() => import("@/pages/SettingsPage")),
+  Profile: lazy(() => import("@/pages/ProfilePage")),
   Logout: lazy(() => import("@/pages/LogoutPage")),
 };

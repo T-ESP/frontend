@@ -9,7 +9,7 @@ export function Sidebar({ isOpen }: SidebarProps) {
 
   return (
     <aside
-      className={`relative h-screen bg-white transition-[width] duration-300 border-r border-gray-200
+      className={`fixed left-0 top-0 h-screen bg-white transition-[width] duration-300 border-r border-gray-200 z-30
       ${isOpen ? "w-64" : "w-16"} flex flex-col`}
     >
       {/* Header */}
