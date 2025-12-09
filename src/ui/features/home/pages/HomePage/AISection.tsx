@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import BOT from "../../assets/images/AI.svg";
+import BOT from "@/assets/images/AI.svg";
+
 
 export default function AISection() {
   return (

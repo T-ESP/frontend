@@ -1,6 +1,6 @@
-import { LoginHeader } from "@/pages/LoginPage/components/LoginHeader";
-import { LoginForm } from "@/pages/LoginPage/components/LoginForm";
-import { LoginFooter } from "@/pages/LoginPage/components/LoginFooter";
+import { LoginHeader } from "./components/LoginHeader";
+import { LoginForm } from "./components/LoginForm";
+import { LoginFooter } from "./components/LoginFooter";
 
 export default function LoginPage() {
   return (

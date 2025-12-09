@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import screen from "../../assets/images/preview.svg"; // replace with your actual path
+import screen from "@/assets/images/preview.svg";
 
 export default function Preview() {
   return (
