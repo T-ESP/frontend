@@ -17,6 +17,7 @@ interface InventoryTableProps {
 export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs }: InventoryTableProps) {
   const [products, setProducts] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
 
   useEffect(() => {
     loadProducts();
@@ -82,6 +83,10 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs }:
     }
   };
 
+  const filteredProducts = selectedCategory === "All Categories" 
+    ? products 
+    : products.filter(p => p.category === selectedCategory);
+
   if (loading) {
     return (
       <div className="overflow-hidden bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center">
@@ -92,12 +97,15 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs }:
 
   return (
     <div className="overflow-hidden bg-white rounded-2xl border border-gray-100 shadow-sm">
-      <InventoryTableHeader />
+      <InventoryTableHeader 
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
+      />
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <InventoryTableHead />
           <InventoryTableBody 
-            data={products}
+            data={filteredProducts}
             onEdit={onEdit}
             onDelete={onDelete}
             onStockUpdate={handleStockUpdate}
