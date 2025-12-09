@@ -2,10 +2,9 @@ import { useState, useEffect } from "react";
 import { productService } from "@/infrastructure/api/services/productService";
 import type { Product } from "@/domain/models/Product";
 import type { InventoryItem } from "@/ui/features/inventory/types";
-import { InventoryTableBody } from "./InventoryTableBody";
-import { InventoryTableFooter } from "./InventoryTableFooter";
-import { InventoryTableHead } from "./InventoryTableHead";
 import { InventoryTableHeader } from "./InventoryTableHeader";
+import { InventoryCardGrid } from "./InventoryCardGrid";
+import { InventoryTableFooter } from "./InventoryTableFooter";
 
 interface InventoryTableProps {
   onEdit: (item: InventoryItem) => void;
@@ -89,31 +88,38 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs }:
 
   if (loading) {
     return (
-      <div className="overflow-hidden bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center">
-        <p className="text-gray-600">Chargement des produits...</p>
+      <div className="space-y-6">
+        <InventoryTableHeader 
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+        />
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center">
+          <p className="text-gray-600">Chargement des produits...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden bg-white rounded-2xl border border-gray-100 shadow-sm">
-      <InventoryTableHeader 
-        selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
-      />
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <InventoryTableHead />
-          <InventoryTableBody 
-            data={filteredProducts}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onStockUpdate={handleStockUpdate}
-            onViewKPIs={onViewKPIs}
-          />
-        </table>
+    <div className="space-y-6">
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm">
+        <InventoryTableHeader 
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+        />
       </div>
-      <InventoryTableFooter />
+      
+      <InventoryCardGrid 
+        data={filteredProducts}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        onStockUpdate={handleStockUpdate}
+        onViewKPIs={onViewKPIs}
+      />
+      
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm">
+        <InventoryTableFooter />
+      </div>
     </div>
   );
 }
