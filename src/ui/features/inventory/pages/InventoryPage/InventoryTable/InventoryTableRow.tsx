@@ -39,9 +39,12 @@ export function InventoryTableRow({ item, index, onEdit, onDelete, onStockUpdate
         <div className="flex gap-3 items-center">
           <div className="relative">
             <img
-              src={item.image}
+              src={item.image || 'https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg?semt=ais_hybrid&w=740&q=80'}
               alt={item.name}
-              className="w-10 h-10 rounded-full ring-2 ring-white shadow-sm"
+              onError={(e) => {
+                e.currentTarget.src = 'https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg?semt=ais_hybrid&w=740&q=80';
+              }}
+              className="w-10 h-10 rounded-full ring-2 ring-white shadow-sm object-cover"
             />
             <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
           </div>
@@ -98,17 +101,6 @@ export function InventoryTableRow({ item, index, onEdit, onDelete, onStockUpdate
             }`}></span>
           {item.status}
         </span>
-      </td>
-      <td className="px-6 py-4">
-        <div className="flex gap-1.5">
-          {item.colors.map((color, i) => (
-            <span
-              key={i}
-              className="w-5 h-5 rounded-full border-2 border-white ring-1 ring-gray-200 shadow-sm"
-              style={{ backgroundColor: color }}
-            ></span>
-          ))}
-        </div>
       </td>
       <td className="px-6 py-4">
         <div className="flex gap-2">
