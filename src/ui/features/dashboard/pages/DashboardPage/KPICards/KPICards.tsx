@@ -20,12 +20,12 @@ export function KPICards({ orders, products, users, totalRevenue, evolution }: K
       currency: 'EUR',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }).format(value);
+    }).format(value || 0);
   };
 
   const formatPercentage = (value: number) => {
     const sign = value >= 0 ? '+' : '';
-    return `${sign}${value.toFixed(1)}%`;
+    return `${sign}${(value || 0).toFixed(1)}%`;
   };
 
   // Calculate low stock products (stock < 10)
