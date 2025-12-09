@@ -59,6 +59,19 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
     priceEvolution?: PriceEvolutionKPI;
   }>({});
 
+  // Helper functions to safely format numbers
+  const formatNumber = (value: number | null | undefined, decimals: number = 2): string => {
+    return value != null ? value.toFixed(decimals) : 'N/A';
+  };
+
+  const formatCurrency = (value: number | null | undefined): string => {
+    return value != null ? `${value.toFixed(2)} €` : 'N/A';
+  };
+
+  const formatPercent = (value: number | null | undefined, decimals: number = 1): string => {
+    return value != null ? `${value.toFixed(decimals)}%` : 'N/A';
+  };
+
   useEffect(() => {
     if (isOpen && productId) {
       loadKPIs();
@@ -203,32 +216,32 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
               {activeTab === 'overview' && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {kpis.pricingMargin && (
+                    {kpis.pricingMargin?.margin_percentage != null && (
                       <StatCard
                         label="Margin"
-                        value={`${kpis.pricingMargin.margin_percentage.toFixed(1)}%`}
+                        value={formatPercent(kpis.pricingMargin.margin_percentage)}
                         badge={kpis.pricingMargin.market_position}
                       />
                     )}
                     {kpis.stockAvailability && (
                       <StatCard
                         label="Stock Status"
-                        value={kpis.stockAvailability.current_stock}
+                        value={kpis.stockAvailability.current_stock ?? 'N/A'}
                         badge={kpis.stockAvailability.stock_status}
                       />
                     )}
-                    {kpis.salesRotation && (
+                    {kpis.salesRotation?.rotation_rate != null && (
                       <StatCard
                         label="Rotation"
-                        value={kpis.salesRotation.rotation_rate.toFixed(1)}
+                        value={formatNumber(kpis.salesRotation.rotation_rate, 1)}
                         badge={kpis.salesRotation.rotation_category}
                         trend={kpis.salesRotation.sales_trend}
                       />
                     )}
-                    {kpis.profitability && (
+                    {kpis.profitability?.roi != null && (
                       <StatCard
                         label="ROI"
-                        value={`${kpis.profitability.roi.toFixed(1)}%`}
+                        value={formatPercent(kpis.profitability.roi)}
                       />
                     )}
                   </div>
@@ -259,7 +272,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                   )}
 
                   {/* Alerts */}
-                  {kpis.predictionsAlerts && kpis.predictionsAlerts.alerts.length > 0 && (
+                  {kpis.predictionsAlerts?.alerts && kpis.predictionsAlerts.alerts.length > 0 && (
                     <div className="bg-white p-6 rounded-lg border border-gray-200">
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">⚠️ Active Alerts</h3>
                       <div className="space-y-2">
@@ -295,16 +308,16 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
               {activeTab === 'pricing' && kpis.pricingMargin && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <StatCard label="Current Price" value={`${kpis.pricingMargin.current_price.toFixed(2)} €`} />
-                    <StatCard label="Cost Price" value={`${kpis.pricingMargin.cost_price.toFixed(2)} €`} />
+                    <StatCard label="Current Price" value={formatCurrency(kpis.pricingMargin.current_price)} />
+                    <StatCard label="Cost Price" value={formatCurrency(kpis.pricingMargin.cost_price)} />
                     <StatCard 
                       label="Margin" 
-                      value={`${kpis.pricingMargin.margin_percentage.toFixed(1)}%`}
+                      value={formatPercent(kpis.pricingMargin.margin_percentage)}
                       badge={kpis.pricingMargin.market_position}
                     />
                   </div>
 
-                  {kpis.priceEvolution && kpis.priceEvolution.price_changes.length > 0 && (
+                  {kpis.priceEvolution?.price_changes && kpis.priceEvolution.price_changes.length > 0 && (
                     <div className="bg-white p-6 rounded-lg border border-gray-200">
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">Price Evolution</h3>
                       <ResponsiveContainer width="100%" height={300}>
@@ -312,7 +325,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                           <CartesianGrid strokeDasharray="3 3" />
                           <XAxis dataKey="date" />
                           <YAxis />
-                          <Tooltip formatter={(value: number) => `${value.toFixed(2)} €`} />
+                          <Tooltip formatter={(value: number) => formatCurrency(value)} />
                           <Legend />
                           <Line type="monotone" dataKey="new_price" stroke="#3b82f6" name="Price" strokeWidth={2} />
                         </LineChart>
@@ -392,12 +405,12 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <StatCard 
                       label="Rotation Rate" 
-                      value={kpis.salesRotation.rotation_rate.toFixed(1)}
+                      value={formatNumber(kpis.salesRotation.rotation_rate, 1)}
                       badge={kpis.salesRotation.rotation_category}
                       trend={kpis.salesRotation.sales_trend}
                     />
-                    <StatCard label="Turnover Ratio" value={kpis.salesRotation.turnover_ratio.toFixed(2)} />
-                    <StatCard label="Avg Daily Sales" value={kpis.salesRotation.average_daily_sales.toFixed(1)} />
+                    <StatCard label="Turnover Ratio" value={formatNumber(kpis.salesRotation.turnover_ratio)} />
+                    <StatCard label="Avg Daily Sales" value={formatNumber(kpis.salesRotation.average_daily_sales, 1)} />
                     <StatCard label="Last 30 Days" value={kpis.salesRotation.sales_last_30_days} />
                   </div>
 
@@ -411,7 +424,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                         </div>
                         <div>
                           <p className="text-sm text-gray-600">Total Value</p>
-                          <p className="text-3xl font-bold text-blue-600">{kpis.salesRotation.total_sales_value.toFixed(2)} €</p>
+                          <p className="text-3xl font-bold text-blue-600">{formatCurrency(kpis.salesRotation.total_sales_value)}</p>
                         </div>
                       </div>
                     </div>
@@ -439,10 +452,10 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
               {activeTab === 'profitability' && kpis.profitability && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <StatCard label="Total Revenue" value={`${kpis.profitability.total_revenue.toFixed(2)} €`} />
-                    <StatCard label="Total Cost" value={`${kpis.profitability.total_cost.toFixed(2)} €`} />
-                    <StatCard label="Gross Profit" value={`${kpis.profitability.gross_profit.toFixed(2)} €`} />
-                    <StatCard label="ROI" value={`${kpis.profitability.roi.toFixed(1)}%`} />
+                    <StatCard label="Total Revenue" value={formatCurrency(kpis.profitability.total_revenue)} />
+                    <StatCard label="Total Cost" value={formatCurrency(kpis.profitability.total_cost)} />
+                    <StatCard label="Gross Profit" value={formatCurrency(kpis.profitability.gross_profit)} />
+                    <StatCard label="ROI" value={formatPercent(kpis.profitability.roi)} />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -452,7 +465,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                         <div>
                           <div className="flex justify-between mb-1">
                             <span className="text-sm text-gray-600">Profit Margin</span>
-                            <span className="font-semibold">{kpis.profitability.profit_margin_percentage.toFixed(1)}%</span>
+                            <span className="font-semibold">{formatPercent(kpis.profitability.profit_margin_percentage)}</span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div
@@ -464,7 +477,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                         <div>
                           <div className="flex justify-between mb-1">
                             <span className="text-sm text-gray-600">Contribution to Total Profit</span>
-                            <span className="font-semibold">{kpis.profitability.contribution_to_total_profit.toFixed(1)}%</span>
+                            <span className="font-semibold">{formatPercent(kpis.profitability.contribution_to_total_profit)}</span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div
@@ -545,7 +558,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                     />
                     <StatCard 
                       label="Seasonality Factor" 
-                      value={kpis.predictionsAlerts.seasonality_factor?.toFixed(2) || 'N/A'}
+                      value={formatNumber(kpis.predictionsAlerts.seasonality_factor)}
                     />
                   </div>
 
@@ -556,7 +569,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                         <div>
                           <div className="flex justify-between mb-1">
                             <span className="text-sm text-gray-600">Stockout Risk</span>
-                            <span className="font-semibold text-red-600">{kpis.predictionsAlerts.stockout_risk_percentage.toFixed(1)}%</span>
+                            <span className="font-semibold text-red-600">{formatPercent(kpis.predictionsAlerts.stockout_risk_percentage)}</span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div
@@ -568,7 +581,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                         <div>
                           <div className="flex justify-between mb-1">
                             <span className="text-sm text-gray-600">Overstock Risk</span>
-                            <span className="font-semibold text-orange-600">{kpis.predictionsAlerts.overstock_risk_percentage.toFixed(1)}%</span>
+                            <span className="font-semibold text-orange-600">{formatPercent(kpis.predictionsAlerts.overstock_risk_percentage)}</span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div
@@ -589,7 +602,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                     </div>
                   </div>
 
-                  {kpis.predictionsAlerts.alerts.length > 0 && (
+                  {kpis.predictionsAlerts.alerts && kpis.predictionsAlerts.alerts.length > 0 && (
                     <div className="bg-white p-6 rounded-lg border border-gray-200">
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">Active Alerts</h3>
                       <div className="space-y-2">
@@ -663,7 +676,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                     />
                     <StatCard 
                       label="Revenue Contribution" 
-                      value={`${kpis.scoringClassification.revenue_contribution_percentage.toFixed(1)}%`}
+                      value={formatPercent(kpis.scoringClassification.revenue_contribution_percentage)}
                     />
                     <StatCard 
                       label="Strategic Importance" 
@@ -747,7 +760,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                     </div>
                   </div>
 
-                  {kpis.comparative.top_competitors && kpis.comparative.top_competitors.length > 0 && (
+                  {kpis.comparative?.top_competitors && kpis.comparative.top_competitors.length > 0 && (
                     <div className="bg-white p-6 rounded-lg border border-gray-200">
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Competitors in Category</h3>
                       <div className="space-y-2">
