@@ -3,139 +3,109 @@ import type { ApiResponse } from '../client';
 
 // KPI Types based on backend responses
 export interface PricingMarginKPI {
-  product_id: number;
-  product_name: string;
-  current_price: number;
-  cost_price: number;
-  margin_amount: number;
-  margin_percentage: number;
-  market_position: string;
-  price_history?: Array<{
-    date: string;
-    price: number;
-  }>;
+  current_buying_price: number;
+  current_selling_price: number | null;
+  gross_margin: number | null;
+  margin_rate: number | null;
+  buying_price_min: number | null;
+  buying_price_max: number | null;
+  buying_price_avg: number | null;
+  buying_price_variation: number | null;
+  buying_price_volatility: number | null;
+  buying_price_changes_count: number;
+  selling_price_min: number | null;
+  selling_price_max: number | null;
+  selling_price_avg: number | null;
+  selling_price_variation: number | null;
+  selling_price_volatility: number | null;
+  selling_price_changes_count: number;
+  repercussion_rate: number | null;
+  repercussion_delay_days: number | null;
 }
 
 export interface StockAvailabilityKPI {
-  product_id: number;
-  product_name: string;
   current_stock: number;
-  reserved_stock: number;
-  available_stock: number;
-  min_stock_threshold: number;
-  max_stock_threshold: number;
-  stock_status: 'critical' | 'low' | 'optimal' | 'excess';
-  days_until_stockout: number | null;
-  stock_coverage_days: number;
-}
-
-export interface SalesRotationKPI {
-  product_id: number;
-  product_name: string;
-  total_sales_quantity: number;
-  total_sales_value: number;
-  sales_last_30_days: number;
-  sales_last_90_days: number;
-  rotation_rate: number;
-  average_daily_sales: number;
-  turnover_ratio: number;
-  rotation_category: 'fast' | 'medium' | 'slow';
-  sales_trend: 'increasing' | 'stable' | 'decreasing';
-}
-
-export interface ProfitabilityKPI {
-  product_id: number;
-  product_name: string;
-  total_revenue: number;
-  total_cost: number;
-  gross_profit: number;
-  profit_margin_percentage: number;
-  roi: number;
-  contribution_to_total_profit: number;
-  profitability_score: number;
-  profitability_rank: number;
-}
-
-export interface RestockKPI {
-  product_id: number;
-  product_name: string;
-  current_stock: number;
-  optimal_stock_level: number;
-  reorder_point: number;
-  economic_order_quantity: number;
-  suggested_restock_quantity: number;
-  urgency_level: 'immediate' | 'soon' | 'normal' | 'not_needed';
-  next_suggested_order_date: string | null;
-  supplier_lead_time_days: number;
+  product_status: string;
+  stockout_rate: number | null;
+  stockout_count: number;
+  avg_stockout_duration_days: number | null;
+  safety_stock_recommended: number | null;
+  days_since_last_restock: number | null;
   last_restock_date: string | null;
 }
 
+export interface SalesRotationKPI {
+  quantity_sold: number;
+  revenue: number;
+  order_count: number;
+  avg_quantity_per_order: number | null;
+  avg_basket_value: number | null;
+  stock_turnover_rate: number | null;
+  avg_storage_duration_days: number | null;
+  sales_velocity_per_day: number | null;
+  sales_trend: string;
+  sales_variation_percent: number | null;
+}
+
+export interface ProfitabilityKPI {
+  total_profit: number;
+  avg_profit_per_sale: number | null;
+  roi: number | null;
+  contribution_to_total_revenue_percent: number | null;
+  contribution_to_total_profit_percent: number | null;
+}
+
+export interface RestockKPI {
+  restock_count: number;
+  total_restocked_quantity: number;
+  avg_quantity_per_restock: number | null;
+  restock_frequency_days: number | null;
+  total_restock_cost: number;
+  avg_restock_cost: number | null;
+  reception_rate: number | null;
+  cancellation_rate: number | null;
+  avg_delivery_delay_days: number | null;
+}
+
 export interface PredictionsAlertsKPI {
-  product_id: number;
-  product_name: string;
-  predicted_demand_7_days: number;
-  predicted_demand_30_days: number;
-  stockout_risk_percentage: number;
-  overstock_risk_percentage: number;
-  alerts: Array<{
-    type: 'stockout' | 'overstock' | 'price_anomaly' | 'demand_spike' | 'demand_drop';
-    severity: 'critical' | 'warning' | 'info';
-    message: string;
-    action_required: boolean;
-  }>;
-  seasonality_factor: number | null;
-  demand_trend: 'increasing' | 'stable' | 'decreasing';
+  estimated_stockout_date: string | null;
+  optimal_reorder_quantity: number | null;
+  optimal_reorder_point: number | null;
+  days_of_coverage: number | null;
+  alert_status: string;
 }
 
 export interface ScoringClassificationKPI {
-  product_id: number;
-  product_name: string;
-  abc_classification: 'A' | 'B' | 'C';
-  xyz_classification: 'X' | 'Y' | 'Z';
-  performance_score: number;
-  strategic_importance: 'high' | 'medium' | 'low';
-  revenue_contribution_percentage: number;
-  sales_frequency: number;
-  demand_variability: number;
-  recommendation: string;
+  popularity_score: number;
+  profitability_score: number;
+  reliability_score: number;
+  global_score: number;
+  abc_classification: string;
+  performance_category: string;
 }
 
 export interface ComparativeKPI {
-  product_id: number;
-  product_name: string;
-  category: string;
-  rank_by_revenue: number;
-  rank_by_profit: number;
-  rank_by_rotation: number;
-  overall_performance_rank: number;
-  category_average_price: number;
-  price_vs_category_avg: number;
-  sales_vs_category_avg: number;
-  margin_vs_category_avg: number;
-  performance_vs_category: 'above' | 'average' | 'below';
-  top_competitors?: Array<{
-    product_id: number;
-    product_name: string;
-    metric_value: number;
-  }>;
+  performance_vs_category_percent: number | null;
+  performance_vs_supplier_percent: number | null;
+  rank_in_category: number | null;
+  share_in_category_percent: number | null;
+}
+
+export interface PricePoint {
+  date: string;
+  price: number;
+}
+
+export interface MarginPoint {
+  date: string;
+  margin_amount: number | null;
+  margin_rate: number | null;
 }
 
 export interface PriceEvolutionKPI {
-  product_id: number;
-  product_name: string;
-  current_price: number;
-  price_changes: Array<{
-    date: string;
-    old_price: number;
-    new_price: number;
-    change_percentage: number;
-    reason?: string;
-  }>;
-  average_price_last_30_days: number;
-  average_price_last_90_days: number;
-  price_volatility: number;
-  price_trend: 'increasing' | 'stable' | 'decreasing';
-  optimal_price_suggestion: number | null;
+  buying_price_history: PricePoint[];
+  selling_price_history: PricePoint[];
+  margin_history: MarginPoint[];
 }
 
 export const productKpisService = {

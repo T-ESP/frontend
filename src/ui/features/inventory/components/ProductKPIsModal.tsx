@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, TrendingUp, TrendingDown, AlertTriangle, ChevronRight } from 'lucide-react';
+import { X, TrendingUp, TrendingDown, AlertTriangle } from 'lucide-react';
 import { productKpisService } from '@/infrastructure/api/services/productKpisService';
 import type {
   PricingMarginKPI,
@@ -15,8 +15,6 @@ import type {
 import {
   LineChart,
   Line,
-  BarChart,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -216,26 +214,24 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
               {activeTab === 'overview' && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {kpis.pricingMargin?.margin_percentage != null && (
+                    {kpis.pricingMargin?.margin_rate != null && (
                       <StatCard
-                        label="Margin"
-                        value={formatPercent(kpis.pricingMargin.margin_percentage)}
-                        badge={kpis.pricingMargin.market_position}
+                        label="Margin Rate"
+                        value={formatPercent(kpis.pricingMargin.margin_rate)}
                       />
                     )}
                     {kpis.stockAvailability && (
                       <StatCard
                         label="Stock Status"
                         value={kpis.stockAvailability.current_stock ?? 'N/A'}
-                        badge={kpis.stockAvailability.stock_status}
+                        badge={kpis.stockAvailability.product_status}
                       />
                     )}
-                    {kpis.salesRotation?.rotation_rate != null && (
+                    {kpis.salesRotation?.stock_turnover_rate != null && (
                       <StatCard
-                        label="Rotation"
-                        value={formatNumber(kpis.salesRotation.rotation_rate, 1)}
-                        badge={kpis.salesRotation.rotation_category}
-                        trend={kpis.salesRotation.sales_trend}
+                        label="Stock Turnover"
+                        value={formatNumber(kpis.salesRotation.stock_turnover_rate, 1)}
+                        trend={kpis.salesRotation.sales_trend as 'increasing' | 'stable' | 'decreasing' | undefined}
                       />
                     )}
                     {kpis.profitability?.roi != null && (
@@ -251,53 +247,47 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                     <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-lg border border-purple-200">
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">Product Classification</h3>
                       <div className="flex flex-wrap gap-3">
-                        <div className={`px-4 py-2 rounded-lg border ${getStatusColor(kpis.scoringClassification.abc_classification)}`}>
+                        <div className={`px-4 py-2 rounded-lg border ${
+                          kpis.scoringClassification.abc_classification === 'A' ? 'bg-green-50 border-green-200 text-green-600' :
+                          kpis.scoringClassification.abc_classification === 'B' ? 'bg-blue-50 border-blue-200 text-blue-600' :
+                          'bg-orange-50 border-orange-200 text-orange-600'
+                        }`}>
                           <span className="text-xs font-medium">ABC Classification</span>
                           <p className="text-xl font-bold mt-1">{kpis.scoringClassification.abc_classification}</p>
                         </div>
-                        <div className={`px-4 py-2 rounded-lg border ${getStatusColor(kpis.scoringClassification.xyz_classification)}`}>
-                          <span className="text-xs font-medium">XYZ Classification</span>
-                          <p className="text-xl font-bold mt-1">{kpis.scoringClassification.xyz_classification}</p>
+                        <div className={`px-4 py-2 rounded-lg border ${
+                          kpis.scoringClassification.performance_category === 'star' ? 'bg-yellow-50 border-yellow-200 text-yellow-600' :
+                          kpis.scoringClassification.performance_category === 'growth' ? 'bg-green-50 border-green-200 text-green-600' :
+                          kpis.scoringClassification.performance_category === 'stable' ? 'bg-blue-50 border-blue-200 text-blue-600' :
+                          'bg-red-50 border-red-200 text-red-600'
+                        }`}>
+                          <span className="text-xs font-medium">Performance Category</span>
+                          <p className="text-xl font-bold mt-1 capitalize">{kpis.scoringClassification.performance_category}</p>
                         </div>
-                        <div className={`px-4 py-2 rounded-lg border ${getStatusColor(kpis.scoringClassification.strategic_importance)}`}>
-                          <span className="text-xs font-medium">Strategic Importance</span>
-                          <p className="text-xl font-bold mt-1 capitalize">{kpis.scoringClassification.strategic_importance}</p>
-                        </div>
-                        <div className="px-4 py-2 rounded-lg border bg-blue-50 border-blue-200 text-blue-600">
-                          <span className="text-xs font-medium">Performance Score</span>
-                          <p className="text-xl font-bold mt-1">{kpis.scoringClassification.performance_score}/100</p>
+                        <div className="px-4 py-2 rounded-lg border bg-indigo-50 border-indigo-200 text-indigo-600">
+                          <span className="text-xs font-medium">Global Score</span>
+                          <p className="text-xl font-bold mt-1">{formatNumber(kpis.scoringClassification.global_score, 1)}/100</p>
                         </div>
                       </div>
                     </div>
                   )}
 
-                  {/* Alerts */}
-                  {kpis.predictionsAlerts?.alerts && kpis.predictionsAlerts.alerts.length > 0 && (
-                    <div className="bg-white p-6 rounded-lg border border-gray-200">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">⚠️ Active Alerts</h3>
-                      <div className="space-y-2">
-                        {kpis.predictionsAlerts.alerts.slice(0, 5).map((alert, idx) => (
-                          <div
-                            key={idx}
-                            className={`p-3 rounded-lg border ${
-                              alert.severity === 'critical'
-                                ? 'bg-red-50 border-red-200 text-red-900'
-                                : alert.severity === 'warning'
-                                ? 'bg-orange-50 border-orange-200 text-orange-900'
-                                : 'bg-blue-50 border-blue-200 text-blue-900'
-                            }`}
-                          >
-                            <div className="flex items-start gap-2">
-                              <AlertTriangle className="w-5 h-5 mt-0.5 flex-shrink-0" />
-                              <div className="flex-1">
-                                <p className="font-medium">{alert.message}</p>
-                                {alert.action_required && (
-                                  <span className="text-xs font-semibold mt-1 inline-block">ACTION REQUIRED</span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
+                  {/* Alert Status */}
+                  {kpis.predictionsAlerts && (
+                    <div className={`p-6 rounded-lg border ${
+                      kpis.predictionsAlerts.alert_status === 'stockout' ? 'bg-red-50 border-red-200' :
+                      kpis.predictionsAlerts.alert_status === 'low_stock' ? 'bg-orange-50 border-orange-200' :
+                      kpis.predictionsAlerts.alert_status === 'overstock' ? 'bg-yellow-50 border-yellow-200' :
+                      'bg-green-50 border-green-200'
+                    }`}>
+                      <div className="flex items-center gap-2">
+                        <AlertTriangle className="w-5 h-5" />
+                        <div>
+                          <h3 className="text-lg font-semibold">Stock Alert</h3>
+                          <p className="text-sm mt-1">
+                            Status: <span className="font-bold uppercase">{kpis.predictionsAlerts.alert_status}</span>
+                          </p>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -308,29 +298,75 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
               {activeTab === 'pricing' && kpis.pricingMargin && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <StatCard label="Current Price" value={formatCurrency(kpis.pricingMargin.current_price)} />
-                    <StatCard label="Cost Price" value={formatCurrency(kpis.pricingMargin.cost_price)} />
+                    <StatCard label="Selling Price" value={formatCurrency(kpis.pricingMargin.current_selling_price)} />
+                    <StatCard label="Buying Price" value={formatCurrency(kpis.pricingMargin.current_buying_price)} />
                     <StatCard 
-                      label="Margin" 
-                      value={formatPercent(kpis.pricingMargin.margin_percentage)}
-                      badge={kpis.pricingMargin.market_position}
+                      label="Margin Rate" 
+                      value={formatPercent(kpis.pricingMargin.margin_rate)}
                     />
                   </div>
 
-                  {kpis.priceEvolution?.price_changes && kpis.priceEvolution.price_changes.length > 0 && (
-                    <div className="bg-white p-6 rounded-lg border border-gray-200">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Price Evolution</h3>
-                      <ResponsiveContainer width="100%" height={300}>
-                        <LineChart data={kpis.priceEvolution.price_changes}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="date" />
-                          <YAxis />
-                          <Tooltip formatter={(value: number) => formatCurrency(value)} />
-                          <Legend />
-                          <Line type="monotone" dataKey="new_price" stroke="#3b82f6" name="Price" strokeWidth={2} />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
+                  {/* Price Evolution Chart */}
+                  {kpis.priceEvolution && (
+                    (kpis.priceEvolution.buying_price_history?.length > 0 || kpis.priceEvolution.selling_price_history?.length > 0) && (
+                      <div className="bg-white p-6 rounded-lg border border-gray-200">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Price Evolution</h3>
+                        {kpis.priceEvolution.buying_price_history?.length > 0 && (
+                          <div className="mb-6">
+                            <h4 className="text-md font-medium text-gray-700 mb-2">Buying Price History</h4>
+                            <ResponsiveContainer width="100%" height={250}>
+                              <LineChart data={kpis.priceEvolution.buying_price_history}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis 
+                                  dataKey="date" 
+                                  tickFormatter={(value) => new Date(value).toLocaleDateString()}
+                                />
+                                <YAxis />
+                                <Tooltip 
+                                  labelFormatter={(value) => new Date(value).toLocaleDateString()}
+                                  formatter={(value: number) => formatCurrency(value)}
+                                />
+                                <Legend />
+                                <Line 
+                                  type="monotone" 
+                                  dataKey="price" 
+                                  stroke="#ef4444" 
+                                  name="Buying Price"
+                                  strokeWidth={2}
+                                />
+                              </LineChart>
+                            </ResponsiveContainer>
+                          </div>
+                        )}
+                        {kpis.priceEvolution.selling_price_history?.length > 0 && (
+                          <div>
+                            <h4 className="text-md font-medium text-gray-700 mb-2">Selling Price History</h4>
+                            <ResponsiveContainer width="100%" height={250}>
+                              <LineChart data={kpis.priceEvolution.selling_price_history}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis 
+                                  dataKey="date" 
+                                  tickFormatter={(value) => new Date(value).toLocaleDateString()}
+                                />
+                                <YAxis />
+                                <Tooltip 
+                                  labelFormatter={(value) => new Date(value).toLocaleDateString()}
+                                  formatter={(value: number) => formatCurrency(value)}
+                                />
+                                <Legend />
+                                <Line 
+                                  type="monotone" 
+                                  dataKey="price" 
+                                  stroke="#22c55e" 
+                                  name="Selling Price"
+                                  strokeWidth={2}
+                                />
+                              </LineChart>
+                            </ResponsiveContainer>
+                          </div>
+                        )}
+                      </div>
+                    )
                   )}
                 </div>
               )}
@@ -342,56 +378,95 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                     <StatCard 
                       label="Current Stock" 
                       value={kpis.stockAvailability.current_stock}
-                      badge={kpis.stockAvailability.stock_status}
+                      badge={kpis.stockAvailability.product_status}
                     />
-                    <StatCard label="Available" value={kpis.stockAvailability.available_stock} />
-                    <StatCard label="Reserved" value={kpis.stockAvailability.reserved_stock} />
                     <StatCard 
-                      label="Coverage" 
-                      value={`${kpis.stockAvailability.stock_coverage_days} days`}
+                      label="Safety Stock" 
+                      value={kpis.stockAvailability.safety_stock_recommended ?? 'N/A'} 
+                    />
+                    <StatCard 
+                      label="Stockout Rate" 
+                      value={formatPercent(kpis.stockAvailability.stockout_rate, 2)}
+                    />
+                    <StatCard 
+                      label="Days Since Restock" 
+                      value={kpis.stockAvailability.days_since_last_restock ?? 'N/A'}
                     />
                   </div>
 
-                  <div className="bg-white p-6 rounded-lg border border-gray-200">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Stock Thresholds</h3>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-gray-600">Min Threshold</span>
-                        <span className="font-semibold text-orange-600">{kpis.stockAvailability.min_stock_threshold}</span>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-white p-6 rounded-lg border border-gray-200">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Stock Status</h3>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">Product Status</span>
+                          <span className={`px-3 py-1 rounded-full text-sm font-medium border ${
+                            kpis.stockAvailability.product_status === 'in_stock' ? 'bg-green-50 text-green-700 border-green-200' :
+                            kpis.stockAvailability.product_status === 'out_of_stock' ? 'bg-red-50 text-red-700 border-red-200' :
+                            kpis.stockAvailability.product_status === 'discontinued' ? 'bg-gray-50 text-gray-700 border-gray-200' :
+                            'bg-yellow-50 text-yellow-700 border-yellow-200'
+                          }`}>
+                            {kpis.stockAvailability.product_status.replace('_', ' ').toUpperCase()}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">Current Stock</span>
+                          <span className="font-semibold text-gray-900">{kpis.stockAvailability.current_stock}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">Safety Stock Recommended</span>
+                          <span className="font-semibold text-orange-600">
+                            {kpis.stockAvailability.safety_stock_recommended ?? 'N/A'}
+                          </span>
+                        </div>
+                        {kpis.stockAvailability.last_restock_date && (
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-600">Last Restock Date</span>
+                            <span className="font-semibold text-blue-600">
+                              {new Date(kpis.stockAvailability.last_restock_date).toLocaleDateString()}
+                            </span>
+                          </div>
+                        )}
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-gray-600">Current Stock</span>
-                        <span className="font-semibold text-gray-900">{kpis.stockAvailability.current_stock}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-gray-600">Max Threshold</span>
-                        <span className="font-semibold text-green-600">{kpis.stockAvailability.max_stock_threshold}</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2 mt-4">
-                        <div
-                          className={`h-2 rounded-full ${
-                            kpis.stockAvailability.stock_status === 'critical' ? 'bg-red-500' :
-                            kpis.stockAvailability.stock_status === 'low' ? 'bg-orange-500' :
-                            kpis.stockAvailability.stock_status === 'optimal' ? 'bg-green-500' :
-                            'bg-blue-500'
-                          }`}
-                          style={{
-                            width: `${Math.min(
-                              (kpis.stockAvailability.current_stock / kpis.stockAvailability.max_stock_threshold) * 100,
-                              100
-                            )}%`,
-                          }}
-                        />
+                    </div>
+
+                    <div className="bg-white p-6 rounded-lg border border-gray-200">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Stockout Analysis</h3>
+                      <div className="space-y-4">
+                        <div>
+                          <div className="flex justify-between mb-1">
+                            <span className="text-sm text-gray-600">Stockout Rate</span>
+                            <span className="font-semibold">{formatPercent(kpis.stockAvailability.stockout_rate, 2)}</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-red-500 h-2 rounded-full"
+                              style={{ width: `${Math.min(kpis.stockAvailability.stockout_rate ?? 0, 100)}%` }}
+                            />
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">Total Stockouts</span>
+                          <span className="font-semibold text-red-600">{kpis.stockAvailability.stockout_count}</span>
+                        </div>
+                        {kpis.stockAvailability.avg_stockout_duration_days && (
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-600">Avg Stockout Duration</span>
+                            <span className="font-semibold text-orange-600">
+                              {kpis.stockAvailability.avg_stockout_duration_days.toFixed(1)} days
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
 
-                  {kpis.stockAvailability.days_until_stockout !== null && (
-                    <div className="bg-red-50 border border-red-200 p-4 rounded-lg">
+                  {kpis.stockAvailability.current_stock < (kpis.stockAvailability.safety_stock_recommended ?? 0) && (
+                    <div className="bg-orange-50 border border-orange-200 p-4 rounded-lg">
                       <div className="flex items-center gap-2">
-                        <AlertTriangle className="w-5 h-5 text-red-600" />
-                        <p className="text-red-900 font-medium">
-                          Estimated stockout in {kpis.stockAvailability.days_until_stockout} days
+                        <AlertTriangle className="w-5 h-5 text-orange-600" />
+                        <p className="text-orange-900 font-medium">
+                          Current stock ({kpis.stockAvailability.current_stock}) is below safety stock level ({kpis.stockAvailability.safety_stock_recommended})
                         </p>
                       </div>
                     </div>
@@ -404,45 +479,64 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <StatCard 
-                      label="Rotation Rate" 
-                      value={formatNumber(kpis.salesRotation.rotation_rate, 1)}
-                      badge={kpis.salesRotation.rotation_category}
-                      trend={kpis.salesRotation.sales_trend}
+                      label="Quantity Sold" 
+                      value={kpis.salesRotation.quantity_sold}
                     />
-                    <StatCard label="Turnover Ratio" value={formatNumber(kpis.salesRotation.turnover_ratio)} />
-                    <StatCard label="Avg Daily Sales" value={formatNumber(kpis.salesRotation.average_daily_sales, 1)} />
-                    <StatCard label="Last 30 Days" value={kpis.salesRotation.sales_last_30_days} />
+                    <StatCard label="Total Revenue" value={formatCurrency(kpis.salesRotation.revenue)} />
+                    <StatCard label="Order Count" value={kpis.salesRotation.order_count} />
+                    <StatCard 
+                      label="Sales Velocity" 
+                      value={`${formatNumber(kpis.salesRotation.sales_velocity_per_day, 2)}/day`}
+                    />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="bg-white p-6 rounded-lg border border-gray-200">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Total Sales</h3>
-                      <div className="space-y-3">
-                        <div>
-                          <p className="text-sm text-gray-600">Quantity Sold</p>
-                          <p className="text-3xl font-bold text-gray-900">{kpis.salesRotation.total_sales_quantity}</p>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Sales Metrics</h3>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">Avg Quantity per Order</span>
+                          <span className="font-semibold text-gray-900">{formatNumber(kpis.salesRotation.avg_quantity_per_order, 1)}</span>
                         </div>
-                        <div>
-                          <p className="text-sm text-gray-600">Total Value</p>
-                          <p className="text-3xl font-bold text-blue-600">{formatCurrency(kpis.salesRotation.total_sales_value)}</p>
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">Avg Basket Value</span>
+                          <span className="font-semibold text-blue-600">{formatCurrency(kpis.salesRotation.avg_basket_value)}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">Sales Trend</span>
+                          <span className={`px-3 py-1 rounded-full text-sm font-medium border ${
+                            kpis.salesRotation.sales_trend === 'increasing' ? 'bg-green-50 text-green-700 border-green-200' :
+                            kpis.salesRotation.sales_trend === 'decreasing' ? 'bg-red-50 text-red-700 border-red-200' :
+                            'bg-gray-50 text-gray-700 border-gray-200'
+                          }`}>
+                            {kpis.salesRotation.sales_trend.toUpperCase()}
+                          </span>
                         </div>
                       </div>
                     </div>
 
                     <div className="bg-white p-6 rounded-lg border border-gray-200">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Sales Periods</h3>
-                      <ResponsiveContainer width="100%" height={150}>
-                        <BarChart data={[
-                          { period: 'Last 30d', value: kpis.salesRotation.sales_last_30_days },
-                          { period: 'Last 90d', value: kpis.salesRotation.sales_last_90_days },
-                        ]}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="period" />
-                          <YAxis />
-                          <Tooltip />
-                          <Bar dataKey="value" fill="#3b82f6" />
-                        </BarChart>
-                      </ResponsiveContainer>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Stock Rotation</h3>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">Turnover Rate</span>
+                          <span className="font-semibold text-purple-600">{formatNumber(kpis.salesRotation.stock_turnover_rate, 2)}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">Avg Storage Duration</span>
+                          <span className="font-semibold text-orange-600">{formatNumber(kpis.salesRotation.avg_storage_duration_days, 1)} days</span>
+                        </div>
+                        {kpis.salesRotation.sales_variation_percent !== null && (
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-600">Sales Variation</span>
+                            <span className={`font-semibold ${
+                              kpis.salesRotation.sales_variation_percent > 0 ? 'text-green-600' : 'text-red-600'
+                            }`}>
+                              {formatPercent(kpis.salesRotation.sales_variation_percent)}
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -452,37 +546,40 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
               {activeTab === 'profitability' && kpis.profitability && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <StatCard label="Total Revenue" value={formatCurrency(kpis.profitability.total_revenue)} />
-                    <StatCard label="Total Cost" value={formatCurrency(kpis.profitability.total_cost)} />
-                    <StatCard label="Gross Profit" value={formatCurrency(kpis.profitability.gross_profit)} />
+                    <StatCard label="Total Profit" value={formatCurrency(kpis.profitability.total_profit)} />
+                    <StatCard label="Avg Profit per Sale" value={formatCurrency(kpis.profitability.avg_profit_per_sale)} />
                     <StatCard label="ROI" value={formatPercent(kpis.profitability.roi)} />
+                    <StatCard 
+                      label="Revenue Contribution" 
+                      value={formatPercent(kpis.profitability.contribution_to_total_revenue_percent)} 
+                    />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="bg-white p-6 rounded-lg border border-gray-200">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Profitability Metrics</h3>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Profit Contribution</h3>
                       <div className="space-y-4">
                         <div>
                           <div className="flex justify-between mb-1">
-                            <span className="text-sm text-gray-600">Profit Margin</span>
-                            <span className="font-semibold">{formatPercent(kpis.profitability.profit_margin_percentage)}</span>
+                            <span className="text-sm text-gray-600">Revenue Contribution</span>
+                            <span className="font-semibold">{formatPercent(kpis.profitability.contribution_to_total_revenue_percent)}</span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div
-                              className="bg-green-500 h-2 rounded-full"
-                              style={{ width: `${Math.min(kpis.profitability.profit_margin_percentage, 100)}%` }}
+                              className="bg-blue-500 h-2 rounded-full"
+                              style={{ width: `${Math.min(kpis.profitability.contribution_to_total_revenue_percent ?? 0, 100)}%` }}
                             />
                           </div>
                         </div>
                         <div>
                           <div className="flex justify-between mb-1">
-                            <span className="text-sm text-gray-600">Contribution to Total Profit</span>
-                            <span className="font-semibold">{formatPercent(kpis.profitability.contribution_to_total_profit)}</span>
+                            <span className="text-sm text-gray-600">Profit Contribution</span>
+                            <span className="font-semibold">{formatPercent(kpis.profitability.contribution_to_total_profit_percent)}</span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div
-                              className="bg-blue-500 h-2 rounded-full"
-                              style={{ width: `${Math.min(kpis.profitability.contribution_to_total_profit, 100)}%` }}
+                              className="bg-green-500 h-2 rounded-full"
+                              style={{ width: `${Math.min(kpis.profitability.contribution_to_total_profit_percent ?? 0, 100)}%` }}
                             />
                           </div>
                         </div>
@@ -490,15 +587,19 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                     </div>
 
                     <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-lg border border-green-200">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Profitability Ranking</h3>
-                      <div className="text-center">
-                        <p className="text-6xl font-bold text-green-600">#{kpis.profitability.profitability_rank}</p>
-                        <p className="text-sm text-gray-600 mt-2">Overall Ranking</p>
-                        <div className="mt-4">
-                          <div className="inline-block px-4 py-2 bg-white rounded-lg border border-green-200">
-                            <p className="text-sm text-gray-600">Score</p>
-                            <p className="text-2xl font-bold text-green-600">{kpis.profitability.profitability_score}/100</p>
-                          </div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Profitability Overview</h3>
+                      <div className="space-y-3">
+                        <div>
+                          <p className="text-sm text-gray-600">Total Profit</p>
+                          <p className="text-3xl font-bold text-green-600">{formatCurrency(kpis.profitability.total_profit)}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-600">Avg Profit per Sale</p>
+                          <p className="text-2xl font-bold text-gray-900">{formatCurrency(kpis.profitability.avg_profit_per_sale)}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-600">ROI</p>
+                          <p className="text-2xl font-bold text-blue-600">{formatPercent(kpis.profitability.roi)}</p>
                         </div>
                       </div>
                     </div>
@@ -509,32 +610,66 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
               {/* Restock Tab */}
               {activeTab === 'restock' && kpis.restock && (
                 <div className="space-y-6">
-                  <div className={`p-6 rounded-lg border ${getStatusColor(kpis.restock.urgency_level)}`}>
-                    <h3 className="text-lg font-semibold mb-2">Restock Urgency</h3>
-                    <p className="text-3xl font-bold uppercase">{kpis.restock.urgency_level.replace('_', ' ')}</p>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <StatCard label="Restock Count" value={kpis.restock.restock_count} />
+                    <StatCard label="Total Restocked" value={kpis.restock.total_restocked_quantity} />
+                    <StatCard 
+                      label="Avg per Restock" 
+                      value={formatNumber(kpis.restock.avg_quantity_per_restock, 1)} 
+                    />
+                    <StatCard 
+                      label="Restock Frequency" 
+                      value={kpis.restock.restock_frequency_days ? `${formatNumber(kpis.restock.restock_frequency_days, 1)} days` : 'N/A'} 
+                    />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <StatCard label="Current Stock" value={kpis.restock.current_stock} />
-                    <StatCard label="Optimal Level" value={kpis.restock.optimal_stock_level} />
-                    <StatCard label="Reorder Point" value={kpis.restock.reorder_point} />
-                  </div>
-
-                  <div className="bg-white p-6 rounded-lg border border-gray-200">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Restock Recommendation</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <p className="text-sm text-gray-600 mb-2">Suggested Order Quantity</p>
-                        <p className="text-4xl font-bold text-blue-600">{kpis.restock.suggested_restock_quantity}</p>
-                        <p className="text-sm text-gray-500 mt-2">(Economic Order Quantity: {kpis.restock.economic_order_quantity})</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-white p-6 rounded-lg border border-gray-200">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Cost Analysis</h3>
+                      <div className="space-y-3">
+                        <div>
+                          <p className="text-sm text-gray-600">Total Restock Cost</p>
+                          <p className="text-3xl font-bold text-blue-600">{formatCurrency(kpis.restock.total_restock_cost)}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-600">Avg Cost per Restock</p>
+                          <p className="text-2xl font-bold text-gray-900">{formatCurrency(kpis.restock.avg_restock_cost)}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-sm text-gray-600 mb-2">Supplier Lead Time</p>
-                        <p className="text-4xl font-bold text-gray-900">{kpis.restock.supplier_lead_time_days} days</p>
-                        {kpis.restock.next_suggested_order_date && (
-                          <p className="text-sm text-gray-500 mt-2">
-                            Order by: {new Date(kpis.restock.next_suggested_order_date).toLocaleDateString()}
-                          </p>
+                    </div>
+
+                    <div className="bg-white p-6 rounded-lg border border-gray-200">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Reliability Metrics</h3>
+                      <div className="space-y-4">
+                        <div>
+                          <div className="flex justify-between mb-1">
+                            <span className="text-sm text-gray-600">Reception Rate</span>
+                            <span className="font-semibold text-green-600">{formatPercent(kpis.restock.reception_rate)}</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-green-500 h-2 rounded-full"
+                              style={{ width: `${Math.min(kpis.restock.reception_rate ?? 0, 100)}%` }}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <div className="flex justify-between mb-1">
+                            <span className="text-sm text-gray-600">Cancellation Rate</span>
+                            <span className="font-semibold text-red-600">{formatPercent(kpis.restock.cancellation_rate)}</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-red-500 h-2 rounded-full"
+                              style={{ width: `${Math.min(kpis.restock.cancellation_rate ?? 0, 100)}%` }}
+                            />
+                          </div>
+                        </div>
+                        {kpis.restock.avg_delivery_delay_days !== null && (
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-600">Avg Delivery Delay</span>
+                            <span className="font-semibold text-orange-600">{formatNumber(kpis.restock.avg_delivery_delay_days, 1)} days</span>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -547,106 +682,66 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <StatCard 
-                      label="7-Day Forecast" 
-                      value={kpis.predictionsAlerts.predicted_demand_7_days}
-                      trend={kpis.predictionsAlerts.demand_trend}
+                      label="Optimal Reorder Quantity" 
+                      value={kpis.predictionsAlerts.optimal_reorder_quantity ?? 'N/A'}
                     />
                     <StatCard 
-                      label="30-Day Forecast" 
-                      value={kpis.predictionsAlerts.predicted_demand_30_days}
-                      trend={kpis.predictionsAlerts.demand_trend}
+                      label="Optimal Reorder Point" 
+                      value={kpis.predictionsAlerts.optimal_reorder_point ?? 'N/A'}
                     />
                     <StatCard 
-                      label="Seasonality Factor" 
-                      value={formatNumber(kpis.predictionsAlerts.seasonality_factor)}
+                      label="Days of Coverage" 
+                      value={formatNumber(kpis.predictionsAlerts.days_of_coverage, 0)}
                     />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="bg-white p-6 rounded-lg border border-gray-200">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Risk Assessment</h3>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Reorder Recommendations</h3>
                       <div className="space-y-4">
-                        <div>
-                          <div className="flex justify-between mb-1">
-                            <span className="text-sm text-gray-600">Stockout Risk</span>
-                            <span className="font-semibold text-red-600">{formatPercent(kpis.predictionsAlerts.stockout_risk_percentage)}</span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-red-500 h-2 rounded-full"
-                              style={{ width: `${kpis.predictionsAlerts.stockout_risk_percentage}%` }}
-                            />
-                          </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">Optimal Reorder Quantity</span>
+                          <span className="text-2xl font-bold text-blue-600">{kpis.predictionsAlerts.optimal_reorder_quantity}</span>
                         </div>
-                        <div>
-                          <div className="flex justify-between mb-1">
-                            <span className="text-sm text-gray-600">Overstock Risk</span>
-                            <span className="font-semibold text-orange-600">{formatPercent(kpis.predictionsAlerts.overstock_risk_percentage)}</span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-orange-500 h-2 rounded-full"
-                              style={{ width: `${kpis.predictionsAlerts.overstock_risk_percentage}%` }}
-                            />
-                          </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">Optimal Reorder Point</span>
+                          <span className="text-2xl font-bold text-orange-600">{kpis.predictionsAlerts.optimal_reorder_point}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">Days of Coverage</span>
+                          <span className="text-2xl font-bold text-green-600">{formatNumber(kpis.predictionsAlerts.days_of_coverage, 0)}</span>
                         </div>
                       </div>
                     </div>
 
-                    <div className={`p-6 rounded-lg border ${getStatusColor(kpis.predictionsAlerts.demand_trend)}`}>
-                      <h3 className="text-lg font-semibold mb-2">Demand Trend</h3>
+                    <div className={`p-6 rounded-lg border ${
+                      kpis.predictionsAlerts.alert_status === 'stockout' ? 'bg-red-50 border-red-200' :
+                      kpis.predictionsAlerts.alert_status === 'low_stock' ? 'bg-orange-50 border-orange-200' :
+                      kpis.predictionsAlerts.alert_status === 'overstock' ? 'bg-yellow-50 border-yellow-200' :
+                      'bg-green-50 border-green-200'
+                    }`}>
+                      <h3 className="text-lg font-semibold mb-2">Alert Status</h3>
                       <div className="flex items-center gap-2">
-                        {getTrendIcon(kpis.predictionsAlerts.demand_trend)}
-                        <p className="text-2xl font-bold capitalize">{kpis.predictionsAlerts.demand_trend}</p>
+                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${
+                          kpis.predictionsAlerts.alert_status === 'stockout' ? 'bg-red-100 text-red-800' :
+                          kpis.predictionsAlerts.alert_status === 'low_stock' ? 'bg-orange-100 text-orange-800' :
+                          kpis.predictionsAlerts.alert_status === 'overstock' ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-green-100 text-green-800'
+                        }`}>
+                          {kpis.predictionsAlerts.alert_status.replace('_', ' ').toUpperCase()}
+                        </span>
                       </div>
                     </div>
                   </div>
 
-                  {kpis.predictionsAlerts.alerts && kpis.predictionsAlerts.alerts.length > 0 && (
-                    <div className="bg-white p-6 rounded-lg border border-gray-200">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Active Alerts</h3>
-                      <div className="space-y-2">
-                        {kpis.predictionsAlerts.alerts.map((alert, idx) => (
-                          <div
-                            key={idx}
-                            className={`p-4 rounded-lg border ${
-                              alert.severity === 'critical'
-                                ? 'bg-red-50 border-red-200'
-                                : alert.severity === 'warning'
-                                ? 'bg-orange-50 border-orange-200'
-                                : 'bg-blue-50 border-blue-200'
-                            }`}
-                          >
-                            <div className="flex items-start gap-3">
-                              <AlertTriangle className={`w-5 h-5 mt-0.5 ${
-                                alert.severity === 'critical' ? 'text-red-600' :
-                                alert.severity === 'warning' ? 'text-orange-600' :
-                                'text-blue-600'
-                              }`} />
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <span className={`text-xs font-bold uppercase ${
-                                    alert.severity === 'critical' ? 'text-red-600' :
-                                    alert.severity === 'warning' ? 'text-orange-600' :
-                                    'text-blue-600'
-                                  }`}>
-                                    {alert.severity}
-                                  </span>
-                                  <span className="text-xs text-gray-500">•</span>
-                                  <span className="text-xs text-gray-600 capitalize">{alert.type.replace('_', ' ')}</span>
-                                </div>
-                                <p className="text-sm font-medium text-gray-900">{alert.message}</p>
-                                {alert.action_required && (
-                                  <div className="mt-2 flex items-center gap-1 text-xs font-semibold text-red-700">
-                                    <ChevronRight className="w-3 h-3" />
-                                    ACTION REQUIRED
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                  {kpis.predictionsAlerts.estimated_stockout_date && (
+                    <div className="bg-orange-50 border border-orange-200 p-6 rounded-lg">
+                      <h3 className="text-lg font-semibold text-orange-900 mb-2">⚠️ Stockout Prediction</h3>
+                      <p className="text-orange-800">
+                        Estimated stockout date: <span className="font-bold">
+                          {new Date(kpis.predictionsAlerts.estimated_stockout_date).toLocaleDateString()}
+                        </span>
+                      </p>
                     </div>
                   )}
                 </div>
@@ -656,128 +751,142 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
               {activeTab === 'classification' && kpis.scoringClassification && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className={`p-6 rounded-lg border ${getStatusColor(kpis.scoringClassification.abc_classification)}`}>
+                    <div className={`p-6 rounded-lg border ${
+                      kpis.scoringClassification.abc_classification === 'A' ? 'bg-green-50 border-green-200' :
+                      kpis.scoringClassification.abc_classification === 'B' ? 'bg-blue-50 border-blue-200' :
+                      'bg-orange-50 border-orange-200'
+                    }`}>
                       <h3 className="text-sm font-medium mb-2">ABC Classification</h3>
                       <p className="text-6xl font-bold">{kpis.scoringClassification.abc_classification}</p>
                       <p className="text-sm mt-2 opacity-80">Based on revenue contribution</p>
                     </div>
 
-                    <div className={`p-6 rounded-lg border ${getStatusColor(kpis.scoringClassification.xyz_classification)}`}>
-                      <h3 className="text-sm font-medium mb-2">XYZ Classification</h3>
-                      <p className="text-6xl font-bold">{kpis.scoringClassification.xyz_classification}</p>
-                      <p className="text-sm mt-2 opacity-80">Based on demand variability</p>
+                    <div className={`p-6 rounded-lg border ${
+                      kpis.scoringClassification.performance_category === 'star' ? 'bg-yellow-50 border-yellow-200' :
+                      kpis.scoringClassification.performance_category === 'growth' ? 'bg-green-50 border-green-200' :
+                      kpis.scoringClassification.performance_category === 'stable' ? 'bg-blue-50 border-blue-200' :
+                      'bg-red-50 border-red-200'
+                    }`}>
+                      <h3 className="text-sm font-medium mb-2">Performance Category</h3>
+                      <p className="text-4xl font-bold capitalize">{kpis.scoringClassification.performance_category}</p>
+                      <p className="text-sm mt-2 opacity-80">Product lifecycle stage</p>
                     </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <StatCard 
-                      label="Performance Score" 
-                      value={`${kpis.scoringClassification.performance_score}/100`}
-                    />
-                    <StatCard 
-                      label="Revenue Contribution" 
-                      value={formatPercent(kpis.scoringClassification.revenue_contribution_percentage)}
-                    />
-                    <StatCard 
-                      label="Strategic Importance" 
-                      value={kpis.scoringClassification.strategic_importance.toUpperCase()}
-                      badge={kpis.scoringClassification.strategic_importance}
-                    />
                   </div>
 
                   <div className="bg-white p-6 rounded-lg border border-gray-200">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Analysis Metrics</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Score Breakdown</h3>
+                    <div className="space-y-4">
                       <div>
-                        <p className="text-sm text-gray-600 mb-2">Sales Frequency</p>
-                        <p className="text-3xl font-bold text-gray-900">{kpis.scoringClassification.sales_frequency}</p>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm text-gray-600">Popularity Score</span>
+                          <span className="font-semibold text-blue-600">{formatNumber(kpis.scoringClassification.popularity_score, 1)}/100</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-blue-500 h-2 rounded-full"
+                            style={{ width: `${Math.min(kpis.scoringClassification.popularity_score ?? 0, 100)}%` }}
+                          />
+                        </div>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-600 mb-2">Demand Variability</p>
-                        <p className="text-3xl font-bold text-gray-900">{kpis.scoringClassification.demand_variability.toFixed(2)}</p>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm text-gray-600">Profitability Score</span>
+                          <span className="font-semibold text-green-600">{formatNumber(kpis.scoringClassification.profitability_score, 1)}/100</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-green-500 h-2 rounded-full"
+                            style={{ width: `${Math.min(kpis.scoringClassification.profitability_score ?? 0, 100)}%` }}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm text-gray-600">Reliability Score</span>
+                          <span className="font-semibold text-purple-600">{formatNumber(kpis.scoringClassification.reliability_score, 1)}/100</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-purple-500 h-2 rounded-full"
+                            style={{ width: `${Math.min(kpis.scoringClassification.reliability_score ?? 0, 100)}%` }}
+                          />
+                        </div>
+                      </div>
+                      <div className="pt-2 border-t border-gray-200">
+                        <div className="flex justify-between items-center">
+                          <span className="text-base font-semibold text-gray-900">Global Score</span>
+                          <span className="text-3xl font-bold text-indigo-600">{formatNumber(kpis.scoringClassification.global_score, 1)}/100</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-
-                  {kpis.scoringClassification.recommendation && (
-                    <div className="bg-blue-50 border border-blue-200 p-6 rounded-lg">
-                      <h3 className="text-lg font-semibold text-blue-900 mb-2">💡 Recommendation</h3>
-                      <p className="text-blue-800">{kpis.scoringClassification.recommendation}</p>
-                    </div>
-                  )}
                 </div>
               )}
 
               {/* Comparative Tab */}
               {activeTab === 'comparative' && kpis.comparative && (
                 <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <StatCard label="Revenue Rank" value={`#${kpis.comparative.rank_by_revenue}`} />
-                    <StatCard label="Profit Rank" value={`#${kpis.comparative.rank_by_profit}`} />
-                    <StatCard label="Rotation Rank" value={`#${kpis.comparative.rank_by_rotation}`} />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <StatCard 
-                      label="Overall Rank" 
-                      value={`#${kpis.comparative.overall_performance_rank}`}
-                      badge={kpis.comparative.performance_vs_category}
+                      label="Rank in Category" 
+                      value={`#${kpis.comparative.rank_in_category}`}
+                    />
+                    <StatCard 
+                      label="Category Market Share" 
+                      value={formatPercent(kpis.comparative.share_in_category_percent)}
                     />
                   </div>
 
-                  <div className="bg-white p-6 rounded-lg border border-gray-200">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Category Comparison: {kpis.comparative.category}
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <div>
-                        <p className="text-sm text-gray-600 mb-2">Price vs Average</p>
-                        <p className={`text-2xl font-bold ${
-                          kpis.comparative.price_vs_category_avg > 0 ? 'text-green-600' : 'text-red-600'
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-white p-6 rounded-lg border border-gray-200">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Performance vs Category</h3>
+                      <div className="flex items-center justify-between">
+                        <span className="text-gray-600">Performance Difference</span>
+                        <span className={`text-3xl font-bold ${
+                          (kpis.comparative.performance_vs_category_percent ?? 0) > 0 ? 'text-green-600' : 'text-red-600'
                         }`}>
-                          {kpis.comparative.price_vs_category_avg > 0 ? '+' : ''}
-                          {kpis.comparative.price_vs_category_avg.toFixed(1)}%
-                        </p>
-                        <p className="text-sm text-gray-500 mt-1">
-                          Avg: {kpis.comparative.category_average_price.toFixed(2)} €
-                        </p>
+                          {(kpis.comparative.performance_vs_category_percent ?? 0) > 0 ? '+' : ''}
+                          {formatNumber(kpis.comparative.performance_vs_category_percent, 1)}%
+                        </span>
                       </div>
-                      <div>
-                        <p className="text-sm text-gray-600 mb-2">Sales vs Average</p>
-                        <p className={`text-2xl font-bold ${
-                          kpis.comparative.sales_vs_category_avg > 0 ? 'text-green-600' : 'text-red-600'
+                      <p className="text-sm text-gray-500 mt-2">
+                        Compared to category average
+                      </p>
+                    </div>
+
+                    <div className="bg-white p-6 rounded-lg border border-gray-200">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Performance vs Supplier</h3>
+                      <div className="flex items-center justify-between">
+                        <span className="text-gray-600">Performance Difference</span>
+                        <span className={`text-3xl font-bold ${
+                          (kpis.comparative.performance_vs_supplier_percent ?? 0) > 0 ? 'text-green-600' : 'text-red-600'
                         }`}>
-                          {kpis.comparative.sales_vs_category_avg > 0 ? '+' : ''}
-                          {kpis.comparative.sales_vs_category_avg.toFixed(1)}%
-                        </p>
+                          {(kpis.comparative.performance_vs_supplier_percent ?? 0) > 0 ? '+' : ''}
+                          {formatNumber(kpis.comparative.performance_vs_supplier_percent, 1)}%
+                        </span>
                       </div>
-                      <div>
-                        <p className="text-sm text-gray-600 mb-2">Margin vs Average</p>
-                        <p className={`text-2xl font-bold ${
-                          kpis.comparative.margin_vs_category_avg > 0 ? 'text-green-600' : 'text-red-600'
-                        }`}>
-                          {kpis.comparative.margin_vs_category_avg > 0 ? '+' : ''}
-                          {kpis.comparative.margin_vs_category_avg.toFixed(1)}%
-                        </p>
-                      </div>
+                      <p className="text-sm text-gray-500 mt-2">
+                        Compared to supplier average
+                      </p>
                     </div>
                   </div>
 
-                  {kpis.comparative?.top_competitors && kpis.comparative.top_competitors.length > 0 && (
-                    <div className="bg-white p-6 rounded-lg border border-gray-200">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Competitors in Category</h3>
-                      <div className="space-y-2">
-                        {kpis.comparative.top_competitors.map((competitor, idx) => (
-                          <div key={competitor.product_id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <div className="flex items-center gap-3">
-                              <span className="text-2xl font-bold text-gray-400">#{idx + 1}</span>
-                              <span className="font-medium text-gray-900">{competitor.product_name}</span>
-                            </div>
-                            <span className="text-lg font-semibold text-blue-600">
-                              {competitor.metric_value.toFixed(2)}
-                            </span>
-                          </div>
-                        ))}
+                  <div className="bg-white p-6 rounded-lg border border-gray-200">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Market Position</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <p className="text-sm text-gray-600 mb-2">Category Rank</p>
+                        <p className="text-5xl font-bold text-blue-600">#{kpis.comparative.rank_in_category}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600 mb-2">Market Share in Category</p>
+                        <div className="flex items-baseline gap-2">
+                          <p className="text-5xl font-bold text-green-600">{formatNumber(kpis.comparative.share_in_category_percent, 1)}</p>
+                          <span className="text-2xl text-gray-500">%</span>
+                        </div>
                       </div>
                     </div>
-                  )}
+                  </div>
                 </div>
               )}
             </>
