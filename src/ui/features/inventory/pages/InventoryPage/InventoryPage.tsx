@@ -6,6 +6,7 @@ import { PageActions } from "./PageActions";
 import { AddProductModal } from "../../components/AddProductModal";
 import { EditProductModal } from "../../components/EditProductModal";
 import { DeleteConfirmModal } from "../../components/DeleteConfirmModal";
+import { ProductKPIsModal } from "../../components/ProductKPIsModal";
 import type { InventoryItem } from "@/ui/features/inventory/types";
 import type { Product } from "@/domain/models/Product";
 
@@ -13,9 +14,12 @@ export default function InventoryPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showKPIsModal, setShowKPIsModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [deleteProductId, setDeleteProductId] = useState<number | null>(null);
   const [deleteProductName, setDeleteProductName] = useState("");
+  const [kpiProductId, setKpiProductId] = useState<number | null>(null);
+  const [kpiProductName, setKpiProductName] = useState("");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const handleEdit = (item: InventoryItem) => {
@@ -46,6 +50,12 @@ export default function InventoryPage() {
     setRefreshTrigger(prev => prev + 1);
   };
 
+  const handleViewKPIs = (id: number, name: string) => {
+    setKpiProductId(id);
+    setKpiProductName(name);
+    setShowKPIsModal(true);
+  };
+
   return (
     <PageLayout
       title="Inventory"
@@ -57,6 +67,7 @@ export default function InventoryPage() {
         onEdit={handleEdit} 
         onDelete={handleDelete}
         refreshTrigger={refreshTrigger}
+        onViewKPIs={handleViewKPIs}
       />
 
       <AddProductModal
@@ -79,6 +90,19 @@ export default function InventoryPage() {
         productId={deleteProductId}
         productName={deleteProductName}
       />
+
+      {kpiProductId && (
+        <ProductKPIsModal
+          isOpen={showKPIsModal}
+          onClose={() => {
+            setShowKPIsModal(false);
+            setKpiProductId(null);
+            setKpiProductName("");
+          }}
+          productId={kpiProductId}
+          productName={kpiProductName}
+        />
+      )}
     </PageLayout>
   );
 }

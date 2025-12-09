@@ -6,9 +6,10 @@ interface InventoryTableBodyProps {
   onEdit: (item: InventoryItem) => void;
   onDelete: (id: number, name: string) => void;
   onStockUpdate: (id: number, change: number) => Promise<void>;
+  onViewKPIs: (id: number, name: string) => void;
 }
 
-export function InventoryTableBody({ data, onEdit, onDelete, onStockUpdate }: InventoryTableBodyProps) {
+export function InventoryTableBody({ data, onEdit, onDelete, onStockUpdate, onViewKPIs }: InventoryTableBodyProps) {
   return (
     <tbody className="divide-y divide-gray-100">
       {data.map((item, index) => (
@@ -19,6 +20,7 @@ export function InventoryTableBody({ data, onEdit, onDelete, onStockUpdate }: In
           onEdit={onEdit}
           onDelete={onDelete}
           onStockUpdate={onStockUpdate}
+          onViewKPIs={onViewKPIs}
         />
       ))}
     </tbody>

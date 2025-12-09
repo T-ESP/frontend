@@ -27,13 +27,26 @@ class ApiClient {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.timeout);
 
+    // Get JWT token from localStorage
+    const token = localStorage.getItem('auth_token');
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+
+    // Add Authorization header if token exists
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    // Merge with any additional headers from options
+    if (options.headers) {
+      Object.assign(headers, options.headers);
+    }
+
     try {
       const response = await fetch(`${this.baseURL}${endpoint}`, {
         ...options,
-        headers: {
-          'Content-Type': 'application/json',
-          ...options.headers,
-        },
+        headers,
         signal: controller.signal,
       });
 

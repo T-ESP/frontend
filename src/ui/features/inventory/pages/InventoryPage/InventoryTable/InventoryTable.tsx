@@ -11,9 +11,10 @@ interface InventoryTableProps {
   onEdit: (item: InventoryItem) => void;
   onDelete: (id: number, name: string) => void;
   refreshTrigger: number;
+  onViewKPIs: (id: number, name: string) => void;
 }
 
-export function InventoryTable({ onEdit, onDelete, refreshTrigger }: InventoryTableProps) {
+export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs }: InventoryTableProps) {
   const [products, setProducts] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -100,6 +101,7 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger }: InventoryTa
             onEdit={onEdit}
             onDelete={onDelete}
             onStockUpdate={handleStockUpdate}
+            onViewKPIs={onViewKPIs}
           />
         </table>
       </div>

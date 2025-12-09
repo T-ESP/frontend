@@ -1,4 +1,4 @@
-import { FiEdit2, FiPackage, FiTrash, FiMinus, FiPlus } from "react-icons/fi";
+import { FiEdit2, FiPackage, FiTrash, FiMinus, FiPlus, FiBarChart2 } from "react-icons/fi";
 import type { InventoryItem } from "@/ui/features/inventory/types";
 import { useState } from "react";
 
@@ -8,6 +8,7 @@ interface InventoryTableRowProps {
   onEdit: (item: InventoryItem) => void;
   onDelete: (id: number, name: string) => void;
   onStockUpdate: (id: number, change: number) => Promise<void>;
+  onViewKPIs: (id: number, name: string) => void;
 }
 
 const statusStyles = {
@@ -16,7 +17,7 @@ const statusStyles = {
   "Out of Stock": "bg-rose-50 text-rose-700 border border-rose-200"
 };
 
-export function InventoryTableRow({ item, index, onEdit, onDelete, onStockUpdate }: InventoryTableRowProps) {
+export function InventoryTableRow({ item, index, onEdit, onDelete, onStockUpdate, onViewKPIs }: InventoryTableRowProps) {
   const [updating, setUpdating] = useState(false);
 
   const handleStockChange = async (change: number) => {
@@ -111,6 +112,13 @@ export function InventoryTableRow({ item, index, onEdit, onDelete, onStockUpdate
       </td>
       <td className="px-6 py-4">
         <div className="flex gap-2">
+          <button
+            onClick={() => onViewKPIs(item.id, item.name)}
+            className="p-2 text-gray-400 rounded-lg transition-all duration-150 hover:text-blue-600 hover:bg-blue-50"
+            title="View KPIs"
+          >
+            <FiBarChart2 size={16} />
+          </button>
           <button
             onClick={() => onEdit(item)}
             className="p-2 text-gray-400 rounded-lg transition-all duration-150 hover:text-purple-600 hover:bg-purple-50"
