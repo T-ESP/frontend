@@ -1,10 +1,5 @@
 import { Navigate } from 'react-router-dom';
-
-// Simule un utilisateur connecté avec un rôle (à remplacer par un vrai hook ou provider)
-const fakeUser = {
-  isAuthenticated: true,
-  role: 'admin', // ex: admin, manager, viewer
-};
+import { useAuth } from '@/features/auth/hooks/useAuth';
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
@@ -12,7 +7,7 @@ type ProtectedRouteProps = {
 };
 
 export function ProtectedRoute({ children, roles }: ProtectedRouteProps) {
-  const { isAuthenticated, role } = fakeUser;
+  const { isAuthenticated, role } = useAuth();
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;

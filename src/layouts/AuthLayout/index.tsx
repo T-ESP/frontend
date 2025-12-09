@@ -1,6 +1,7 @@
 import { usePageTitle } from '@/hooks/usePageTitle';
 import type { ReactNode } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 import abstract1 from '@/assets/svg/abstract1.svg';
 import abstract2 from '@/assets/svg/abstract2.svg';
 import abstract3 from '@/assets/svg/abstract3.svg';
@@ -12,6 +13,12 @@ type AuthLayoutProps = {
 
 export function AuthLayout({ children }: AuthLayoutProps) {
   usePageTitle("StockS - Connexion");
+  const { isAuthenticated } = useAuth();
+
+  // Si on est déjà connecté, on évite l’accès aux pages /login et /register
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return (
     <div className="flex overflow-hidden relative justify-center items-center min-h-screen">

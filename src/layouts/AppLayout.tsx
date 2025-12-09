@@ -21,12 +21,17 @@ export function AppLayout({ children }: AppLayoutProps) {
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen overflow-hidden">
       <Sidebar isOpen={isSidebarOpen} />
-      <div className="flex-1">
+      <div
+        className="flex-1 flex flex-col overflow-hidden transition-[margin-left] duration-300"
+        style={{ marginLeft: isSidebarOpen ? '256px' : '64px' }}
+      >
         <HomeHeader onMenuClick={toggleSidebar} isSidebarOpen={isSidebarOpen} />
-        {/* C'est ICI que tu dois rendre children */}
-        {children ?? <Outlet />}
+        <div className="flex-1 overflow-y-auto">
+          {/* C'est ICI que tu dois rendre children */}
+          {children ?? <Outlet />}
+        </div>
       </div>
     </div>
   );
