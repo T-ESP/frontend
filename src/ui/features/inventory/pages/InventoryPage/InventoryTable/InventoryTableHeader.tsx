@@ -195,6 +195,19 @@ export function InventoryTableHeader({
         {/* Advanced Filters Panel */}
         {showAdvancedFilters && (
           <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg space-y-4 animate-in slide-in-from-top-2 duration-200">
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-sm font-semibold text-gray-700">Advanced Filters</h4>
+              <button
+                onClick={() => {
+                  onPriceRangeChange({ min: 0, max: 10000 });
+                  onStockRangeChange({ min: 0, max: 10000 });
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:border-gray-300 transition-colors"
+              >
+                <FiX className="w-3 h-3" />
+                Reset Filters
+              </button>
+            </div>
             <div className="grid grid-cols-2 gap-4">
               {/* Price Range */}
               <div className="space-y-2">
