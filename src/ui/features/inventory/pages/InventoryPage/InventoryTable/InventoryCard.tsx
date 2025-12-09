@@ -1,4 +1,4 @@
-import { FiEdit2, FiPackage, FiTrash, FiMinus, FiPlus, FiBarChart2 } from "react-icons/fi";
+import { FiPackage, FiTrash, FiMinus, FiPlus, FiBarChart2 } from "react-icons/fi";
 import type { InventoryItem } from "@/ui/features/inventory/types";
 import { useState } from "react";
 
@@ -48,99 +48,99 @@ export function InventoryCard({ item, index, onEdit, onDelete, onStockUpdate, on
 
   return (
     <div
-      className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 overflow-hidden group"
-      style={{ animationDelay: `${index * 50}ms` }}
+      className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:border-l-4 hover:border-l-blue-500 group mb-3"
+      style={{ animationDelay: `${index * 30}ms` }}
     >
-      {/* Card Header with Image */}
-      <div className="relative h-48 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-        <img
-          src={item.image || 'https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg?semt=ais_hybrid&w=740&q=80'}
-          alt={item.name}
-          onError={(e) => {
-            e.currentTarget.src = 'https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg?semt=ais_hybrid&w=740&q=80';
-          }}
-          className="w-32 h-32 object-cover rounded-lg shadow-sm"
-        />
-        {/* Status Badge - Positioned on Image */}
-        <div className="absolute top-3 right-3">
-          <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border} border backdrop-blur-sm`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${statusStyle.dot}`}></span>
-            {item.status}
-          </span>
+      <div className="flex items-center gap-4 p-4">
+        {/* Left: Product Image Thumbnail */}
+        <div className="flex-shrink-0">
+          <img
+            src={item.image || 'https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg?semt=ais_hybrid&w=740&q=80'}
+            alt={item.name}
+            onError={(e) => {
+              e.currentTarget.src = 'https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg?semt=ais_hybrid&w=740&q=80';
+            }}
+            className="w-16 h-16 object-cover rounded-lg border border-gray-200"
+          />
         </div>
-      </div>
 
-      {/* Card Body */}
-      <div className="p-5 space-y-4">
-        {/* Product Name & SKU */}
-        <div>
-          <h3 className="font-semibold text-gray-900 text-lg leading-tight group-hover:text-purple-600 transition-colors line-clamp-2">
+        {/* Middle: Product Info */}
+        <div className="flex-1 min-w-0">
+          <h3 className="font-bold text-gray-900 text-base leading-tight truncate group-hover:text-purple-600 transition-colors">
             {item.name}
           </h3>
-          <p className="text-xs text-gray-500 mt-1">SKU: {item.sku}</p>
-        </div>
-
-        {/* Category & Price */}
-        <div className="flex items-center justify-between pb-4 border-b border-gray-100">
-          <div className="flex items-center gap-2 text-gray-600">
-            <FiPackage className="w-4 h-4 text-gray-400" />
-            <span className="text-sm">{item.category}</span>
-          </div>
-          <div className="text-right">
-            <span className="text-lg font-bold text-gray-900">{item.price}</span>
+          <div className="flex items-center gap-3 mt-1">
+            <span className="text-sm text-gray-500">SKU: {item.sku}</span>
+            <span className="text-gray-300">•</span>
+            <div className="flex items-center gap-1.5 text-gray-600">
+              <FiPackage className="w-3.5 h-3.5 text-gray-400" />
+              <span className="text-sm">{item.category}</span>
+            </div>
           </div>
         </div>
 
-        {/* Stock Control */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-600">Stock</span>
-            <span className="text-sm font-bold text-gray-900">{item.piece.toLocaleString()} units</span>
+        {/* Right: Stock Badge, Price, Stock Controls, Actions */}
+        <div className="flex items-center gap-6">
+          {/* Status Badge */}
+          <div className="flex-shrink-0">
+            <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border} border`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${statusStyle.dot}`}></span>
+              {item.status}
+            </span>
           </div>
-          <div className="flex items-center gap-2">
+
+          {/* Stock Controls */}
+          <div className="flex-shrink-0 flex items-center gap-2">
             <button
               onClick={() => handleStockChange(-1)}
               disabled={updating || item.piece <= 0}
-              className="flex-1 p-2 text-gray-600 border border-gray-200 rounded-lg hover:text-red-600 hover:bg-red-50 hover:border-red-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="p-1.5 text-gray-600 border border-gray-200 rounded hover:text-red-600 hover:bg-red-50 hover:border-red-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               title="Decrease stock"
             >
-              <FiMinus className="w-4 h-4 mx-auto" />
+              <FiMinus className="w-3.5 h-3.5" />
             </button>
+            <span className="text-sm font-semibold text-gray-900 min-w-[60px] text-center">
+              {item.piece.toLocaleString()}
+            </span>
             <button
               onClick={() => handleStockChange(1)}
               disabled={updating}
-              className="flex-1 p-2 text-gray-600 border border-gray-200 rounded-lg hover:text-green-600 hover:bg-green-50 hover:border-green-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="p-1.5 text-gray-600 border border-gray-200 rounded hover:text-green-600 hover:bg-green-50 hover:border-green-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               title="Increase stock"
             >
-              <FiPlus className="w-4 h-4 mx-auto" />
+              <FiPlus className="w-3.5 h-3.5" />
             </button>
           </div>
-        </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-2 pt-2">
-          <button
-            onClick={() => onViewKPIs(item.id, item.name)}
-            className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
-            title="View KPIs"
-          >
-            <FiBarChart2 size={16} />
-            <span>KPIs</span>
-          </button>
-          <button
-            onClick={() => onEdit(item)}
-            className="p-2.5 text-gray-600 bg-gray-50 rounded-lg hover:text-purple-600 hover:bg-purple-50 transition-colors"
-            title="Edit product"
-          >
-            <FiEdit2 size={16} />
-          </button>
-          <button
-            onClick={() => onDelete(item.id, item.name)}
-            className="p-2.5 text-gray-600 bg-gray-50 rounded-lg hover:text-rose-600 hover:bg-rose-50 transition-colors"
-            title="Delete product"
-          >
-            <FiTrash size={16} />
-          </button>
+          {/* Price */}
+          <div className="flex-shrink-0 text-right min-w-[100px]">
+            <p className="text-lg font-bold text-gray-900">{item.price}</p>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex-shrink-0 flex items-center gap-2">
+            <button
+              onClick={() => onViewKPIs(item.id, item.name)}
+              className="p-2 text-gray-600 bg-blue-50 rounded-lg hover:bg-blue-100 hover:text-blue-700 transition-colors"
+              title="View KPIs"
+            >
+              <FiBarChart2 size={18} />
+            </button>
+            <button
+              onClick={() => onEdit(item)}
+              className="px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors"
+              title="Edit product"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => onDelete(item.id, item.name)}
+              className="p-2 text-gray-600 bg-gray-50 rounded-lg hover:text-rose-600 hover:bg-rose-50 transition-colors"
+              title="Delete product"
+            >
+              <FiTrash size={18} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
