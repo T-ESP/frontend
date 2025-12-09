@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { FiSearch } from "react-icons/fi";
 import { productService } from "@/infrastructure/api/services/productService";
 import type { Product } from "@/domain/models/Product";
 import type { InventoryItem } from "@/ui/features/inventory/types";
 import { InventoryTableHeader } from "./InventoryTableHeader";
 import { InventoryCardGrid } from "./InventoryCardGrid";
-import { InventoryTableFooter } from "./InventoryTableFooter";
 
 interface InventoryTableProps {
   onEdit: (item: InventoryItem) => void;
@@ -16,7 +16,19 @@ interface InventoryTableProps {
 export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs }: InventoryTableProps) {
   const [products, setProducts] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // Filter states
   const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
+  const [selectedStatus, setSelectedStatus] = useState<string>("All Status");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [sortBy, setSortBy] = useState<string>("name");
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({ min: 0, max: 10000 });
+  const [stockRange, setStockRange] = useState<{ min: number; max: number }>({ min: 0, max: 10000 });
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(25);
 
   useEffect(() => {
     loadProducts();
@@ -38,7 +50,6 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs }:
           : product.stock_quantity < 10 
           ? "Low Stock" 
           : "In Stock",
-        colors: ["#000000"], // Default color since backend doesn't have this
         image: "https://via.placeholder.com/150", // Placeholder since backend doesn't have images
         sku: product.reference,
         lastUpdated: product.updated_at || product.created_at || "Unknown"
@@ -82,19 +93,147 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs }:
     }
   };
 
-  const filteredProducts = selectedCategory === "All Categories" 
-    ? products 
-    : products.filter(p => p.category === selectedCategory);
+  // Advanced filtering and sorting logic
+  const filteredAndSortedProducts = useMemo(() => {
+    let filtered = [...products];
+
+    // Category filter
+    if (selectedCategory !== "All Categories") {
+      filtered = filtered.filter(p => p.category === selectedCategory);
+    }
+
+    // Status filter
+    if (selectedStatus !== "All Status") {
+      filtered = filtered.filter(p => p.status === selectedStatus);
+    }
+
+    // Search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(p => 
+        p.name.toLowerCase().includes(query) ||
+        p.sku.toLowerCase().includes(query) ||
+        p.category.toLowerCase().includes(query)
+      );
+    }
+
+    // Price range filter
+    filtered = filtered.filter(p => {
+      const price = parseFloat(p.price.replace(' €', ''));
+      return price >= priceRange.min && price <= priceRange.max;
+    });
+
+    // Stock range filter
+    filtered = filtered.filter(p => 
+      p.piece >= stockRange.min && p.piece <= stockRange.max
+    );
+
+    // Sorting
+    filtered.sort((a, b) => {
+      let comparison = 0;
+      
+      switch (sortBy) {
+        case 'name':
+          comparison = a.name.localeCompare(b.name);
+          break;
+        case 'price':
+          const priceA = parseFloat(a.price.replace(' €', ''));
+          const priceB = parseFloat(b.price.replace(' €', ''));
+          comparison = priceA - priceB;
+          break;
+        case 'stock':
+          comparison = a.piece - b.piece;
+          break;
+        case 'category':
+          comparison = a.category.localeCompare(b.category);
+          break;
+        case 'updated':
+          comparison = new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime();
+          break;
+        default:
+          comparison = 0;
+      }
+      
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+
+    return filtered;
+  }, [products, selectedCategory, selectedStatus, searchQuery, sortBy, sortOrder, priceRange, stockRange]);
+
+  // Pagination
+  const totalPages = Math.ceil(filteredAndSortedProducts.length / itemsPerPage);
+  const paginatedProducts = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredAndSortedProducts.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredAndSortedProducts, currentPage, itemsPerPage]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, selectedStatus, searchQuery, priceRange, stockRange]);
+
+  const handleExport = () => {
+    // Create CSV content
+    const headers = ['ID', 'Name', 'SKU', 'Category', 'Price', 'Stock', 'Status', 'Last Updated'];
+    const rows = filteredAndSortedProducts.map(p => [
+      p.id,
+      p.name,
+      p.sku,
+      p.category,
+      p.price,
+      p.piece,
+      p.status,
+      p.lastUpdated
+    ]);
+    
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    // Download CSV
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `inventory_export_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   if (loading) {
     return (
       <div className="space-y-6">
-        <InventoryTableHeader 
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-        />
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center">
-          <p className="text-gray-600">Chargement des produits...</p>
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm">
+          <InventoryTableHeader 
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+            selectedStatus={selectedStatus}
+            onStatusChange={setSelectedStatus}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            sortBy={sortBy}
+            onSortChange={setSortBy}
+            sortOrder={sortOrder}
+            onSortOrderChange={setSortOrder}
+            priceRange={priceRange}
+            onPriceRangeChange={setPriceRange}
+            stockRange={stockRange}
+            onStockRangeChange={setStockRange}
+            onRefresh={loadProducts}
+            onExport={handleExport}
+            totalProducts={0}
+            filteredProducts={0}
+          />
+        </div>
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-8 text-center">
+          <div className="flex flex-col items-center justify-center space-y-3">
+            <div className="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+            <p className="text-gray-600 font-medium">Loading inventory data...</p>
+            <p className="text-sm text-gray-400">Please wait while we fetch your products</p>
+          </div>
         </div>
       </div>
     );
@@ -106,20 +245,133 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs }:
         <InventoryTableHeader 
           selectedCategory={selectedCategory}
           onCategoryChange={setSelectedCategory}
+          selectedStatus={selectedStatus}
+          onStatusChange={setSelectedStatus}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+          sortOrder={sortOrder}
+          onSortOrderChange={setSortOrder}
+          priceRange={priceRange}
+          onPriceRangeChange={setPriceRange}
+          stockRange={stockRange}
+          onStockRangeChange={setStockRange}
+          onRefresh={loadProducts}
+          onExport={handleExport}
+          totalProducts={products.length}
+          filteredProducts={filteredAndSortedProducts.length}
         />
       </div>
       
-      <InventoryCardGrid 
-        data={filteredProducts}
-        onEdit={onEdit}
-        onDelete={onDelete}
-        onStockUpdate={handleStockUpdate}
-        onViewKPIs={onViewKPIs}
-      />
-      
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm">
-        <InventoryTableFooter />
-      </div>
+      {filteredAndSortedProducts.length === 0 ? (
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-12 text-center">
+          <div className="flex flex-col items-center space-y-3">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+              <FiSearch className="w-8 h-8 text-gray-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900">No products found</h3>
+            <p className="text-sm text-gray-500 max-w-md">
+              Try adjusting your filters or search query to find what you're looking for.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <>
+          <InventoryCardGrid 
+            data={paginatedProducts}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onStockUpdate={handleStockUpdate}
+            onViewKPIs={onViewKPIs}
+          />
+          
+          {/* Pagination */}
+          <div className="bg-white rounded-xl border border-gray-100 shadow-sm px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-gray-600">
+                  Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredAndSortedProducts.length)} of {filteredAndSortedProducts.length} products
+                </span>
+                <select
+                  value={itemsPerPage}
+                  onChange={(e) => {
+                    setItemsPerPage(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                  className="px-3 py-1.5 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  <option value={10}>10 per page</option>
+                  <option value={25}>25 per page</option>
+                  <option value={50}>50 per page</option>
+                  <option value={100}>100 per page</option>
+                </select>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setCurrentPage(1)}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  First
+                </button>
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Previous
+                </button>
+                
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNum;
+                    if (totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1;
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i;
+                    } else {
+                      pageNum = currentPage - 2 + i;
+                    }
+                    
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => setCurrentPage(pageNum)}
+                        className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                          currentPage === pageNum
+                            ? 'text-white bg-purple-600'
+                            : 'text-gray-700 bg-white border border-gray-200 hover:bg-gray-50'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+                </div>
+                
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Next
+                </button>
+                <button
+                  onClick={() => setCurrentPage(totalPages)}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Last
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
