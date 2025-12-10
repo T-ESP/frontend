@@ -7,6 +7,7 @@ import { EditOrderModal } from '@/ui/features/orders/components/EditOrderModal';
 import { DeleteOrderModal } from '@/ui/features/orders/components/DeleteOrderModal';
 import { ViewOrderModal } from '@/ui/features/orders/components/ViewOrderModal';
 import { OrderStats } from '@/ui/features/orders/components/OrderStats';
+import { useToast } from '@/ui/components/common/Toast';
 
 // --- Helper Functions (Refined for Consistency) ---
 
@@ -51,6 +52,7 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false); // Changed to false to show skeleton initially if desired
   const [error, setError] = useState<string | null>(null);
+  const { addToast } = useToast();
   
   // Modals
   const [showAddModal, setShowAddModal] = useState(false);
@@ -83,6 +85,7 @@ export default function OrdersPage() {
       setOrders(data);
     } catch (err) {
       setError('Failed to load orders. Check API connection.');
+      addToast('Failed to load orders', 'Please check your connection and try again.', 'error');
       console.error('Error loading orders:', err);
     } finally {
       setLoading(false);

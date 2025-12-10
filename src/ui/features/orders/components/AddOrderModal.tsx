@@ -6,6 +6,7 @@ import { productService } from "@/infrastructure/api/services/productService";
 import type { CreateOrderDto, CreateLineItemDto } from "@/domain/models/Order";
 import type { User as UserType } from "@/domain/models/User";
 import type { Product as ProductType } from "@/domain/models/Product"; // Renamed Product type to avoid clash
+import { useToast } from "@/ui/components/common/Toast";
 
 interface AddOrderModalProps {
   onClose: () => void;
@@ -28,6 +29,7 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
   const [loading, setLoading] = useState(false);
   const [isDataLoading, setIsDataLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { addToast } = useToast();
 
   useEffect(() => {
     // Load static data concurrently
@@ -114,10 +116,13 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
 
       // 3. Send the fixed payload
       await orderService.create(finalPayload);
+      addToast('Order created', 'The order has been successfully created.', 'success');
       onSuccess();
     } catch (err) {
       console.error('API Error during order creation:', err);
-      setError(err instanceof Error ? err.message : "Erreur: Échec de la création de la commande.");
+      const errorMsg = err instanceof Error ? err.message : "Erreur: Échec de la création de la commande.";
+      setError(errorMsg);
+      addToast('Failed to create order', errorMsg, 'error');
     } finally {
       setLoading(false);
     }

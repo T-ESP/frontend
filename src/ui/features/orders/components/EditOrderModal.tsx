@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FiX } from "react-icons/fi";
 import { orderService } from "@/infrastructure/api/services/orderService";
 import type { Order, UpdateOrderDto } from "@/domain/models/Order";
+import { useToast } from "@/ui/components/common/Toast";
 
 interface EditOrderModalProps {
   order: Order;
@@ -15,6 +16,7 @@ export function EditOrderModal({ order, onClose, onSuccess }: EditOrderModalProp
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { addToast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,9 +25,12 @@ export function EditOrderModal({ order, onClose, onSuccess }: EditOrderModalProp
 
     try {
       await orderService.update(order.id, formData);
+      addToast('Order updated', `Order #${order.id} has been updated successfully.`, 'success');
       onSuccess();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to update order");
+      const errorMsg = err instanceof Error ? err.message : "Failed to update order";
+      setError(errorMsg);
+      addToast('Failed to update order', errorMsg, 'error');
     } finally {
       setLoading(false);
     }

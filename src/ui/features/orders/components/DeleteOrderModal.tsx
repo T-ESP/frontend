@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FiX, FiAlertTriangle } from "react-icons/fi";
 import { orderService } from "@/infrastructure/api/services/orderService";
 import type { Order } from "@/domain/models/Order";
+import { useToast } from "@/ui/components/common/Toast";
 
 interface DeleteOrderModalProps {
   order: Order;
@@ -12,6 +13,7 @@ interface DeleteOrderModalProps {
 export function DeleteOrderModal({ order, onClose, onSuccess }: DeleteOrderModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { addToast } = useToast();
 
   const handleDelete = async () => {
     setLoading(true);
@@ -19,9 +21,12 @@ export function DeleteOrderModal({ order, onClose, onSuccess }: DeleteOrderModal
 
     try {
       await orderService.delete(order.id);
+      addToast('Order deleted', `Order #${order.id} has been removed successfully.`, 'success');
       onSuccess();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to delete order");
+      const errorMsg = err instanceof Error ? err.message : "Failed to delete order";
+      setError(errorMsg);
+      addToast('Failed to delete order', errorMsg, 'error');
     } finally {
       setLoading(false);
     }
