@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { FiX } from "react-icons/fi";
+import { X, PackagePlus, Loader2, AlertTriangle } from "lucide-react"; // Using Lucide icons for consistency
 import { productService } from "@/infrastructure/api/services/productService";
 import type { CreateProductDto } from "@/domain/models/Product";
+import { CategorySelect } from "./CategorySelect";
 
 interface AddProductModalProps {
   isOpen: boolean;
@@ -9,38 +10,68 @@ interface AddProductModalProps {
   onProductAdded: () => void;
 }
 
+// Initial state for form clarity
+const INITIAL_STATE: CreateProductDto = {
+  name: "",
+  category: "",
+  reference: "",
+  supplier_id: 1, // Assume 1 is a valid default for a quick prototype
+  stock_quantity: 0,
+  buying_price: 0,
+};
+
 export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductModalProps) {
-  const [formData, setFormData] = useState<CreateProductDto>({
-    name: "",
-    category: "",
-    reference: "",
-    supplier_id: 1,
-    stock_quantity: 0,
-    buying_price: 0,
-  });
+  const [formData, setFormData] = useState<CreateProductDto>(INITIAL_STATE);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type } = e.target;
+    let typedValue: string | number;
+
+    if (type === 'number') {
+      // Use parseFloat/parseInt only if the value is not empty to handle clear operations gracefully
+      if (value === '') {
+        typedValue = 0; 
+      } else if (name === 'buying_price') {
+        typedValue = parseFloat(value);
+      } else {
+        typedValue = parseInt(value, 10);
+      }
+    } else {
+      typedValue = value;
+    }
+
+    setFormData({ ...formData, [name]: typedValue });
+  };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
+    // Basic validation check for number types being NaN or infinite
+    const invalidNumber = Object.values(formData).some(val => 
+        (typeof val === 'number' && (isNaN(val) || !isFinite(val)))
+    );
+
+    if (invalidNumber) {
+        setError("Please ensure all number fields are valid.");
+        setLoading(false);
+        return;
+    }
+
     try {
       await productService.create(formData);
       onProductAdded();
       onClose();
-      // Reset form
-      setFormData({
-        name: "",
-        category: "",
-        reference: "",
-        supplier_id: 1,
-        stock_quantity: 0,
-        buying_price: 0,
-      });
+      // Reset form on successful submission
+      setFormData(INITIAL_STATE);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create product");
+      // Centralize error logging and display
+      console.error('API Error during product creation:', err);
+      setError(err instanceof Error ? err.message : "Failed to create product. Check API connectivity.");
     } finally {
       setLoading(false);
     }
@@ -48,124 +79,150 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
 
   if (!isOpen) return null;
 
+  // Modern Enterprise Modal Styling
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <h2 className="text-xl font-semibold text-gray-900">Add New Product</h2>
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-slate-200">
+        
+        {/* Modal Header */}
+        <div className="flex items-center justify-between p-6 border-b border-slate-100 bg-slate-50 rounded-t-2xl">
+          <div className="flex items-center gap-3">
+            <PackagePlus className="w-6 h-6 text-blue-600" />
+            <h2 className="text-xl font-bold text-slate-900">Create New Product</h2>
+          </div>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+            className="p-2 text-slate-400 hover:text-slate-700 rounded-full hover:bg-slate-100 transition-colors"
           >
-            <FiX size={20} />
+            <X size={20} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+          {/* Error Alert */}
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+            <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 text-sm font-medium flex items-center gap-2">
+              <AlertTriangle size={18} />
               {error}
             </div>
           )}
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Product Name *
-            </label>
-            <input
-              type="text"
-              required
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              placeholder="Enter product name"
-            />
+          {/* Form Fields - Modern Inputs */}
+          
+          <div className="grid grid-cols-2 gap-4">
+            {/* Product Name */}
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">
+                Product Name *
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                value={formData.name}
+                onChange={handleFormChange}
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+                placeholder="Name"
+              />
+            </div>
+
+            {/* Reference (SKU) */}
+            <div>
+              <label htmlFor="reference" className="block text-sm font-medium text-slate-700 mb-1">
+                Reference (SKU) *
+              </label>
+              <input
+                id="reference"
+                name="reference"
+                type="text"
+                required
+                value={formData.reference}
+                onChange={handleFormChange}
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+                placeholder="PROD-001"
+              />
+            </div>
           </div>
 
+          {/* Category */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Category *
-            </label>
-            <input
-              type="text"
-              required
+            <CategorySelect
               value={formData.category}
-              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              placeholder="e.g., Electronics"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Reference (SKU) *
-            </label>
-            <input
-              type="text"
+              onChange={(value) => setFormData({ ...formData, category: value })}
               required
-              value={formData.reference}
-              onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              placeholder="e.g., PROD-001"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Supplier ID *
-            </label>
-            <input
-              type="number"
-              required
-              min="1"
-              value={formData.supplier_id}
-              onChange={(e) => setFormData({ ...formData, supplier_id: parseInt(e.target.value) })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-            />
+          <div className="grid grid-cols-3 gap-4">
+            {/* Buying Price */}
+            <div>
+              <label htmlFor="buying_price" className="block text-sm font-medium text-slate-700 mb-1">
+                Buying Price (€) *
+              </label>
+              <input
+                id="buying_price"
+                name="buying_price"
+                type="number"
+                required
+                min="0"
+                step="0.01"
+                value={formData.buying_price}
+                onChange={handleFormChange}
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+              />
+            </div>
+            
+            {/* Stock Quantity */}
+            <div>
+              <label htmlFor="stock_quantity" className="block text-sm font-medium text-slate-700 mb-1">
+                Stock Quantity *
+              </label>
+              <input
+                id="stock_quantity"
+                name="stock_quantity"
+                type="number"
+                required
+                min="0"
+                value={formData.stock_quantity}
+                onChange={handleFormChange}
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+              />
+            </div>
+
+            {/* Supplier ID */}
+            <div>
+              <label htmlFor="supplier_id" className="block text-sm font-medium text-slate-700 mb-1">
+                Supplier ID *
+              </label>
+              <input
+                id="supplier_id"
+                name="supplier_id"
+                type="number"
+                required
+                min="1"
+                value={formData.supplier_id}
+                onChange={handleFormChange}
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+              />
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Stock Quantity *
-            </label>
-            <input
-              type="number"
-              required
-              min="0"
-              value={formData.stock_quantity}
-              onChange={(e) => setFormData({ ...formData, stock_quantity: parseInt(e.target.value) })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Buying Price (€) *
-            </label>
-            <input
-              type="number"
-              required
-              min="0"
-              step="0.01"
-              value={formData.buying_price}
-              onChange={(e) => setFormData({ ...formData, buying_price: parseFloat(e.target.value) })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-            />
-          </div>
-
-          <div className="flex gap-3 pt-4">
+          {/* Action Buttons */}
+          <div className="flex gap-3 pt-6 border-t border-slate-100 mt-6">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-300 hover:bg-gray-50"
+              className="flex-1 px-4 py-2.5 text-sm font-semibold text-slate-700 bg-white rounded-xl border border-slate-300 hover:bg-slate-50 transition duration-150"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-blue-600 rounded-xl shadow-lg shadow-blue-500/30 hover:bg-blue-700 transition duration-150 disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
+              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               {loading ? "Creating..." : "Create Product"}
             </button>
           </div>
