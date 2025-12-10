@@ -277,29 +277,39 @@ export default function SalesPage() {
   ];
 
   return (
-    <div className="space-y-6 pb-10">
+    <div className="p-8 bg-slate-50 min-h-screen">
       {/* Header */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm px-6 py-4 flex items-center justify-between">
-          <div>
-            <h3 className="text-xl font-bold text-gray-900">Sales Dashboard</h3>
-            <p className="text-sm text-gray-500 mt-0.5">Performance overview for last 30 days</p>
-          </div>
-          <button onClick={loadSalesData} className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-            <FiRefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /> Refresh
-          </button>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
+            <FiDollarSign className="w-7 h-7 text-emerald-600" />
+            Sales Dashboard
+          </h1>
+          <p className="text-slate-500 mt-2">
+            Performance overview and analytics for the last 30 days
+          </p>
+        </div>
+        <button 
+          onClick={loadSalesData} 
+          className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/30 hover:bg-blue-700 transition-colors"
+        >
+          <FiRefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+          Refresh
+        </button>
       </div>
 
       {/* KPI Cards */}
-      {loading ? (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-32 bg-white rounded-xl animate-pulse border border-gray-100 shadow-sm" />
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mb-6">
+        {loading ? (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-32 bg-white rounded-xl animate-pulse border border-slate-100 shadow-sm" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => (
-            <div key={stat.title} className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 hover:shadow-md transition-all">
+            <div key={stat.title} className="bg-white rounded-xl border border-slate-100 shadow-sm p-6 hover:shadow-md transition-all">
               <div className="flex items-center justify-between mb-4">
                 <div className={`w-12 h-12 rounded-lg bg-${stat.color}-50 flex items-center justify-center`}>
                   <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />
@@ -311,60 +321,63 @@ export default function SalesPage() {
                 </span>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
-                <p className="text-xs text-gray-500 mt-1">{stat.description}</p>
+                <p className="text-sm font-medium text-slate-600">{stat.title}</p>
+                <p className="text-2xl font-bold text-slate-900 mt-1">{stat.value}</p>
+                <p className="text-xs text-slate-500 mt-1">{stat.description}</p>
               </div>
             </div>
           ))}
         </div>
-      )}
+        )}
+      </div>
 
       {/* Main Revenue Chart */}
-      <SalesChart data={chartData} />
+      <div className="mb-6">
+        <SalesChart data={chartData} />
+      </div>
 
       {/* --- NEW SECTION: PERFORMANCE INSIGHTS (Replaces the boring table) --- */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         
         {/* Left Panel: Top Selling Products (2/3 width) */}
-        <div className="lg:col-span-2 bg-white rounded-xl border border-gray-100 shadow-sm flex flex-col">
-            <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+        <div className="lg:col-span-2 bg-white rounded-xl border border-slate-100 shadow-sm flex flex-col">
+            <div className="p-6 border-b border-slate-100 flex justify-between items-center">
                 <div className="flex items-center gap-2">
                     <FiAward className="text-amber-500" />
-                    <h3 className="font-bold text-gray-900">Top Performing Products</h3>
+                    <h3 className="font-bold text-slate-900">Top Performing Products</h3>
                 </div>
                 <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">View All</button>
             </div>
             
             <div className="flex-1 overflow-auto">
                 <table className="min-w-full">
-                    <thead className="bg-gray-50/50">
+                    <thead className="bg-slate-50/50">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Product Name</th>
-                            <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Units Sold</th>
-                            <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Revenue</th>
-                            <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Performance</th>
+                            <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Product Name</th>
+                            <th className="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Units Sold</th>
+                            <th className="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Revenue</th>
+                            <th className="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Performance</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-slate-100">
                         {topProducts.map((product, idx) => (
-                            <tr key={product.id} className="hover:bg-gray-50/50 transition-colors">
+                            <tr key={product.id} className="hover:bg-slate-50/50 transition-colors">
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="flex items-center gap-3">
-                                        <div className="flex-shrink-0 w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center font-bold text-xs text-gray-600">
+                                        <div className="flex-shrink-0 w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center font-bold text-xs text-slate-600">
                                             #{idx + 1}
                                         </div>
-                                        <span className="text-sm font-medium text-gray-900">{product.name}</span>
+                                        <span className="text-sm font-medium text-slate-900">{product.name}</span>
                                     </div>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
+                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-slate-600">
                                     {product.quantity}
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-gray-900">
+                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-slate-900">
                                     {formatCurrency(product.revenue)}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-right">
-                                    <div className="w-24 ml-auto bg-gray-100 rounded-full h-1.5">
+                                    <div className="w-24 ml-auto bg-slate-100 rounded-full h-1.5">
                                         <div 
                                             className="bg-blue-600 h-1.5 rounded-full" 
                                             style={{ width: `${(product.revenue / topProducts[0].revenue) * 100}%` }} 
@@ -379,10 +392,10 @@ export default function SalesPage() {
         </div>
 
         {/* Right Panel: Sales by Category (1/3 width) */}
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm flex flex-col">
-            <div className="p-6 border-b border-gray-100 flex items-center gap-2">
+        <div className="bg-white rounded-xl border border-slate-100 shadow-sm flex flex-col">
+            <div className="p-6 border-b border-slate-100 flex items-center gap-2">
                 <FiPieChart className="text-purple-500" />
-                <h3 className="font-bold text-gray-900">Sales by Category</h3>
+                <h3 className="font-bold text-slate-900">Sales by Category</h3>
             </div>
             
             <div className="p-6 flex-1 flex flex-col items-center justify-center">
@@ -414,9 +427,9 @@ export default function SalesPage() {
                         <div key={cat.name} className="flex items-center justify-between text-sm">
                             <div className="flex items-center gap-2">
                                 <div className="w-3 h-3 rounded-full" style={{ backgroundColor: cat.color }} />
-                                <span className="text-gray-600">{cat.name}</span>
+                                <span className="text-slate-600">{cat.name}</span>
                             </div>
-                            <span className="font-semibold text-gray-900">{formatCurrency(cat.value)}</span>
+                            <span className="font-semibold text-slate-900">{formatCurrency(cat.value)}</span>
                         </div>
                     ))}
                 </div>

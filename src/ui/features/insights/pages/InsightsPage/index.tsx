@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import PageLayout from "@/ui/components/layouts/PageLayout";
 import {
   PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  Legend, LineChart, Line
+  Legend
 } from "recharts";
 import { 
-  FiAlertTriangle, FiCheckCircle, FiTrendingUp, FiPackage, 
+  FiAlertTriangle, FiPackage, 
   FiActivity, FiTruck, FiRefreshCw 
 } from "react-icons/fi"; // Switched to Feather icons (fi) consistent with your imports
 import { productService } from "@/infrastructure/api/services/productService";
@@ -23,8 +23,6 @@ const COLORS = {
 };
 
 export default function InsightsPage() {
-  const [loading, setLoading] = useState(true);
-  
   // State for Real-Time Calculated Insights
   const [stockHealth, setStockHealth] = useState<any[]>([]);
   const [abcStats, setAbcStats] = useState<any[]>([]);
@@ -42,7 +40,6 @@ export default function InsightsPage() {
 
   const loadInsights = async () => {
     try {
-      setLoading(true);
       // Fetch all products to perform client-side aggregation
       // In a real huge app, the backend should provide /analytics/summary endpoints
       const products = await productService.getAll();
@@ -53,8 +50,6 @@ export default function InsightsPage() {
       
     } catch (error) {
       console.error("Failed to load insights", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -124,6 +119,7 @@ export default function InsightsPage() {
     <PageLayout 
       title="Inventory Intelligence" 
       subtitle="Stock optimization, health monitoring, and risk prediction"
+      icon={<FiActivity className="w-7 h-7 text-purple-600" />}
     >
       {/* 1. Global Inventory KPIs */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
