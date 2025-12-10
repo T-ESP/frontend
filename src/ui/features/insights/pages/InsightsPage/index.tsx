@@ -23,6 +23,7 @@ import {
 } from "react-icons/fi";
 import { orderService } from "@/infrastructure/api/services/orderService";
 import { productService } from "@/infrastructure/api/services/productService";
+import type { Product } from "@/domain/models/Product";
 import type { OrderStats } from "@/domain/models/Order";
 
 // Mock data for analytics

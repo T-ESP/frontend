@@ -4,6 +4,7 @@ import { API_ENDPOINTS } from '../config';
 import type {
   TotalRevenueResponse,
   EvolutionResponse,
+  EvolutionByGrainResponse,
   ComparisonResponse,
   AverageBasketResponse,
   AverageBasketByClientTypeResponse,
@@ -28,6 +29,21 @@ export const salesService = {
       end_date: params.end_date,
     }).toString();
     const response = await apiClient.get<ApiResponse<EvolutionResponse>>(
+      `${API_ENDPOINTS.sales.evolution}?${queryString}`
+    );
+    return response.data;
+  },
+
+  async getEvolutionByGrain(params: PeriodQuery): Promise<EvolutionByGrainResponse> {
+    const queryParams: Record<string, string> = {
+      start_date: params.start_date,
+      end_date: params.end_date,
+    };
+    if (params.grain) {
+      queryParams.grain = params.grain;
+    }
+    const queryString = new URLSearchParams(queryParams).toString();
+    const response = await apiClient.get<ApiResponse<EvolutionByGrainResponse>>(
       `${API_ENDPOINTS.sales.evolution}?${queryString}`
     );
     return response.data;

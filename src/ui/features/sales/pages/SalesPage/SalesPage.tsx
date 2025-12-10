@@ -4,12 +4,15 @@ import SalesChart from "@/ui/features/sales/pages/SalesPage/SalesChart";
 import { SalesTable } from "@/ui/features/sales/pages/SalesPage/SalesTable";
 import { salesService } from "@/infrastructure/api/services/salesService";
 import { orderService } from "@/infrastructure/api/services/orderService";
+import type { Order } from "@/domain/models/Order";
 
 export default function SalesPage() {
+  const [orders, setOrders] = useState<Order[]>([]);
   const [totalRevenue, setTotalRevenue] = useState<number>(0);
-  const [evolution, setEvolution] = useState<number>(0);
+  const [revenueGrowth, setRevenueGrowth] = useState<number>(0);
   const [averageBasket, setAverageBasket] = useState<number>(0);
-  const [totalOrders, setTotalOrders] = useState<number>(0);
+  const [averageBasketEvolution, setAverageBasketEvolution] = useState<number>(0);
+  const [chartData, setChartData] = useState<Array<{ date: string; revenue: number; orders: number }>>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -30,14 +33,15 @@ export default function SalesPage() {
       const period = {
         start_date: formatDate(startDate),
         end_date: formatDate(endDate),
+        grain: 'day',
       };
 
       // Fetch data in parallel with error handling
-      const [revenueData, evolutionData, basketData, ordersData] = await Promise.allSettled([
+      const [revenueData, basketData, ordersData, dailyRevenueData] = await Promise.allSettled([
         salesService.getTotalRevenue(period),
-        salesService.getEvolution(period),
         salesService.getAverageBasket(period),
         orderService.getAll(),
+        salesService.getEvolutionByGrain(period),
       ]);
 
       // Safely extract values with defaults
@@ -45,24 +49,64 @@ export default function SalesPage() {
         setTotalRevenue(revenueData.value.total_revenue || 0);
       }
       
-      if (evolutionData.status === 'fulfilled' && evolutionData.value) {
-        setEvolution(evolutionData.value.evolution_percentage || 0);
-      }
-      
       if (basketData.status === 'fulfilled' && basketData.value) {
         setAverageBasket(basketData.value.average_basket || 0);
+        setAverageBasketEvolution(basketData.value.evolution_percentage || 0);
       }
       
       if (ordersData.status === 'fulfilled' && ordersData.value) {
-        setTotalOrders(ordersData.value.length || 0);
+        setOrders(ordersData.value);
       }
+
+      // Process daily revenue data for the chart
+      if (dailyRevenueData.status === 'fulfilled' && dailyRevenueData.value) {
+        const dailyData = dailyRevenueData.value.data || [];
+        
+        // Calculate revenue growth from the daily data
+        if (dailyData.length > 0) {
+          const halfPoint = Math.floor(dailyData.length / 2);
+          const firstHalf = dailyData.slice(0, halfPoint);
+          const secondHalf = dailyData.slice(halfPoint);
+          
+          const firstHalfRevenue = firstHalf.reduce((sum, d) => sum + d.revenue, 0);
+          const secondHalfRevenue = secondHalf.reduce((sum, d) => sum + d.revenue, 0);
+          
+          if (firstHalfRevenue > 0) {
+            const growth = ((secondHalfRevenue - firstHalfRevenue) / firstHalfRevenue) * 100;
+            setRevenueGrowth(growth);
+          }
+        }
+        
+        // Create a map to count orders per day
+        const ordersByDate = new Map<string, number>();
+        if (ordersData.status === 'fulfilled' && ordersData.value) {
+          ordersData.value.forEach(order => {
+            if (order.status !== 'Cancelled') {
+              const dateStr = new Date(order.order_date).toISOString().split('T')[0];
+              ordersByDate.set(dateStr, (ordersByDate.get(dateStr) || 0) + 1);
+            }
+          });
+        }
+
+        // Combine revenue data with order counts
+        const processedData = dailyData.map(item => ({
+          date: item.date,
+          revenue: item.revenue,
+          orders: ordersByDate.get(item.date) || 0,
+        }));
+
+        setChartData(processedData);
+      }
+
     } catch (error) {
       console.error('Error loading sales data:', error);
       // Set defaults on error
       setTotalRevenue(0);
-      setEvolution(0);
+      setRevenueGrowth(0);
       setAverageBasket(0);
-      setTotalOrders(0);
+      setAverageBasketEvolution(0);
+      setOrders([]);
+      setChartData([]);
     } finally {
       setLoading(false);
     }
@@ -88,35 +132,35 @@ export default function SalesPage() {
     {
       title: "Total Revenue",
       value: formatCurrency(totalRevenue),
-      change: formatPercentage(evolution),
-      trend: evolution >= 0 ? "up" : "down",
+      change: formatPercentage(revenueGrowth),
+      trend: revenueGrowth >= 0 ? "up" : "down",
       icon: FiDollarSign,
       color: "emerald",
       description: "Last 30 days"
     },
     {
       title: "Total Orders",
-      value: totalOrders.toString(),
+      value: orders.filter(o => o.status !== 'Cancelled').length.toString(),
       change: "+0.0%",
       trend: "up",
       icon: FiShoppingCart,
       color: "blue",
-      description: "All time"
+      description: "Last 30 days"
     },
     {
       title: "Average Basket",
       value: formatCurrency(averageBasket),
-      change: "+0.0%",
-      trend: "up",
+      change: formatPercentage(averageBasketEvolution),
+      trend: averageBasketEvolution >= 0 ? "up" : "down",
       icon: FiTrendingUp,
       color: "purple",
       description: "Last 30 days"
     },
     {
       title: "Revenue Growth",
-      value: formatPercentage(evolution),
-      change: formatPercentage(evolution),
-      trend: evolution >= 0 ? "up" : "down",
+      value: formatPercentage(revenueGrowth),
+      change: formatPercentage(revenueGrowth),
+      trend: revenueGrowth >= 0 ? "up" : "down",
       icon: FiTrendingUp,
       color: "amber",
       description: "vs previous period"
@@ -174,10 +218,10 @@ export default function SalesPage() {
       )}
 
       {/* Chart */}
-      <SalesChart />
+      <SalesChart data={chartData} />
 
       {/* Table */}
-      <SalesTable />
+      <SalesTable data={chartData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())} />
     </div>
   );
 }
