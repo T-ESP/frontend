@@ -1,6 +1,7 @@
 import { FiAlertTriangle, FiX } from "react-icons/fi";
 import { useState } from "react";
 import { productService } from "@/infrastructure/api/services/productService";
+import { useToast } from "@/ui/components/common/Toast";
 
 interface DeleteConfirmModalProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ export function DeleteConfirmModal({
 }: DeleteConfirmModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { addToast } = useToast();
 
   const handleDelete = async () => {
     if (!productId) return;
@@ -28,10 +30,13 @@ export function DeleteConfirmModal({
 
     try {
       await productService.delete(productId);
+      addToast("Product deleted", `${productName} has been removed from inventory.`, "success");
       onProductDeleted();
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to delete product");
+      const errorMsg = err instanceof Error ? err.message : "Failed to delete product";
+      setError(errorMsg);
+      addToast("Failed to delete product", errorMsg, "error");
     } finally {
       setLoading(false);
     }

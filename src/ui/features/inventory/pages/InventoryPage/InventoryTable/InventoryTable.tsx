@@ -5,6 +5,8 @@ import type { Product } from "@/domain/models/Product";
 import type { InventoryItem } from "@/ui/features/inventory/types";
 import { InventoryTableHeader } from "./InventoryTableHeader";
 import { InventoryCardGrid } from "./InventoryCardGrid";
+import { InventoryTableSkeleton } from "./InventoryTableSkeleton";
+import { useToast } from "@/ui/components/common/Toast";
 
 interface InventoryTableProps {
   onEdit: (item: InventoryItem) => void;
@@ -16,6 +18,7 @@ interface InventoryTableProps {
 export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs }: InventoryTableProps) {
   const [products, setProducts] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const { addToast } = useToast();
   
   // Filter states
   const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
@@ -57,6 +60,7 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs }:
       setProducts(inventoryItems);
     } catch (error) {
       console.error("Error loading products:", error);
+      addToast("Failed to load products", "Please check your connection and try again.", "error");
     } finally {
       setLoading(false);
     }
@@ -87,8 +91,11 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs }:
             }
           : p
       ));
+      
+      addToast("Stock updated", `Successfully updated stock for ${product.name}`, "success");
     } catch (error) {
       console.error("Error updating stock:", error);
+      addToast("Failed to update stock", "Please try again.", "error");
       throw error; // Re-throw to show error in UI
     }
   };
@@ -204,39 +211,7 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs }:
   };
 
   if (loading) {
-    return (
-      <div className="space-y-6">
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm">
-          <InventoryTableHeader 
-            selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-            selectedStatus={selectedStatus}
-            onStatusChange={setSelectedStatus}
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            sortBy={sortBy}
-            onSortChange={setSortBy}
-            sortOrder={sortOrder}
-            onSortOrderChange={setSortOrder}
-            priceRange={priceRange}
-            onPriceRangeChange={setPriceRange}
-            stockRange={stockRange}
-            onStockRangeChange={setStockRange}
-            onRefresh={loadProducts}
-            onExport={handleExport}
-            totalProducts={0}
-            filteredProducts={0}
-          />
-        </div>
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-8 text-center">
-          <div className="flex flex-col items-center justify-center space-y-3">
-            <div className="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
-            <p className="text-gray-600 font-medium">Loading inventory data...</p>
-            <p className="text-sm text-gray-400">Please wait while we fetch your products</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <InventoryTableSkeleton />;
   }
 
   return (

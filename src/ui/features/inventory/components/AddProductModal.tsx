@@ -3,6 +3,7 @@ import { X, PackagePlus, Loader2, AlertTriangle } from "lucide-react"; // Using 
 import { productService } from "@/infrastructure/api/services/productService";
 import type { CreateProductDto } from "@/domain/models/Product";
 import { CategorySelect } from "./CategorySelect";
+import { useToast } from "@/ui/components/common/Toast";
 
 interface AddProductModalProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
   const [formData, setFormData] = useState<CreateProductDto>(INITIAL_STATE);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { addToast } = useToast();
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
@@ -64,6 +66,7 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
 
     try {
       await productService.create(formData);
+      addToast("Product created", `${formData.name} has been added to inventory.`, "success");
       onProductAdded();
       onClose();
       // Reset form on successful submission
@@ -71,7 +74,9 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
     } catch (err) {
       // Centralize error logging and display
       console.error('API Error during product creation:', err);
-      setError(err instanceof Error ? err.message : "Failed to create product. Check API connectivity.");
+      const errorMsg = err instanceof Error ? err.message : "Failed to create product. Check API connectivity.";
+      setError(errorMsg);
+      addToast("Failed to create product", errorMsg, "error");
     } finally {
       setLoading(false);
     }

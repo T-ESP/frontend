@@ -3,6 +3,7 @@ import { X, Package, Hash, Truck, Box, DollarSign, Edit3, AlertTriangle, Loader2
 import { productService } from "@/infrastructure/api/services/productService";
 import type { Product, UpdateProductDto } from "@/domain/models/Product";
 import { CategorySelect } from "./CategorySelect";
+import { useToast } from "@/ui/components/common/Toast";
 
 interface EditProductModalProps {
   isOpen: boolean;
@@ -25,6 +26,7 @@ export function EditProductModal({ isOpen, onClose, onProductUpdated, product }:
   const [formData, setFormData] = useState<UpdateProductDto>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { addToast } = useToast();
 
   // Sync state when the modal opens or the product data changes
   useEffect(() => {
@@ -77,11 +79,14 @@ export function EditProductModal({ isOpen, onClose, onProductUpdated, product }:
 
     try {
       await productService.update(product.id, formData);
+      addToast("Product updated", `${product.name} has been updated successfully.`, "success");
       onProductUpdated();
       onClose();
     } catch (err) {
       console.error('API Error during product update:', err);
-      setError(err instanceof Error ? err.message : "Failed to update product. Check API connectivity.");
+      const errorMsg = err instanceof Error ? err.message : "Failed to update product. Check API connectivity.";
+      setError(errorMsg);
+      addToast("Failed to update product", errorMsg, "error");
     } finally {
       setLoading(false);
     }
