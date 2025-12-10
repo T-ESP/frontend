@@ -1,5 +1,5 @@
 import { useState } from "react";
-import PageLayout from "@/layouts/PageLayout";
+import PageLayout from "@/ui/components/layouts/PageLayout";
 import { InventoryStats } from "./InventoryStats";
 import { InventoryTable } from "./InventoryTable";
 import { PageActions } from "./PageActions";

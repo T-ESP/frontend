@@ -1,7 +1,7 @@
-import { usePageTitle } from '@/hooks/usePageTitle';
+import { usePageTitle } from '@/ui/hooks/usePageTitle';
 import type { ReactNode } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '@/features/auth/hooks/useAuth';
+import { useAuth } from '@/ui/features/auth/hooks/useAuth';
 import abstract1 from '@/assets/svg/abstract1.svg';
 import abstract2 from '@/assets/svg/abstract2.svg';
 import abstract3 from '@/assets/svg/abstract3.svg';

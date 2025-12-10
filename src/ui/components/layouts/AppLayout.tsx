@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Sidebar } from '@/ui/components/layouts/Sidebar';
-import { usePageTitle } from '@/hooks/usePageTitle';
+import { usePageTitle } from '@/ui/hooks/usePageTitle';
 import type { ReactNode } from 'react';
 import { Outlet } from 'react-router-dom';
 import { HomeHeader } from '@/ui/components/layouts/HomeHeader';

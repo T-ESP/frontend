@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/Toast";
-import { useAuth, clearAuthToken, getAuthToken } from "@/features/auth/hooks/useAuth";
+import { useToast } from "@/ui/components/common/Toast";
+import { useAuth, clearAuthToken, getAuthToken } from "@/ui/features/auth/hooks/useAuth";
 import { Button } from "@/ui/components/common/Button/Button";
 import { FormField } from "@/ui/components/common/FormField/FormField";
 import { Input } from "@/ui/components/common/Input/Input";

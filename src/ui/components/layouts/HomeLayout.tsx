@@ -1,7 +1,7 @@
-import { usePageTitle } from '@/hooks/usePageTitle';
+import { usePageTitle } from '@/ui/hooks/usePageTitle';
 import type { ReactNode } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '@/features/auth/hooks/useAuth';
+import { useAuth } from '@/ui/features/auth/hooks/useAuth';
 
 type HomeLayoutProps = {
   children?: ReactNode;

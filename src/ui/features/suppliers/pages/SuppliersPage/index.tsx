@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { supplierService } from '@/infrastructure/api/services/supplierService';
 import type { Supplier } from '@/domain/models/Supplier';
 import { FiEdit2, FiTrash, FiPlus } from 'react-icons/fi';
-import { AddSupplierModal } from '@/components/suppliers/AddSupplierModal';
-import { EditSupplierModal } from '@/components/suppliers/EditSupplierModal';
-import { DeleteSupplierModal } from '@/components/suppliers/DeleteSupplierModal';
+import { AddSupplierModal } from '@/ui/features/suppliers/components/AddSupplierModal';
+import { EditSupplierModal } from '@/ui/features/suppliers/components/EditSupplierModal';
+import { DeleteSupplierModal } from '@/ui/features/suppliers/components/DeleteSupplierModal';
 
 export default function SuppliersPage() {
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import PageLayout from "@/layouts/PageLayout";
+import PageLayout from "@/ui/components/layouts/PageLayout";
 import { KPICards } from "./KPICards";
 import { ChartContainer } from "./ChartContainer";
 import { TopProducts } from "./TopProducts";

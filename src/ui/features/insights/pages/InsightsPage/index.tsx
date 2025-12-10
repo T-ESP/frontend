@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import PageLayout from "@/layouts/PageLayout";
+import PageLayout from "@/ui/components/layouts/PageLayout";
 import {
   Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   LineChart, Line, Legend, PieChart, Pie, Cell, BarChart, Bar, ComposedChart

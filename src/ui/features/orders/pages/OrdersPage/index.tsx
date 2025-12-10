@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { orderService } from '@/infrastructure/api/services/orderService';
 import type { Order } from '@/domain/models/Order';
 import { FiEdit2, FiTrash, FiPlus, FiEye } from 'react-icons/fi';
-import { AddOrderModal } from '@/components/orders/AddOrderModal';
-import { EditOrderModal } from '@/components/orders/EditOrderModal';
-import { DeleteOrderModal } from '@/components/orders/DeleteOrderModal';
-import { ViewOrderModal } from '@/components/orders/ViewOrderModal';
+import { AddOrderModal } from '@/ui/features/orders/components/AddOrderModal';
+import { EditOrderModal } from '@/ui/features/orders/components/EditOrderModal';
+import { DeleteOrderModal } from '@/ui/features/orders/components/DeleteOrderModal';
+import { ViewOrderModal } from '@/ui/features/orders/components/ViewOrderModal';
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);

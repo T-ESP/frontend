@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { userService } from '@/infrastructure/api/services/userService';
 import type { User } from '@/domain/models/User';
 import { FiEdit2, FiTrash, FiPlus, FiUser } from 'react-icons/fi';
-import { AddUserModal } from '@/components/users/AddUserModal';
-import { EditUserModal } from '@/components/users/EditUserModal';
-import { DeleteUserModal } from '@/components/users/DeleteUserModal';
+import { AddUserModal } from '@/ui/features/users/components/AddUserModal';
+import { EditUserModal } from '@/ui/features/users/components/EditUserModal';
+import { DeleteUserModal } from '@/ui/features/users/components/DeleteUserModal';
 
 export default function TeamPage() {
   const [users, setUsers] = useState<User[]>([]);

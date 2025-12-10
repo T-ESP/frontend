@@ -1,7 +1,7 @@
 
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/Toast";
+import { useToast } from "@/ui/components/common/Toast";
 
 export default function LogoutPage() {
   const navigate = useNavigate();

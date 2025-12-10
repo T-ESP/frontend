@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createLoginUserUsecase } from "@/application/usecases/LoginUser/LoginUser";
 import type { LoginRequest } from "@/application/usecases/LoginUser/LoginUser.types";
 import { HttpLoginUserGateway } from "@/infrastructure/http/loginUserGateway";
-import { useToast } from "@/components/ui/Toast";
+import { useToast } from "@/ui/components/common/Toast";
 import { Button } from "@/ui/components/common/Button/Button";
 import { Checkbox } from "@/ui/components/common/Checkbox/Checkbox";
 import { FormField } from "@/ui/components/common/FormField/FormField";

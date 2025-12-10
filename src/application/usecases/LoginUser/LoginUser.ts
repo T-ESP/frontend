@@ -1,5 +1,5 @@
 import type { LoginRequest, LoginResponse, LoginUserGateway } from "./LoginUser.types";
-import { clearAuthToken, getAuthToken } from "@/features/auth/hooks/useAuth";
+import { clearAuthToken, getAuthToken } from "@/ui/features/auth/hooks/useAuth";
 
 export function createLoginUserUsecase(gateway: LoginUserGateway) {
   return async (request: LoginRequest): Promise<LoginResponse> => {
