@@ -6,6 +6,7 @@ import { AddOrderModal } from '@/ui/features/orders/components/AddOrderModal';
 import { EditOrderModal } from '@/ui/features/orders/components/EditOrderModal';
 import { DeleteOrderModal } from '@/ui/features/orders/components/DeleteOrderModal';
 import { ViewOrderModal } from '@/ui/features/orders/components/ViewOrderModal';
+import { OrderStats } from '@/ui/features/orders/components/OrderStats';
 
 // --- Helper Functions (Refined for Consistency) ---
 
@@ -271,6 +272,9 @@ export default function OrdersPage() {
             New Order
           </button>
         </div>
+
+        {/* Order Stats Cards */}
+        <OrderStats orders={orders} />
 
         {/* Filter and Search Bar */}
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 mb-6">
