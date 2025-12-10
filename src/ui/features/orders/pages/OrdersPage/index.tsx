@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { orderService } from '@/infrastructure/api/services/orderService';
 import type { Order } from '@/domain/models/Order';
-import { Edit, Trash2, Plus, Eye, ShoppingCart, Loader2, RefreshCw, AlertTriangle } from 'lucide-react'; // Switched to Lucide
+import { Edit, Trash2, Plus, Eye, ShoppingCart, Loader2, RefreshCw, AlertTriangle, Search, Filter, Download, X, ChevronDown } from 'lucide-react'; // Switched to Lucide
 import { AddOrderModal } from '@/ui/features/orders/components/AddOrderModal';
 import { EditOrderModal } from '@/ui/features/orders/components/EditOrderModal';
 import { DeleteOrderModal } from '@/ui/features/orders/components/DeleteOrderModal';
@@ -58,6 +58,18 @@ export default function OrdersPage() {
   const [showViewModal, setShowViewModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
+  // Filter states
+  const [selectedStatus, setSelectedStatus] = useState<string>("All Status");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [sortBy, setSortBy] = useState<string>("date");
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [amountRange, setAmountRange] = useState<{ min: number; max: number }>({ min: 0, max: 10000 });
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(25);
+
   useEffect(() => {
     loadOrders();
   }, []);
@@ -94,6 +106,109 @@ export default function OrdersPage() {
     if (type !== 'add') setSelectedOrder(null); 
 
     if (shouldReload) loadOrders();
+  };
+
+  // Advanced filtering and sorting logic
+  const filteredAndSortedOrders = useMemo(() => {
+    let filtered = [...orders];
+
+    // Status filter
+    if (selectedStatus !== "All Status") {
+      filtered = filtered.filter(o => o.status.toLowerCase() === selectedStatus.toLowerCase());
+    }
+
+    // Search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(o => 
+        o.id.toString().includes(query) ||
+        o.user_id.toString().includes(query) ||
+        o.status.toLowerCase().includes(query)
+      );
+    }
+
+    // Amount range filter
+    filtered = filtered.filter(o => 
+      o.amount >= amountRange.min && o.amount <= amountRange.max
+    );
+
+    // Sorting
+    filtered.sort((a, b) => {
+      let comparison = 0;
+      
+      switch (sortBy) {
+        case 'date':
+          comparison = new Date(a.order_date).getTime() - new Date(b.order_date).getTime();
+          break;
+        case 'amount':
+          comparison = a.amount - b.amount;
+          break;
+        case 'status':
+          comparison = a.status.localeCompare(b.status);
+          break;
+        case 'user':
+          comparison = a.user_id - b.user_id;
+          break;
+        default:
+          comparison = 0;
+      }
+      
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+
+    return filtered;
+  }, [orders, selectedStatus, searchQuery, sortBy, sortOrder, amountRange]);
+
+  // Pagination
+  const totalPages = Math.ceil(filteredAndSortedOrders.length / itemsPerPage);
+  const paginatedOrders = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredAndSortedOrders.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredAndSortedOrders, currentPage, itemsPerPage]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedStatus, searchQuery, amountRange]);
+
+  const activeFiltersCount = [
+    selectedStatus !== "All Status",
+    searchQuery !== "",
+    amountRange.min > 0 || amountRange.max < 10000
+  ].filter(Boolean).length;
+
+  const clearAllFilters = () => {
+    setSelectedStatus("All Status");
+    setSearchQuery("");
+    setAmountRange({ min: 0, max: 10000 });
+  };
+
+  const handleExport = () => {
+    // Create CSV content
+    const headers = ['ID', 'User ID', 'Date', 'Status', 'Amount'];
+    const rows = filteredAndSortedOrders.map(o => [
+      o.id,
+      o.user_id,
+      o.order_date,
+      o.status,
+      o.amount
+    ]);
+    
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    // Download CSV
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `orders_export_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   // --- Render Loading/Error States ---
@@ -143,7 +258,9 @@ export default function OrdersPage() {
                 Orders Management
             </h1>
             <p className="text-slate-500 mt-2">
-              {orders.length} order{orders.length !== 1 ? 's' : ''} currently registered in the system.
+              {filteredAndSortedOrders.length === orders.length 
+                ? `${orders.length} order${orders.length !== 1 ? 's' : ''} currently registered in the system.`
+                : `${filteredAndSortedOrders.length} of ${orders.length} orders`}
             </p>
           </div>
           <button
@@ -153,6 +270,168 @@ export default function OrdersPage() {
             <Plus size={20} />
             New Order
           </button>
+        </div>
+
+        {/* Filter and Search Bar */}
+        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 mb-6">
+          {/* Header Row */}
+          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+            <div className="flex items-center gap-4">
+              <div>
+                <h3 className="text-lg font-bold text-slate-900">Orders List</h3>
+                <p className="text-sm text-slate-500 mt-0.5">
+                  {filteredAndSortedOrders.length === orders.length 
+                    ? `${orders.length.toLocaleString()} orders` 
+                    : `${filteredAndSortedOrders.length.toLocaleString()} of ${orders.length.toLocaleString()} orders`}
+                </p>
+              </div>
+              {activeFiltersCount > 0 && (
+                <button
+                  onClick={clearAllFilters}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-100 rounded-full hover:bg-slate-200 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                  Clear {activeFiltersCount} filter{activeFiltersCount > 1 ? 's' : ''}
+                </button>
+              )}
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <button
+                onClick={loadOrders}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
+                title="Refresh data"
+              >
+                <RefreshCw className="w-4 h-4" />
+                Refresh
+              </button>
+              <button
+                onClick={handleExport}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition-colors"
+                title="Export to CSV"
+              >
+                <Download className="w-4 h-4" />
+                Export
+              </button>
+            </div>
+          </div>
+
+          {/* Search and Quick Filters Row */}
+          <div className="px-6 py-4 space-y-4">
+            <div className="flex gap-3">
+              {/* Search Bar */}
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by order ID, user ID, or status..."
+                  className="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-all"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+
+              {/* Status Filter */}
+              <select 
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value)}
+                className="px-4 py-2.5 text-sm font-medium bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all cursor-pointer min-w-[160px]"
+              >
+                <option value="All Status">All Status</option>
+                <option value="Pending">⏳ Pending</option>
+                <option value="Confirmed">✓ Confirmed</option>
+                <option value="Shipped">📦 Shipped</option>
+                <option value="Delivered">✅ Delivered</option>
+                <option value="Cancelled">❌ Cancelled</option>
+              </select>
+
+              {/* Sort By */}
+              <select 
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="px-4 py-2.5 text-sm font-medium bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all cursor-pointer min-w-[160px]"
+              >
+                <option value="date">Sort: Date</option>
+                <option value="amount">Sort: Amount</option>
+                <option value="status">Sort: Status</option>
+                <option value="user">Sort: User ID</option>
+              </select>
+
+              {/* Sort Order */}
+              <button
+                onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                className="px-4 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+                title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
+              >
+                {sortOrder === 'asc' ? '↑ A-Z' : '↓ Z-A'}
+              </button>
+
+              {/* Advanced Filters Toggle */}
+              <button
+                onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border rounded-lg transition-colors ${
+                  showAdvancedFilters 
+                    ? 'text-blue-700 bg-blue-50 border-blue-200' 
+                    : 'text-slate-700 bg-white border-slate-200 hover:bg-slate-50'
+                }`}
+              >
+                <Filter className="w-4 h-4" />
+                Filters
+                <ChevronDown className={`w-4 h-4 transition-transform ${showAdvancedFilters ? 'rotate-180' : ''}`} />
+              </button>
+            </div>
+
+            {/* Advanced Filters Panel */}
+            {showAdvancedFilters && (
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-4 animate-in slide-in-from-top-2 duration-200">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="text-sm font-semibold text-slate-700">Advanced Filters</h4>
+                  <button
+                    onClick={() => {
+                      setAmountRange({ min: 0, max: 10000 });
+                    }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors"
+                  >
+                    <X className="w-3 h-3" />
+                    Reset Filters
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 gap-4">
+                  {/* Amount Range */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-slate-700">
+                      Amount Range (€)
+                    </label>
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="number"
+                        value={amountRange.min}
+                        onChange={(e) => setAmountRange({ ...amountRange, min: Number(e.target.value) })}
+                        placeholder="Min"
+                        className="flex-1 px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                      <span className="text-slate-400">—</span>
+                      <input
+                        type="number"
+                        value={amountRange.max}
+                        onChange={(e) => setAmountRange({ ...amountRange, max: Number(e.target.value) })}
+                        placeholder="Max"
+                        className="flex-1 px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Modern Data Grid Container */}
@@ -182,15 +461,15 @@ export default function OrdersPage() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-slate-100">
-                {orders.length === 0 ? (
+                {paginatedOrders.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="px-6 py-12 text-center text-slate-500 bg-white">
                       <ShoppingCart className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                      No orders found. Click "New Order" to get started.
+                      {orders.length === 0 ? 'No orders found. Click "New Order" to get started.' : 'No orders match your filters.'}
                     </td>
                   </tr>
                 ) : (
-                  orders.map((order) => (
+                  paginatedOrders.map((order) => (
                     <tr key={order.id} className="hover:bg-slate-50 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
                         #{order.id}
@@ -242,6 +521,93 @@ export default function OrdersPage() {
             </table>
           </div>
         </div>
+
+        {/* Pagination */}
+        {filteredAndSortedOrders.length > 0 && (
+          <div className="mt-6 bg-white rounded-2xl shadow-xl border border-slate-200 px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-slate-600">
+                  Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredAndSortedOrders.length)} of {filteredAndSortedOrders.length} orders
+                </span>
+                <select
+                  value={itemsPerPage}
+                  onChange={(e) => {
+                    setItemsPerPage(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                  className="px-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value={10}>10 per page</option>
+                  <option value={25}>25 per page</option>
+                  <option value={50}>50 per page</option>
+                  <option value={100}>100 per page</option>
+                </select>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setCurrentPage(1)}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  First
+                </button>
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Previous
+                </button>
+                
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNum;
+                    if (totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1;
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i;
+                    } else {
+                      pageNum = currentPage - 2 + i;
+                    }
+                    
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => setCurrentPage(pageNum)}
+                        className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                          currentPage === pageNum
+                            ? 'text-white bg-blue-600'
+                            : 'text-slate-700 bg-white border border-slate-200 hover:bg-slate-50'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+                </div>
+                
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Next
+                </button>
+                <button
+                  onClick={() => setCurrentPage(totalPages)}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Last
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Modals are placed outside the main content flow */}
