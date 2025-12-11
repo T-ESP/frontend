@@ -23,7 +23,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Erreur non gérée:', error, errorInfo);
+    console.error('Unhandled error:', error, errorInfo);
     this.setState({
       error,
       errorInfo,
@@ -45,17 +45,17 @@ class ErrorBoundary extends Component<Props, State> {
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-red-600">
-                  Une erreur s'est produite
+                  An error occurred
                 </h1>
                 <p className="text-gray-600 mt-1">
-                  L'application a rencontré une erreur inattendue
+                  The application encountered an unexpected error
                 </p>
               </div>
             </div>
 
-            {/* Message d'erreur */}
+            {/* Error message */}
             <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4 rounded">
-              <h2 className="font-bold text-red-800 mb-2">Message d'erreur :</h2>
+              <h2 className="font-bold text-red-800 mb-2">Error message:</h2>
               <p className="text-red-700 font-mono text-sm">
                 {this.state.error?.toString()}
               </p>
@@ -64,18 +64,18 @@ class ErrorBoundary extends Component<Props, State> {
             {/* Stack trace */}
             {this.state.errorInfo && (
               <div className="bg-gray-50 border border-gray-300 rounded p-4 mb-6 max-h-96 overflow-auto">
-                <h2 className="font-bold text-gray-800 mb-2">Stack trace :</h2>
+                <h2 className="font-bold text-gray-800 mb-2">Stack trace:</h2>
                 <pre className="text-xs text-gray-700 whitespace-pre-wrap font-mono">
                   {this.state.errorInfo.componentStack}
                 </pre>
               </div>
             )}
 
-            {/* Stack de l'erreur complète */}
+            {/* Full error stack */}
             {this.state.error?.stack && (
               <details className="mb-6">
                 <summary className="cursor-pointer font-semibold text-gray-700 hover:text-gray-900 mb-2">
-                  Voir le stack complet
+                  View full stack
                 </summary>
                 <div className="bg-gray-900 text-green-400 rounded p-4 max-h-96 overflow-auto">
                   <pre className="text-xs font-mono whitespace-pre-wrap">
@@ -101,11 +101,11 @@ class ErrorBoundary extends Component<Props, State> {
               </button>
             </div>
 
-            {/* Informations de développement */}
+            {/* Development information */}
             <div className="mt-6 pt-6 border-t border-gray-200">
               <p className="text-sm text-gray-600">
-                💡 <strong>En développement :</strong> Vérifiez la console pour plus de détails.
-                Cette page ne s'affichera pas en production si vous configurez un error boundary approprié.
+                💡 <strong>In development:</strong> Check the console for more details.
+                This page will not display in production if you configure an appropriate error boundary.
               </p>
             </div>
           </div>

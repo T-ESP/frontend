@@ -47,7 +47,7 @@ export default function Hero() {
         </div>
 
         {/* Right Side */}
-        <div className="flex justify-center w-full lg:w-1/2 lg:justify-end">
+        <div className="flex justify-center w-full lg:w-1/2 lg:justify-center">
           <Logo className="object-contain w-80 h-80" />
         </div>
       </div>

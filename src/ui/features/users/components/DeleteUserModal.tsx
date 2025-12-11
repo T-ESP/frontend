@@ -47,7 +47,7 @@ export function DeleteUserModal({
             <div className="p-2 bg-red-100 rounded-lg">
               <FiAlertTriangle className="text-red-600" size={20} />
             </div>
-            <h2 className="text-xl font-semibold text-gray-900">Supprimer le membre</h2>
+            <h2 className="text-xl font-semibold text-gray-900">Delete Member</h2>
           </div>
           <button
             onClick={onClose}
@@ -65,9 +65,9 @@ export function DeleteUserModal({
           )}
 
           <p className="text-gray-600">
-            Êtes-vous sûr de vouloir supprimer{" "}
+            Are you sure you want to delete{" "}
             <span className="font-semibold text-gray-900">{userName}</span> ?
-            Cette action est irréversible.
+            This action is irreversible.
           </p>
 
           <div className="flex gap-3 pt-4">
@@ -84,7 +84,7 @@ export function DeleteUserModal({
               disabled={loading}
               className="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "Suppression..." : "Supprimer"}
+              {loading ? "Deleting..." : "Delete"}
             </button>
           </div>
         </div>

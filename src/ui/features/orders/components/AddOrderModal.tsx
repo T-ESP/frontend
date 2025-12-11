@@ -44,7 +44,7 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
             setProducts(productData);
         } catch (err) {
             console.error("Failed to load static data:", err);
-            setError("Erreur lors du chargement des utilisateurs/produits.");
+            setError("Error loading users/products.");
         } finally {
             setIsDataLoading(false);
         }
@@ -78,17 +78,17 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
     e.preventDefault();
     
     if (formData.user_id === 0) {
-      setError("Veuillez sélectionner un utilisateur.");
+      setError("Please select a user.");
       return;
     }
 
     if (lineItems.some(item => item.product_id === 0)) {
-      setError("Veuillez sélectionner un produit pour chaque article.");
+      setError("Please select a product for each item.");
       return;
     }
 
     if (lineItems.some(item => item.quantity <= 0)) {
-        setError("La quantité de chaque article doit être supérieure à zéro.");
+        setError("Each item quantity must be greater than zero.");
         return;
     }
 
@@ -120,7 +120,7 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
       onSuccess();
     } catch (err) {
       console.error('API Error during order creation:', err);
-      const errorMsg = err instanceof Error ? err.message : "Erreur: Échec de la création de la commande.";
+      const errorMsg = err instanceof Error ? err.message : "Error: Failed to create order.";
       setError(errorMsg);
       addToast('Failed to create order', errorMsg, 'error');
     } finally {
@@ -175,7 +175,7 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
                     onChange={(e) => setFormData({ ...formData, user_id: parseInt(e.target.value) })}
                     className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 text-slate-900 bg-white"
                   >
-                    <option value={0} disabled>Sélectionner un utilisateur</option>
+                    <option value={0} disabled>Select a user</option>
                     {users.map((user) => (
                       <option key={user.id} value={user.id}>
                         {user.firstname} {user.lastname} ({user.email})
@@ -216,7 +216,7 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
                     className="flex items-center gap-1 text-sm text-blue-600 font-medium px-2 py-1 rounded-lg hover:bg-blue-50 transition-colors"
                   >
                     <Plus size={16} />
-                    Ajouter un article
+                    Add Item
                   </button>
                 </div>
 
@@ -229,7 +229,7 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
                         onChange={(e) => updateLineItem(index, 'product_id', parseInt(e.target.value))}
                         className="flex-grow px-3 py-2 border border-slate-300 rounded-lg focus:ring-1 focus:ring-blue-500 transition duration-150 text-slate-900 bg-white"
                       >
-                        <option value={0} disabled>Sélectionner un produit</option>
+                        <option value={0} disabled>Select a product</option>
                         {products.map((product) => (
                           <option key={product.id} value={product.id}>
                             {product.name} ({product.reference}) - {product.buying_price}€
@@ -243,14 +243,14 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
                         value={item.quantity}
                         onChange={(e) => updateLineItem(index, 'quantity', parseInt(e.target.value))}
                         className="w-20 text-center px-3 py-2 border border-slate-300 rounded-lg focus:ring-1 focus:ring-blue-500 transition duration-150 text-slate-900"
-                        placeholder="Qté"
+                        placeholder="Qty"
                       />
                       {lineItems.length > 1 && (
                         <button
                           type="button"
                           onClick={() => removeLineItem(index)}
                           className="p-2 text-rose-600 hover:text-white hover:bg-rose-500 rounded-full transition-colors"
-                          title="Supprimer cet article"
+                          title="Delete this item"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -277,7 +277,7 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
               className="px-6 py-2.5 text-sm font-semibold text-white bg-blue-600 rounded-xl shadow-lg shadow-blue-500/30 hover:bg-blue-700 transition duration-150 disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-              {loading ? "Création..." : "Créer la commande"}
+              {loading ? "Creating..." : "Create Order"}
             </button>
           </div>
         </form>

@@ -27,14 +27,14 @@ export class HttpRegisterUserGateway implements RegisterUserGateway {
     if (!response.ok) {
       const errorMessage =
         (maybeJson && (maybeJson.message as string | undefined)) ??
-        "Impossible de créer le compte.";
+        "Unable to create account.";
       throw new Error(errorMessage);
     }
 
     return {
       message:
         (maybeJson && (maybeJson.message as string | undefined)) ??
-        "Compte créé avec succès.",
+        "Account created successfully.",
     };
   }
 

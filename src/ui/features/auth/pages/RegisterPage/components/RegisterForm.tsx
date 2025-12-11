@@ -44,7 +44,7 @@ export function RegisterForm() {
 
     if (!formValues.terms) {
       setStatus("error");
-      setFeedback("Vous devez accepter les conditions d'utilisation.");
+      setFeedback("You must accept the terms and conditions.");
       return;
     }
 
@@ -60,19 +60,19 @@ export function RegisterForm() {
     try {
       const result = await registerUser(payload);
       setStatus("success");
-      setFeedback(result.message ?? "Compte créé avec succès.");
+      setFeedback(result.message ?? "Account created successfully.");
       addToast(
-        "Compte créé",
-        "Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.",
+        "Account created",
+        "Your account has been created successfully. You can now log in.",
         "success"
       );
       setFormValues(INITIAL_VALUES);
     } catch (error) {
       setStatus("error");
-      const message = error instanceof Error ? error.message : "Une erreur est survenue.";
+      const message = error instanceof Error ? error.message : "An error occurred.";
       setFeedback(message);
       addToast(
-        "Erreur lors de l'inscription",
+        "Registration error",
         message,
         "error"
       );

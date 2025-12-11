@@ -37,7 +37,7 @@ export function HomeHeader({ onMenuClick, isSidebarOpen }: HomeHeaderProps): JSX
 
   const handleLogout = () => {
     clearAuthToken();
-    addToast("Déconnexion", "Vous avez été déconnecté avec succès.", "info");
+    addToast("Logged out", "You have been logged out successfully.", "info");
     navigate("/login", { replace: true });
     setIsProfileMenuOpen(false);
   };
@@ -51,7 +51,7 @@ export function HomeHeader({ onMenuClick, isSidebarOpen }: HomeHeaderProps): JSX
           type="button"
           className="inline-flex justify-center items-center w-9 h-9 text-gray-700 rounded-md hover:bg-gray-100"
           onClick={onMenuClick}
-          aria-label={(isSidebarOpen ?? false) ? "Replier la sidebar" : "Déplier la sidebar"}
+          aria-label={(isSidebarOpen ?? false) ? "Collapse sidebar" : "Expand sidebar"}
           aria-pressed={isSidebarOpen ?? false}
         >
           <Menu className="w-5 h-5" />

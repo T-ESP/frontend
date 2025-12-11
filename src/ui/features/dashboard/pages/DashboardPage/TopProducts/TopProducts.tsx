@@ -66,7 +66,7 @@ export function TopProducts({ products }: TopProductsProps) {
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
       <div className="flex justify-between items-center p-6 border-b border-gray-100">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Top Stock Products</h3>
+          <h3 className="text-lg font-semibold text-gray-900">Best Performing Products</h3>
           <p className="mt-1 text-sm text-gray-500">Products with highest inventory</p>
         </div>
         <div className="flex gap-3 items-center">
@@ -107,9 +107,6 @@ export function TopProducts({ products }: TopProductsProps) {
               </div>
             )}
           </div>
-          <button className="text-sm font-medium text-purple-600 hover:text-purple-700">
-            View All
-          </button>
         </div>
       </div>
       <div className="divide-y divide-gray-100">

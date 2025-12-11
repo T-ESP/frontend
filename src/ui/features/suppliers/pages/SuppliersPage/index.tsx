@@ -116,7 +116,7 @@ export default function SuppliersPage() {
     return (
       <PageLayout title="Supplier Management" icon={<Users size={28} />}>
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-xl">Chargement des fournisseurs...</div>
+          <div className="text-xl">Loading suppliers...</div>
         </div>
       </PageLayout>
     );
@@ -127,13 +127,13 @@ export default function SuppliersPage() {
       <PageLayout title="Supplier Management" icon={<Users size={28} />}>
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-red-600">
-            <h2 className="text-2xl font-bold mb-2">Erreur</h2>
+            <h2 className="text-2xl font-bold mb-2">Error</h2>
             <p>{error}</p>
             <button
               onClick={loadSuppliers}
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             >
-              Réessayer
+              Retry
             </button>
           </div>
         </div>

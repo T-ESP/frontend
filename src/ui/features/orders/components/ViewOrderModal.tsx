@@ -95,7 +95,7 @@ export function ViewOrderModal({ order, onClose }: ViewOrderModalProps) {
             
             {loading ? (
               <div className="text-center py-8 text-gray-500">
-                Chargement des articles...
+                Loading items...
               </div>
             ) : error ? (
               <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
@@ -103,7 +103,7 @@ export function ViewOrderModal({ order, onClose }: ViewOrderModalProps) {
               </div>
             ) : lineItems.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
-                Aucun article dans cette commande
+                No items in this order
               </div>
             ) : (
               <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">

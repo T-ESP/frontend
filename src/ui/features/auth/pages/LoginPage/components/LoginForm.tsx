@@ -59,7 +59,7 @@ export function LoginForm() {
     try {
       const result = await loginUser(payload);
       setStatus("success");
-      setFeedback(result.message ?? "Connexion réussie.");
+      setFeedback(result.message ?? "Login successful.");
 
       if (!formValues.remember) {
         // Si on ne veut pas se souvenir, on pourra plus tard stocker ailleurs (state, memory, etc.)
@@ -67,17 +67,17 @@ export function LoginForm() {
       }
 
       addToast(
-        "Connexion réussie",
-        "Vous êtes connecté. Vous pouvez maintenant accéder au tableau de bord.",
+        "Login successful",
+        "You are now logged in. You can now access the dashboard.",
         "success"
       );
 
       navigate("/dashboard", { replace: true });
     } catch (error) {
       setStatus("error");
-      const message = error instanceof Error ? error.message : "Une erreur est survenue.";
+      const message = error instanceof Error ? error.message : "An error occurred.";
       setFeedback(message);
-      addToast("Erreur de connexion", message, "error");
+      addToast("Login error", message, "error");
     }
   };
 

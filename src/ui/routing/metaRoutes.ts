@@ -153,7 +153,7 @@ export const ROUTES: Record<string, RouteMeta> = {
     page: 'NotFound',
     layout: 'none',
     restricted: false,
-    title: 'StockS - Page non trouvée',
+    title: 'StockS - Page not found',
   },
   PLAYGROUND: {
     path: '/playground',

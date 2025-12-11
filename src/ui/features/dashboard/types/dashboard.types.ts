@@ -36,7 +36,7 @@ export type RevenueData = {
   month: string;
   revenue: number | null;
   profit: number | null;
-  orders: number;
+  orders?: number;
 };
 
 export type RevenueChartProps = {

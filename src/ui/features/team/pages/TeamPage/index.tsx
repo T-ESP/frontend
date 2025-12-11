@@ -119,7 +119,7 @@ export default function TeamPage() {
     return (
       <PageLayout title="Team Management" icon={<UsersIcon size={28} />}>
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-xl">Chargement de l'équipe...</div>
+          <div className="text-xl">Loading team...</div>
         </div>
       </PageLayout>
     );
@@ -130,13 +130,13 @@ export default function TeamPage() {
       <PageLayout title="Team Management" icon={<UsersIcon size={28} />}>
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-red-600">
-            <h2 className="text-2xl font-bold mb-2">Erreur</h2>
+            <h2 className="text-2xl font-bold mb-2">Error</h2>
             <p>{error}</p>
             <button
               onClick={loadUsers}
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             >
-              Réessayer
+              Retry
             </button>
           </div>
         </div>

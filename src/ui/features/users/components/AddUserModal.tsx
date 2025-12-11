@@ -48,7 +48,7 @@ export function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <h2 className="text-xl font-semibold text-gray-900">Ajouter un membre</h2>
+          <h2 className="text-xl font-semibold text-gray-900">Add Member</h2>
           <button
             onClick={onClose}
             className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"

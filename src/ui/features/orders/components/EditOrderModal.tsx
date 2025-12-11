@@ -40,7 +40,7 @@ export function EditOrderModal({ order, onClose, onSuccess }: EditOrderModalProp
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="bg-white rounded-2xl shadow-xl max-w-md w-full">
         <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <h2 className="text-xl font-semibold text-gray-900">Modifier la commande #{order.id}</h2>
+          <h2 className="text-xl font-semibold text-gray-900">Edit Order #{order.id}</h2>
           <button
             onClick={onClose}
             className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
@@ -106,7 +106,7 @@ export function EditOrderModal({ order, onClose, onSuccess }: EditOrderModalProp
               disabled={loading}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "Modification..." : "Modifier"}
+              {loading ? "Updating..." : "Update"}
             </button>
           </div>
         </form>

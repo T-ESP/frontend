@@ -21,7 +21,7 @@ export default function NotFoundPage() {
         <img src={illustration404} alt="Illustration 404" className="mx-auto w-56" />
         <h1 className="mt-8 text-2xl font-semibold text-gray-900">Oups, page introuvable</h1>
         <p className="mt-3 text-sm text-gray-500">
-          Il semble que la page que vous cherchez n’existe plus ou ait été déplacée.
+          It seems the page you're looking for no longer exists or has been moved.
         </p>
         <Link
           to="/"

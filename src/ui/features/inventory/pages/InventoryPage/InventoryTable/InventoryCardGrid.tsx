@@ -13,7 +13,7 @@ export function InventoryCardGrid({ data, onEdit, onDelete, onStockUpdate, onVie
   if (data.length === 0) {
     return (
       <div className="text-center py-12 bg-white rounded-lg shadow-sm">
-        <p className="text-gray-500 text-lg">Aucun produit trouvé</p>
+        <p className="text-gray-500 text-lg">No products found</p>
       </div>
     );
   }

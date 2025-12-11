@@ -346,7 +346,6 @@ export default function SalesPage() {
                     <FiAward className="text-amber-500" />
                     <h3 className="font-bold text-slate-900">Top Performing Products</h3>
                 </div>
-                <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">View All</button>
             </div>
             
             <div className="flex-1 overflow-auto">
