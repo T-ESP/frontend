@@ -1,13 +1,44 @@
-import { useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { CustomerDistributionChart } from "./CustomerDistributionChart";
 import { RevenueChart } from "./RevenueChart";
+import { salesService } from "@/infrastructure/api/services/salesService";
 import type { Order } from "@/domain/models/Order";
+import type { EvolutionDataPoint } from "@/domain/models/Sales";
 
 interface ChartContainerProps {
   orders: Order[];
 }
 
 export function ChartContainer({ orders }: ChartContainerProps) {
+  const [revenueDataFromApi, setRevenueDataFromApi] = useState<EvolutionDataPoint[]>([]);
+
+  // Fetch revenue data from sales API
+  useEffect(() => {
+    const fetchRevenueData = async () => {
+      try {
+        // Get last 12 months date range
+        const endDate = new Date();
+        const startDate = new Date();
+        startDate.setMonth(startDate.getMonth() - 12);
+        
+        const formatDate = (date: Date) => date.toISOString().split('T')[0];
+        
+        const response = await salesService.getEvolutionByGrain({
+          start_date: formatDate(startDate),
+          end_date: formatDate(endDate),
+          grain: 'month'
+        });
+        
+        setRevenueDataFromApi(response.data);
+      } catch (error) {
+        console.error('Error fetching revenue data:', error);
+        setRevenueDataFromApi([]);
+      }
+    };
+    
+    fetchRevenueData();
+  }, []);
+
   // Calculate customer distribution (new vs returning)
   const customerData = useMemo(() => {
     const userOrderCounts = new Map<number, number>();
@@ -50,60 +81,19 @@ export function ChartContainer({ orders }: ChartContainerProps) {
     ];
   }, [orders]);
 
-  // Group orders by month and calculate revenue
+  // Transform API data to chart format
   const revenueData = useMemo(() => {
-    // Generate last 12 months chronologically
-    const last12Months: { month: string; year: number; key: string }[] = [];
-    const now = new Date();
-    
-    for (let i = 11; i >= 0; i--) {
-      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    return revenueDataFromApi.map(dataPoint => {
+      const date = new Date(dataPoint.date);
       const monthName = date.toLocaleDateString('en-US', { month: 'short' });
-      const year = date.getFullYear();
-      last12Months.push({
-        month: monthName,
-        year,
-        key: `${year}-${String(date.getMonth() + 1).padStart(2, '0')}` // e.g., "2024-12"
-      });
-    }
-    
-    // Group orders by month-year
-    const monthlyData = new Map<string, { revenue: number, orders: number }>();
-    
-    orders.forEach(order => {
-      const date = new Date(order.order_date);
-      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-      
-      const existing = monthlyData.get(monthKey) || { revenue: 0, orders: 0 };
-      
-      monthlyData.set(monthKey, {
-        revenue: existing.revenue + order.amount,
-        orders: existing.orders + 1,
-      });
-    });
-    
-    // Map the last 12 months with their data
-    return last12Months.map(({ month, key }) => {
-      const data = monthlyData.get(key);
-      
-      // If no orders in this month, use null so the chart skips it (creates continuous line)
-      if (!data || data.orders === 0) {
-        return {
-          month,
-          revenue: null,
-          profit: null,
-          orders: 0,
-        };
-      }
       
       return {
-        month,
-        revenue: Math.round(data.revenue),
-        profit: Math.round(data.revenue * 0.7), // Estimate profit as 70% of revenue
-        orders: data.orders,
+        month: monthName,
+        revenue: Math.round(dataPoint.revenue),
+        profit: Math.round(dataPoint.revenue * 0.7), // Estimate profit as 70% of revenue
       };
     });
-  }, [orders]);
+  }, [revenueDataFromApi]);
 
   return (
     <div className="grid grid-cols-1 gap-8 mb-8 lg:grid-cols-3">
@@ -112,3 +102,5 @@ export function ChartContainer({ orders }: ChartContainerProps) {
     </div>
   );
 }
+
+
