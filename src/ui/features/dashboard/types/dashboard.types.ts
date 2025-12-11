@@ -34,8 +34,8 @@ export type CustomerDistributionChartProps = {
 
 export type RevenueData = {
   month: string;
-  revenue: number;
-  profit: number;
+  revenue: number | null;
+  profit: number | null;
   orders: number;
 };
 

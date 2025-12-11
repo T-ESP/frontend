@@ -81,6 +81,7 @@ export function RevenueChart({ data }: RevenueChartProps) {
               fillOpacity={1}
               fill="url(#colorRevenue)"
               name="Revenue"
+              connectNulls={true}
               animationDuration={1000} // Smooth animation when data changes
             />
             <Area
@@ -91,6 +92,7 @@ export function RevenueChart({ data }: RevenueChartProps) {
               fillOpacity={1}
               fill="url(#colorProfit)"
               name="Profit"
+              connectNulls={true}
               animationDuration={1000}
             />
           </AreaChart>
