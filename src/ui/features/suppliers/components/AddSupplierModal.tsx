@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiX } from "react-icons/fi";
+import { X, Truck, Mail, Phone, MapPin, Loader2, AlertTriangle } from "lucide-react"; // Consistent Icon Set
 import { supplierService } from "@/infrastructure/api/services/supplierService";
 import type { CreateSupplierDto } from "@/domain/models/Supplier";
 
@@ -9,15 +9,24 @@ interface AddSupplierModalProps {
   onSupplierAdded: () => void;
 }
 
+// Initial state constant for clean resets
+const INITIAL_STATE: CreateSupplierDto = {
+  name_sup: "",
+  email_sup: "",
+  phone_sup: "",
+  address_sup: "",
+};
+
 export function AddSupplierModal({ isOpen, onClose, onSupplierAdded }: AddSupplierModalProps) {
-  const [formData, setFormData] = useState<CreateSupplierDto>({
-    name_sup: "",
-    email_sup: "",
-    phone_sup: "",
-    address_sup: "",
-  });
+  const [formData, setFormData] = useState<CreateSupplierDto>(INITIAL_STATE);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Centralized change handler
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,15 +37,10 @@ export function AddSupplierModal({ isOpen, onClose, onSupplierAdded }: AddSuppli
       await supplierService.create(formData);
       onSupplierAdded();
       onClose();
-      // Reset form
-      setFormData({
-        name_sup: "",
-        email_sup: "",
-        phone_sup: "",
-        address_sup: "",
-      });
+      setFormData(INITIAL_STATE);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create supplier");
+      console.error('API Error during supplier creation:', err);
+      setError(err instanceof Error ? err.message : "Failed to create supplier. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -45,95 +49,121 @@ export function AddSupplierModal({ isOpen, onClose, onSupplierAdded }: AddSuppli
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <h2 className="text-xl font-semibold text-gray-900">Ajouter un fournisseur</h2>
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-hidden border border-slate-200 animate-in zoom-in-95 duration-300">
+        
+        {/* Header - Consistent Blue Theme */}
+        <div className="flex items-center justify-between p-6 border-b border-slate-100 bg-slate-50 rounded-t-2xl">
+          <div className="flex items-center gap-3">
+            <Truck className="w-6 h-6 text-blue-600" />
+            <h2 className="text-xl font-bold text-slate-900">Add New Supplier</h2>
+          </div>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+            className="p-2 text-slate-400 hover:text-slate-700 rounded-full hover:bg-slate-100 transition-colors"
           >
-            <FiX size={20} />
+            <X size={20} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-5 overflow-y-auto max-h-[calc(90vh-120px)]">
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+            <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 text-sm font-medium flex items-center gap-2">
+              <AlertTriangle size={18} />
               {error}
             </div>
           )}
 
+          {/* Supplier Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nom du fournisseur *
+            <label htmlFor="name_sup" className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1">
+              <Truck className="w-4 h-4 text-slate-400" />
+              Supplier Name *
             </label>
             <input
+              id="name_sup"
+              name="name_sup"
               type="text"
               required
               value={formData.name_sup}
-              onChange={(e) => setFormData({ ...formData, name_sup: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 text-slate-900 placeholder:text-slate-400"
               placeholder="Ex: Acme Corp"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email *
-            </label>
-            <input
-              type="email"
-              required
-              value={formData.email_sup}
-              onChange={(e) => setFormData({ ...formData, email_sup: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="contact@acme.com"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Email */}
+            <div>
+              <label htmlFor="email_sup" className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1">
+                <Mail className="w-4 h-4 text-slate-400" />
+                Email *
+              </label>
+              <input
+                id="email_sup"
+                name="email_sup"
+                type="email"
+                required
+                value={formData.email_sup}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 text-slate-900 placeholder:text-slate-400"
+                placeholder="contact@acme.com"
+              />
+            </div>
+
+            {/* Phone */}
+            <div>
+              <label htmlFor="phone_sup" className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1">
+                <Phone className="w-4 h-4 text-slate-400" />
+                Phone *
+              </label>
+              <input
+                id="phone_sup"
+                name="phone_sup"
+                type="tel"
+                required
+                value={formData.phone_sup}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 text-slate-900 placeholder:text-slate-400"
+                placeholder="+33 1 23 45 67 89"
+              />
+            </div>
           </div>
 
+          {/* Address */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Téléphone *
-            </label>
-            <input
-              type="tel"
-              required
-              value={formData.phone_sup}
-              onChange={(e) => setFormData({ ...formData, phone_sup: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Ex: +33 1 23 45 67 89"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Adresse *
+            <label htmlFor="address_sup" className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1">
+              <MapPin className="w-4 h-4 text-slate-400" />
+              Address *
             </label>
             <textarea
+              id="address_sup"
+              name="address_sup"
               required
               value={formData.address_sup}
-              onChange={(e) => setFormData({ ...formData, address_sup: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 text-slate-900 placeholder:text-slate-400 resize-none"
               placeholder="123 Rue Example, 75001 Paris"
               rows={3}
             />
           </div>
 
-          <div className="flex gap-3 pt-4">
+          {/* Action Buttons */}
+          <div className="flex gap-3 pt-6 border-t border-slate-100 mt-6">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-300 hover:bg-gray-50"
+              className="flex-1 px-4 py-2.5 text-sm font-semibold text-slate-700 bg-white rounded-xl border border-slate-300 hover:bg-slate-50 transition duration-150"
             >
-              Annuler
+              Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-blue-600 rounded-xl shadow-lg shadow-blue-500/30 hover:bg-blue-700 transition duration-150 disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              {loading ? "Création..." : "Créer"}
+              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+              {loading ? "Creating..." : "Create Supplier"}
             </button>
           </div>
         </form>
