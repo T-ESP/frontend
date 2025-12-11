@@ -46,7 +46,7 @@ export function RevenueChart({ data }: RevenueChartProps) {
               axisLine={false}
               tickLine={false}
               tick={{ fontSize: 12, fill: '#64748b' }}
-              tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+              tickFormatter={(value) => `€${(value / 1000).toFixed(0)}k`}
             />
             <Tooltip content={<CustomTooltip />} />
             <Legend

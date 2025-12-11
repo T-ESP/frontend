@@ -3,22 +3,16 @@ export function SalesTableHead() {
     <thead>
       <tr className="border-b border-gray-100 bg-gray-50/50">
         <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
-          Product Name
+          Date
         </th>
         <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
-          Location
+          Orders Count
         </th>
         <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
-          Date & Time
+          Revenue
         </th>
         <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
-          Quantity
-        </th>
-        <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
-          Amount
-        </th>
-        <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
-          Status
+          Average Basket
         </th>
       </tr>
     </thead>

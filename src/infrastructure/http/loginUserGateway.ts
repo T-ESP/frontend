@@ -43,7 +43,9 @@ export class HttpLoginUserGateway implements LoginUserGateway {
 
     const token = body.data.token;
 
-    // Stockage simple du token pour le moment
+    // Store token in localStorage for authenticated API calls
+    localStorage.setItem('auth_token', token);
+
     return {
       success: true,
       token,

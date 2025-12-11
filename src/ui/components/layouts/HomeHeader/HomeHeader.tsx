@@ -4,8 +4,8 @@ import { Bell, ChevronDown, Menu, Search, User, LogOut } from "lucide-react";
 import avatarImg from "@/assets/images/BOT.png";
 import type { JSX } from "react";
 import type { HomeHeaderProps } from "./HomeHeader.types";
-import { clearAuthToken } from "@/features/auth/hooks/useAuth";
-import { useToast } from "@/components/ui/Toast";
+import { clearAuthToken } from "@/ui/features/auth/hooks/useAuth";
+import { useToast } from "@/ui/components/common/Toast";
 
 
 export function HomeHeader({ onMenuClick, isSidebarOpen }: HomeHeaderProps): JSX.Element {

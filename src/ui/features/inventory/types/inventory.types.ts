@@ -5,7 +5,6 @@ export type InventoryItem = {
   price: string;
   piece: number;
   status: "In Stock" | "Low Stock" | "Out of Stock";
-  colors: string[];
   image: string;
   sku: string;
   lastUpdated: string;
