@@ -1,13 +1,83 @@
-import { FiCalendar, FiDownload } from "react-icons/fi";
+import { FiCalendar, FiDownload, FiChevronDown } from "react-icons/fi";
+import { useState, useEffect, useRef } from "react";
 
-export function PageActions() {
+interface PageActionsProps {
+  onDateRangeChange?: (days: number) => void;
+  onExport?: () => void;
+  currentRange?: number;
+}
+
+export function PageActions({ onDateRangeChange, onExport, currentRange = 30 }: PageActionsProps) {
+  const [showDateMenu, setShowDateMenu] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDateMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const dateRanges = [
+    { label: 'Last 7 days', days: 7 },
+    { label: 'Last 30 days', days: 30 },
+    { label: 'Last 90 days', days: 90 },
+    { label: 'Last year', days: 365 },
+  ];
+
+  const currentLabel = dateRanges.find(r => r.days === currentRange)?.label || 'Last 30 days';
+
+  const handleExport = () => {
+    if (onExport) {
+      onExport();
+    } else {
+      // Default CSV export
+      const csvContent = "data:text/csv;charset=utf-8,Dashboard Export\nGenerated: " + new Date().toISOString();
+      const link = document.createElement('a');
+      link.setAttribute('href', csvContent);
+      link.setAttribute('download', `dashboard-${new Date().toISOString().split('T')[0]}.csv`);
+      link.click();
+    }
+  };
+
   return (
     <div className="flex gap-3">
-      <button className="flex gap-2 items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-200 transition-colors hover:bg-gray-50">
-        <FiCalendar size={16} />
-        Last 30 days
-      </button>
-      <button className="flex gap-2 items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-200 transition-colors hover:bg-gray-50">
+      <div className="relative" ref={dropdownRef}>
+        <button 
+          onClick={() => setShowDateMenu(!showDateMenu)}
+          className="flex gap-2 items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-200 transition-colors hover:bg-gray-50"
+        >
+          <FiCalendar size={16} />
+          {currentLabel}
+          <FiChevronDown size={14} className={`transition-transform ${showDateMenu ? 'rotate-180' : ''}`} />
+        </button>
+        {showDateMenu && (
+          <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
+            {dateRanges.map(range => (
+              <button
+                key={range.days}
+                onClick={() => {
+                  onDateRangeChange?.(range.days);
+                  setShowDateMenu(false);
+                }}
+                className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
+                  range.days === currentRange ? 'text-blue-600 font-medium' : 'text-gray-700'
+                }`}
+              >
+                {range.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      <button 
+        onClick={handleExport}
+        className="flex gap-2 items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-200 transition-colors hover:bg-gray-50"
+      >
         <FiDownload size={16} />
         Export
       </button>

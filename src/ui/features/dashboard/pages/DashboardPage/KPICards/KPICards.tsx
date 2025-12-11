@@ -11,9 +11,10 @@ interface KPICardsProps {
   users: User[];
   totalRevenue: number;
   evolution: number;
+  dateRange?: number;
 }
 
-export function KPICards({ orders, products, users, totalRevenue, evolution }: KPICardsProps) {
+export function KPICards({ orders, products, users, totalRevenue, evolution, dateRange = 30 }: KPICardsProps) {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
@@ -39,7 +40,7 @@ export function KPICards({ orders, products, users, totalRevenue, evolution }: K
       trend: evolution >= 0 ? "up" : "down",
       icon: FiDollarSign,
       color: "emerald",
-      description: "Last 30 days"
+      description: dateRange === 7 ? "Last 7 days" : dateRange === 90 ? "Last 90 days" : dateRange === 365 ? "Last year" : "Last 30 days"
     },
     {
       title: "Total Orders",

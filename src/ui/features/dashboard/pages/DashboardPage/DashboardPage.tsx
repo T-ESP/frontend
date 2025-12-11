@@ -19,19 +19,20 @@ export default function DashboardPage() {
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [evolution, setEvolution] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [dateRange, setDateRange] = useState(30);
 
   useEffect(() => {
     loadDashboardData();
-  }, []);
+  }, [dateRange]);
 
   const loadDashboardData = async () => {
     try {
       setLoading(true);
       
-      // Get date ranges (last 30 days)
+      // Get date ranges based on selected range
       const endDate = new Date();
       const startDate = new Date();
-      startDate.setDate(startDate.getDate() - 30);
+      startDate.setDate(startDate.getDate() - dateRange);
       
       const formatDate = (date: Date) => date.toISOString().split('T')[0];
       
@@ -61,11 +62,39 @@ export default function DashboardPage() {
     }
   };
 
+  const handleExport = () => {
+    const csvData = [
+      ['Dashboard Export', new Date().toISOString()],
+      [],
+      ['Metric', 'Value'],
+      ['Total Revenue', `€${totalRevenue.toFixed(2)}`],
+      ['Revenue Evolution', `${evolution.toFixed(1)}%`],
+      ['Total Orders', orders.length.toString()],
+      ['Total Products', products.length.toString()],
+      ['Total Users', users.length.toString()],
+      ['Low Stock Products', products.filter(p => p.stock_quantity < 10).length.toString()],
+    ];
+
+    const csv = csvData.map(row => row.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `dashboard-${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+  };
+
   return (
     <PageLayout
       title="Dashboard"
       subtitle="Monitor your business performance in real-time"
-      actions={<PageActions />}
+      actions={
+        <PageActions 
+          onDateRangeChange={setDateRange} 
+          onExport={handleExport}
+          currentRange={dateRange}
+        />
+      }
     >
       {loading ? (
         <div className="space-y-8">
@@ -85,6 +114,7 @@ export default function DashboardPage() {
             users={users}
             totalRevenue={totalRevenue}
             evolution={evolution}
+            dateRange={dateRange}
           />
 
           <ChartContainer orders={orders} />
