@@ -91,7 +91,6 @@ export default function DashboardPage() {
       actions={
         <PageActions 
           onDateRangeChange={setDateRange} 
-          onExport={handleExport}
           currentRange={dateRange}
         />
       }
@@ -117,7 +116,7 @@ export default function DashboardPage() {
             dateRange={dateRange}
           />
 
-          <ChartContainer orders={orders} />
+          <ChartContainer orders={orders} dateRange={dateRange} />
 
           <TopProducts products={products} />
         </>
