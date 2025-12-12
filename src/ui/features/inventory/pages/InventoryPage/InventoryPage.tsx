@@ -21,6 +21,7 @@ export default function InventoryPage() {
   const [kpiProductId, setKpiProductId] = useState<number | null>(null);
   const [kpiProductName, setKpiProductName] = useState("");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [products, setProducts] = useState<InventoryItem[]>([]);
 
   const handleEdit = (item: InventoryItem) => {
     // Convert InventoryItem back to Product for editing
@@ -50,6 +51,10 @@ export default function InventoryPage() {
     setRefreshTrigger(prev => prev + 1);
   };
 
+  const handleProductsLoaded = (loadedProducts: InventoryItem[]) => {
+    setProducts(loadedProducts);
+  };
+
   const handleViewKPIs = (id: number, name: string) => {
     setKpiProductId(id);
     setKpiProductName(name);
@@ -62,12 +67,13 @@ export default function InventoryPage() {
       subtitle="Manage your stock, products and availability."
       actions={<PageActions onAddProduct={() => setShowAddModal(true)} />}
     >
-      <InventoryStats />
+      <InventoryStats products={products} />
       <InventoryTable 
         onEdit={handleEdit} 
         onDelete={handleDelete}
         refreshTrigger={refreshTrigger}
         onViewKPIs={handleViewKPIs}
+        onProductsLoaded={handleProductsLoaded}
       />
 
       <AddProductModal

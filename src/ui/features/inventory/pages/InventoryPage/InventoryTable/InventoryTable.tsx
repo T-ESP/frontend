@@ -13,9 +13,10 @@ interface InventoryTableProps {
   onDelete: (id: number, name: string) => void;
   refreshTrigger: number;
   onViewKPIs: (id: number, name: string) => void;
+  onProductsLoaded?: (products: InventoryItem[]) => void;
 }
 
-export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs }: InventoryTableProps) {
+export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs, onProductsLoaded }: InventoryTableProps) {
   const [products, setProducts] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const { addToast } = useToast();
@@ -58,6 +59,7 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs }:
         lastUpdated: product.updated_at || product.created_at || "Unknown"
       }));
       setProducts(inventoryItems);
+      onProductsLoaded?.(inventoryItems);
     } catch (error) {
       console.error("Error loading products:", error);
       addToast("Failed to load products", "Please check your connection and try again.", "error");
