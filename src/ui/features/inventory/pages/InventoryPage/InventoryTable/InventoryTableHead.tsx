@@ -18,9 +18,6 @@ export function InventoryTableHead() {
           Status
         </th>
         <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
-          Colors
-        </th>
-        <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
           Actions
         </th>
       </tr>
