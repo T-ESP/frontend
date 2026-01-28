@@ -1,5 +1,6 @@
 import { FiCalendar, FiDownload, FiChevronDown } from "react-icons/fi";
 import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 interface PageActionsProps {
   onDateRangeChange?: (days: number) => void;
@@ -8,6 +9,7 @@ interface PageActionsProps {
 }
 
 export function PageActions({ onDateRangeChange, onExport, currentRange = 30 }: PageActionsProps) {
+  const { t } = useTranslation();
   const [showDateMenu, setShowDateMenu] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -23,13 +25,13 @@ export function PageActions({ onDateRangeChange, onExport, currentRange = 30 }: 
   }, []);
 
   const dateRanges = [
-    { label: 'Last 7 days', days: 7 },
-    { label: 'Last 30 days', days: 30 },
-    { label: 'Last 90 days', days: 90 },
-    { label: 'Last year', days: 365 },
+    { label: t('common.date_range.last_7_days'), days: 7 },
+    { label: t('common.date_range.last_30_days'), days: 30 },
+    { label: t('common.date_range.last_90_days'), days: 90 },
+    { label: t('common.date_range.last_year'), days: 365 },
   ];
 
-  const currentLabel = dateRanges.find(r => r.days === currentRange)?.label || 'Last 30 days';
+  const currentLabel = dateRanges.find(r => r.days === currentRange)?.label || t('common.date_range.last_30_days');
 
   const handleExport = () => {
     if (onExport) {
@@ -47,7 +49,7 @@ export function PageActions({ onDateRangeChange, onExport, currentRange = 30 }: 
   return (
     <div className="flex gap-3">
       <div className="relative" ref={dropdownRef}>
-        <button 
+        <button
           onClick={() => setShowDateMenu(!showDateMenu)}
           className="flex gap-2 items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-200 transition-colors hover:bg-gray-50"
         >
@@ -64,9 +66,8 @@ export function PageActions({ onDateRangeChange, onExport, currentRange = 30 }: 
                   onDateRangeChange?.(range.days);
                   setShowDateMenu(false);
                 }}
-                className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
-                  range.days === currentRange ? 'text-blue-600 font-medium' : 'text-gray-700'
-                }`}
+                className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${range.days === currentRange ? 'text-blue-600 font-medium' : 'text-gray-700'
+                  }`}
               >
                 {range.label}
               </button>
@@ -74,12 +75,12 @@ export function PageActions({ onDateRangeChange, onExport, currentRange = 30 }: 
           </div>
         )}
       </div>
-      <button 
+      <button
         onClick={handleExport}
         className="flex gap-2 items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-200 transition-colors hover:bg-gray-50"
       >
         <FiDownload size={16} />
-        Export
+        {t('common.export')}
       </button>
     </div>
   );

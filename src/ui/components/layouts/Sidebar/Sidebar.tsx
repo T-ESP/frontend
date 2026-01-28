@@ -32,7 +32,7 @@ export function Sidebar({ isOpen }: SidebarProps) {
       </div>
 
       {/* Bottom section */}
-      <div className="px-2 py-4 border-t border-gray-200">
+      <div className="px-2 py-4 border-t border-gray-200 space-y-4">
         <SidebarSection items={bottomSection} isOpen={isOpen} />
       </div>
     </aside>
