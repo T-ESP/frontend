@@ -320,83 +320,190 @@
         }
     },
     "pricing": {
-        "title": "Subscription Plans",
-        "subtitle": "Choose the perfect plan for your retail business",
-        "billing": {
-            "monthly": "Monthly",
-            "yearly": "Yearly"
+        "tabs": {
+            "overview": "Overview",
+            "pricing": "Pricing",
+            "stock": "Stock",
+            "sales": "Sales",
+            "profitability": "Profit",
+            "restock": "Restock",
+            "predictions": "Predictions",
+            "classification": "Scoring",
+            "comparative": "Market"
         },
-        "most_popular": "Most Popular",
-        "cta": {
-            "start_trial": "Start Free Trial",
-            "get_started": "Get Started",
-            "contact_sales": "Contact Sales"
+        "tab_desc": {
+            "overview": "Key metrics summary",
+            "pricing": "Margins & history",
+            "stock": "Levels & availability",
+            "sales": "Velocity & turnover",
+            "profitability": "ROI & contribution",
+            "restock": "Supply chain",
+            "predictions": "AI Forecasts",
+            "classification": "ABC & Rank",
+            "comparative": "Competitor analysis"
         },
-        "tiers": {
-            "starter": "Starter",
-            "starter_desc": "Perfect for small convenience stores.",
-            "professional": "Professional",
-            "professional_desc": "For growing supermarkets and chains.",
-            "enterprise": "Enterprise",
-            "enterprise_desc": "Full control for large retail networks."
+        "sections": {
+            "overview": "Performance Overview",
+            "overview_desc": "High-level snapshot of product health",
+            "pricing": "Pricing Strategy",
+            "pricing_desc": "Cost, margin analysis and price history",
+            "stock": "Inventory Health",
+            "stock_desc": "Stock levels and availability analysis",
+            "sales": "Sales Performance",
+            "sales_desc": "Velocity, rotation and demand trends",
+            "profitability": "Financial Performance",
+            "profitability_desc": "ROI, margins and profit contribution",
+            "restock": "Restock Analysis",
+            "restock_desc": "Supply chain and reorder recommendations",
+            "predictions": "AI Predictions",
+            "predictions_desc": "Forecasts and intelligent recommendations",
+            "classification": "Product Scoring",
+            "classification_desc": "ABC Classification and Performance Matrix",
+            "comparative": "Market Position",
+            "comparative_desc": "Competitive analysis and benchmarking"
         },
-        "features": {
-            "products_1k": "Up to 1,000 Products",
-            "products_50k": "Up to 50,000 Products",
-            "products_unlimited": "Unlimited Products",
-            "dashboard_basic": "Basic Sales Dashboard",
-            "analytics_advanced": "Advanced Analytics & KPIs",
-            "users_1": "1 User Account",
-            "users_5": "5 User Accounts",
-            "users_unlimited": "Unlimited Users",
-            "support_email": "Email Support",
-            "support_priority": "Priority Support",
-            "support_phone": "24/7 Phone Support",
-            "backups_manual": "Manual Backups",
-            "backups_daily": "Daily Automated Backups",
-            "predictions_ai": "AI Predictions",
-            "predictions_stock": "AI Stock Predictions",
-            "models_custom": "Custom AI Models",
-            "integration_supplier": "Supplier API Integration",
-            "multi_store": "Multi-store Management",
-            "multi_store_sync": "Multi-Store Sync",
-            "erp_custom": "Custom ERP Integrations",
-            "account_manager": "Dedicated Account Manager",
-            "on_premise": "On-premise Deployment Option"
+        "metrics": {
+            "global_score": "Global Score",
+            "margin_rate": "Margin Rate",
+            "current_stock": "Current Stock",
+            "turnover_rate": "Turnover Rate",
+            "selling_price": "Selling Price",
+            "buying_price": "Buying Price",
+            "margin": "Margin",
+            "price_evolution": "Price Evolution",
+            "stockout_analysis": "Stockout Analysis",
+            "historical_rate": "Historical Stockout Rate",
+            "occurrences": "Occurrences",
+            "avg_duration": "Avg Duration",
+            "abc_class": "ABC Class",
+            "score_breakdown": "Score Breakdown",
+            "sales_velocity": "Sales Velocity",
+            "total_sold": "Total Sold",
+            "rotation_analysis": "Rotation Analysis",
+            "avg_storage": "Avg Storage Duration",
+            "avg_per_order": "Avg per Order",
+            "revenue": "Revenue",
+            "sales_trend": "Sales Trend",
+            "roi": "ROI",
+            "total_profit": "Total Profit",
+            "avg_profit_sale": "Avg Profit/Sale",
+            "revenue_percent": "Revenue %",
+            "profit_metrics": "Profit Metrics",
+            "contribution": "Contribution Analysis",
+            "restock_count": "Restock Count",
+            "avg_quantity": "Avg Quantity",
+            "avg_delay": "Avg Delay",
+            "supply_chain": "Supply Chain Metrics",
+            "total_cost": "Total Cost",
+            "reception_rate": "Reception Rate",
+            "optimal_strategy": "Optimal Restock Strategy",
+            "frequency": "Frequency",
+            "avg_cost": "Avg Cost",
+            "alert_status": "Alert Status",
+            "days_coverage": "Days Coverage",
+            "stockout_date": "Stockout Date",
+            "reorder_recs": "Reorder Recommendations",
+            "optimal_qty": "Optimal Quantity",
+            "reorder_point": "Reorder Point",
+            "coverage_analysis": "Coverage Analysis",
+            "vs_category": "vs Category Avg",
+            "category_rank": "Category Rank",
+            "market_share": "Market Share",
+            "competitive_position": "Competitive Position",
+            "vs_supplier": "Performance vs Supplier"
         },
-        "faq": {
-            "title": "Frequently Asked Questions",
-            "upgrade": {
-                "q": "Can I upgrade later?",
-                "a": "Yes, you can upgrade or downgrade your plan at any time. The price will be prorated based on your billing cycle."
-            },
-            "setup_fee": {
-                "q": "Is there a setup fee?",
-                "a": "No, there are no hidden setup fees. You only pay the monthly or yearly subscription cost."
-            }
-        }
+        "labels": {
+            "per_day": "per day",
+            "orders": "orders",
+            "days": "days",
+            "times": "times",
+            "performance": "Performance",
+            "revenue_share": "Revenue Share",
+            "profit_share": "Profit Share"
+        },
+        "ai_recommendation": "AI Recommendation",
+        "analytics": "Analytics",
+        "loading_insights": "Gathering insights...",
+        "failed_load": "Failed to load KPIs."
+    }
+},
+"pricing": {
+    "title": "Subscription Plans",
+    "subtitle": "Choose the perfect plan for your retail business",
+    "billing": {
+        "monthly": "Monthly",
+        "yearly": "Yearly"
     },
-    "team": {
-        "users": {
-            "title": "User Management",
-            "count": "{{count}} users",
-            "add": "Add User",
-            "search_placeholder": "Search by name or email...",
-            "role": "Role",
-            "status": "Status"
+    "most_popular": "Most Popular",
+    "cta": {
+        "start_trial": "Start Free Trial",
+        "get_started": "Get Started",
+        "contact_sales": "Contact Sales"
+    },
+    "tiers": {
+        "starter": "Starter",
+        "starter_desc": "Perfect for small convenience stores.",
+        "professional": "Professional",
+        "professional_desc": "For growing supermarkets and chains.",
+        "enterprise": "Enterprise",
+        "enterprise_desc": "Full control for large retail networks."
+    },
+    "features": {
+        "products_1k": "Up to 1,000 Products",
+        "products_50k": "Up to 50,000 Products",
+        "products_unlimited": "Unlimited Products",
+        "dashboard_basic": "Basic Sales Dashboard",
+        "analytics_advanced": "Advanced Analytics & KPIs",
+        "users_1": "1 User Account",
+        "users_5": "5 User Accounts",
+        "users_unlimited": "Unlimited Users",
+        "support_email": "Email Support",
+        "support_priority": "Priority Support",
+        "support_phone": "24/7 Phone Support",
+        "backups_manual": "Manual Backups",
+        "backups_daily": "Daily Automated Backups",
+        "predictions_ai": "AI Predictions",
+        "predictions_stock": "AI Stock Predictions",
+        "models_custom": "Custom AI Models",
+        "integration_supplier": "Supplier API Integration",
+        "multi_store": "Multi-store Management",
+        "multi_store_sync": "Multi-Store Sync",
+        "erp_custom": "Custom ERP Integrations",
+        "account_manager": "Dedicated Account Manager",
+        "on_premise": "On-premise Deployment Option"
+    },
+    "faq": {
+        "title": "Frequently Asked Questions",
+        "upgrade": {
+            "q": "Can I upgrade later?",
+            "a": "Yes, you can upgrade or downgrade your plan at any time. The price will be prorated based on your billing cycle."
         },
-        "filters": {
-            "all_roles": "All Roles",
-            "all_status": "All Status"
-        },
-        "roles": {
-            "admin": "Admin",
-            "manager": "Manager",
-            "employee": "Employee"
-        },
-        "status": {
-            "active": "Active",
-            "inactive": "Inactive"
+        "setup_fee": {
+            "q": "Is there a setup fee?",
+            "a": "No, there are no hidden setup fees. You only pay the monthly or yearly subscription cost."
         }
+    }
+},
+"team": {
+    "users": {
+        "title": "User Management",
+        "count": "{{count}} users",
+        "add": "Add User",
+        "search_placeholder": "Search by name or email...",
+        "role": "Role",
+        "status": "Status"
+    },
+    "filters": {
+        "all_roles": "All Roles",
+        "all_status": "All Status"
+    },
+    "roles": {
+        "admin": "Admin",
+        "manager": "Manager",
+        "employee": "Employee"
+    },
+    "status": {
+        "active": "Active",
+        "inactive": "Inactive"
     }
 }

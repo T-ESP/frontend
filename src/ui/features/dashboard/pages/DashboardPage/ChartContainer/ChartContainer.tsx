@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { CustomerDistributionChart } from "./CustomerDistributionChart";
 import { RevenueChart } from "./RevenueChart";
 import { salesService } from "@/infrastructure/api/services/salesService";
@@ -11,6 +12,7 @@ interface ChartContainerProps {
 }
 
 export function ChartContainer({ orders, dateRange }: ChartContainerProps) {
+  const { t } = useTranslation();
   const [revenueDataFromApi, setRevenueDataFromApi] = useState<EvolutionDataPoint[]>([]);
 
   // Fetch revenue data from sales API
@@ -79,19 +81,19 @@ export function ChartContainer({ orders, dateRange }: ChartContainerProps) {
 
     return [
       {
-        name: "New Customers",
+        name: t('dashboard.charts.new_customers'),
         value: parseFloat(newPercentage.toFixed(1)),
         count: newCustomers,
         color: "#8b5cf6"
       },
       {
-        name: "Returning",
+        name: t('dashboard.charts.returning_customers'),
         value: parseFloat(returningPercentage.toFixed(1)),
         count: returningCustomers,
         color: "#06b6d4"
       },
     ];
-  }, [orders]);
+  }, [orders, t]);
 
   // Transform API data to chart format
   const revenueData = useMemo(() => {

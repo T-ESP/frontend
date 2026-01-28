@@ -3,20 +3,20 @@ import { Bell, Box, Brain, ChartLine, LayoutDashboard, LogOut, Package, Settings
 
 export const items: SidebarItemType[][] = [
   [
-    { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
-    { label: "Inventory", to: "/inventory", icon: Box },
-    { label: "Orders", to: "/orders", icon: Package },
-    { label: "Insights", to: "/insights", icon: ChartLine },
-    { label: "Sales", to: "/sales", icon: ShoppingCartIcon }
+    { label: "sidebar.dashboard", to: "/dashboard", icon: LayoutDashboard },
+    { label: "sidebar.inventory", to: "/inventory", icon: Box },
+    { label: "sidebar.orders", to: "/orders", icon: Package },
+    { label: "sidebar.insights", to: "/insights", icon: ChartLine },
+    { label: "sidebar.sales", to: "/sales", icon: ShoppingCartIcon }
   ],
   [
-    { label: "Pricing News & Alerts", to: "/pricing-news-alerts", icon: Bell },
-    { label: "Suppliers", to: "/suppliers", icon: Truck },
-    { label: "AI Assistant", to: "/ai-assistant", icon: Brain },
-    { label: "Team", to: "/team", icon: Users }
+    { label: "sidebar.pricing_news", to: "/pricing-news-alerts", icon: Bell },
+    { label: "sidebar.suppliers", to: "/suppliers", icon: Truck },
+    { label: "sidebar.ai_assistant", to: "/ai-assistant", icon: Brain },
+    { label: "sidebar.team", to: "/team", icon: Users }
   ],
   [
-    { label: "Settings", to: "/settings", icon: Settings },
-    { label: "Logout", to: "/logout", icon: LogOut }
+    { label: "sidebar.settings", to: "/settings", icon: Settings },
+    { label: "sidebar.logout", to: "/logout", icon: LogOut }
   ]
 ];

@@ -8,6 +8,7 @@ import { DeleteOrderModal } from '@/ui/features/orders/components/DeleteOrderMod
 import { ViewOrderModal } from '@/ui/features/orders/components/ViewOrderModal';
 import { OrderStats } from '@/ui/features/orders/components/OrderStats';
 import { useToast } from '@/ui/components/common/Toast';
+import { useTranslation } from 'react-i18next';
 
 // --- Helper Functions (Refined for Consistency) ---
 
@@ -49,11 +50,12 @@ const getStatusColor = (status: string) => {
 // --- Component ---
 
 export default function OrdersPage() {
+  const { t } = useTranslation();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false); // Changed to false to show skeleton initially if desired
   const [error, setError] = useState<string | null>(null);
   const { addToast } = useToast();
-  
+
   // Modals
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -105,9 +107,9 @@ export default function OrdersPage() {
     if (type === 'edit') setShowEditModal(false);
     if (type === 'delete') setShowDeleteModal(false);
     if (type === 'view') setShowViewModal(false);
-    
+
     // Clear selection after closing edit/delete/view modals
-    if (type !== 'add') setSelectedOrder(null); 
+    if (type !== 'add') setSelectedOrder(null);
 
     if (shouldReload) loadOrders();
   };
@@ -124,7 +126,7 @@ export default function OrdersPage() {
     // Search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(o => 
+      filtered = filtered.filter(o =>
         o.id.toString().includes(query) ||
         o.user_id.toString().includes(query) ||
         o.status.toLowerCase().includes(query)
@@ -132,14 +134,14 @@ export default function OrdersPage() {
     }
 
     // Amount range filter
-    filtered = filtered.filter(o => 
+    filtered = filtered.filter(o =>
       o.amount >= amountRange.min && o.amount <= amountRange.max
     );
 
     // Sorting
     filtered.sort((a, b) => {
       let comparison = 0;
-      
+
       switch (sortBy) {
         case 'date':
           comparison = new Date(a.order_date).getTime() - new Date(b.order_date).getTime();
@@ -156,7 +158,7 @@ export default function OrdersPage() {
         default:
           comparison = 0;
       }
-      
+
       return sortOrder === 'asc' ? comparison : -comparison;
     });
 
@@ -197,7 +199,7 @@ export default function OrdersPage() {
       o.status,
       o.amount
     ]);
-    
+
     const csvContent = [
       headers.join(','),
       ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
@@ -221,9 +223,9 @@ export default function OrdersPage() {
     return (
       <div className="p-8 h-full flex items-center justify-center">
         <div className="text-center text-slate-500">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
-            <div className="text-xl font-medium">Loading orders...</div>
-            <p className="text-sm mt-1">Fetching {orders.length > 0 ? 'latest data' : 'initial data'} from server.</p>
+          <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
+          <div className="text-xl font-medium">Loading orders...</div>
+          <p className="text-sm mt-1">Fetching {orders.length > 0 ? 'latest data' : 'initial data'} from server.</p>
         </div>
       </div>
     );
@@ -233,16 +235,16 @@ export default function OrdersPage() {
     return (
       <div className="p-8 h-full flex flex-col items-center justify-center">
         <div className="text-center p-6 rounded-xl border border-rose-200 bg-rose-50 text-rose-700">
-            <AlertTriangle className="w-8 h-8 mx-auto mb-3" />
-            <h2 className="text-xl font-bold mb-2">Error</h2>
-            <p>{error}</p>
-            <button
-                onClick={loadOrders}
-                className="mt-4 flex items-center gap-2 px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors mx-auto"
-            >
-                <RefreshCw size={16} />
-                Try Again
-            </button>
+          <AlertTriangle className="w-8 h-8 mx-auto mb-3" />
+          <h2 className="text-xl font-bold mb-2">Error</h2>
+          <p>{error}</p>
+          <button
+            onClick={loadOrders}
+            className="mt-4 flex items-center gap-2 px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors mx-auto"
+          >
+            <RefreshCw size={16} />
+            Try Again
+          </button>
         </div>
       </div>
     );
@@ -253,18 +255,18 @@ export default function OrdersPage() {
   return (
     <>
       <div className="p-8 bg-slate-50 min-h-screen">
-        
+
         {/* Header Component (Consistent Styling) */}
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
-                <ShoppingCart className="w-7 h-7 text-blue-600" />
-                Orders Management
+              <ShoppingCart className="w-7 h-7 text-blue-600" />
+              {t('orders.title')}
             </h1>
             <p className="text-slate-500 mt-2">
-              {filteredAndSortedOrders.length === orders.length 
-                ? `${orders.length} order${orders.length !== 1 ? 's' : ''} currently registered in the system.`
-                : `${filteredAndSortedOrders.length} of ${orders.length} orders`}
+              {filteredAndSortedOrders.length === orders.length
+                ? t('orders.subtitle', { count: orders.length })
+                : `${filteredAndSortedOrders.length} ${t('common.of')} ${orders.length} ${t('orders.orders_label')}`}
             </p>
           </div>
           <button
@@ -272,7 +274,7 @@ export default function OrdersPage() {
             className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/30 hover:bg-blue-700 transition-colors"
           >
             <Plus size={20} />
-            New Order
+            {t('orders.new_order')}
           </button>
         </div>
 
@@ -285,11 +287,11 @@ export default function OrdersPage() {
           <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
             <div className="flex items-center gap-4">
               <div>
-                <h3 className="text-lg font-bold text-slate-900">Orders List</h3>
+                <h3 className="text-lg font-bold text-slate-900">{t('orders.list_title')}</h3>
                 <p className="text-sm text-slate-500 mt-0.5">
-                  {filteredAndSortedOrders.length === orders.length 
-                    ? `${orders.length.toLocaleString()} orders` 
-                    : `${filteredAndSortedOrders.length.toLocaleString()} of ${orders.length.toLocaleString()} orders`}
+                  {filteredAndSortedOrders.length === orders.length
+                    ? `${orders.length.toLocaleString()} ${t('orders.orders_label')}`
+                    : `${filteredAndSortedOrders.length.toLocaleString()} ${t('common.of')} ${orders.length.toLocaleString()} ${t('orders.orders_label')}`}
                 </p>
               </div>
               {activeFiltersCount > 0 && (
@@ -298,27 +300,27 @@ export default function OrdersPage() {
                   className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-100 rounded-full hover:bg-slate-200 transition-colors"
                 >
                   <X className="w-3 h-3" />
-                  Clear {activeFiltersCount} filter{activeFiltersCount > 1 ? 's' : ''}
+                  {t('orders.clear_filters', { count: activeFiltersCount })}
                 </button>
               )}
             </div>
-            
+
             <div className="flex items-center gap-2">
               <button
                 onClick={loadOrders}
                 className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
-                title="Refresh data"
+                title={t('common.refresh')}
               >
                 <RefreshCw className="w-4 h-4" />
-                Refresh
+                {t('common.refresh')}
               </button>
               <button
                 onClick={handleExport}
                 className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition-colors"
-                title="Export to CSV"
+                title={t('common.export')}
               >
                 <Download className="w-4 h-4" />
-                Export
+                {t('common.export')}
               </button>
             </div>
           </div>
@@ -347,7 +349,7 @@ export default function OrdersPage() {
               </div>
 
               {/* Status Filter */}
-              <select 
+              <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
                 className="px-4 py-2.5 text-sm font-medium bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all cursor-pointer min-w-[160px]"
@@ -361,7 +363,7 @@ export default function OrdersPage() {
               </select>
 
               {/* Sort By */}
-              <select 
+              <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 className="px-4 py-2.5 text-sm font-medium bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all cursor-pointer min-w-[160px]"
@@ -384,11 +386,10 @@ export default function OrdersPage() {
               {/* Advanced Filters Toggle */}
               <button
                 onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-                className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border rounded-lg transition-colors ${
-                  showAdvancedFilters 
-                    ? 'text-blue-700 bg-blue-50 border-blue-200' 
-                    : 'text-slate-700 bg-white border-slate-200 hover:bg-slate-50'
-                }`}
+                className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border rounded-lg transition-colors ${showAdvancedFilters
+                  ? 'text-blue-700 bg-blue-50 border-blue-200'
+                  : 'text-slate-700 bg-white border-slate-200 hover:bg-slate-50'
+                  }`}
               >
                 <Filter className="w-4 h-4" />
                 Filters
@@ -448,22 +449,22 @@ export default function OrdersPage() {
               <thead className="bg-slate-100/70">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                    ID
+                    {t('orders.table.id')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                    User
+                    {t('orders.table.user')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                    Date & Time
+                    {t('orders.table.date')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                    Status
+                    {t('orders.table.status')}
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                    Amount
+                    {t('orders.table.amount')}
                   </th>
                   <th className="px-6 py-3 text-center text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                    Actions
+                    {t('orders.table.actions')}
                   </th>
                 </tr>
               </thead>
@@ -472,7 +473,7 @@ export default function OrdersPage() {
                   <tr>
                     <td colSpan={6} className="px-6 py-12 text-center text-slate-500 bg-white">
                       <ShoppingCart className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                      {orders.length === 0 ? 'No orders found. Click "New Order" to get started.' : 'No orders match your filters.'}
+                      {orders.length === 0 ? 'No orders found' : t('inventory.table.no_products_desc')}
                     </td>
                   </tr>
                 ) : (
@@ -501,21 +502,21 @@ export default function OrdersPage() {
                           <button
                             onClick={() => handleOpenModal('view', order)}
                             className="p-2 text-blue-600 rounded-full hover:bg-blue-50 transition-colors"
-                            title="View Details"
+                            title={t('common.view_details')}
                           >
                             <Eye size={16} />
                           </button>
                           <button
                             onClick={() => handleOpenModal('edit', order)}
                             className="p-2 text-amber-600 rounded-full hover:bg-amber-50 transition-colors"
-                            title="Edit"
+                            title={t('common.edit')}
                           >
                             <Edit size={16} />
                           </button>
                           <button
                             onClick={() => handleOpenModal('delete', order)}
                             className="p-2 text-rose-600 rounded-full hover:bg-rose-50 transition-colors"
-                            title="Delete"
+                            title={t('common.delete')}
                           >
                             <Trash2 size={16} />
                           </button>
@@ -551,7 +552,7 @@ export default function OrdersPage() {
                   <option value={100}>100 per page</option>
                 </select>
               </div>
-              
+
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setCurrentPage(1)}
@@ -567,7 +568,7 @@ export default function OrdersPage() {
                 >
                   Previous
                 </button>
-                
+
                 <div className="flex items-center gap-1">
                   {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                     let pageNum;
@@ -580,23 +581,22 @@ export default function OrdersPage() {
                     } else {
                       pageNum = currentPage - 2 + i;
                     }
-                    
+
                     return (
                       <button
                         key={pageNum}
                         onClick={() => setCurrentPage(pageNum)}
-                        className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
-                          currentPage === pageNum
-                            ? 'text-white bg-blue-600'
-                            : 'text-slate-700 bg-white border border-slate-200 hover:bg-slate-50'
-                        }`}
+                        className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${currentPage === pageNum
+                          ? 'text-white bg-blue-600'
+                          : 'text-slate-700 bg-white border border-slate-200 hover:bg-slate-50'
+                          }`}
                       >
                         {pageNum}
                       </button>
                     );
                   })}
                 </div>
-                
+
                 <button
                   onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
