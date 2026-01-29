@@ -23,8 +23,8 @@ export default function AIAssistantPage() {
     const nid = `t-${Date.now()}`;
     const newThread: ChatThread = {
       id: nid,
-      title: "Nouvelle conversation",
-      lastMessagePreview: "Démarrez une question…",
+      title: "New conversation",
+      lastMessagePreview: "Start a question…",
       avatar: botAvatar,
     };
     setThreads((prev) => [newThread, ...prev]);
@@ -39,7 +39,7 @@ export default function AIAssistantPage() {
     const echoMsg: ChatMessage = {
       id: `m-${Date.now()}-bot`,
       role: "bot",
-      content: "(Réponse simulée) Je traite votre demande…",
+      content: "(Simulated response) Processing your request…",
       createdAt: Date.now() + 500,
     };
     setMessagesByThread((prev) => ({
@@ -53,7 +53,7 @@ export default function AIAssistantPage() {
   };
 
   const handleRename = (threadId: string) => {
-    const name = prompt("Renommer la conversation:")?.trim();
+    const name = prompt("Rename conversation:")?.trim();
     if (!name) return;
     setThreads((prev) => prev.map((t) => (t.id === threadId ? { ...t, title: name } : t)));
     setOpenMenuThreadId(null);

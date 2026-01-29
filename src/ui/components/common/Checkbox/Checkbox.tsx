@@ -1,19 +1,13 @@
-import { forwardRef } from "react";
+import { forwardRef, type KeyboardEvent } from "react";
 import type { CheckboxProps } from "./index";
 
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
-  ({ label, error, className = "", id, onKeyDown, ...props }, ref) => {
+  ({ label, error, className = "", id, onKeyDown, onChange, ...props }, ref) => {
     const checkboxId = id || props.name;
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        const input = e.currentTarget;
-        input.checked = !input.checked;
-        // Déclencher l'événement change pour que les handlers soient appelés
-        const changeEvent = new Event("change", { bubbles: true });
-        input.dispatchEvent(changeEvent);
-      }
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+      // Laisser le comportement natif (Espace) gérer le toggle
+      // et simplement relayer les autres handlers clavier éventuels
       onKeyDown?.(e);
     };
 
@@ -26,6 +20,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             type="checkbox"
             className={`mt-1 w-4 h-4 rounded border-border text-primary focus:ring-primary ${className}`}
             onKeyDown={handleKeyDown}
+            onChange={onChange}
             {...props}
           />
           {label && (

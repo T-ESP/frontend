@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 html, body, #root {
-  font-family: 'Nunito Sans', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+  background-color: #f3f4f6;
 }
 
 @theme {
@@ -15,13 +16,13 @@ html, body, #root {
   --color-primary-night: #35275d;      /* Pour borders, focus state, ou dark très poussé */
   --color-primary-bg: #f4f6fa;
 
-  /* ---- Neutres ---- */
-  --color-bg: #ffffff;                 /* Fond global (clair) */
-  --color-surface: #f4f6fa;            /* Fond surface (cards, panels) */
-  --color-neutral-900: #1e293b;        /* Texte principal (noir/bleu) */
-  --color-neutral-700: #54575c;        /* Texte secondaire, border, icons */
-  --color-border: #e2e8f0;             /* Bordures discrètes */
-  --color-black: #202224;
+  /* ---- Neutres (Modernized) ---- */
+  --color-bg: #f3f4f6;                 /* Fond global (light gray) */
+  --color-surface: #ffffff;            /* Fond surface (cards, panels - now pure white) */
+  --color-neutral-900: #1f2937;        /* Texte principal (dark gray, softer than black) */
+  --color-neutral-700: #6b7280;        /* Texte secondaire, border, icons (medium gray) */
+  --color-border: #e5e7eb;             /* Bordures discrètes */
+  --color-black: #1f2937;              /* Use dark gray instead of pure black */
 
   /* ---- Feedback / Alerts ---- */
   --color-success: #22c55e;            /* Succès/valide */
@@ -66,4 +67,27 @@ html, body, #root {
 .animate-toast-in { animation: toast-in 0.2s ease-out forwards; }
 .animate-toast-out { animation: toast-out 0.2s ease-in forwards; }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px) scale(0.95); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
