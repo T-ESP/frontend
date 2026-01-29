@@ -12,7 +12,7 @@ services:
     container_name: vite-frontend
     restart: always
 
-    # Expose seulement pour debug local
+    # Expose seulement pour debug localllll
     ports:
       - "3001:80"
 
