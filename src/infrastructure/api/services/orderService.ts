@@ -36,11 +36,6 @@ export const orderService = {
     return response.data;
   },
 
-  async getStats(): Promise<OrderStats> {
-    const response = await apiClient.get<ApiResponse<OrderStats>>(API_ENDPOINTS.orders.getStats);
-    return response.data;
-  },
-
   async create(data: CreateOrderDto): Promise<Order> {
     const response = await apiClient.post<ApiResponse<Order>>(API_ENDPOINTS.orders.create, data);
     return response.data;

@@ -28,14 +28,14 @@ export default function DashboardPage() {
   const loadDashboardData = async () => {
     try {
       setLoading(true);
-      
+
       // Get date ranges based on selected range
       const endDate = new Date();
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - dateRange);
-      
+
       const formatDate = (date: Date) => date.toISOString().split('T')[0];
-      
+
       const period = {
         start_date: formatDate(startDate),
         end_date: formatDate(endDate),
@@ -62,35 +62,35 @@ export default function DashboardPage() {
     }
   };
 
-  const handleExport = () => {
-    const csvData = [
-      ['Dashboard Export', new Date().toISOString()],
-      [],
-      ['Metric', 'Value'],
-      ['Total Revenue', `€${totalRevenue.toFixed(2)}`],
-      ['Revenue Evolution', `${evolution.toFixed(1)}%`],
-      ['Total Orders', orders.length.toString()],
-      ['Total Products', products.length.toString()],
-      ['Total Users', users.length.toString()],
-      ['Low Stock Products', products.filter(p => p.stock_quantity < 10).length.toString()],
-    ];
+  // const handleExport = () => {
+  //   const csvData = [
+  //     ['Dashboard Export', new Date().toISOString()],
+  //     [],
+  //     ['Metric', 'Value'],
+  //     ['Total Revenue', `€${totalRevenue.toFixed(2)}`],
+  //     ['Revenue Evolution', `${evolution.toFixed(1)}%`],
+  //     ['Total Orders', orders.length.toString()],
+  //     ['Total Products', products.length.toString()],
+  //     ['Total Users', users.length.toString()],
+  //     ['Low Stock Products', products.filter(p => p.stock_quantity < 10).length.toString()],
+  //   ];
 
-    const csv = csvData.map(row => row.join(',')).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `dashboard-${new Date().toISOString().split('T')[0]}.csv`;
-    link.click();
-  };
+  //   const csv = csvData.map(row => row.join(',')).join('\n');
+  //   const blob = new Blob([csv], { type: 'text/csv' });
+  //   const url = window.URL.createObjectURL(blob);
+  //   const link = document.createElement('a');
+  //   link.href = url;
+  //   link.download = `dashboard-${new Date().toISOString().split('T')[0]}.csv`;
+  //   link.click();
+  // };
 
   return (
     <PageLayout
       title="Dashboard"
       subtitle="Monitor your business performance in real-time"
       actions={
-        <PageActions 
-          onDateRangeChange={setDateRange} 
+        <PageActions
+          onDateRangeChange={setDateRange}
           currentRange={dateRange}
         />
       }
@@ -99,15 +99,15 @@ export default function DashboardPage() {
         <div className="space-y-8">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-32 bg-white rounded-2xl animate-pulse border border-gray-100" />
+              <div key={i} className="h-32 bg-white border border-gray-100 rounded-2xl animate-pulse" />
             ))}
           </div>
-          <div className="h-96 bg-white rounded-2xl animate-pulse border border-gray-100" />
+          <div className="bg-white border border-gray-100 h-96 rounded-2xl animate-pulse" />
         </div>
       ) : (
         <>
           {/* KPI Cards */}
-          <KPICards 
+          <KPICards
             orders={orders}
             products={products}
             users={users}

@@ -29,18 +29,18 @@ export function SalesTableBody({ data }: SalesTableBodyProps) {
           </td>
         </tr>
       ) : (
-        data.map((row, index) => (
-          <tr key={row.date} className="hover:bg-gray-50 transition-colors">
-            <td className="px-6 py-4 whitespace-nowrap text-gray-900 font-medium">
+        data.map((row) => (
+          <tr key={row.date} className="transition-colors hover:bg-gray-50">
+            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
               {formatDate(row.date)}
             </td>
-            <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+            <td className="px-6 py-4 text-gray-600 whitespace-nowrap">
               {row.orders}
             </td>
-            <td className="px-6 py-4 whitespace-nowrap text-gray-900 font-semibold">
+            <td className="px-6 py-4 font-semibold text-gray-900 whitespace-nowrap">
               {formatCurrency(row.revenue)}
             </td>
-            <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+            <td className="px-6 py-4 text-gray-600 whitespace-nowrap">
               {row.orders > 0 ? formatCurrency(row.revenue / row.orders) : '-'}
             </td>
           </tr>
