@@ -104,15 +104,15 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
 
     return (
       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ring-1 ring-inset ${getStyles()} uppercase tracking-wide`}>
-        {status.replace(/_/g, ' ')}
+        {t(`inventory.kpi_modal.status_values.${status}`, status.replace(/_/g, ' '))}
       </span>
     );
   };
 
   const TrendIndicator = ({ value }: { value: 'increasing' | 'stable' | 'decreasing' }) => {
-    if (value === 'increasing') return <div className="flex items-center text-emerald-600 text-xs font-medium"><TrendingUp className="w-3 h-3 mr-1" /> +Inc</div>;
-    if (value === 'decreasing') return <div className="flex items-center text-rose-600 text-xs font-medium"><TrendingDown className="w-3 h-3 mr-1" /> -Dec</div>;
-    return <div className="flex items-center text-slate-500 text-xs font-medium"><div className="w-3 h-0.5 bg-slate-400 mr-1" /> Stable</div>;
+    if (value === 'increasing') return <div className="flex items-center text-emerald-600 text-xs font-medium"><TrendingUp className="w-3 h-3 mr-1" /> {t('inventory.kpi_modal.trends.inc')}</div>;
+    if (value === 'decreasing') return <div className="flex items-center text-rose-600 text-xs font-medium"><TrendingDown className="w-3 h-3 mr-1" /> {t('inventory.kpi_modal.trends.dec')}</div>;
+    return <div className="flex items-center text-slate-500 text-xs font-medium"><div className="w-3 h-0.5 bg-slate-400 mr-1" /> {t('inventory.kpi_modal.trends.stable')}</div>;
   };
 
   const StatCard = ({ title, value, subtext, icon: Icon, trend, alert }: any) => (
@@ -265,22 +265,22 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                           <Zap size={24} />
                         </div>
                         <div>
-                          <h3 className="text-lg font-bold text-slate-900">AI Recommendation</h3>
+                          <h3 className="text-lg font-bold text-slate-900">{t('inventory.kpi_modal.ai_recommendation')}</h3>
                           <div className="mt-1 flex items-center gap-2">
-                            <span className="text-slate-600">Current Status:</span>
+                            <span className="text-slate-600">{t('inventory.kpi_modal.metrics.current_status')}:</span>
                             <StatusBadge status={kpis.predictionsAlerts.alert_status} />
                           </div>
                           <div className="mt-4 grid grid-cols-3 gap-8">
                             <div>
-                              <p className="text-xs text-slate-500 uppercase tracking-wider">Reorder Qty</p>
+                              <p className="text-xs text-slate-500 uppercase tracking-wider">{t('inventory.kpi_modal.metrics.reorder_qty')}</p>
                               <p className="text-xl font-bold text-slate-900">{kpis.predictionsAlerts.optimal_reorder_quantity}</p>
                             </div>
                             <div>
-                              <p className="text-xs text-slate-500 uppercase tracking-wider">Reorder Point</p>
+                              <p className="text-xs text-slate-500 uppercase tracking-wider">{t('inventory.kpi_modal.metrics.reorder_point')}</p>
                               <p className="text-xl font-bold text-slate-900">{kpis.predictionsAlerts.optimal_reorder_point}</p>
                             </div>
                             <div>
-                              <p className="text-xs text-slate-500 uppercase tracking-wider">Days Coverage</p>
+                              <p className="text-xs text-slate-500 uppercase tracking-wider">{t('inventory.kpi_modal.metrics.days_coverage')}</p>
                               <p className="text-xl font-bold text-slate-900">{formatNum(kpis.predictionsAlerts.days_of_coverage)}</p>
                             </div>
                           </div>
@@ -304,14 +304,14 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                     {kpis.priceEvolution && (
                       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                         <div className="flex items-center justify-between mb-6">
-                          <h3 className="font-bold text-slate-900">Price Evolution</h3>
+                          <h3 className="font-bold text-slate-900">{t('inventory.kpi_modal.metrics.price_evolution')}</h3>
                           {(kpis.priceEvolution.selling_price_history.length > 0 || kpis.priceEvolution.buying_price_history.length > 0) && (
                             <div className="flex gap-4 text-sm">
                               {kpis.priceEvolution.selling_price_history.length > 0 && (
-                                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-emerald-500" /> Selling</div>
+                                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-emerald-500" /> {t('inventory.kpi_modal.metrics.selling')}</div>
                               )}
                               {kpis.priceEvolution.buying_price_history.length > 0 && (
-                                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-blue-500" /> Buying</div>
+                                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-blue-500" /> {t('inventory.kpi_modal.metrics.buying')}</div>
                               )}
                             </div>
                           )}
@@ -320,8 +320,8 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                           {(kpis.priceEvolution.selling_price_history.length === 0 && kpis.priceEvolution.buying_price_history.length === 0) ? (
                             <div className="flex flex-col items-center justify-center h-full text-slate-400">
                               <Package size={48} className="mb-4 opacity-50" />
-                              <p className="text-lg font-medium">No Price History Available</p>
-                              <p className="text-sm mt-2">Price changes will appear here once recorded</p>
+                              <p className="text-lg font-medium">{t('inventory.kpi_modal.metrics.no_price_history')}</p>
+                              <p className="text-sm mt-2">{t('inventory.kpi_modal.metrics.price_history_empty')}</p>
                             </div>
                           ) : (
                             <ResponsiveContainer width="100%" height="100%">
@@ -368,19 +368,19 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                       {/* Status Card */}
                       <div className="bg-white p-6 rounded-2xl border border-slate-200">
                         <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
-                          <Package className="text-slate-400" size={20} /> Current Status
+                          <Package className="text-slate-400" size={20} /> {t('inventory.kpi_modal.metrics.current_status')}
                         </h3>
                         <div className="flex justify-between items-center p-4 bg-slate-50 rounded-xl mb-4">
-                          <span className="text-slate-500 font-medium">Availability</span>
+                          <span className="text-slate-500 font-medium">{t('inventory.kpi_modal.metrics.availability')}</span>
                           <StatusBadge status={kpis.stockAvailability.product_status} />
                         </div>
                         <div className="space-y-4">
                           <div className="flex justify-between">
-                            <span className="text-slate-500">In Hand</span>
+                            <span className="text-slate-500">{t('inventory.kpi_modal.metrics.in_hand')}</span>
                             <span className="font-bold text-slate-900 text-lg">{kpis.stockAvailability.current_stock}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-slate-500">Safety Level</span>
+                            <span className="text-slate-500">{t('inventory.kpi_modal.metrics.safety_level')}</span>
                             <span className="font-bold text-amber-600">{kpis.stockAvailability.safety_stock_recommended}</span>
                           </div>
                         </div>
@@ -389,23 +389,23 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                       {/* Stockout Visual */}
                       <div className="bg-white p-6 rounded-2xl border border-slate-200">
                         <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
-                          <AlertTriangle className="text-slate-400" size={20} /> Stockout Analysis
+                          <AlertTriangle className="text-slate-400" size={20} /> {t('inventory.kpi_modal.metrics.stockout_analysis')}
                         </h3>
                         <div className="text-center py-4">
                           <div className="text-4xl font-bold text-slate-900 mb-1">{formatPercent(kpis.stockAvailability.stockout_rate)}</div>
-                          <p className="text-sm text-slate-500">Historical Stockout Rate</p>
+                          <p className="text-sm text-slate-500">{t('inventory.kpi_modal.metrics.historical_rate')}</p>
                         </div>
                         <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
                           <div className="bg-rose-500 h-full rounded-full" style={{ width: `${Math.min(kpis.stockAvailability.stockout_rate ?? 0, 100)}%` }} />
                         </div>
                         <div className="mt-6 flex justify-between text-sm">
                           <div>
-                            <p className="text-slate-400">Occurrences</p>
-                            <p className="font-medium text-slate-900">{kpis.stockAvailability.stockout_count} times</p>
+                            <p className="text-slate-400">{t('inventory.kpi_modal.metrics.occurrences')}</p>
+                            <p className="font-medium text-slate-900">{kpis.stockAvailability.stockout_count} {t('inventory.kpi_modal.labels.times')}</p>
                           </div>
                           <div className="text-right">
-                            <p className="text-slate-400">Avg Duration</p>
-                            <p className="font-medium text-slate-900">{kpis.stockAvailability.avg_stockout_duration_days?.toFixed(1)} days</p>
+                            <p className="text-slate-400">{t('inventory.kpi_modal.metrics.avg_duration')}</p>
+                            <p className="font-medium text-slate-900">{kpis.stockAvailability.avg_stockout_duration_days?.toFixed(1)} {t('inventory.kpi_modal.labels.days')}</p>
                           </div>
                         </div>
                       </div>
@@ -421,18 +421,18 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                     <div className="grid grid-cols-2 gap-6">
                       <div className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-8 rounded-3xl relative overflow-hidden">
                         <div className="relative z-10">
-                          <p className="text-indigo-100 font-medium mb-1">ABC Class</p>
+                          <p className="text-indigo-100 font-medium mb-1">{t('inventory.kpi_modal.metrics.abc_class')}</p>
                           <h2 className="text-6xl font-bold">{kpis.scoringClassification.abc_classification}</h2>
                           <div className="mt-8 inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
                             <Activity size={16} />
-                            <span className="font-medium">{kpis.scoringClassification.performance_category} Performance</span>
+                            <span className="font-medium">{kpis.scoringClassification.performance_category} {t('inventory.kpi_modal.labels.performance')}</span>
                           </div>
                         </div>
                         <Target className="absolute -bottom-8 -right-8 w-48 h-48 text-white/10" />
                       </div>
 
                       <div className="bg-white p-8 rounded-3xl border border-slate-200">
-                        <h3 className="font-bold text-slate-900 mb-6">Score Breakdown</h3>
+                        <h3 className="font-bold text-slate-900 mb-6">{t('inventory.kpi_modal.metrics.score_breakdown')}</h3>
                         <div className="space-y-6">
                           {['Popularity', 'Profitability', 'Reliability'].map((metric) => {
                             const key = `${metric.toLowerCase()}_score` as keyof ScoringClassificationKPI;
@@ -440,7 +440,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                             return (
                               <div key={metric}>
                                 <div className="flex justify-between text-sm mb-2">
-                                  <span className="text-slate-600">{metric}</span>
+                                  <span className="text-slate-600">{t(`inventory.kpi_modal.metrics.score_${metric.toLowerCase()}`)}</span>
                                   <span className="font-bold text-slate-900">{val}/100</span>
                                 </div>
                                 <div className="w-full bg-slate-100 rounded-full h-2.5">
@@ -484,29 +484,29 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                     <div className="bg-white p-6 rounded-2xl border border-slate-200">
                       <div className="flex items-center justify-between mb-6">
                         <div>
-                          <h3 className="font-bold text-slate-900">Rotation Analysis</h3>
-                          <p className="text-sm text-slate-500">Stock movement velocity</p>
+                          <h3 className="font-bold text-slate-900">{t('inventory.kpi_modal.metrics.rotation_analysis')}</h3>
+                          <p className="text-sm text-slate-500">{t('inventory.kpi_modal.metrics.rotation_desc')}</p>
                         </div>
                         <StatusBadge status={kpis.salesRotation.sales_trend} />
                       </div>
                       <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-4">
                           <div className="flex justify-between p-4 bg-slate-50 rounded-xl">
-                            <span className="text-slate-500">Avg Storage Duration</span>
-                            <span className="font-bold text-slate-900">{formatNum(kpis.salesRotation.avg_storage_duration_days)} days</span>
+                            <span className="text-slate-500">{t('inventory.kpi_modal.metrics.avg_storage')}</span>
+                            <span className="font-bold text-slate-900">{formatNum(kpis.salesRotation.avg_storage_duration_days)} {t('inventory.kpi_modal.labels.days')}</span>
                           </div>
                           <div className="flex justify-between p-4 bg-slate-50 rounded-xl">
-                            <span className="text-slate-500">Avg per Order</span>
+                            <span className="text-slate-500">{t('inventory.kpi_modal.metrics.avg_per_order')}</span>
                             <span className="font-bold text-slate-900">{formatNum(kpis.salesRotation.avg_quantity_per_order)}</span>
                           </div>
                         </div>
                         <div className="space-y-4">
                           <div className="flex justify-between p-4 bg-slate-50 rounded-xl">
-                            <span className="text-slate-500">Revenue</span>
+                            <span className="text-slate-500">{t('inventory.kpi_modal.metrics.revenue')}</span>
                             <span className="font-bold text-slate-900">{formatCurrency(kpis.salesRotation.revenue)}</span>
                           </div>
                           <div className="flex justify-between p-4 bg-slate-50 rounded-xl">
-                            <span className="text-slate-500">Sales Trend</span>
+                            <span className="text-slate-500">{t('inventory.kpi_modal.metrics.sales_trend')}</span>
                             <TrendIndicator value={kpis.salesRotation.sales_trend as 'increasing' | 'stable' | 'decreasing'} />
                           </div>
                         </div>
@@ -545,25 +545,25 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="bg-white p-6 rounded-2xl border border-slate-200">
-                        <h3 className="font-bold text-slate-900 mb-6">Profit Metrics</h3>
+                        <h3 className="font-bold text-slate-900 mb-6">{t('inventory.kpi_modal.metrics.profit_metrics')}</h3>
                         <div className="space-y-4">
                           <div className="flex justify-between items-center p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-                            <span className="text-slate-600">Total Profit</span>
+                            <span className="text-slate-600">{t('inventory.kpi_modal.metrics.total_profit')}</span>
                             <span className="font-bold text-emerald-700 text-xl">{formatCurrency(kpis.profitability.total_profit)}</span>
                           </div>
                           <div className="flex justify-between items-center p-4 bg-slate-50 rounded-xl">
-                            <span className="text-slate-600">ROI</span>
+                            <span className="text-slate-600">{t('inventory.kpi_modal.metrics.roi')}</span>
                             <span className="font-bold text-slate-900 text-xl">{formatPercent(kpis.profitability.roi)}</span>
                           </div>
                         </div>
                       </div>
 
                       <div className="bg-white p-6 rounded-2xl border border-slate-200">
-                        <h3 className="font-bold text-slate-900 mb-6">Contribution Analysis</h3>
+                        <h3 className="font-bold text-slate-900 mb-6">{t('inventory.kpi_modal.metrics.contribution')}</h3>
                         <div className="space-y-4">
                           <div>
                             <div className="flex justify-between text-sm mb-2">
-                              <span className="text-slate-600">Revenue Share</span>
+                              <span className="text-slate-600">{t('inventory.kpi_modal.labels.revenue_share')}</span>
                               <span className="font-bold text-slate-900">{formatPercent(kpis.profitability.contribution_to_total_revenue_percent)}</span>
                             </div>
                             <div className="w-full bg-slate-100 rounded-full h-3">
@@ -572,7 +572,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                           </div>
                           <div>
                             <div className="flex justify-between text-sm mb-2">
-                              <span className="text-slate-600">Profit Share</span>
+                              <span className="text-slate-600">{t('inventory.kpi_modal.labels.profit_share')}</span>
                               <span className="font-bold text-slate-900">{formatPercent(kpis.profitability.contribution_to_total_profit_percent)}</span>
                             </div>
                             <div className="w-full bg-slate-100 rounded-full h-3">
@@ -588,22 +588,22 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                 {/* --- RESTOCK TAB --- */}
                 {activeTab === 'restock' && kpis.restock && (
                   <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <SectionHeader title="Restock Analysis" desc="Supply chain and reorder recommendations" />
+                    <SectionHeader title={t('inventory.kpi_modal.sections.restock')} desc={t('inventory.kpi_modal.sections.restock_desc')} />
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                       <StatCard
-                        title="Restock Count"
+                        title={t('inventory.kpi_modal.metrics.restock_count_label')}
                         value={kpis.restock.restock_count}
                         icon={Truck}
                       />
                       <StatCard
-                        title="Avg Quantity"
+                        title={t('inventory.kpi_modal.metrics.avg_qty_label')}
                         value={formatNum(kpis.restock.avg_quantity_per_restock)}
                         icon={AlertTriangle}
                       />
                       <StatCard
-                        title="Avg Delay"
-                        value={`${formatNum(kpis.restock.avg_delivery_delay_days)} days`}
+                        title={t('inventory.kpi_modal.metrics.avg_delay_label')}
+                        value={`${formatNum(kpis.restock.avg_delivery_delay_days)} ${t('inventory.kpi_modal.labels.days')}`}
                         icon={Package}
                       />
                     </div>
@@ -614,11 +614,11 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                       </h3>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                         <div>
-                          <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">Total Restocks</p>
+                          <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">{t('inventory.kpi_modal.metrics.total_restocks')}</p>
                           <p className="text-2xl font-bold text-slate-900">{kpis.restock.restock_count}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">{t('inventory.kpi_modal.metrics.avg_quantity')}</p>
+                          <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">{t('inventory.kpi_modal.metrics.avg_qty_label')}</p>
                           <p className="text-2xl font-bold text-slate-900">{formatNum(kpis.restock.avg_quantity_per_restock)}</p>
                         </div>
                         <div>
@@ -639,11 +639,11 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                         </div>
                         <div className="flex-1">
                           <h3 className="font-bold text-slate-900 mb-2">{t('inventory.kpi_modal.metrics.optimal_strategy')}</h3>
-                          <p className="text-slate-600 mb-4">Based on historical data and supply chain analysis</p>
+                          <p className="text-slate-600 mb-4">{t('inventory.kpi_modal.metrics.strategy_desc')}</p>
                           <div className="grid grid-cols-2 gap-4">
                             <div className="bg-white/60 p-4 rounded-xl">
                               <p className="text-sm text-slate-600">{t('inventory.kpi_modal.metrics.frequency')}</p>
-                              <p className="text-xl font-bold text-slate-900">Every {formatNum(kpis.restock.restock_frequency_days)} {t('inventory.kpi_modal.labels.days')}</p>
+                              <p className="text-xl font-bold text-slate-900">{t('inventory.kpi_modal.metrics.every')} {formatNum(kpis.restock.restock_frequency_days)} {t('inventory.kpi_modal.labels.days')}</p>
                             </div>
                             <div className="bg-white/60 p-4 rounded-xl">
                               <p className="text-sm text-slate-600">{t('inventory.kpi_modal.metrics.avg_cost')}</p>
@@ -659,7 +659,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                 {/* --- PREDICTIONS TAB --- */}
                 {activeTab === 'predictions' && kpis.predictionsAlerts && (
                   <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <SectionHeader title="AI Predictions" desc="Forecasts and intelligent recommendations" />
+                    <SectionHeader title={t('inventory.kpi_modal.sections.predictions')} desc={t('inventory.kpi_modal.sections.predictions_desc')} />
 
                     <div className="bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 text-white p-8 rounded-3xl relative overflow-hidden">
                       <div className="relative z-10">
@@ -669,12 +669,12 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                           </div>
                           <div>
                             <h3 className="text-2xl font-bold">{t('inventory.kpi_modal.metrics.alert_status')}</h3>
-                            <p className="text-violet-100">Current prediction model</p>
+                            <p className="text-violet-100">{t('inventory.kpi_modal.metrics.current_model')}</p>
                           </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                           <div className="bg-white/10 backdrop-blur-sm p-5 rounded-2xl border border-white/20">
-                            <p className="text-violet-100 text-sm mb-2">Status</p>
+                            <p className="text-violet-100 text-sm mb-2">{t('inventory.kpi_modal.metrics.status')}</p>
                             <StatusBadge status={kpis.predictionsAlerts.alert_status} />
                           </div>
                           <div className="bg-white/10 backdrop-blur-sm p-5 rounded-2xl border border-white/20">
@@ -697,14 +697,14 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                           <div className="flex justify-between items-center p-4 bg-blue-50 rounded-xl border border-blue-100">
                             <div>
                               <p className="text-sm text-slate-600">{t('inventory.kpi_modal.metrics.optimal_qty')}</p>
-                              <p className="text-xs text-slate-400">Based on forecast</p>
+                              <p className="text-xs text-slate-400">{t('inventory.kpi_modal.metrics.based_on_forecast')}</p>
                             </div>
                             <span className="text-2xl font-bold text-blue-600">{kpis.predictionsAlerts.optimal_reorder_quantity}</span>
                           </div>
                           <div className="flex justify-between items-center p-4 bg-amber-50 rounded-xl border border-amber-100">
                             <div>
                               <p className="text-sm text-slate-600">{t('inventory.kpi_modal.metrics.reorder_point')}</p>
-                              <p className="text-xs text-slate-400">Trigger threshold</p>
+                              <p className="text-xs text-slate-400">{t('inventory.kpi_modal.metrics.trigger_threshold')}</p>
                             </div>
                             <span className="text-2xl font-bold text-amber-600">{kpis.predictionsAlerts.optimal_reorder_point}</span>
                           </div>
@@ -720,10 +720,10 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                               <p className="text-xs text-slate-500 mt-1">{t('inventory.kpi_modal.labels.days')}</p>
                             </div>
                           </div>
-                          <p className="text-sm text-slate-600">Current stock coverage</p>
+                          <p className="text-sm text-slate-600">{t('inventory.kpi_modal.metrics.current_coverage')}</p>
                           <div className="mt-4 inline-flex items-center gap-2 text-xs text-slate-500">
                             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                            AI Model Active
+                            {t('inventory.kpi_modal.metrics.ai_active')}
                           </div>
                         </div>
                       </div>
@@ -734,23 +734,23 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                 {/* --- COMPARATIVE TAB --- */}
                 {activeTab === 'comparative' && kpis.comparative && (
                   <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <SectionHeader title="Market Position" desc="Competitive analysis and benchmarking" />
+                    <SectionHeader title={t('inventory.kpi_modal.sections.comparative')} desc={t('inventory.kpi_modal.sections.comparative_desc')} />
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                       <StatCard
-                        title="vs Category Avg"
+                        title={t('inventory.kpi_modal.metrics.vs_category_avg')}
                         value={formatPercent(kpis.comparative.performance_vs_category_percent)}
                         trend={(kpis.comparative.performance_vs_category_percent ?? 0) > 0 ? 'increasing' : 'decreasing'}
                         icon={Activity}
                       />
                       <StatCard
-                        title="Category Rank"
+                        title={t('inventory.kpi_modal.metrics.category_rank')}
                         value={`#${kpis.comparative.rank_in_category}`}
-                        subtext="Market position"
+                        subtext={t('inventory.kpi_modal.metrics.market_pos_label')}
                         icon={Target}
                       />
                       <StatCard
-                        title="Market Share"
+                        title={t('inventory.kpi_modal.metrics.market_share')}
                         value={formatPercent(kpis.comparative.share_in_category_percent)}
                         icon={PieChart}
                       />
@@ -760,7 +760,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                       <h3 className="font-bold text-slate-900 mb-6">{t('inventory.kpi_modal.metrics.competitive_position')}</h3>
                       <div className="space-y-6">
                         <div>
-                          <p className="text-sm text-slate-600 mb-4">Performance vs Category</p>
+                          <p className="text-sm text-slate-600 mb-4">{t('inventory.kpi_modal.metrics.perf_vs_category')}</p>
                           <div className="flex items-center gap-4">
                             <div className="flex-1 bg-slate-100 rounded-full h-3">
                               <div className="bg-blue-600 h-full rounded-full transition-all duration-1000" style={{ width: `${Math.min(Math.abs(kpis.comparative.performance_vs_category_percent ?? 0), 100)}%` }} />
@@ -787,13 +787,13 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                           <div className="p-2 bg-emerald-100 rounded-lg text-emerald-600">
                             <TrendingUp size={20} />
                           </div>
-                          <h4 className="font-bold text-slate-900">{t('inventory.kpi_modal.metrics.performance')} vs Average</h4>
+                          <h4 className="font-bold text-slate-900">{t('inventory.kpi_modal.metrics.perf_vs_avg')}</h4>
                         </div>
                         <p className="text-4xl font-bold text-emerald-600 mb-2">
                           {(kpis.comparative.performance_vs_category_percent ?? 0) > 0 ? '+' : ''}{formatPercent(kpis.comparative.performance_vs_category_percent)}
                         </p>
                         <p className="text-sm text-slate-600">
-                          {(kpis.comparative.performance_vs_category_percent ?? 0) > 0 ? 'Above' : 'Below'} category average
+                          {(kpis.comparative.performance_vs_category_percent ?? 0) > 0 ? t('inventory.kpi_modal.metrics.above_avg') : t('inventory.kpi_modal.metrics.below_avg')}
                         </p>
                       </div>
 
