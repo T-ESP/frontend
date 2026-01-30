@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import botAvatar from "@/assets/images/BOT.png";
 import { initialMessages, initialThreads } from "@/ui/features/ai-assistant/constants";
 import type { ChatThread, ChatMessage } from "@/ui/features/ai-assistant/types";
@@ -6,6 +6,8 @@ import { ChatHeader } from "./ChatHeader";
 import { Composer } from "./Composer";
 import { MessageList } from "./MessageList";
 import { ThreadList } from "./ThreadList";
+import { aiInsightsService } from "@/infrastructure/api/services/aiInsightsService";
+import { mistralService } from "@/infrastructure/api/services/mistralService";
 
 export default function AIAssistantPage() {
   const threadsData = useMemo(() => initialThreads, []);
@@ -16,6 +18,27 @@ export default function AIAssistantPage() {
   const [messagesByThread, setMessagesByThread] = useState<Record<string, ChatMessage[]>>(messagesData);
   const [composer, setComposer] = useState("");
   const [openMenuThreadId, setOpenMenuThreadId] = useState<string | null>(null);
+  const [insightsContext, setInsightsContext] = useState("");
+
+  // Charger les insights pour voir la structure des données
+  useEffect(() => {
+    const loadInsights = async () => {
+      try {
+        const data = await aiInsightsService.getLast30Days();
+        console.log('📊 AI INSIGHTS DATA:', data);
+        const formatted = aiInsightsService.formatForAI(data);
+        console.log('📊 Formatted for AI:', formatted);
+        setInsightsContext(formatted);
+        console.log('📊 Structured:', aiInsightsService.formatForAIStructured(data));
+        console.log('📊 Critical Points:', aiInsightsService.getCriticalPoints(data));
+        console.log('📊 Executive Summary:', aiInsightsService.getExecutiveSummary(data));
+      } catch (error) {
+        console.error('❌ Erreur lors du chargement des insights:', error);
+      }
+    };
+
+    loadInsights();
+  }, []);
 
   const activeMessages: ChatMessage[] = messagesByThread[activeThreadId] ?? [];
 
@@ -32,24 +55,91 @@ export default function AIAssistantPage() {
     setActiveThreadId(nid);
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     const text = composer.trim();
     if (!text || !activeThreadId) return;
-    const newMsg: ChatMessage = { id: `m-${Date.now()}`, role: "user", content: text, createdAt: Date.now() };
-    const echoMsg: ChatMessage = {
-      id: `m-${Date.now()}-bot`,
-      role: "bot",
-      content: "(Simulated response) Processing your request…",
-      createdAt: Date.now() + 500,
+
+    // 1. Message de l'utilisateur
+    const newMsg: ChatMessage = {
+      id: `m-${Date.now()}`,
+      role: "user",
+      content: text,
+      createdAt: Date.now()
     };
+
+    // Mise à jour optimiste
     setMessagesByThread((prev) => ({
       ...prev,
-      [activeThreadId]: [...(prev[activeThreadId] ?? []), newMsg, echoMsg],
+      [activeThreadId]: [...(prev[activeThreadId] ?? []), newMsg],
     }));
     setThreads((prev) =>
       prev.map((t) => (t.id === activeThreadId ? { ...t, lastMessagePreview: text } : t))
     );
     setComposer("");
+
+    // 2. Indicateur de chargement
+    const loadingId = `loading-${Date.now()}`;
+    const loadingMsg: ChatMessage = {
+      id: loadingId,
+      role: "bot",
+      content: "Analyse en cours...",
+      createdAt: Date.now() + 10,
+    };
+    setMessagesByThread((prev) => ({
+      ...prev,
+      [activeThreadId]: [...(prev[activeThreadId] ?? []), loadingMsg],
+    }));
+
+    try {
+      // Préparer l'historique pour Mistral
+      // On exclut le message de loading qu'on vient d'ajouter
+      const currentHistory = messagesByThread[activeThreadId] || [];
+      const historyForMistral = currentHistory.map(m => ({
+        role: m.role === 'user' ? 'user' : 'assistant',
+        content: m.content
+      })) as any[];
+
+      // 3. Appel API Mistral
+      const response = await mistralService.chat(text, insightsContext, historyForMistral);
+
+      // 4. Remplacer le loading par la réponse
+      const botMsg: ChatMessage = {
+        id: `m-${Date.now()}-bot`,
+        role: "bot",
+        content: response,
+        createdAt: Date.now(),
+      };
+
+      setMessagesByThread((prev) => {
+        const threadMsgs = prev[activeThreadId] ?? [];
+        return {
+          ...prev,
+          [activeThreadId]: threadMsgs.map(m => m.id === loadingId ? botMsg : m),
+        };
+      });
+
+      // Mettre à jour l'aperçu avec la réponse du bot
+      setThreads((prev) =>
+        prev.map((t) => (t.id === activeThreadId ? { ...t, lastMessagePreview: response } : t))
+      );
+
+    } catch (error) {
+      console.error("Erreur chat:", error);
+      // En cas d'erreur, on remplace le loading par un message d'erreur
+      setMessagesByThread((prev) => {
+        const threadMsgs = prev[activeThreadId] ?? [];
+        const errorMsg: ChatMessage = {
+          id: `err-${Date.now()}`,
+          role: "bot",
+          content: "Désolé, je rencontre des difficultés pour accéder aux services.",
+          createdAt: Date.now(),
+        };
+        return {
+          ...prev,
+          [activeThreadId]: threadMsgs.map(m => m.id === loadingId ? errorMsg : m),
+        };
+      });
+    }
   };
 
   const handleRename = (threadId: string) => {
