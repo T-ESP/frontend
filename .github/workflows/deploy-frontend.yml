@@ -6,13 +6,39 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-and-push:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout frontend repo
         uses: actions/checkout@v4
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ghcr.io/t-esp/frontend:latest
+            ghcr.io/t-esp/frontend:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Checkout devops repo
         uses: actions/checkout@v4
         with:
@@ -40,6 +66,7 @@ jobs:
         working-directory: devops
         run: |
           ansible-playbook -i inventory.ini deploy-frontend.yml \
-            -e "gh_token=${{ secrets.GH_TOKEN }}"
+            -e "gh_token=${{ secrets.GH_TOKEN }}" \
+            -e "frontend_image_tag=${{ github.sha }}"
         env:
           ANSIBLE_HOST_KEY_CHECKING: False

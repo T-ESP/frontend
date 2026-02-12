@@ -6,16 +6,10 @@ networks:
 
 services:
   frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/t-esp/frontend:latest
     container_name: vite-frontend
     restart: always
 
-    # Expose seulement pour debug local
-    # ports:
-    #   - "3001:80"
-    # Expose seulement pour debug localllll
     ports:
       - "3001:80"
 
