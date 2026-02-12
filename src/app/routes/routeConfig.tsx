@@ -1,10 +1,10 @@
 import type { RouteObject } from 'react-router-dom';
 import { ROUTES } from './metaRoutes';
 import { ProtectedRoute } from './ProtectedRoute';
-import { AppLayout } from '@/layouts/AppLayout';
-import { AuthLayout } from '@/layouts/AuthLayout';
-import { PAGES } from '@/pages/pages';
-import { HomeLayout } from '@/layouts/HomeLayout';
+import { AuthLayout } from '@/ui/components/layouts/AuthLayout';
+import { HomeLayout } from '@/ui/components/layouts/HomeLayout';
+import { AppLayout } from '@/ui/components/layouts/AppLayout';
+import { PAGES } from '@/ui/routing/pages';
 
 export const routes: RouteObject[] = Object.values(ROUTES).map((route) => {
 
