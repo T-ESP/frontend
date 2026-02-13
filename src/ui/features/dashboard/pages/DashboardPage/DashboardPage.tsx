@@ -65,17 +65,17 @@ export default function DashboardPage() {
   };
 
   const handleExport = () => {
-    const csvData = [
-      [t('dashboard.export.title'), new Date().toISOString()],
-      [],
-      [t('dashboard.export.metric'), t('dashboard.export.value')],
-      [t('dashboard.kpi.total_revenue'), `€${totalRevenue.toFixed(2)}`],
-      [t('dashboard.kpi.revenue_evolution'), `${evolution.toFixed(1)}%`],
-      [t('dashboard.kpi.total_orders'), orders.length.toString()],
-      [t('dashboard.kpi.total_products'), products.length.toString()],
-      [t('dashboard.kpi.total_users'), users.length.toString()],
-      [t('dashboard.kpi.low_stock'), products.filter(p => p.stock_quantity < 10).length.toString()],
-    ];
+    // const csvData = [
+    //   [t('dashboard.export.title'), new Date().toISOString()],
+    //   [],
+    //   [t('dashboard.export.metric'), t('dashboard.export.value')],
+    //   [t('dashboard.kpi.total_revenue'), `€${totalRevenue.toFixed(2)}`],
+    //   [t('dashboard.kpi.revenue_evolution'), `${evolution.toFixed(1)}%`],
+    //   [t('dashboard.kpi.total_orders'), orders.length.toString()],
+    //   [t('dashboard.kpi.total_products'), products.length.toString()],
+    //   [t('dashboard.kpi.total_users'), users.length.toString()],
+    //   [t('dashboard.kpi.low_stock'), products.filter(p => p.stock_quantity < 10).length.toString()],
+    // ];
 
     //   const csv = csvData.map(row => row.join(',')).join('\n');
     //   const blob = new Blob([csv], { type: 'text/csv' });

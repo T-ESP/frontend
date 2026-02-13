@@ -18,8 +18,8 @@ interface SalesChartProps {
 
 export default function SalesChart({ data }: SalesChartProps) {
   return (
-    <div className="p-6 bg-white rounded-xl shadow-sm border border-slate-200">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-6 bg-white border shadow-sm rounded-xl border-slate-200">
+      <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-lg font-bold text-slate-900">Revenue Trend</h3>
           <p className="text-sm text-slate-500">Daily revenue over the last 30 days</p>
@@ -39,8 +39,8 @@ export default function SalesChart({ data }: SalesChartProps) {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-            <XAxis 
-              dataKey="date" 
+            <XAxis
+              dataKey="date"
               axisLine={false}
               tickLine={false}
               tick={{ fontSize: 12, fill: '#64748b' }}
@@ -49,14 +49,16 @@ export default function SalesChart({ data }: SalesChartProps) {
                 return `${date.getDate()}/${date.getMonth() + 1}`;
               }}
             />
-            <YAxis 
+            <YAxis
               axisLine={false}
               tickLine={false}
               tick={{ fontSize: 12, fill: '#64748b' }}
               tickFormatter={(value) => `€${value}`}
             />
-            <Tooltip 
+            <Tooltip
+              cursor={{ strokeDasharray: '3 3' }}
               contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+              // @ts-ignore
               formatter={(value: number) => [`€${value.toLocaleString()}`, 'Revenue']}
               labelFormatter={(label) => new Date(label).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             />
