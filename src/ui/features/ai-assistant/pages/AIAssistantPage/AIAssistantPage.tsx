@@ -7,7 +7,7 @@ import { Composer } from "./Composer";
 import { MessageList } from "./MessageList";
 import { ThreadList } from "./ThreadList";
 import { aiInsightsService } from "@/infrastructure/api/services/aiInsightsService";
-import { mistralService } from "@/infrastructure/api/services/mistralService";
+import { agentService } from "@/infrastructure/api/services/agentService";
 
 export default function AIAssistantPage() {
   const threadsData = useMemo(() => initialThreads, []);
@@ -91,22 +91,22 @@ export default function AIAssistantPage() {
     }));
 
     try {
-      // Préparer l'historique pour Mistral
-      // On exclut le message de loading qu'on vient d'ajouter
+      // Préparer l'historique pour l'Agent
       const currentHistory = messagesByThread[activeThreadId] || [];
-      const historyForMistral = currentHistory.map(m => ({
+      // On convertit l'historique UI en format compatible Mistral (juste le texte pour l'instant)
+      const historyForAgent = currentHistory.map(m => ({
         role: m.role === 'user' ? 'user' : 'assistant',
         content: m.content
-      })) as any[];
+      }));
 
-      // 3. Appel API Mistral
-      const response = await mistralService.chat(text, insightsContext, historyForMistral);
+      // 3. Appel Agent Service (boucle incluse)
+      const agentResponse = await agentService.handleUserMessage(text, historyForAgent, insightsContext);
 
       // 4. Remplacer le loading par la réponse
       const botMsg: ChatMessage = {
         id: `m-${Date.now()}-bot`,
         role: "bot",
-        content: response,
+        content: agentResponse.message, // On prend le message final
         createdAt: Date.now(),
       };
 
@@ -120,7 +120,7 @@ export default function AIAssistantPage() {
 
       // Mettre à jour l'aperçu avec la réponse du bot
       setThreads((prev) =>
-        prev.map((t) => (t.id === activeThreadId ? { ...t, lastMessagePreview: response } : t))
+        prev.map((t) => (t.id === activeThreadId ? { ...t, lastMessagePreview: agentResponse.message } : t))
       );
 
     } catch (error) {
