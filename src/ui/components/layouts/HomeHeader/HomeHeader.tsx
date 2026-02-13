@@ -6,13 +6,21 @@ import type { JSX } from "react";
 import type { HomeHeaderProps } from "./HomeHeader.types";
 import { clearAuthToken } from "@/ui/features/auth/hooks/useAuth";
 import { useToast } from "@/ui/components/common/Toast";
+import { useTranslation } from "react-i18next";
 
 
 export function HomeHeader({ onMenuClick, isSidebarOpen }: HomeHeaderProps): JSX.Element {
   const navigate = useNavigate();
   const { addToast } = useToast();
+  const { i18n } = useTranslation();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const handleLanguageChange = (lang: string) => {
+    i18n.changeLanguage(lang);
+    setIsLangMenuOpen(false);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -75,12 +83,36 @@ export function HomeHeader({ onMenuClick, isSidebarOpen }: HomeHeaderProps): JSX
         </button>
 
         {/* Langue */}
-        <div className="hidden gap-2 items-center sm:flex">
-          <span className="text-lg" aria-hidden>🇬🇧</span>
-          <button className="inline-flex gap-1 items-center text-sm text-gray-700 hover:text-gray-900">
-            English
-            <ChevronDown className="w-4 h-4" />
+        <div className="hidden relative sm:flex">
+          <button
+            onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+            className="flex gap-2 items-center px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            <span className="text-xl" aria-hidden>{i18n.language === 'fr' ? '🇫🇷' : '🇬🇧'}</span>
+            <span className="text-sm font-medium text-gray-700">
+              {i18n.language === 'fr' ? 'Français' : 'English'}
+            </span>
+            <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isLangMenuOpen ? 'rotate-180' : ''}`} />
           </button>
+
+          {isLangMenuOpen && (
+            <div className="absolute top-full right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-100 py-1 overflow-hidden z-20 animate-in fade-in slide-in-from-top-2 duration-200">
+              <button
+                onClick={() => handleLanguageChange('en')}
+                className={`flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors ${i18n.language !== 'fr' ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700 hover:bg-gray-50'
+                  }`}
+              >
+                <span className="text-lg">🇬🇧</span> English
+              </button>
+              <button
+                onClick={() => handleLanguageChange('fr')}
+                className={`flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors ${i18n.language === 'fr' ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700 hover:bg-gray-50'
+                  }`}
+              >
+                <span className="text-lg">🇫🇷</span> Français
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Profil utilisateur */}

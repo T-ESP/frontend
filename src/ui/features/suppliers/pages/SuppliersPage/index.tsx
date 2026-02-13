@@ -6,8 +6,10 @@ import { AddSupplierModal } from '@/ui/features/suppliers/components/AddSupplier
 import { EditSupplierModal } from '@/ui/features/suppliers/components/EditSupplierModal';
 import { DeleteSupplierModal } from '@/ui/features/suppliers/components/DeleteSupplierModal';
 import PageLayout from '../../../../components/layouts/PageLayout';
+import { useTranslation } from 'react-i18next';
 
 export default function SuppliersPage() {
+  const { t } = useTranslation();
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -63,7 +65,7 @@ export default function SuppliersPage() {
       ['ID', 'Name', 'Email', 'Phone', 'Address'],
       ...suppliers.map(s => [s.id, s.name_sup, s.email_sup, s.phone_sup, s.address_sup])
     ].map(row => row.join(',')).join('\n');
-    
+
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -142,13 +144,13 @@ export default function SuppliersPage() {
   }
 
   return (
-    <PageLayout title="Supplier Management" icon={<Users size={28} />}>
+    <PageLayout title={t('suppliers.title')} icon={<Users size={28} />}>
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-white rounded-xl border border-slate-100 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-600">Total Suppliers</p>
+              <p className="text-sm font-medium text-slate-600">{t('suppliers.total')}</p>
               <p className="text-2xl font-bold text-slate-900 mt-2">{stats.total}</p>
             </div>
             <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center">
@@ -160,7 +162,7 @@ export default function SuppliersPage() {
         <div className="bg-white rounded-xl border border-slate-100 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-600">Active</p>
+              <p className="text-sm font-medium text-slate-600">{t('suppliers.active')}</p>
               <p className="text-2xl font-bold text-green-600 mt-2">{stats.total}</p>
             </div>
             <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center">
@@ -172,7 +174,7 @@ export default function SuppliersPage() {
         <div className="bg-white rounded-xl border border-slate-100 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-600">With Phone</p>
+              <p className="text-sm font-medium text-slate-600">{t('suppliers.with_phone')}</p>
               <p className="text-2xl font-bold text-slate-900 mt-2">{stats.withPhone}</p>
             </div>
             <div className="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center">
@@ -184,7 +186,7 @@ export default function SuppliersPage() {
         <div className="bg-white rounded-xl border border-slate-100 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-600">Locations</p>
+              <p className="text-sm font-medium text-slate-600">{t('suppliers.locations')}</p>
               <p className="text-2xl font-bold text-slate-900 mt-2">{stats.locations}</p>
             </div>
             <div className="w-12 h-12 bg-amber-50 rounded-lg flex items-center justify-center">
@@ -207,7 +209,7 @@ export default function SuppliersPage() {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                placeholder="Search by name, email, phone, address..."
+                placeholder={t('suppliers.search_placeholder')}
                 className="w-full pl-10 pr-10 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
               {searchQuery && (
@@ -230,21 +232,21 @@ export default function SuppliersPage() {
               className="flex items-center gap-2 px-4 py-2.5 text-slate-700 bg-slate-50 border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors disabled:opacity-50"
             >
               <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
-              Refresh
+              {t('common.refresh')}
             </button>
             <button
               onClick={handleExport}
               className="flex items-center gap-2 px-4 py-2.5 text-slate-700 bg-slate-50 border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors"
             >
               <Download size={16} />
-              Export
+              {t('common.export')}
             </button>
             <button
               onClick={() => setShowAddModal(true)}
               className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               <Plus size={16} />
-              Add Supplier
+              {t('suppliers.add')}
             </button>
           </div>
         </div>
@@ -259,156 +261,156 @@ export default function SuppliersPage() {
         ) : filteredAndSortedSuppliers.length === 0 ? (
           <div className="text-center py-12">
             <Users className="mx-auto text-slate-400 mb-4" size={48} />
-            <p className="text-slate-600 text-lg">No suppliers found</p>
+            <p className="text-slate-600 text-lg">{t('suppliers.no_suppliers')}</p>
             <p className="text-slate-500 text-sm mt-2">
-              {searchQuery ? 'Try adjusting your search' : 'Add a supplier to get started'}
+              {searchQuery ? t('suppliers.try_adjusting') : t('suppliers.get_started')}
             </p>
           </div>
         ) : (
           <>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-100">
-              <thead className="bg-slate-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    ID
-                  </th>
-                  <th
-                    onClick={() => handleSort('name_sup')}
-                    className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100"
-                  >
-                    <div className="flex items-center gap-2">
-                      Name
-                      {sortField === 'name_sup' && (
-                        <span className="text-blue-600">{sortDirection === 'asc' ? '↑' : '↓'}</span>
-                      )}
-                    </div>
-                  </th>
-                  <th
-                    onClick={() => handleSort('email_sup')}
-                    className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100"
-                  >
-                    <div className="flex items-center gap-2">
-                      Email
-                      {sortField === 'email_sup' && (
-                        <span className="text-blue-600">{sortDirection === 'asc' ? '↑' : '↓'}</span>
-                      )}
-                    </div>
-                  </th>
-                  <th
-                    onClick={() => handleSort('phone_sup')}
-                    className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100"
-                  >
-                    <div className="flex items-center gap-2">
-                      Phone
-                      {sortField === 'phone_sup' && (
-                        <span className="text-blue-600">{sortDirection === 'asc' ? '↑' : '↓'}</span>
-                      )}
-                    </div>
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Address
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-slate-100">
-                {paginatedSuppliers.map((supplier) => (
-                  <tr key={supplier.id} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-                      {supplier.id}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
-                      {supplier.name_sup}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
-                      {supplier.email_sup}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
-                      {supplier.phone_sup}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-slate-600">
-                      {supplier.address_sup}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleEdit(supplier)}
-                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                          title="Edit"
-                        >
-                          <Edit size={16} />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(supplier)}
-                          className="p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
-                          title="Delete"
-                        >
-                          <Trash2 size={16} />
-                        </button>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-slate-100">
+                <thead className="bg-slate-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      ID
+                    </th>
+                    <th
+                      onClick={() => handleSort('name_sup')}
+                      className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100"
+                    >
+                      <div className="flex items-center gap-2">
+                        {t('suppliers.table.name')}
+                        {sortField === 'name_sup' && (
+                          <span className="text-blue-600">{sortDirection === 'asc' ? '↑' : '↓'}</span>
+                        )}
                       </div>
-                    </td>
+                    </th>
+                    <th
+                      onClick={() => handleSort('email_sup')}
+                      className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100"
+                    >
+                      <div className="flex items-center gap-2">
+                        {t('suppliers.table.email')}
+                        {sortField === 'email_sup' && (
+                          <span className="text-blue-600">{sortDirection === 'asc' ? '↑' : '↓'}</span>
+                        )}
+                      </div>
+                    </th>
+                    <th
+                      onClick={() => handleSort('phone_sup')}
+                      className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100"
+                    >
+                      <div className="flex items-center gap-2">
+                        {t('suppliers.table.phone')}
+                        {sortField === 'phone_sup' && (
+                          <span className="text-blue-600">{sortDirection === 'asc' ? '↑' : '↓'}</span>
+                        )}
+                      </div>
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      {t('suppliers.table.address')}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      {t('suppliers.table.actions')}
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="bg-white divide-y divide-slate-100">
+                  {paginatedSuppliers.map((supplier) => (
+                    <tr key={supplier.id} className="hover:bg-slate-50/50 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
+                        {supplier.id}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
+                        {supplier.name_sup}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                        {supplier.email_sup}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                        {supplier.phone_sup}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-slate-600">
+                        {supplier.address_sup}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleEdit(supplier)}
+                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            title={t('common.edit')}
+                          >
+                            <Edit size={16} />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(supplier)}
+                            className="p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                            title={t('common.delete')}
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-          {/* Pagination */}
-          <div className="flex items-center justify-between px-6 py-4 bg-white border-t border-slate-100 rounded-b-xl">
-            <div className="flex items-center gap-2 text-sm text-slate-600">
-              <span>Show</span>
-              <select
-                value={itemsPerPage}
-                onChange={(e) => setItemsPerPage(Number(e.target.value))}
-                className="px-3 py-1.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value={10}>10</option>
-                <option value={25}>25</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-              </select>
-              <span>per page</span>
-              <span className="ml-4 font-medium text-slate-900">
-                {((currentPage - 1) * itemsPerPage) + 1} - {Math.min(currentPage * itemsPerPage, filteredAndSortedSuppliers.length)} of {filteredAndSortedSuppliers.length}
-              </span>
+            {/* Pagination */}
+            <div className="flex items-center justify-between px-6 py-4 bg-white border-t border-slate-100 rounded-b-xl">
+              <div className="flex items-center gap-2 text-sm text-slate-600">
+                <span>Show</span>
+                <select
+                  value={itemsPerPage}
+                  onChange={(e) => setItemsPerPage(Number(e.target.value))}
+                  className="px-3 py-1.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </select>
+                <span>per page</span>
+                <span className="ml-4 font-medium text-slate-900">
+                  {((currentPage - 1) * itemsPerPage) + 1} - {Math.min(currentPage * itemsPerPage, filteredAndSortedSuppliers.length)} of {filteredAndSortedSuppliers.length}
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setCurrentPage(1)}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  First
+                </button>
+                <button
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Previous
+                </button>
+                <span className="flex items-center px-4 py-1.5 text-sm font-medium text-slate-700">
+                  Page {currentPage} of {totalPages || 1}
+                </span>
+                <button
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  disabled={currentPage >= totalPages}
+                  className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Next
+                </button>
+                <button
+                  onClick={() => setCurrentPage(totalPages)}
+                  disabled={currentPage >= totalPages}
+                  className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Last
+                </button>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setCurrentPage(1)}
-                disabled={currentPage === 1}
-                className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                First
-              </button>
-              <button
-                onClick={() => setCurrentPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                Previous
-              </button>
-              <span className="flex items-center px-4 py-1.5 text-sm font-medium text-slate-700">
-                Page {currentPage} of {totalPages || 1}
-              </span>
-              <button
-                onClick={() => setCurrentPage(currentPage + 1)}
-                disabled={currentPage >= totalPages}
-                className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                Next
-              </button>
-              <button
-                onClick={() => setCurrentPage(totalPages)}
-                disabled={currentPage >= totalPages}
-                className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                Last
-              </button>
-            </div>
-          </div>
           </>
         )}
       </div>

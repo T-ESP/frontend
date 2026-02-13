@@ -1,14 +1,14 @@
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import type { CustomerDistributionChartProps } from "@/ui/features/dashboard/types";
-
-
+import { useTranslation } from "react-i18next";
 
 export function CustomerDistributionChart({ data }: CustomerDistributionChartProps) {
+  const { t } = useTranslation();
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
       <div className="p-6 border-b border-gray-100">
-        <h3 className="text-lg font-semibold text-gray-900">Customer Distribution</h3>
-        <p className="mt-1 text-sm text-gray-500">New vs returning customers</p>
+        <h3 className="text-lg font-semibold text-gray-900">{t('dashboard.charts.customer_title')}</h3>
+        <p className="mt-1 text-sm text-gray-500">{t('dashboard.charts.customer_subtitle')}</p>
       </div>
       <div className="p-6">
         <ResponsiveContainer width="100%" height={200}>

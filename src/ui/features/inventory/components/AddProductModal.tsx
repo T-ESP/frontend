@@ -4,6 +4,7 @@ import { productService } from "@/infrastructure/api/services/productService";
 import type { CreateProductDto } from "@/domain/models/Product";
 import { CategorySelect } from "./CategorySelect";
 import { useToast } from "@/ui/components/common/Toast";
+import { useTranslation } from "react-i18next";
 
 interface AddProductModalProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ const INITIAL_STATE: CreateProductDto = {
 };
 
 export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductModalProps) {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState<CreateProductDto>(INITIAL_STATE);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,7 +36,7 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
     if (type === 'number') {
       // Use parseFloat/parseInt only if the value is not empty to handle clear operations gracefully
       if (value === '') {
-        typedValue = 0; 
+        typedValue = 0;
       } else if (name === 'buying_price') {
         typedValue = parseFloat(value);
       } else {
@@ -54,14 +56,14 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
     setError(null);
 
     // Basic validation check for number types being NaN or infinite
-    const invalidNumber = Object.values(formData).some(val => 
-        (typeof val === 'number' && (isNaN(val) || !isFinite(val)))
+    const invalidNumber = Object.values(formData).some(val =>
+      (typeof val === 'number' && (isNaN(val) || !isFinite(val)))
     );
 
     if (invalidNumber) {
-        setError("Please ensure all number fields are valid.");
-        setLoading(false);
-        return;
+      setError(t('inventory.form.error.numbers'));
+      setLoading(false);
+      return;
     }
 
     try {
@@ -88,12 +90,12 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
       <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-slate-200">
-        
+
         {/* Modal Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-100 bg-slate-50 rounded-t-2xl">
           <div className="flex items-center gap-3">
             <PackagePlus className="w-6 h-6 text-blue-600" />
-            <h2 className="text-xl font-bold text-slate-900">Create New Product</h2>
+            <h2 className="text-xl font-bold text-slate-900">{t('inventory.add_modal.title')}</h2>
           </div>
           <button
             onClick={onClose}
@@ -113,12 +115,12 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
           )}
 
           {/* Form Fields - Modern Inputs */}
-          
+
           <div className="grid grid-cols-2 gap-4">
             {/* Product Name */}
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">
-                Product Name *
+                {t('inventory.form.product_name')} *
               </label>
               <input
                 id="name"
@@ -135,7 +137,7 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
             {/* Reference (SKU) */}
             <div>
               <label htmlFor="reference" className="block text-sm font-medium text-slate-700 mb-1">
-                Reference (SKU) *
+                {t('inventory.form.reference')} *
               </label>
               <input
                 id="reference"
@@ -163,7 +165,7 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
             {/* Buying Price */}
             <div>
               <label htmlFor="buying_price" className="block text-sm font-medium text-slate-700 mb-1">
-                Buying Price (€) *
+                {t('inventory.form.buying_price')} *
               </label>
               <input
                 id="buying_price"
@@ -177,11 +179,11 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
                 className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
               />
             </div>
-            
+
             {/* Stock Quantity */}
             <div>
               <label htmlFor="stock_quantity" className="block text-sm font-medium text-slate-700 mb-1">
-                Stock Quantity *
+                {t('inventory.form.stock_quantity')} *
               </label>
               <input
                 id="stock_quantity"
@@ -198,7 +200,7 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
             {/* Supplier ID */}
             <div>
               <label htmlFor="supplier_id" className="block text-sm font-medium text-slate-700 mb-1">
-                Supplier ID *
+                {t('inventory.form.supplier_id')} *
               </label>
               <input
                 id="supplier_id"
@@ -220,7 +222,7 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
               onClick={onClose}
               className="flex-1 px-4 py-2.5 text-sm font-semibold text-slate-700 bg-white rounded-xl border border-slate-300 hover:bg-slate-50 transition duration-150"
             >
-              Cancel
+              {t('common.cancel')}
             </button>
             <button
               type="submit"
@@ -228,7 +230,7 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
               className="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-blue-600 rounded-xl shadow-lg shadow-blue-500/30 hover:bg-blue-700 transition duration-150 disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-              {loading ? "Creating..." : "Create Product"}
+              {loading ? t('common.creating') : t('inventory.form.create_submit')}
             </button>
           </div>
         </form>

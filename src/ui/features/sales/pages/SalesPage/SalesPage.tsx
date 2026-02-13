@@ -7,6 +7,7 @@ import { productService } from "@/infrastructure/api/services/productService";
 import type { Order } from "@/domain/models/Order";
 import type { Product } from "@/domain/models/Product";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from "recharts";
+import { useTranslation } from "react-i18next";
 
 // --- Types for our new insights ---
 interface TopProduct {
@@ -26,6 +27,7 @@ interface CategoryData {
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
 export default function SalesPage() {
+  const { t } = useTranslation();
   // ... (Keep existing state)
   const [orders, setOrders] = useState<Order[]>([]);
   const [totalRevenue, setTotalRevenue] = useState<number>(0);
@@ -33,7 +35,7 @@ export default function SalesPage() {
   const [averageBasket, setAverageBasket] = useState<number>(0);
   const [averageBasketEvolution, setAverageBasketEvolution] = useState<number>(0);
   const [chartData, setChartData] = useState<Array<{ date: string; revenue: number; orders: number }>>([]);
-  
+
   // New State for Insights
   const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
   const [categoryData, setCategoryData] = useState<CategoryData[]>([]);
@@ -46,11 +48,11 @@ export default function SalesPage() {
   const loadSalesData = async () => {
     try {
       setLoading(true);
-      
+
       const endDate = new Date();
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - 30);
-      
+
       const formatDate = (date: Date) => date.toISOString().split('T')[0];
       const period = { start_date: formatDate(startDate), end_date: formatDate(endDate), grain: 'day' };
 
@@ -70,8 +72,8 @@ export default function SalesPage() {
       }
 
       // --- NEW: Process Orders for Deep Insights ---
-      if (ordersData.status === 'fulfilled' && ordersData.value && 
-          productsData.status === 'fulfilled' && productsData.value) {
+      if (ordersData.status === 'fulfilled' && ordersData.value &&
+        productsData.status === 'fulfilled' && productsData.value) {
         setOrders(ordersData.value);
         await processInsights(ordersData.value, productsData.value);
       }
@@ -79,22 +81,22 @@ export default function SalesPage() {
       // Process daily revenue data for the chart
       if (dailyRevenueData.status === 'fulfilled' && dailyRevenueData.value) {
         const dailyData = dailyRevenueData.value.data || [];
-        
+
         // Calculate revenue growth from the daily data
         if (dailyData.length > 0) {
           const halfPoint = Math.floor(dailyData.length / 2);
           const firstHalf = dailyData.slice(0, halfPoint);
           const secondHalf = dailyData.slice(halfPoint);
-          
+
           const firstHalfRevenue = firstHalf.reduce((sum, d) => sum + d.revenue, 0);
           const secondHalfRevenue = secondHalf.reduce((sum, d) => sum + d.revenue, 0);
-          
+
           if (firstHalfRevenue > 0) {
             const growth = ((secondHalfRevenue - firstHalfRevenue) / firstHalfRevenue) * 100;
             setRevenueGrowth(growth);
           }
         }
-        
+
         // Create a map to count orders per day
         const ordersByDate = new Map<string, number>();
         if (ordersData.status === 'fulfilled' && ordersData.value) {
@@ -131,8 +133,8 @@ export default function SalesPage() {
       const productsById = new Map(products.map(p => [p.id, p]));
 
       // Filter valid orders
-      const validOrders = orders.filter(order => 
-        order.status !== 'Cancelled' && 
+      const validOrders = orders.filter(order =>
+        order.status !== 'Cancelled' &&
         order.amount > 0
       );
 
@@ -140,26 +142,26 @@ export default function SalesPage() {
 
       // Process each order to get line items and aggregate by product and category
       const orderPromises = validOrders
-        .map(order => 
+        .map(order =>
           orderService.getOrderItems(order.id)
             .catch(err => {
               console.warn(`Failed to fetch items for order ${order.id}:`, err);
               return [];
             })
         );
-      
+
       const allLineItems = await Promise.all(orderPromises);
-      
+
       let totalItemsProcessed = 0;
       let itemsWithInvalidData = 0;
 
       // Aggregate data by product and category
       allLineItems.forEach((lineItems, orderIndex) => {
         if (!lineItems || lineItems.length === 0) return;
-        
+
         lineItems.forEach(item => {
           totalItemsProcessed++;
-          
+
           const product = productsById.get(item.product_id);
           if (!product) {
             console.warn(`Product not found for item:`, item);
@@ -168,7 +170,7 @@ export default function SalesPage() {
 
           // Get line total, with fallback calculation
           let lineTotal = item.line_total;
-          
+
           // Validate and handle NaN/undefined
           if (typeof lineTotal !== 'number' || isNaN(lineTotal) || lineTotal === null || lineTotal === undefined) {
             // Fallback: calculate from order amount divided by number of items
@@ -220,7 +222,7 @@ export default function SalesPage() {
 
       console.log('Final processed categories:', processedCategories);
       setCategoryData(processedCategories);
-      
+
     } catch (error) {
       console.error('Error processing insights:', error);
       // Set empty data on error
@@ -231,7 +233,7 @@ export default function SalesPage() {
 
   // ... (Keep formatCurrency and formatPercentage helpers) ...
   const formatCurrency = (val: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(val);
-  
+
   const formatPercentage = (value: number) => {
     const sign = value >= 0 ? '+' : '';
     return `${sign}${value.toFixed(1)}%`;
@@ -239,40 +241,40 @@ export default function SalesPage() {
 
   const stats = [
     {
-      title: "Total Revenue",
+      title: t('sales.stats.total_revenue'),
       value: formatCurrency(totalRevenue),
       change: formatPercentage(revenueGrowth),
       trend: revenueGrowth >= 0 ? "up" : "down",
       icon: FiDollarSign,
       color: "emerald",
-      description: "Last 30 days"
+      description: t('sales.stats.last_30_days')
     },
     {
-      title: "Total Orders",
+      title: t('sales.stats.total_orders'),
       value: orders.filter(o => o.status !== 'Cancelled').length.toString(),
       change: "+0.0%",
       trend: "up",
       icon: FiShoppingCart,
       color: "blue",
-      description: "Last 30 days"
+      description: t('sales.stats.last_30_days')
     },
     {
-      title: "Average Basket",
+      title: t('sales.stats.avg_basket'),
       value: formatCurrency(averageBasket),
       change: formatPercentage(averageBasketEvolution),
       trend: averageBasketEvolution >= 0 ? "up" : "down",
       icon: FiTrendingUp,
       color: "purple",
-      description: "Last 30 days"
+      description: t('sales.stats.last_30_days')
     },
     {
-      title: "Revenue Growth",
+      title: t('sales.stats.revenue_growth'),
       value: formatPercentage(revenueGrowth),
       change: formatPercentage(revenueGrowth),
       trend: revenueGrowth >= 0 ? "up" : "down",
       icon: FiArrowRight,
       color: "indigo",
-      description: "Trend"
+      description: t('sales.stats.trend')
     }
   ];
 
@@ -283,18 +285,18 @@ export default function SalesPage() {
         <div>
           <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
             <FiDollarSign className="w-7 h-7 text-emerald-600" />
-            Sales Dashboard
+            {t('sales.title')}
           </h1>
           <p className="text-slate-500 mt-2">
-            Performance overview and analytics for the last 30 days
+            {t('sales.subtitle')}
           </p>
         </div>
-        <button 
-          onClick={loadSalesData} 
+        <button
+          onClick={loadSalesData}
           className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/30 hover:bg-blue-700 transition-colors"
         >
           <FiRefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
-          Refresh
+          {t('sales.refresh')}
         </button>
       </div>
 
@@ -308,26 +310,25 @@ export default function SalesPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat) => (
-            <div key={stat.title} className="bg-white rounded-xl border border-slate-100 shadow-sm p-6 hover:shadow-md transition-all">
-              <div className="flex items-center justify-between mb-4">
-                <div className={`w-12 h-12 rounded-lg bg-${stat.color}-50 flex items-center justify-center`}>
-                  <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />
+            {stats.map((stat) => (
+              <div key={stat.title} className="bg-white rounded-xl border border-slate-100 shadow-sm p-6 hover:shadow-md transition-all">
+                <div className="flex items-center justify-between mb-4">
+                  <div className={`w-12 h-12 rounded-lg bg-${stat.color}-50 flex items-center justify-center`}>
+                    <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />
+                  </div>
+                  <span className={`text-sm font-semibold ${stat.trend === 'up' ? 'text-emerald-600' : 'text-rose-600'
+                    }`}>
+                    {stat.change}
+                  </span>
                 </div>
-                <span className={`text-sm font-semibold ${
-                  stat.trend === 'up' ? 'text-emerald-600' : 'text-rose-600'
-                }`}>
-                  {stat.change}
-                </span>
+                <div>
+                  <p className="text-sm font-medium text-slate-600">{stat.title}</p>
+                  <p className="text-2xl font-bold text-slate-900 mt-1">{stat.value}</p>
+                  <p className="text-xs text-slate-500 mt-1">{stat.description}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm font-medium text-slate-600">{stat.title}</p>
-                <p className="text-2xl font-bold text-slate-900 mt-1">{stat.value}</p>
-                <p className="text-xs text-slate-500 mt-1">{stat.description}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
         )}
       </div>
 
@@ -338,101 +339,101 @@ export default function SalesPage() {
 
       {/* --- NEW SECTION: PERFORMANCE INSIGHTS (Replaces the boring table) --- */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        
+
         {/* Left Panel: Top Selling Products (2/3 width) */}
         <div className="lg:col-span-2 bg-white rounded-xl border border-slate-100 shadow-sm flex flex-col">
-            <div className="p-6 border-b border-slate-100 flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                    <FiAward className="text-amber-500" />
-                    <h3 className="font-bold text-slate-900">Top Performing Products</h3>
-                </div>
+          <div className="p-6 border-b border-slate-100 flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <FiAward className="text-amber-500" />
+              <h3 className="font-bold text-slate-900">{t('sales.top_products')}</h3>
             </div>
-            
-            <div className="flex-1 overflow-auto">
-                <table className="min-w-full">
-                    <thead className="bg-slate-50/50">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Product Name</th>
-                            <th className="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Units Sold</th>
-                            <th className="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Revenue</th>
-                            <th className="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Performance</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                        {topProducts.map((product, idx) => (
-                            <tr key={product.id} className="hover:bg-slate-50/50 transition-colors">
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="flex items-center gap-3">
-                                        <div className="flex-shrink-0 w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center font-bold text-xs text-slate-600">
-                                            #{idx + 1}
-                                        </div>
-                                        <span className="text-sm font-medium text-slate-900">{product.name}</span>
-                                    </div>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-slate-600">
-                                    {product.quantity}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-slate-900">
-                                    {formatCurrency(product.revenue)}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-right">
-                                    <div className="w-24 ml-auto bg-slate-100 rounded-full h-1.5">
-                                        <div 
-                                            className="bg-blue-600 h-1.5 rounded-full" 
-                                            style={{ width: `${(product.revenue / topProducts[0].revenue) * 100}%` }} 
-                                        />
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+          </div>
+
+          <div className="flex-1 overflow-auto">
+            <table className="min-w-full">
+              <thead className="bg-slate-50/50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('sales.table.product')}</th>
+                  <th className="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('sales.table.units')}</th>
+                  <th className="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('sales.table.revenue')}</th>
+                  <th className="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('sales.table.performance')}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {topProducts.map((product, idx) => (
+                  <tr key={product.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-3">
+                        <div className="flex-shrink-0 w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center font-bold text-xs text-slate-600">
+                          #{idx + 1}
+                        </div>
+                        <span className="text-sm font-medium text-slate-900">{product.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-slate-600">
+                      {product.quantity}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-slate-900">
+                      {formatCurrency(product.revenue)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                      <div className="w-24 ml-auto bg-slate-100 rounded-full h-1.5">
+                        <div
+                          className="bg-blue-600 h-1.5 rounded-full"
+                          style={{ width: `${(product.revenue / topProducts[0].revenue) * 100}%` }}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Right Panel: Sales by Category (1/3 width) */}
         <div className="bg-white rounded-xl border border-slate-100 shadow-sm flex flex-col">
-            <div className="p-6 border-b border-slate-100 flex items-center gap-2">
-                <FiPieChart className="text-purple-500" />
-                <h3 className="font-bold text-slate-900">Sales by Category</h3>
-            </div>
-            
-            <div className="p-6 flex-1 flex flex-col items-center justify-center">
-                <div className="w-full h-64">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                            <Pie
-                                data={categoryData}
-                                cx="50%"
-                                cy="50%"
-                                innerRadius={60}
-                                outerRadius={80}
-                                paddingAngle={5}
-                                dataKey="value"
-                            >
-                                {categoryData.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
-                                ))}
-                            </Pie>
-                            <RechartsTooltip formatter={(value: number) => formatCurrency(value)} />
-                            <Legend />
-                        </PieChart>
-                    </ResponsiveContainer>
-                </div>
-                
-                {/* Category List */}
-                <div className="w-full mt-4 space-y-3">
-                    {categoryData.slice(0, 4).map((cat) => (
-                        <div key={cat.name} className="flex items-center justify-between text-sm">
-                            <div className="flex items-center gap-2">
-                                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: cat.color }} />
-                                <span className="text-slate-600">{cat.name}</span>
-                            </div>
-                            <span className="font-semibold text-slate-900">{formatCurrency(cat.value)}</span>
-                        </div>
+          <div className="p-6 border-b border-slate-100 flex items-center gap-2">
+            <FiPieChart className="text-purple-500" />
+            <h3 className="font-bold text-slate-900">{t('sales.by_category')}</h3>
+          </div>
+
+          <div className="p-6 flex-1 flex flex-col items-center justify-center">
+            <div className="w-full h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={categoryData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {categoryData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
                     ))}
-                </div>
+                  </Pie>
+                  <RechartsTooltip formatter={(value: number) => formatCurrency(value)} />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
+
+            {/* Category List */}
+            <div className="w-full mt-4 space-y-3">
+              {categoryData.slice(0, 4).map((cat) => (
+                <div key={cat.name} className="flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: cat.color }} />
+                    <span className="text-slate-600">{cat.name}</span>
+                  </div>
+                  <span className="font-semibold text-slate-900">{formatCurrency(cat.value)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
       </div>

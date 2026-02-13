@@ -11,8 +11,10 @@ import { salesService } from "@/infrastructure/api/services/salesService";
 import type { Order } from "@/domain/models/Order";
 import type { Product } from "@/domain/models/Product";
 import type { User } from "@/domain/models/User";
+import { useTranslation } from "react-i18next";
 
 export default function DashboardPage() {
+  const { t } = useTranslation();
   const [orders, setOrders] = useState<Order[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -62,36 +64,37 @@ export default function DashboardPage() {
     }
   };
 
-  // const handleExport = () => {
-  //   const csvData = [
-  //     ['Dashboard Export', new Date().toISOString()],
-  //     [],
-  //     ['Metric', 'Value'],
-  //     ['Total Revenue', `€${totalRevenue.toFixed(2)}`],
-  //     ['Revenue Evolution', `${evolution.toFixed(1)}%`],
-  //     ['Total Orders', orders.length.toString()],
-  //     ['Total Products', products.length.toString()],
-  //     ['Total Users', users.length.toString()],
-  //     ['Low Stock Products', products.filter(p => p.stock_quantity < 10).length.toString()],
-  //   ];
+  const handleExport = () => {
+    const csvData = [
+      [t('dashboard.export.title'), new Date().toISOString()],
+      [],
+      [t('dashboard.export.metric'), t('dashboard.export.value')],
+      [t('dashboard.kpi.total_revenue'), `€${totalRevenue.toFixed(2)}`],
+      [t('dashboard.kpi.revenue_evolution'), `${evolution.toFixed(1)}%`],
+      [t('dashboard.kpi.total_orders'), orders.length.toString()],
+      [t('dashboard.kpi.total_products'), products.length.toString()],
+      [t('dashboard.kpi.total_users'), users.length.toString()],
+      [t('dashboard.kpi.low_stock'), products.filter(p => p.stock_quantity < 10).length.toString()],
+    ];
 
-  //   const csv = csvData.map(row => row.join(',')).join('\n');
-  //   const blob = new Blob([csv], { type: 'text/csv' });
-  //   const url = window.URL.createObjectURL(blob);
-  //   const link = document.createElement('a');
-  //   link.href = url;
-  //   link.download = `dashboard-${new Date().toISOString().split('T')[0]}.csv`;
-  //   link.click();
-  // };
+    //   const csv = csvData.map(row => row.join(',')).join('\n');
+    //   const blob = new Blob([csv], { type: 'text/csv' });
+    //   const url = window.URL.createObjectURL(blob);
+    //   const link = document.createElement('a');
+    //   link.href = url;
+    //   link.download = `dashboard-${new Date().toISOString().split('T')[0]}.csv`;
+    //   link.click();
+  }
 
   return (
     <PageLayout
-      title="Dashboard"
-      subtitle="Monitor your business performance in real-time"
+      title={t('dashboard.title')}
+      subtitle={t('dashboard.subtitle')}
       actions={
         <PageActions
           onDateRangeChange={setDateRange}
           currentRange={dateRange}
+          onExport={handleExport}
         />
       }
     >

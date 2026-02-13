@@ -1,11 +1,14 @@
+// ProductItem.tsx
 import { FiStar, FiShoppingCart, FiArrowUpRight, FiArrowDownLeft, FiEye } from "react-icons/fi";
 import type { TopProduct } from "../../../types/dashboard.types";
+import { useTranslation } from "react-i18next";
 
 interface ProductItemProps {
   product: TopProduct;
 }
 
 export function ProductItem({ product }: ProductItemProps) {
+  const { t } = useTranslation();
   return (
     <div className="p-6 transition-colors hover:bg-gray-50/50 group">
       <div className="flex gap-4 items-center">
@@ -29,7 +32,7 @@ export function ProductItem({ product }: ProductItemProps) {
                 </div>
                 <div className="flex gap-1 items-center">
                   <FiShoppingCart className="w-4 h-4 text-gray-400" />
-                  <span className="text-sm text-gray-600">{product.sales.toLocaleString()} sold</span>
+                  <span className="text-sm text-gray-600">{product.sales.toLocaleString()} {t('common.sold')}</span>
                 </div>
               </div>
             </div>
@@ -50,7 +53,10 @@ export function ProductItem({ product }: ProductItemProps) {
           </div>
         </div>
         <div className="shrink-0">
-          <button className="p-2 text-gray-400 rounded-lg opacity-0 transition-colors hover:text-gray-600 hover:bg-white group-hover:opacity-100">
+          <button
+            className="p-2 text-gray-400 rounded-lg opacity-0 transition-colors hover:text-gray-600 hover:bg-white group-hover:opacity-100"
+            title={t('common.view_details')}
+          >
             <FiEye size={16} />
           </button>
         </div>

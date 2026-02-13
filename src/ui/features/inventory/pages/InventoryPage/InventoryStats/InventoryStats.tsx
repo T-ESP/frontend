@@ -2,18 +2,22 @@ import { useMemo } from "react";
 import { FiPackage, FiTrendingUp } from "react-icons/fi";
 import { InventoryStatCard } from "./InventoryStatCard";
 import type { InventoryItem } from "@/ui/features/inventory/types";
+import { useTranslation } from "react-i18next";
 
 interface InventoryStatsProps {
   products: InventoryItem[];
 }
 
 export function InventoryStats({ products }: InventoryStatsProps) {
+  const { t } = useTranslation();
+
   const stats = useMemo(() => {
+    // Keep internal logic associated with English status strings returned by backend or default
     const inStock = products.filter(p => p.status === "In Stock").length;
     const lowStock = products.filter(p => p.status === "Low Stock").length;
     const outOfStock = products.filter(p => p.status === "Out of Stock").length;
     const totalProducts = products.length;
-    
+
     return {
       inStock,
       lowStock,
@@ -25,25 +29,25 @@ export function InventoryStats({ products }: InventoryStatsProps) {
   return (
     <div className="grid grid-cols-1 gap-4 mb-6 md:grid-cols-4">
       <InventoryStatCard
-        label="In Stock"
+        label={t('inventory.stats.in_stock')}
         value={stats.inStock}
         icon={FiPackage}
         color="emerald"
       />
       <InventoryStatCard
-        label="Low Stock"
+        label={t('inventory.stats.low_stock')}
         value={stats.lowStock}
         icon={FiTrendingUp}
         color="amber"
       />
       <InventoryStatCard
-        label="Out of Stock"
+        label={t('inventory.stats.out_of_stock')}
         value={stats.outOfStock}
         icon={FiPackage}
         color="rose"
       />
       <InventoryStatCard
-        label="Total Products"
+        label={t('inventory.stats.total_products')}
         value={stats.totalProducts}
         icon={FiTrendingUp}
         color="blue"

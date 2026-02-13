@@ -9,8 +9,10 @@ import { DeleteConfirmModal } from "../../components/DeleteConfirmModal";
 import { ProductKPIsModal } from "../../components/ProductKPIsModal";
 import type { InventoryItem } from "@/ui/features/inventory/types";
 import type { Product } from "@/domain/models/Product";
+import { useTranslation } from "react-i18next";
 
 export default function InventoryPage() {
+  const { t } = useTranslation();
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -63,13 +65,13 @@ export default function InventoryPage() {
 
   return (
     <PageLayout
-      title="Inventory"
-      subtitle="Manage your stock, products and availability."
+      title={t('inventory.title')}
+      subtitle={t('inventory.subtitle')}
       actions={<PageActions onAddProduct={() => setShowAddModal(true)} />}
     >
       <InventoryStats products={products} />
-      <InventoryTable 
-        onEdit={handleEdit} 
+      <InventoryTable
+        onEdit={handleEdit}
         onDelete={handleDelete}
         refreshTrigger={refreshTrigger}
         onViewKPIs={handleViewKPIs}

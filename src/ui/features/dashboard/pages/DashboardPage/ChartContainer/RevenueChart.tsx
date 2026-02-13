@@ -3,8 +3,10 @@ import { FiMoreVertical } from "react-icons/fi";
 import { Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { CustomTooltip } from "../CustomTooltip/CustomTooltip";
 import type { RevenueChartProps } from "@/ui/features/dashboard/types";
+import { useTranslation } from "react-i18next";
 
 export function RevenueChart({ data }: RevenueChartProps) {
+  const { t } = useTranslation();
   // 1. Add state to track the selected range (default to 12 months)
   const [range, setRange] = useState<number>(12);
 
@@ -12,7 +14,7 @@ export function RevenueChart({ data }: RevenueChartProps) {
   // We use useMemo so it only recalculates when data or range changes
   const filteredData = useMemo(() => {
     if (!data || data.length === 0) return [];
-    
+
     // slice(-range) takes the last 'range' items from the array
     // e.g., if range is 6, it takes the last 6 months
     return data.slice(-range);
@@ -22,19 +24,19 @@ export function RevenueChart({ data }: RevenueChartProps) {
     <div className="overflow-hidden bg-white rounded-2xl border border-gray-100 shadow-sm lg:col-span-2">
       <div className="flex justify-between items-center p-6 border-b border-gray-100">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Revenue Analytics</h3>
-          <p className="mt-1 text-sm text-gray-500">Track your revenue and profit trends</p>
+          <h3 className="text-lg font-semibold text-gray-900">{t('dashboard.charts.revenue_title')}</h3>
+          <p className="mt-1 text-sm text-gray-500">{t('dashboard.charts.revenue_subtitle')}</p>
         </div>
         <div className="flex gap-3 items-center">
           {/* 3. Connect the select to the state */}
-          <select 
+          <select
             value={range}
             onChange={(e) => setRange(Number(e.target.value))}
             className="px-3 py-2 text-sm bg-white rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent cursor-pointer"
           >
-            <option value={12}>Last 12 months</option>
-            <option value={6}>Last 6 months</option>
-            <option value={3}>Last 3 months</option>
+            <option value={12}>{t('dashboard.charts.range.last_12')}</option>
+            <option value={6}>{t('dashboard.charts.range.last_6')}</option>
+            <option value={3}>{t('dashboard.charts.range.last_3')}</option>
           </select>
           <button className="p-2 text-gray-400 rounded-lg transition-colors hover:text-gray-600 hover:bg-gray-50">
             <FiMoreVertical size={16} />
@@ -80,7 +82,7 @@ export function RevenueChart({ data }: RevenueChartProps) {
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#colorRevenue)"
-              name="Revenue"
+              name={t('dashboard.charts.revenue')}
               connectNulls={true}
               animationDuration={1000} // Smooth animation when data changes
             />
@@ -91,7 +93,7 @@ export function RevenueChart({ data }: RevenueChartProps) {
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#colorProfit)"
-              name="Profit"
+              name={t('dashboard.charts.profit')}
               connectNulls={true}
               animationDuration={1000}
             />

@@ -1,8 +1,10 @@
 // SidebarItem.tsx
 import { NavLink } from "react-router-dom";
 import type { SidebarItemProps } from "./Sidebar.types";
+import { useTranslation } from "react-i18next";
 
 export function SidebarItem({ label, to, icon: Icon, isOpen }: SidebarItemProps) {
+  const { t } = useTranslation();
   return (
     <NavLink
       to={to}
@@ -21,7 +23,7 @@ export function SidebarItem({ label, to, icon: Icon, isOpen }: SidebarItemProps)
 
           {isOpen && (
             <span className={`truncate ${isActive ? "text-white" : "text-black"}`}>
-              {label}
+              {t(label)}
             </span>
           )}
         </>
