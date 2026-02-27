@@ -1,4 +1,4 @@
-import { FiSearch, FiFilter, FiDownload, FiRefreshCw, FiX, FiChevronDown } from "react-icons/fi";
+import { FiSearch, FiFilter, FiRefreshCw, FiX, FiChevronDown } from "react-icons/fi";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -41,7 +41,6 @@ export function InventoryTableHeader({
   stockRange,
   onStockRangeChange,
   onRefresh,
-  onExport,
   totalProducts,
   filteredProducts
 }: InventoryTableHeaderProps) {
@@ -109,10 +108,10 @@ export function InventoryTableHeader({
 
       {/* Search and Quick Filters Row */}
       <div className="px-6 py-4">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6 items-end">
+        <div className="grid items-end grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6">
           {/* Search Bar */}
           <div className="space-y-1.5 lg:col-span-2">
-            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider ml-1">
+            <label className="ml-1 text-xs font-semibold tracking-wider text-gray-500 uppercase">
               {t('inventory.header.search_label')}
             </label>
             <div className="relative">
@@ -122,7 +121,7 @@ export function InventoryTableHeader({
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
                 placeholder={t('inventory.header.search_placeholder')}
-                className="w-full pl-9 pr-8 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent focus:bg-white transition-all"
+                className="w-full py-2 pr-8 text-sm transition-all border border-gray-200 rounded-lg pl-9 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent focus:bg-white"
               />
               {searchQuery && (
                 <button
@@ -137,13 +136,13 @@ export function InventoryTableHeader({
 
           {/* Category Filter */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider ml-1">
+            <label className="ml-1 text-xs font-semibold tracking-wider text-gray-500 uppercase">
               {t('inventory.header.category_label')}
             </label>
             <select
               value={selectedCategory}
               onChange={(e) => onCategoryChange(e.target.value)}
-              className="w-full px-3 py-2 text-sm font-medium bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent hover:border-gray-300 transition-all cursor-pointer"
+              className="w-full px-3 py-2 text-sm font-medium transition-all bg-white border border-gray-200 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent hover:border-gray-300"
             >
               <option value="All Categories">{t('inventory.filters.all_categories')}</option>
               {categories.map(cat => (
@@ -154,13 +153,13 @@ export function InventoryTableHeader({
 
           {/* Status Filter */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider ml-1">
+            <label className="ml-1 text-xs font-semibold tracking-wider text-gray-500 uppercase">
               {t('inventory.header.status_label')}
             </label>
             <select
               value={selectedStatus}
               onChange={(e) => onStatusChange(e.target.value)}
-              className="w-full px-3 py-2 text-sm font-medium bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent hover:border-gray-300 transition-all cursor-pointer"
+              className="w-full px-3 py-2 text-sm font-medium transition-all bg-white border border-gray-200 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent hover:border-gray-300"
             >
               <option value="All Status">{t('inventory.filters.all_status')}</option>
               <option value="In Stock">✓ {t('inventory.status.in_stock')}</option>
@@ -171,13 +170,13 @@ export function InventoryTableHeader({
 
           {/* Sort By */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider ml-1">
+            <label className="ml-1 text-xs font-semibold tracking-wider text-gray-500 uppercase">
               {t('inventory.header.sort_label')}
             </label>
             <select
               value={sortBy}
               onChange={(e) => onSortChange(e.target.value)}
-              className="w-full px-3 py-2 text-sm font-medium bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent hover:border-gray-300 transition-all cursor-pointer"
+              className="w-full px-3 py-2 text-sm font-medium transition-all bg-white border border-gray-200 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent hover:border-gray-300"
             >
               <option value="name">{t('inventory.sort.name')}</option>
               <option value="price">{t('inventory.sort.price')}</option>
@@ -190,19 +189,19 @@ export function InventoryTableHeader({
           {/* Order & Advanced */}
           <div className="flex gap-2">
             <div className="flex-1 space-y-1.5">
-              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider ml-1">
+              <label className="ml-1 text-xs font-semibold tracking-wider text-gray-500 uppercase">
                 {t('inventory.header.order_label')}
               </label>
               <button
                 onClick={() => onSortOrderChange(sortOrder === 'asc' ? 'desc' : 'asc')}
-                className="w-full px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+                className="flex items-center justify-center w-full gap-2 px-3 py-2 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
               >
                 {sortOrder === 'asc' ? `↑ ${t('inventory.sort.a_z')}` : `↓ ${t('inventory.sort.z_a')}`}
               </button>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider ml-1 opacity-0">
+              <label className="ml-1 text-xs font-semibold tracking-wider text-gray-500 uppercase opacity-0">
                 .
               </label>
               <button
