@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Bell, ChevronDown, Menu, Search, User, LogOut } from "lucide-react";
-import avatarImg from "@/assets/images/BOT.png";
+import { ChevronDown, Menu, User, LogOut } from "lucide-react";
 import type { JSX } from "react";
 import type { HomeHeaderProps } from "./HomeHeader.types";
 import { clearAuthToken, useAuth } from "@/ui/features/auth/hooks/useAuth";
@@ -59,7 +58,7 @@ export function HomeHeader({ onMenuClick, isSidebarOpen }: HomeHeaderProps): JSX
     <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-3 bg-white border-b border-gray-200 md:px-5">
       {/* Menu + Recherche */}
       <div className="flex items-center min-w-0 gap-3 md:gap-4">
-        <div className="absolute left-[-7px] w-4 h-full bg-white " />
+        <div className="absolute -left-1.75 w-4 h-full bg-white " />
         <button
           type="button"
           className="inline-flex items-center justify-center text-gray-700 rounded-md w-9 h-9 hover:bg-gray-100"

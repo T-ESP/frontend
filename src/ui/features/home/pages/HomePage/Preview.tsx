@@ -6,8 +6,8 @@ export default function Preview() {
     <section className="flex items-center min-h-screen relative bg-black text-white py-28 md:px-20 overflow-hidden">
       {/* Background Glow */}
       <div className="absolute -top-32 -left-32 w-[600px] h-[600px] bg-purple-700 opacity-30 rounded-full blur-[200px] z-0" />
-      <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-purple-500 opacity-20 rounded-full blur-[100px] z-0" />
-      
+      <div className="absolute bottom-0 right-0 w-[300px] h-75 bg-purple-500 opacity-20 rounded-full blur-[100px] z-0" />
+
       {/* Purple background blob */}
       <div className="absolute -top-20 right-0 w-[500px] h-[500px] bg-purple-700 opacity-20 rounded-full blur-[200px] z-0" />
 
@@ -18,7 +18,7 @@ export default function Preview() {
           <h2 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
             The best in the <br />
             class product for <br />
-            <span className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">you today!</span>
+            <span className="bg-linear-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">you today!</span>
           </h2>
           <p className="text-gray-300 mb-8">
             This is a placeholder for your testimonials and what your client has to say. Put them here and make sure it’s 100% true and meaningful.

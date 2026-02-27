@@ -135,7 +135,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
         </div>
       </div>
       {/* Decorative gradient background opacity */}
-      <div className="absolute top-0 right-0 w-24 h-24 -mt-4 -mr-4 transition-all rounded-full opacity-50 bg-gradient-to-br from-slate-100 to-transparent blur-2xl group-hover:from-purple-100" />
+      <div className="absolute top-0 right-0 w-24 h-24 -mt-4 -mr-4 transition-all rounded-full opacity-50 bg-linear-to-br from-slate-100 to-transparent blur-2xl group-hover:from-purple-100" />
     </div>
   );
 
@@ -161,11 +161,11 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 flex items-center justify-center p-4 z-60 bg-slate-900/60 backdrop-blur-sm">
       <div className="bg-slate-50 rounded-2xl shadow-2xl w-full max-w-7xl h-[85vh] flex overflow-hidden border border-slate-200">
 
         {/* SIDEBAR NAVIGATION */}
-        <div className="flex flex-col flex-shrink-0 w-64 bg-white border-r border-slate-200">
+        <div className="flex flex-col w-64 bg-white border-r shrink-0 border-slate-200">
           <div className="p-6 border-b border-slate-100">
             <div className="flex items-center justify-center w-10 h-10 mb-3 text-white bg-purple-600 shadow-lg rounded-xl shadow-purple-200">
               <Package size={20} />
@@ -324,7 +324,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                             </div>
                           )}
                         </div>
-                        <div className="h-[300px]">
+                        <div className="h-75">
                           {(kpis.priceEvolution.selling_price_history.length === 0 && kpis.priceEvolution.buying_price_history.length === 0) ? (
                             <div className="flex flex-col items-center justify-center h-full text-slate-400">
                               <Package size={48} className="mb-4 opacity-50" />
@@ -427,7 +427,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                     <SectionHeader title={t('inventory.kpi_modal.sections.classification')} desc={t('inventory.kpi_modal.sections.classification_desc')} />
 
                     <div className="grid grid-cols-2 gap-6">
-                      <div className="relative p-8 overflow-hidden text-white bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl">
+                      <div className="relative p-8 overflow-hidden text-white bg-linear-to-br from-indigo-500 to-purple-600 rounded-3xl">
                         <div className="relative z-10">
                           <p className="mb-1 font-medium text-indigo-100">{t('inventory.kpi_modal.metrics.abc_class')}</p>
                           <h2 className="text-6xl font-bold">{kpis.scoringClassification.abc_classification}</h2>
@@ -640,7 +640,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                       </div>
                     </div>
 
-                    <div className="p-6 border border-purple-200 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl">
+                    <div className="p-6 border border-purple-200 bg-linear-to-br from-purple-50 to-indigo-50 rounded-2xl">
                       <div className="flex items-start gap-4">
                         <div className="p-3 text-purple-600 bg-purple-100 rounded-xl">
                           <Target size={24} />
@@ -669,7 +669,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                   <div className="space-y-8 duration-500 animate-in fade-in slide-in-from-bottom-4">
                     <SectionHeader title={t('inventory.kpi_modal.sections.predictions')} desc={t('inventory.kpi_modal.sections.predictions_desc')} />
 
-                    <div className="relative p-8 overflow-hidden text-white bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 rounded-3xl">
+                    <div className="relative p-8 overflow-hidden text-white bg-linear-to-br from-violet-500 via-purple-500 to-indigo-600 rounded-3xl">
                       <div className="relative z-10">
                         <div className="flex items-center gap-3 mb-6">
                           <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
@@ -722,7 +722,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                       <div className="p-6 bg-white border rounded-2xl border-slate-200">
                         <h3 className="mb-6 font-bold text-slate-900">{t('inventory.kpi_modal.metrics.coverage_analysis')}</h3>
                         <div className="py-8 text-center">
-                          <div className="inline-flex items-center justify-center w-32 h-32 mb-4 rounded-full bg-gradient-to-br from-purple-100 to-indigo-100">
+                          <div className="inline-flex items-center justify-center w-32 h-32 mb-4 rounded-full bg-linear-to-br from-purple-100 to-indigo-100">
                             <div className="text-center">
                               <p className="text-4xl font-bold text-slate-900">{formatNum(kpis.predictionsAlerts.days_of_coverage)}</p>
                               <p className="mt-1 text-xs text-slate-500">{t('inventory.kpi_modal.labels.days')}</p>
@@ -790,7 +790,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                     </div>
 
                     <div className="grid grid-cols-2 gap-6">
-                      <div className="p-6 border bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl border-emerald-200">
+                      <div className="p-6 border bg-linear-to-br from-emerald-50 to-teal-50 rounded-2xl border-emerald-200">
                         <div className="flex items-center gap-3 mb-4">
                           <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600">
                             <TrendingUp size={20} />
@@ -805,7 +805,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                         </p>
                       </div>
 
-                      <div className="p-6 border border-purple-200 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl">
+                      <div className="p-6 border border-purple-200 bg-linear-to-br from-purple-50 to-indigo-50 rounded-2xl">
                         <div className="flex items-center gap-3 mb-4">
                           <div className="p-2 text-purple-600 bg-purple-100 rounded-lg">
                             <Target size={20} />

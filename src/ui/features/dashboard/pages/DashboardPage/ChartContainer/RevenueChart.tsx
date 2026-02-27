@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { FiMoreVertical } from "react-icons/fi";
 import { Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { CustomTooltip } from "../CustomTooltip/CustomTooltip";
 import type { RevenueChartProps } from "@/ui/features/dashboard/types";

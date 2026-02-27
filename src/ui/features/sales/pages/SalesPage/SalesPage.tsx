@@ -7,7 +7,7 @@ import { orderService } from "@/infrastructure/api/services/orderService";
 import { productService } from "@/infrastructure/api/services/productService";
 import type { Order } from "@/domain/models/Order";
 import type { Product } from "@/domain/models/Product";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
 import { useTranslation } from "react-i18next";
 
 // --- Types pour nos nouvelles analyses ---
@@ -358,7 +358,7 @@ export default function SalesPage() {
                   <tr key={product.id} className="transition-colors hover:bg-slate-50/50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center flex-shrink-0 w-8 h-8 text-xs font-bold rounded-lg bg-slate-100 text-slate-600">
+                        <div className="flex items-center justify-center w-8 h-8 text-xs font-bold rounded-lg shrink-0 bg-slate-100 text-slate-600">
                           #{idx + 1}
                         </div>
                         <span className="text-sm font-medium text-slate-900">{product.name}</span>

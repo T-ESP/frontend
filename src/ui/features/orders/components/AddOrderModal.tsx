@@ -132,7 +132,7 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
 
   // Modern Enterprise Modal Structure
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 flex items-center justify-center p-4 z-60 bg-slate-900/60 backdrop-blur-sm">
       <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden border border-slate-200">
 
         {/* Modal Header */}
@@ -143,7 +143,7 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-700 rounded-full hover:bg-slate-100 transition-colors"
+            className="p-2 transition-colors rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100"
           >
             <X size={20} />
           </button>
@@ -151,15 +151,15 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6 overflow-y-auto max-h-[calc(90vh-120px)]">
           {error && (
-            <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 text-sm font-medium flex items-center gap-2">
+            <div className="flex items-center gap-2 p-3 text-sm font-medium border rounded-lg bg-rose-50 border-rose-200 text-rose-700">
               <AlertTriangle size={18} />
               {error}
             </div>
           )}
 
           {isDataLoading ? (
-            <div className="text-center py-10">
-              <Loader2 className="w-6 h-6 animate-spin text-purple-500 mx-auto mb-3" />
+            <div className="py-10 text-center">
+              <Loader2 className="w-6 h-6 mx-auto mb-3 text-purple-500 animate-spin" />
               <p className="text-slate-600">{t('orders.add_modal.loading_data')}</p>
             </div>
           ) : (
@@ -167,7 +167,7 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
               {/* User Select & Status */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="user_id" className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1">
+                  <label htmlFor="user_id" className="flex items-center gap-2 mb-1 text-sm font-semibold text-slate-700">
                     <User size={14} className="text-slate-400" /> {t('orders.add_modal.user_label')}
                   </label>
                   <select
@@ -175,7 +175,7 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
                     required
                     value={formData.user_id}
                     onChange={(e) => setFormData({ ...formData, user_id: parseInt(e.target.value) })}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-150 text-slate-900 bg-white"
+                    className="w-full px-4 py-2 transition duration-150 bg-white border rounded-lg border-slate-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-slate-900"
                   >
                     <option value={0} disabled>{t('orders.add_modal.select_user')}</option>
                     {users.map((user) => (
@@ -187,7 +187,7 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
                 </div>
 
                 <div>
-                  <label htmlFor="status" className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1">
+                  <label htmlFor="status" className="flex items-center gap-2 mb-1 text-sm font-semibold text-slate-700">
                     <AlertTriangle size={14} className="text-slate-400" /> {t('orders.add_modal.status_label')}
                   </label>
                   <select
@@ -195,7 +195,7 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
                     required
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-150 text-slate-900 bg-white"
+                    className="w-full px-4 py-2 transition duration-150 bg-white border rounded-lg border-slate-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-slate-900"
                   >
                     <option value="pending">{t('orders.status.pending')}</option>
                     <option value="confirmed">{t('orders.status.confirmed')}</option>
@@ -215,21 +215,21 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
                   <button
                     type="button"
                     onClick={addLineItem}
-                    className="flex items-center gap-1 text-sm text-purple-600 font-medium px-2 py-1 rounded-lg hover:bg-purple-50 transition-colors"
+                    className="flex items-center gap-1 px-2 py-1 text-sm font-medium text-purple-600 transition-colors rounded-lg hover:bg-purple-50"
                   >
                     <Plus size={16} />
                     {t('orders.add_modal.add_item')}
                   </button>
                 </div>
 
-                <div className="space-y-3 p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                <div className="p-3 space-y-3 border bg-slate-50 border-slate-200 rounded-xl">
                   {lineItems.map((item, index) => (
-                    <div key={index} className="flex items-center gap-3 bg-white p-3 rounded-lg border border-slate-100 shadow-sm">
+                    <div key={index} className="flex items-center gap-3 p-3 bg-white border rounded-lg shadow-sm border-slate-100">
                       <select
                         required
                         value={item.product_id}
                         onChange={(e) => updateLineItem(index, 'product_id', parseInt(e.target.value))}
-                        className="flex-grow px-3 py-2 border border-slate-300 rounded-lg focus:ring-1 focus:ring-purple-500 transition duration-150 text-slate-900 bg-white"
+                        className="px-3 py-2 transition duration-150 bg-white border rounded-lg grow border-slate-300 focus:ring-1 focus:ring-purple-500 text-slate-900"
                       >
                         <option value={0} disabled>{t('orders.add_modal.select_product')}</option>
                         {products.map((product) => (
@@ -244,14 +244,14 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
                         required
                         value={item.quantity}
                         onChange={(e) => updateLineItem(index, 'quantity', parseInt(e.target.value))}
-                        className="w-20 text-center px-3 py-2 border border-slate-300 rounded-lg focus:ring-1 focus:ring-purple-500 transition duration-150 text-slate-900"
+                        className="w-20 px-3 py-2 text-center transition duration-150 border rounded-lg border-slate-300 focus:ring-1 focus:ring-purple-500 text-slate-900"
                         placeholder={t('orders.add_modal.quantity_placeholder')}
                       />
                       {lineItems.length > 1 && (
                         <button
                           type="button"
                           onClick={() => removeLineItem(index)}
-                          className="p-2 text-rose-600 hover:text-white hover:bg-rose-500 rounded-full transition-colors"
+                          className="p-2 transition-colors rounded-full text-rose-600 hover:text-white hover:bg-rose-500"
                           title={t('orders.add_modal.delete_item')}
                         >
                           <Trash2 size={16} />

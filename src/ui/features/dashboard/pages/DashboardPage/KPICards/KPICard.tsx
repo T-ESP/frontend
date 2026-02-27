@@ -1,4 +1,3 @@
-import { FiArrowUpRight, FiArrowDownLeft } from "react-icons/fi";
 import type { KPI } from "@/ui/features/dashboard/types";
 
 export function KPICard({ kpi }: { kpi: KPI }) {

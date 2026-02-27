@@ -1,4 +1,4 @@
-import { FiCalendar, FiDownload, FiChevronDown } from "react-icons/fi";
+import { FiCalendar, FiChevronDown } from "react-icons/fi";
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -8,7 +8,7 @@ interface PageActionsProps {
   currentRange?: number;
 }
 
-export function PageActions({ onDateRangeChange, onExport, currentRange = 30 }: PageActionsProps) {
+export function PageActions({ onDateRangeChange, currentRange = 30 }: PageActionsProps) {
   const { t } = useTranslation();
   const [showDateMenu, setShowDateMenu] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -32,19 +32,6 @@ export function PageActions({ onDateRangeChange, onExport, currentRange = 30 }: 
   ];
 
   const currentLabel = dateRanges.find(r => r.days === currentRange)?.label || t('common.date_range.last_30_days');
-
-  const handleExport = () => {
-    if (onExport) {
-      onExport();
-    } else {
-      // Default CSV export
-      const csvContent = "data:text/csv;charset=utf-8,Dashboard Export\nGenerated: " + new Date().toISOString();
-      const link = document.createElement('a');
-      link.setAttribute('href', csvContent);
-      link.setAttribute('download', `dashboard-${new Date().toISOString().split('T')[0]}.csv`);
-      link.click();
-    }
-  };
 
   return (
     <div className="flex gap-3">

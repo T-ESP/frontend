@@ -11,7 +11,7 @@ interface ChartContainerProps {
   dateRange: number;
 }
 
-export function ChartContainer({ orders, dateRange }: ChartContainerProps) {
+export function ChartContainer({ orders }: ChartContainerProps) {
   const { t } = useTranslation();
   const [revenueDataFromApi, setRevenueDataFromApi] = useState<EvolutionDataPoint[]>([]);
   console.log("🚀 ~ ChartContainer ~ revenueDataFromApi:", revenueDataFromApi)

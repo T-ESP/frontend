@@ -60,7 +60,7 @@ export function DeleteOrderModal({ order, onClose, onSuccess }: DeleteOrderModal
           )}
 
           <div className="flex items-start gap-3 p-4 bg-red-50 rounded-lg mb-6">
-            <FiAlertTriangle className="text-red-600 mt-0.5 flex-shrink-0" size={20} />
+            <FiAlertTriangle className="text-red-600 mt-0.5 shrink-0" size={20} />
             <div className="text-sm text-red-800">
               <p className="font-medium mb-1">
                 {t('orders.delete_modal.confirm_msg')}

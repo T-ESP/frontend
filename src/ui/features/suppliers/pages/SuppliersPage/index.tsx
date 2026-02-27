@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { supplierService } from '@/infrastructure/api/services/supplierService';
 import type { Supplier } from '@/domain/models/Supplier';
-import { Edit, Trash2, Plus, RefreshCw, Search, X, Download, Users, Mail, Phone, MapPin } from 'lucide-react';
+import { Edit, Trash2, Plus, RefreshCw, Search, X, Users, Mail, Phone, MapPin } from 'lucide-react';
 import { AddSupplierModal } from '@/ui/features/suppliers/components/AddSupplierModal';
 import { EditSupplierModal } from '@/ui/features/suppliers/components/EditSupplierModal';
 import { DeleteSupplierModal } from '@/ui/features/suppliers/components/DeleteSupplierModal';
@@ -60,20 +60,6 @@ export default function SuppliersPage() {
     }
   };
 
-  const handleExport = () => {
-    const csv = [
-      ['ID', 'Name', 'Email', 'Phone', 'Address'],
-      ...suppliers.map(s => [s.id, s.name_sup, s.email_sup, s.phone_sup, s.address_sup])
-    ].map(row => row.join(',')).join('\n');
-
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `suppliers-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-  };
-
   const filteredAndSortedSuppliers = useMemo(() => {
     let filtered = suppliers.filter((supplier) => {
       const query = searchQuery.toLowerCase();
@@ -117,7 +103,7 @@ export default function SuppliersPage() {
   if (loading) {
     return (
       <PageLayout title="Supplier Management" icon={<Users size={28} />}>
-        <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex items-center justify-center min-h-100">
           <div className="text-xl">Loading suppliers...</div>
         </div>
       </PageLayout>
@@ -127,7 +113,7 @@ export default function SuppliersPage() {
   if (error) {
     return (
       <PageLayout title="Supplier Management" icon={<Users size={28} />}>
-        <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex items-center justify-center min-h-100">
           <div className="text-red-600">
             <h2 className="mb-2 text-2xl font-bold">Error</h2>
             <p>{error}</p>

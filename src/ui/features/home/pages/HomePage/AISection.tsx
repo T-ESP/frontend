@@ -7,7 +7,7 @@ export default function AISection() {
     <section className="min-h-screen relative bg-black text-white py-24 px-6 md:px-12 flex justify-center items-center overflow-hidden">
       {/* Background Glow */}
       <div className="absolute -top-32 -left-32 w-[600px] h-[600px] bg-purple-700 opacity-30 rounded-full blur-[200px] z-0" />
-      <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-purple-500 opacity-20 rounded-full blur-[100px] z-0" />
+      <div className="absolute bottom-0 right-0 w-[300px] h-75 bg-purple-500 opacity-20 rounded-full blur-[100px] z-0" />
       {/* Content Wrapper */}
       <div className="relative h-full z-10 flex flex-col lg:flex-row items-center justify-between gap-50 mx-auto">
         {/* Text Side */}

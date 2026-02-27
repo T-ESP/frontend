@@ -1,4 +1,4 @@
-import { FiStar, FiShoppingCart, FiArrowUpRight, FiArrowDownLeft, FiEye } from "react-icons/fi";
+import { FiStar, FiShoppingCart } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import type { TopProduct } from "../../../types/dashboard.types";
 import { useTranslation } from "react-i18next";

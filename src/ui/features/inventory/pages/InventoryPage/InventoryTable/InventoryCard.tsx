@@ -58,7 +58,7 @@ export function InventoryCard({ item, index, onEdit, onDelete, onStockUpdate, on
     >
       <div className="flex items-center gap-4 p-4">
         {/* Left: Product Image Thumbnail */}
-        {/* <div className="flex-shrink-0">
+        {/* <div className="shrink-0">
           <img
             src={item.image || 'https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg?semt=ais_hybrid&w=740&q=80'}
             alt={item.name}
@@ -87,7 +87,7 @@ export function InventoryCard({ item, index, onEdit, onDelete, onStockUpdate, on
         {/* Right: Stock Badge, Price, Stock Controls, Actions */}
         <div className="flex items-center gap-6">
           {/* Status Badge */}
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full ${statusStyle?.bg} ${statusStyle?.text} ${statusStyle?.border} border`}>
               <span className={`w-1.5 h-1.5 rounded-full ${statusStyle?.dot}`}></span>
               {statusStyle ? t(statusStyle.key) : item.status}
@@ -95,7 +95,7 @@ export function InventoryCard({ item, index, onEdit, onDelete, onStockUpdate, on
           </div>
 
           {/* Stock Controls */}
-          <div className="flex items-center flex-shrink-0 gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => handleStockChange(-1)}
               disabled={updating || item.piece <= 0}
@@ -104,7 +104,7 @@ export function InventoryCard({ item, index, onEdit, onDelete, onStockUpdate, on
             >
               <FiMinus className="w-3.5 h-3.5" />
             </button>
-            <span className="text-sm font-semibold text-gray-900 min-w-[60px] text-center">
+            <span className="text-sm font-semibold text-center text-gray-900 min-w-15">
               {item.piece.toLocaleString()}
             </span>
             <button
@@ -118,12 +118,12 @@ export function InventoryCard({ item, index, onEdit, onDelete, onStockUpdate, on
           </div>
 
           {/* Price */}
-          <div className="flex-shrink-0 text-right min-w-[100px]">
+          <div className="text-right shrink-0 min-w-25">
             <p className="text-lg font-bold text-gray-900">{item.price}</p>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center flex-shrink-0 gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => onViewKPIs(item.id, item.name)}
               className="p-2 text-purple-600 transition-colors rounded-lg bg-purple-50 hover:bg-purple-100 hover:text-purple-700"

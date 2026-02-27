@@ -6,8 +6,8 @@ import {
   Legend
 } from "recharts";
 import {
-  FiAlertTriangle, FiPackage,
-  FiActivity, FiTruck, FiRefreshCw, FiDollarSign
+  FiAlertTriangle,
+  FiActivity
 } from "react-icons/fi"; // Switched to Feather icons (fi) consistent with your imports
 import { productService } from "@/infrastructure/api/services/productService";
 import type { Product } from "@/domain/models/Product";
@@ -160,7 +160,7 @@ export default function InsightsPage() {
             <h3 className="text-lg font-bold text-gray-900">{t('insights.charts.health_title')}</h3>
             <p className="text-sm text-gray-500">{t('insights.charts.health_subtitle')}</p>
           </div>
-          <div className="flex-1 min-h-[250px]">
+          <div className="flex-1 min-h-62.5">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -189,7 +189,7 @@ export default function InsightsPage() {
             <h3 className="text-lg font-bold text-gray-900">{t('insights.charts.abc_title')}</h3>
             <p className="text-sm text-gray-500">{t('insights.charts.abc_subtitle')}</p>
           </div>
-          <div className="flex-1 min-h-[250px]">
+          <div className="flex-1 min-h-62.5">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={abcStats} layout="vertical" margin={{ left: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} />

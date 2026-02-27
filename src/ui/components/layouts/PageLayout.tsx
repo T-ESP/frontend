@@ -5,8 +5,7 @@ export default function PageLayout({
   title,
   subtitle,
   actions,
-  children,
-  icon
+  children
 }: {
   title: string;
   subtitle?: string;

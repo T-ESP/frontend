@@ -1,5 +1,3 @@
-import React from "react";
-
 export type KpiCardColor = "emerald" | "amber" | "rose" | "blue" | "primary" | "purple";
 
 export interface KpiCardProps {

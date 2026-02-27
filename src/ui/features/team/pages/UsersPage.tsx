@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiSearch, FiDownload, FiRefreshCw, FiPlus, FiMail, FiPhone, FiShield, FiMoreVertical } from "react-icons/fi";
+import { FiSearch, FiRefreshCw, FiPlus, FiMail, FiPhone, FiShield, FiMoreVertical } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 
 const mockUsers = [
@@ -63,7 +63,7 @@ export default function UsersPage() {
             <select
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
-              className="px-4 py-2.5 text-sm font-medium bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 min-w-[140px]"
+              className="px-4 py-2.5 text-sm font-medium bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 min-w-35"
             >
               <option value="All Roles">{t('team.filters.all_roles')}</option>
               <option value="Admin">👑 {t('team.roles.admin')}</option>
@@ -73,7 +73,7 @@ export default function UsersPage() {
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="px-4 py-2.5 text-sm font-medium bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 min-w-[140px]"
+              className="px-4 py-2.5 text-sm font-medium bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 min-w-35"
             >
               <option value="All Status">{t('team.filters.all_status')}</option>
               <option value="Active">✓ {t('team.status.active')}</option>

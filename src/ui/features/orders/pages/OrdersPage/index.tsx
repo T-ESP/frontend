@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { orderService } from '@/infrastructure/api/services/orderService';
 import type { Order } from '@/domain/models/Order';
-import { Edit, Trash2, Plus, Eye, ShoppingCart, Loader2, RefreshCw, AlertTriangle, Search, Filter, Download, X, ChevronDown } from 'lucide-react'; // Switched to Lucide
+import { Edit, Trash2, Eye, ShoppingCart, Loader2, RefreshCw, AlertTriangle, Search, Filter, X, ChevronDown } from 'lucide-react'; // Switched to Lucide
 import { AddOrderModal } from '@/ui/features/orders/components/AddOrderModal';
 import { EditOrderModal } from '@/ui/features/orders/components/EditOrderModal';
 import { DeleteOrderModal } from '@/ui/features/orders/components/DeleteOrderModal';
@@ -189,35 +189,6 @@ export default function OrdersPage() {
     setSearchQuery("");
     setAmountRange({ min: 0, max: 10000 });
   };
-
-  const handleExport = () => {
-    // Create CSV content
-    const headers = ['ID', 'User ID', 'Date', 'Status', 'Amount'];
-    const rows = filteredAndSortedOrders.map(o => [
-      o.id,
-      o.user_id,
-      o.order_date,
-      o.status,
-      o.amount
-    ]);
-
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-    ].join('\n');
-
-    // Download CSV
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', `orders_export_${new Date().toISOString().split('T')[0]}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   // --- Render Loading/Error States ---
 
   if (loading) {
@@ -351,7 +322,7 @@ export default function OrdersPage() {
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="px-4 py-2.5 text-sm font-medium bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent hover:border-slate-300 transition-all cursor-pointer min-w-[160px]"
+                className="px-4 py-2.5 text-sm font-medium bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent hover:border-slate-300 transition-all cursor-pointer min-w-40"
               >
                 <option value="All Status">{t('orders.filters.all_status')}</option>
                 <option value="Pending">{t('orders.filters.pending')}</option>
@@ -365,7 +336,7 @@ export default function OrdersPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2.5 text-sm font-medium bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent hover:border-slate-300 transition-all cursor-pointer min-w-[160px]"
+                className="px-4 py-2.5 text-sm font-medium bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent hover:border-slate-300 transition-all cursor-pointer min-w-40"
               >
                 <option value="date">{t('orders.filters.sort_date')}</option>
                 <option value="amount">{t('orders.filters.sort_amount')}</option>

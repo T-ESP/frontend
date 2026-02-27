@@ -70,7 +70,7 @@ export default function ClientsPage() {
 
   const filteredClients = mockClients.filter(client => {
     const matchesSearch = client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         client.email.toLowerCase().includes(searchQuery.toLowerCase());
+      client.email.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = selectedStatus === "All Status" || client.status === selectedStatus;
     return matchesSearch && matchesStatus;
   });
@@ -78,22 +78,22 @@ export default function ClientsPage() {
   return (
     <div className="space-y-6">
       {/* Header Section */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm">
+      <div className="bg-white border border-gray-100 shadow-sm rounded-xl">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
           <div>
             <h3 className="text-xl font-bold text-gray-900">Client Management</h3>
             <p className="text-sm text-gray-500 mt-0.5">{filteredClients.length} clients</p>
           </div>
           <div className="flex items-center gap-2">
-            <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+            <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
               <FiRefreshCw className="w-4 h-4" />
               Refresh
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors">
+            <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white transition-colors bg-green-600 rounded-lg hover:bg-green-700">
               <FiDownload className="w-4 h-4" />
               Export
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors">
+            <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white transition-colors bg-purple-600 rounded-lg hover:bg-purple-700">
               <FiUserPlus className="w-4 h-4" />
               Add Client
             </button>
@@ -103,8 +103,8 @@ export default function ClientsPage() {
         {/* Search and Filters */}
         <div className="px-6 py-4">
           <div className="flex gap-3">
-            <div className="flex-1 relative">
-              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <div className="relative flex-1">
+              <FiSearch className="absolute w-5 h-5 text-gray-400 -translate-y-1/2 left-3 top-1/2" />
               <input
                 type="text"
                 value={searchQuery}
@@ -116,7 +116,7 @@ export default function ClientsPage() {
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="px-4 py-2.5 text-sm font-medium bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent hover:border-gray-300 transition-all cursor-pointer min-w-[160px]"
+              className="px-4 py-2.5 text-sm font-medium bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent hover:border-gray-300 transition-all cursor-pointer min-w-40"
             >
               <option value="All Status">All Status</option>
               <option value="Active">✓ Active</option>
@@ -132,17 +132,17 @@ export default function ClientsPage() {
         {filteredClients.map((client) => (
           <div
             key={client.id}
-            className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:border-l-4 hover:border-l-purple-500 group"
+            className="transition-all duration-300 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md hover:border-l-4 hover:border-l-purple-500 group"
           >
             <div className="flex items-center gap-4 p-4">
               <img
                 src={client.avatar}
                 alt={client.name}
-                className="w-12 h-12 rounded-full border-2 border-gray-200"
+                className="w-12 h-12 border-2 border-gray-200 rounded-full"
               />
-              
+
               <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-gray-900 text-base leading-tight group-hover:text-purple-600 transition-colors">
+                <h3 className="text-base font-bold leading-tight text-gray-900 transition-colors group-hover:text-purple-600">
                   {client.name}
                 </h3>
                 <div className="flex items-center gap-3 mt-1">
@@ -159,29 +159,28 @@ export default function ClientsPage() {
               </div>
 
               <div className="flex items-center gap-6">
-                <div className="text-center min-w-[80px]">
+                <div className="text-center min-w-20">
                   <p className="text-lg font-bold text-gray-900">{client.orders}</p>
                   <p className="text-xs text-gray-500">Orders</p>
                 </div>
-                <div className="text-center min-w-[100px]">
+                <div className="text-center min-w-25">
                   <p className="text-lg font-bold text-gray-900">{client.totalSpent.toLocaleString()} €</p>
                   <p className="text-xs text-gray-500">Total Spent</p>
                 </div>
-                <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${
-                  client.status === 'VIP' 
-                    ? 'bg-amber-50 text-amber-700 border border-amber-200' 
-                    : client.status === 'Active'
+                <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${client.status === 'VIP'
+                  ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                  : client.status === 'Active'
                     ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                     : 'bg-gray-50 text-gray-700 border border-gray-200'
-                }`}>
+                  }`}>
                   {client.status === 'VIP' && '⭐ '}
                   {client.status}
                 </span>
-                <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-purple-600 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+                <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-purple-600 transition-colors rounded-lg bg-purple-50 hover:bg-purple-100">
                   <FiMessageSquare className="w-4 h-4" />
                   Message
                 </button>
-                <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                <button className="p-2 text-gray-600 transition-colors rounded-lg hover:bg-gray-100">
                   <FiMoreVertical className="w-5 h-5" />
                 </button>
               </div>
