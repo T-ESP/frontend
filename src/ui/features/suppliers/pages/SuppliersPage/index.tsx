@@ -129,11 +129,11 @@ export default function SuppliersPage() {
       <PageLayout title="Supplier Management" icon={<Users size={28} />}>
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-red-600">
-            <h2 className="text-2xl font-bold mb-2">Error</h2>
+            <h2 className="mb-2 text-2xl font-bold">Error</h2>
             <p>{error}</p>
             <button
               onClick={loadSuppliers}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              className="px-4 py-2 mt-4 text-white bg-blue-600 rounded hover:bg-blue-700"
             >
               Retry
             </button>
@@ -146,50 +146,50 @@ export default function SuppliersPage() {
   return (
     <PageLayout title={t('suppliers.title')} icon={<Users size={28} />}>
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-xl border border-slate-100 p-6">
+      <div className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="p-6 bg-white border rounded-xl border-slate-100">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-slate-600">{t('suppliers.total')}</p>
-              <p className="text-2xl font-bold text-slate-900 mt-2">{stats.total}</p>
+              <p className="mt-2 text-2xl font-bold text-slate-900">{stats.total}</p>
             </div>
-            <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center">
+            <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-blue-50">
               <Users className="text-blue-600" size={24} />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-100 p-6">
+        <div className="p-6 bg-white border rounded-xl border-slate-100">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-slate-600">{t('suppliers.active')}</p>
-              <p className="text-2xl font-bold text-green-600 mt-2">{stats.total}</p>
+              <p className="mt-2 text-2xl font-bold text-green-600">{stats.total}</p>
             </div>
-            <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center">
+            <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-green-50">
               <Mail className="text-green-600" size={24} />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-100 p-6">
+        <div className="p-6 bg-white border rounded-xl border-slate-100">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-slate-600">{t('suppliers.with_phone')}</p>
-              <p className="text-2xl font-bold text-slate-900 mt-2">{stats.withPhone}</p>
+              <p className="mt-2 text-2xl font-bold text-slate-900">{stats.withPhone}</p>
             </div>
-            <div className="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center">
+            <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-indigo-50">
               <Phone className="text-indigo-600" size={24} />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-100 p-6">
+        <div className="p-6 bg-white border rounded-xl border-slate-100">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-slate-600">{t('suppliers.locations')}</p>
-              <p className="text-2xl font-bold text-slate-900 mt-2">{stats.locations}</p>
+              <p className="mt-2 text-2xl font-bold text-slate-900">{stats.locations}</p>
             </div>
-            <div className="w-12 h-12 bg-amber-50 rounded-lg flex items-center justify-center">
+            <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-amber-50">
               <MapPin className="text-amber-600" size={24} />
             </div>
           </div>
@@ -197,11 +197,11 @@ export default function SuppliersPage() {
       </div>
 
       {/* Controls */}
-      <div className="bg-white rounded-xl border border-slate-100 p-6 mb-8">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div className="p-6 mb-8 bg-white border rounded-xl border-slate-100">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex-1 max-w-md">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+              <Search className="absolute -translate-y-1/2 left-3 top-1/2 text-slate-400" size={20} />
               <input
                 type="text"
                 value={searchQuery}
@@ -218,7 +218,7 @@ export default function SuppliersPage() {
                     setSearchQuery('');
                     setCurrentPage(1);
                   }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute -translate-y-1/2 right-3 top-1/2 text-slate-400 hover:text-slate-600"
                 >
                   <X size={16} />
                 </button>
@@ -234,13 +234,13 @@ export default function SuppliersPage() {
               <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
               {t('common.refresh')}
             </button>
-            <button
+            {/* <button
               onClick={handleExport}
               className="flex items-center gap-2 px-4 py-2.5 text-slate-700 bg-slate-50 border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors"
             >
               <Download size={16} />
               {t('common.export')}
-            </button>
+            </button> */}
             <button
               onClick={() => setShowAddModal(true)}
               className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -253,16 +253,16 @@ export default function SuppliersPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-slate-100 overflow-hidden">
+      <div className="overflow-hidden bg-white border rounded-xl border-slate-100">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <RefreshCw className="animate-spin text-blue-600" size={32} />
+            <RefreshCw className="text-blue-600 animate-spin" size={32} />
           </div>
         ) : filteredAndSortedSuppliers.length === 0 ? (
-          <div className="text-center py-12">
-            <Users className="mx-auto text-slate-400 mb-4" size={48} />
-            <p className="text-slate-600 text-lg">{t('suppliers.no_suppliers')}</p>
-            <p className="text-slate-500 text-sm mt-2">
+          <div className="py-12 text-center">
+            <Users className="mx-auto mb-4 text-slate-400" size={48} />
+            <p className="text-lg text-slate-600">{t('suppliers.no_suppliers')}</p>
+            <p className="mt-2 text-sm text-slate-500">
               {searchQuery ? t('suppliers.try_adjusting') : t('suppliers.get_started')}
             </p>
           </div>
@@ -272,12 +272,12 @@ export default function SuppliersPage() {
               <table className="min-w-full divide-y divide-slate-100">
                 <thead className="bg-slate-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left uppercase text-slate-500">
                       ID
                     </th>
                     <th
                       onClick={() => handleSort('name_sup')}
-                      className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100"
+                      className="px-6 py-3 text-xs font-medium tracking-wider text-left uppercase cursor-pointer text-slate-500 hover:bg-slate-100"
                     >
                       <div className="flex items-center gap-2">
                         {t('suppliers.table.name')}
@@ -288,7 +288,7 @@ export default function SuppliersPage() {
                     </th>
                     <th
                       onClick={() => handleSort('email_sup')}
-                      className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100"
+                      className="px-6 py-3 text-xs font-medium tracking-wider text-left uppercase cursor-pointer text-slate-500 hover:bg-slate-100"
                     >
                       <div className="flex items-center gap-2">
                         {t('suppliers.table.email')}
@@ -299,7 +299,7 @@ export default function SuppliersPage() {
                     </th>
                     <th
                       onClick={() => handleSort('phone_sup')}
-                      className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100"
+                      className="px-6 py-3 text-xs font-medium tracking-wider text-left uppercase cursor-pointer text-slate-500 hover:bg-slate-100"
                     >
                       <div className="flex items-center gap-2">
                         {t('suppliers.table.phone')}
@@ -308,44 +308,44 @@ export default function SuppliersPage() {
                         )}
                       </div>
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left uppercase text-slate-500">
                       {t('suppliers.table.address')}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left uppercase text-slate-500">
                       {t('suppliers.table.actions')}
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-slate-100">
                   {paginatedSuppliers.map((supplier) => (
-                    <tr key={supplier.id} className="hover:bg-slate-50/50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
+                    <tr key={supplier.id} className="transition-colors hover:bg-slate-50/50">
+                      <td className="px-6 py-4 text-sm whitespace-nowrap text-slate-900">
                         {supplier.id}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
+                      <td className="px-6 py-4 text-sm font-medium whitespace-nowrap text-slate-900">
                         {supplier.name_sup}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                      <td className="px-6 py-4 text-sm whitespace-nowrap text-slate-600">
                         {supplier.email_sup}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                      <td className="px-6 py-4 text-sm whitespace-nowrap text-slate-600">
                         {supplier.phone_sup}
                       </td>
                       <td className="px-6 py-4 text-sm text-slate-600">
                         {supplier.address_sup}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
+                      <td className="px-6 py-4 text-sm whitespace-nowrap text-slate-500">
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleEdit(supplier)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="p-2 text-blue-600 transition-colors rounded-lg hover:bg-blue-50"
                             title={t('common.edit')}
                           >
                             <Edit size={16} />
                           </button>
                           <button
                             onClick={() => handleDelete(supplier)}
-                            className="p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                            className="p-2 transition-colors rounded-lg text-rose-600 hover:bg-rose-50"
                             title={t('common.delete')}
                           >
                             <Trash2 size={16} />

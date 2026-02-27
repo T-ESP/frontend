@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { FiDollarSign, FiShoppingCart, FiTrendingUp, FiRefreshCw, FiArrowRight, FiPieChart, FiAward } from "react-icons/fi"; // Lucide is better if you have it, but sticking to your imports
+import { FiDollarSign, FiShoppingCart, FiTrendingUp, FiArrowRight, FiPieChart, FiAward } from "react-icons/fi"; // Lucide is better if you have it, but sticking to your imports
+import { KpiCard } from "@/ui/components/common/KpiCard";
 import SalesChart from "@/ui/features/sales/pages/SalesPage/SalesChart";
 import { salesService } from "@/infrastructure/api/services/salesService";
 import { orderService } from "@/infrastructure/api/services/orderService";
@@ -9,7 +10,7 @@ import type { Product } from "@/domain/models/Product";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from "recharts";
 import { useTranslation } from "react-i18next";
 
-// --- Types for our new insights ---
+// --- Types pour nos nouvelles analyses ---
 interface TopProduct {
   id: number;
   name: string;
@@ -21,14 +22,15 @@ interface CategoryData {
   name: string;
   value: number; // Revenue
   color: string;
-  [key: string]: string | number; // Index signature for Recharts
+  [key: string]: string | number; // Signature d'index pour Recharts
 }
 
-const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
+const COLORS = ['#9333ea', '#c084fc', '#6b21a8', '#d8b4fe', '#94a3b8'];
 
 export default function SalesPage() {
-  const { t } = useTranslation();
-  // ... (Keep existing state)
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language || 'fr-FR';
+  // ... (Garder l'état existant)
   const [orders, setOrders] = useState<Order[]>([]);
   const [totalRevenue, setTotalRevenue] = useState<number>(0);
   const [revenueGrowth, setRevenueGrowth] = useState<number>(0);
@@ -36,7 +38,7 @@ export default function SalesPage() {
   const [averageBasketEvolution, setAverageBasketEvolution] = useState<number>(0);
   const [chartData, setChartData] = useState<Array<{ date: string; revenue: number; orders: number }>>([]);
 
-  // New State for Insights
+  // Nouvel état pour les analyses
   const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
   const [categoryData, setCategoryData] = useState<CategoryData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -64,25 +66,25 @@ export default function SalesPage() {
         productService.getAll(),
       ]);
 
-      // ... (Keep your existing safety checks for revenue/basket) ...
+      // ... (Garder vos vérifications de sécurité existantes pour les revenus/paniers) ...
       if (revenueData.status === 'fulfilled' && revenueData.value) setTotalRevenue(revenueData.value.total_revenue || 0);
       if (basketData.status === 'fulfilled' && basketData.value) {
         setAverageBasket(basketData.value.average_basket || 0);
         setAverageBasketEvolution(basketData.value.evolution_percentage || 0);
       }
 
-      // --- NEW: Process Orders for Deep Insights ---
+      // --- NOUVEAU: Traiter les commandes pour des analyses approfondies ---
       if (ordersData.status === 'fulfilled' && ordersData.value &&
         productsData.status === 'fulfilled' && productsData.value) {
         setOrders(ordersData.value);
         await processInsights(ordersData.value, productsData.value);
       }
 
-      // Process daily revenue data for the chart
+      // Traiter les données de revenus quotidiens pour le graphique
       if (dailyRevenueData.status === 'fulfilled' && dailyRevenueData.value) {
         const dailyData = dailyRevenueData.value.data || [];
 
-        // Calculate revenue growth from the daily data
+        // Calculer la croissance des revenus à partir des données quotidiennes
         if (dailyData.length > 0) {
           const halfPoint = Math.floor(dailyData.length / 2);
           const firstHalf = dailyData.slice(0, halfPoint);
@@ -97,7 +99,7 @@ export default function SalesPage() {
           }
         }
 
-        // Create a map to count orders per day
+        // Créer une map pour compter les commandes par jour
         const ordersByDate = new Map<string, number>();
         if (ordersData.status === 'fulfilled' && ordersData.value) {
           ordersData.value.forEach(order => {
@@ -108,7 +110,7 @@ export default function SalesPage() {
           });
         }
 
-        // Combine revenue data with order counts
+        // Combiner les données de revenus avec le nombre de commandes
         const processedData = dailyData.map(item => ({
           date: item.date,
           revenue: item.revenue,
@@ -125,27 +127,27 @@ export default function SalesPage() {
     }
   };
 
-  // --- LOGIC TO EXTRACT INSIGHTS FROM ORDERS ---
+  // --- LOGIQUE POUR EXTRAIRE LES ANALYSES DES COMMANDES ---
   const processInsights = async (orders: Order[], products: Product[]) => {
     try {
       const productMap = new Map<number, TopProduct>();
       const categoryMap = new Map<string, number>();
       const productsById = new Map(products.map(p => [p.id, p]));
 
-      // Filter valid orders
+      // Filtrer les commandes valides
       const validOrders = orders.filter(order =>
         order.status !== 'Cancelled' &&
         order.amount > 0
       );
 
-      console.log(`Processing ${validOrders.length} valid orders...`);
+      console.log(`Traitement de ${validOrders.length} commandes valides...`);
 
-      // Process each order to get line items and aggregate by product and category
+      // Traiter chaque commande pour obtenir les articles et regrouper par produit et catégorie
       const orderPromises = validOrders
         .map(order =>
           orderService.getOrderItems(order.id)
             .catch(err => {
-              console.warn(`Failed to fetch items for order ${order.id}:`, err);
+              console.warn(`Échec de la récupération des articles pour la commande ${order.id}:`, err);
               return [];
             })
         );
@@ -155,7 +157,7 @@ export default function SalesPage() {
       let totalItemsProcessed = 0;
       let itemsWithInvalidData = 0;
 
-      // Aggregate data by product and category
+      // Agréger les données par produit et par catégorie
       allLineItems.forEach((lineItems, orderIndex) => {
         if (!lineItems || lineItems.length === 0) return;
 
@@ -164,23 +166,23 @@ export default function SalesPage() {
 
           const product = productsById.get(item.product_id);
           if (!product) {
-            console.warn(`Product not found for item:`, item);
+            console.warn(`Produit introuvable pour l'article:`, item);
             return;
           }
 
-          // Get line total, with fallback calculation
+          // Obtenir le total de la ligne, avec calcul de secours
           let lineTotal = item.line_total;
 
-          // Validate and handle NaN/undefined
+          // Valider et gérer NaN/undefined
           if (typeof lineTotal !== 'number' || isNaN(lineTotal) || lineTotal === null || lineTotal === undefined) {
-            // Fallback: calculate from order amount divided by number of items
+            // Solutions de repli: calculer à partir du montant de la commande divisé par le nombre d'articles
             const order = validOrders[orderIndex];
             lineTotal = order.amount / lineItems.length;
             itemsWithInvalidData++;
-            console.warn(`Invalid line_total for product ${product.name}, using fallback:`, lineTotal);
+            console.warn(`line_total invalide pour le produit ${product.name}, utilisation de la valeur de secours:`, lineTotal);
           }
 
-          // Aggregate by product
+          // Agréger par produit
           const existing = productMap.get(item.product_id);
           if (existing) {
             existing.revenue += lineTotal;
@@ -194,45 +196,55 @@ export default function SalesPage() {
             });
           }
 
-          // Aggregate by category
-          const category = product.category || 'Uncategorized';
+          // Agréger par catégorie
+          const category = product.category || t('sales.uncategorized', 'Non catégorisé');
           const currentCategoryTotal = categoryMap.get(category) || 0;
           categoryMap.set(category, currentCategoryTotal + lineTotal);
         });
       });
 
-      console.log(`Processed ${totalItemsProcessed} items, ${itemsWithInvalidData} had invalid data`);
-      console.log('Category totals:', Array.from(categoryMap.entries()));
+      console.log(`Traitement de ${totalItemsProcessed} articles, ${itemsWithInvalidData} avaient des données invalides`);
+      console.log('Totaux par catégorie:', Array.from(categoryMap.entries()));
 
-      // Sort and set top products
+      // Trier et définir les meilleurs produits
       const sortedProducts = Array.from(productMap.values())
         .sort((a, b) => b.revenue - a.revenue)
         .slice(0, 5);
       setTopProducts(sortedProducts);
 
-      // Process categories with colors
-      const processedCategories: CategoryData[] = Array.from(categoryMap.entries())
-        .filter(([_, value]) => value > 0) // Filter out zero values
-        .map(([name, value], index) => ({
-          name,
-          value: Number(value) || 0, // Ensure it's a number
-          color: COLORS[index % COLORS.length]
-        }))
+      // Traiter les catégories avec des couleurs
+      const sortedCategories = Array.from(categoryMap.entries())
+        .filter(([_, value]) => value > 0) // Filtrer les valeurs nulles
+        .map(([name, value]) => ({ name, value: Number(value) || 0 })) // S'assurer que c'est un nombre
         .sort((a, b) => b.value - a.value);
 
-      console.log('Final processed categories:', processedCategories);
+      const TOP_N = 4;
+      const finalCategories = sortedCategories.slice(0, TOP_N);
+      const otherCategories = sortedCategories.slice(TOP_N);
+
+      if (otherCategories.length > 0) {
+        const otherValue = otherCategories.reduce((sum, cat) => sum + cat.value, 0);
+        finalCategories.push({ name: t('common.others', 'Autres'), value: otherValue });
+      }
+
+      const processedCategories: CategoryData[] = finalCategories.map((cat, index) => ({
+        ...cat,
+        color: COLORS[index % COLORS.length]
+      }));
+
+      console.log('Catégories finales traitées:', processedCategories);
       setCategoryData(processedCategories);
 
     } catch (error) {
-      console.error('Error processing insights:', error);
-      // Set empty data on error
+      console.error('Erreur lors du traitement des analyses:', error);
+      // Définir des données vides en cas d'erreur
       setTopProducts([]);
       setCategoryData([]);
     }
   };
 
-  // ... (Keep formatCurrency and formatPercentage helpers) ...
-  const formatCurrency = (val: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(val);
+  // ... (Garder les helpers formatCurrency et formatPercentage) ...
+  const formatCurrency = (val: number) => new Intl.NumberFormat(currentLang, { style: 'currency', currency: 'EUR' }).format(val);
 
   const formatPercentage = (value: number) => {
     const sign = value >= 0 ? '+' : '';
@@ -279,70 +291,52 @@ export default function SalesPage() {
   ];
 
   return (
-    <div className="p-8 bg-slate-50 min-h-screen">
-      {/* Header */}
-      <div className="mb-8 flex items-center justify-between">
+    <div className="min-h-screen p-8 bg-slate-50">
+      {/* En-tête */}
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
-            <FiDollarSign className="w-7 h-7 text-emerald-600" />
+          <h1 className="flex items-center gap-3 text-3xl font-bold text-slate-900">
             {t('sales.title')}
           </h1>
-          <p className="text-slate-500 mt-2">
+          <p className="mt-2 text-slate-500">
             {t('sales.subtitle')}
           </p>
         </div>
-        <button
-          onClick={loadSalesData}
-          className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/30 hover:bg-blue-700 transition-colors"
-        >
-          <FiRefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
-          {t('sales.refresh')}
-        </button>
       </div>
 
-      {/* KPI Cards */}
+      {/* Cartes KPI */}
       <div className="mb-6">
         {loading ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-32 bg-white rounded-xl animate-pulse border border-slate-100 shadow-sm" />
+              <div key={i} className="h-32 bg-white border shadow-sm rounded-xl animate-pulse border-slate-100" />
             ))}
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((stat) => (
-              <div key={stat.title} className="bg-white rounded-xl border border-slate-100 shadow-sm p-6 hover:shadow-md transition-all">
-                <div className="flex items-center justify-between mb-4">
-                  <div className={`w-12 h-12 rounded-lg bg-${stat.color}-50 flex items-center justify-center`}>
-                    <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />
-                  </div>
-                  <span className={`text-sm font-semibold ${stat.trend === 'up' ? 'text-emerald-600' : 'text-rose-600'
-                    }`}>
-                    {stat.change}
-                  </span>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-slate-600">{stat.title}</p>
-                  <p className="text-2xl font-bold text-slate-900 mt-1">{stat.value}</p>
-                  <p className="text-xs text-slate-500 mt-1">{stat.description}</p>
-                </div>
-              </div>
+              <KpiCard
+                key={stat.title}
+                label={stat.title}
+                value={stat.value}
+                color="primary"
+              />
             ))}
           </div>
         )}
       </div>
 
-      {/* Main Revenue Chart */}
+      {/* Graphique de revenus principal */}
       <div className="mb-6">
         <SalesChart data={chartData} />
       </div>
 
-      {/* --- NEW SECTION: PERFORMANCE INSIGHTS (Replaces the boring table) --- */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      {/* --- NOUVELLE SECTION : ANALYSE DES PERFORMANCES (Remplace le tableau ennuyeux) --- */}
+      <div className="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-3">
 
-        {/* Left Panel: Top Selling Products (2/3 width) */}
-        <div className="lg:col-span-2 bg-white rounded-xl border border-slate-100 shadow-sm flex flex-col">
-          <div className="p-6 border-b border-slate-100 flex justify-between items-center">
+        {/* Panneau gauche : Produits les plus vendus (2/3 de largeur) */}
+        <div className="flex flex-col bg-white border shadow-sm lg:col-span-2 rounded-xl border-slate-100">
+          <div className="flex items-center justify-between p-6 border-b border-slate-100">
             <div className="flex items-center gap-2">
               <FiAward className="text-amber-500" />
               <h3 className="font-bold text-slate-900">{t('sales.top_products')}</h3>
@@ -353,33 +347,33 @@ export default function SalesPage() {
             <table className="min-w-full">
               <thead className="bg-slate-50/50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('sales.table.product')}</th>
-                  <th className="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('sales.table.units')}</th>
-                  <th className="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('sales.table.revenue')}</th>
-                  <th className="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('sales.table.performance')}</th>
+                  <th className="px-6 py-3 text-xs font-semibold tracking-wider text-left uppercase text-slate-500">{t('sales.table.product')}</th>
+                  <th className="px-6 py-3 text-xs font-semibold tracking-wider text-right uppercase text-slate-500">{t('sales.table.units')}</th>
+                  <th className="px-6 py-3 text-xs font-semibold tracking-wider text-right uppercase text-slate-500">{t('sales.table.revenue')}</th>
+                  <th className="px-6 py-3 text-xs font-semibold tracking-wider text-right uppercase text-slate-500">{t('sales.table.performance')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {topProducts.map((product, idx) => (
-                  <tr key={product.id} className="hover:bg-slate-50/50 transition-colors">
+                  <tr key={product.id} className="transition-colors hover:bg-slate-50/50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
-                        <div className="flex-shrink-0 w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center font-bold text-xs text-slate-600">
+                        <div className="flex items-center justify-center flex-shrink-0 w-8 h-8 text-xs font-bold rounded-lg bg-slate-100 text-slate-600">
                           #{idx + 1}
                         </div>
                         <span className="text-sm font-medium text-slate-900">{product.name}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-slate-600">
+                    <td className="px-6 py-4 text-sm text-right whitespace-nowrap text-slate-600">
                       {product.quantity}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-slate-900">
+                    <td className="px-6 py-4 text-sm font-bold text-right whitespace-nowrap text-slate-900">
                       {formatCurrency(product.revenue)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <td className="px-6 py-4 text-right whitespace-nowrap">
                       <div className="w-24 ml-auto bg-slate-100 rounded-full h-1.5">
                         <div
-                          className="bg-blue-600 h-1.5 rounded-full"
+                          className="bg-purple-600 h-1.5 rounded-full"
                           style={{ width: `${(product.revenue / topProducts[0].revenue) * 100}%` }}
                         />
                       </div>
@@ -391,14 +385,14 @@ export default function SalesPage() {
           </div>
         </div>
 
-        {/* Right Panel: Sales by Category (1/3 width) */}
-        <div className="bg-white rounded-xl border border-slate-100 shadow-sm flex flex-col">
-          <div className="p-6 border-b border-slate-100 flex items-center gap-2">
+        {/* Panneau droit : Ventes par catégorie (1/3 de largeur) */}
+        <div className="flex flex-col bg-white border shadow-sm rounded-xl border-slate-100">
+          <div className="flex items-center gap-2 p-6 border-b border-slate-100">
             <FiPieChart className="text-purple-500" />
             <h3 className="font-bold text-slate-900">{t('sales.by_category')}</h3>
           </div>
 
-          <div className="p-6 flex-1 flex flex-col items-center justify-center">
+          <div className="flex flex-col items-center justify-center flex-1 p-6">
             <div className="w-full h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -415,15 +409,14 @@ export default function SalesPage() {
                       <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
                     ))}
                   </Pie>
-                  <RechartsTooltip formatter={(value: number) => formatCurrency(value)} />
-                  <Legend />
+                  <RechartsTooltip formatter={(value: any) => formatCurrency(value)} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
 
-            {/* Category List */}
+            {/* Liste des catégories */}
             <div className="w-full mt-4 space-y-3">
-              {categoryData.slice(0, 4).map((cat) => (
+              {categoryData.map((cat) => (
                 <div key={cat.name} className="flex items-center justify-between text-sm">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: cat.color }} />

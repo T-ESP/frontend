@@ -16,6 +16,7 @@ interface KPICardsProps {
 }
 
 export function KPICards({ orders, products, users, totalRevenue, evolution, dateRange = 30 }: KPICardsProps) {
+  console.log("🚀 ~ KPICards ~ totalRevenue:", totalRevenue)
   const { t } = useTranslation();
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('fr-FR', {

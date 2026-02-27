@@ -83,13 +83,16 @@ export interface AgentResponse {
 // --- Service ---
 
 export const agentService = {
-  async handleUserMessage(userText: string, history: any[] = [], insightsContext: string = ""): Promise<AgentResponse> {
+  async handleUserMessage(userText: string, history: any[] = [], insightsContext: string = "", language: string = "fr"): Promise<AgentResponse> {
     
     // Construction du System Prompt Dynamique
     const dynamicSystemPrompt = {
       role: "system",
       content: `${SYSTEM_PROMPT.content}
       
+INSTRUCTION DE LANGUE :
+Tu dois impérativement répondre en ${language === 'fr' ? 'FRANÇAIS' : 'ANGLAIS'}. 
+
 CONTEXTE GLOBAL (INSIGHTS & DATA) :
 Voici les chiffres clés et tendances actuelles du commerce (Top ventes, Flops, CA...).
 Utilise ces données pour répondre aux questions d'ordre général comme "Quels sont les articles qui marchent le mieux ?" sans avoir besoin d'utiliser un outil de recherche.

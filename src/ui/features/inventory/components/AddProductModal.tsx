@@ -94,7 +94,7 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
         {/* Modal Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-100 bg-slate-50 rounded-t-2xl">
           <div className="flex items-center gap-3">
-            <PackagePlus className="w-6 h-6 text-blue-600" />
+            <PackagePlus className="w-6 h-6 text-purple-600" />
             <h2 className="text-xl font-bold text-slate-900">{t('inventory.add_modal.title')}</h2>
           </div>
           <button
@@ -129,7 +129,7 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
                 required
                 value={formData.name}
                 onChange={handleFormChange}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-150"
                 placeholder="Name"
               />
             </div>
@@ -146,7 +146,7 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
                 required
                 value={formData.reference}
                 onChange={handleFormChange}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-150"
                 placeholder="PROD-001"
               />
             </div>
@@ -176,7 +176,7 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
                 step="0.01"
                 value={formData.buying_price}
                 onChange={handleFormChange}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-150"
               />
             </div>
 
@@ -193,7 +193,7 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
                 min="0"
                 value={formData.stock_quantity}
                 onChange={handleFormChange}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-150"
               />
             </div>
 
@@ -210,7 +210,7 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
                 min="1"
                 value={formData.supplier_id}
                 onChange={handleFormChange}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-150"
               />
             </div>
           </div>
@@ -227,7 +227,7 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-blue-600 rounded-xl shadow-lg shadow-blue-500/30 hover:bg-blue-700 transition duration-150 disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-purple-600 rounded-xl shadow-lg shadow-purple-500/30 hover:bg-purple-700 transition duration-150 disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               {loading ? t('common.creating') : t('inventory.form.create_submit')}

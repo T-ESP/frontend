@@ -55,6 +55,7 @@ export default function DashboardPage() {
       setOrders(ordersData);
       setProducts(productsData);
       setUsers(usersData);
+      console.log("🚀 ~ loadDashboardData ~ revenueData:", revenueData)
       setTotalRevenue(revenueData.total_revenue);
       setEvolution(evolutionData.evolution_percentage);
     } catch (error) {

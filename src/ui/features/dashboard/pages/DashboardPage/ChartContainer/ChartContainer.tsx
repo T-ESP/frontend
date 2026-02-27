@@ -14,44 +14,35 @@ interface ChartContainerProps {
 export function ChartContainer({ orders, dateRange }: ChartContainerProps) {
   const { t } = useTranslation();
   const [revenueDataFromApi, setRevenueDataFromApi] = useState<EvolutionDataPoint[]>([]);
+  console.log("🚀 ~ ChartContainer ~ revenueDataFromApi:", revenueDataFromApi)
 
   // Fetch revenue data from sales API
   useEffect(() => {
     const fetchRevenueData = async () => {
       try {
-        // Calculate start date based on dateRange (or default to 12 months if dateRange is small/irrelevant for this chart?)
-        // Actually, the revenue chart seems to be monthly evolution. Usually this implies a longer range. 
-        // If dateRange is "Last 30 days", monthly evolution is boring (1 point). 
-        // But for consistency let's use it or just accept it to fix the type error.
-        // Let's assume dateRange is days.
-
+        // We fetch 12 months regardless of the dashboard global range
+        // because the Revenue Chart has its own internal range selector (12, 6, 3 months)
         const endDate = new Date();
         const startDate = new Date();
-        startDate.setDate(startDate.getDate() - dateRange);
+        startDate.setFullYear(startDate.getFullYear() - 1); // Exact 1 year ago
 
         const formatDate = (date: Date) => date.toISOString().split('T')[0];
-
-        // If range is large (> 90 days), use month grain, else day/week? 
-        // The original code used 'month' grain and 12 months fixed.
-        // Let's stick to the previous behavior if dateRange is not passed or handled specially?
-        // But the error is that `dateRange` prop does not exist.
-        // Let's just fix the interface locally.
 
         const response = await salesService.getEvolutionByGrain({
           start_date: formatDate(startDate),
           end_date: formatDate(endDate),
-          grain: dateRange > 90 ? 'month' : 'day'
+          grain: "month",
         });
 
         setRevenueDataFromApi(response.data);
       } catch (error) {
-        console.error('Error fetching revenue data:', error);
+        console.error("Error fetching revenue data:", error);
         setRevenueDataFromApi([]);
       }
     };
 
     fetchRevenueData();
-  }, [dateRange]);
+  }, []); // Only fetch on mount or if we want it to be truly static
 
   // Calculate customer distribution (new vs returning)
   const customerData = useMemo(() => {
@@ -84,30 +75,36 @@ export function ChartContainer({ orders, dateRange }: ChartContainerProps) {
         name: t('dashboard.charts.new_customers'),
         value: parseFloat(newPercentage.toFixed(1)),
         count: newCustomers,
-        color: "#8b5cf6"
+        color: "#9333ea"
       },
       {
         name: t('dashboard.charts.returning_customers'),
         value: parseFloat(returningPercentage.toFixed(1)),
         count: returningCustomers,
-        color: "#06b6d4"
+        color: "#c084fc"
       },
     ];
   }, [orders, t]);
 
   // Transform API data to chart format
+  const { i18n } = useTranslation();
   const revenueData = useMemo(() => {
-    return revenueDataFromApi.map(dataPoint => {
+    return revenueDataFromApi.map((dataPoint) => {
       const date = new Date(dataPoint.date);
-      const monthName = date.toLocaleDateString('en-US', { month: 'short' });
+      // Since we forced grain='month', we always show the month
+      // Use current i18n language for proper locale translation
+      let label = date.toLocaleDateString(i18n.language, { month: "short" });
+
+      // Capitalize first letter (often cleaner for UI)
+      label = label.charAt(0).toUpperCase() + label.slice(1);
 
       return {
-        month: monthName,
+        month: label,
         revenue: Math.round(dataPoint.revenue),
         profit: Math.round(dataPoint.revenue * 0.7), // Estimate profit as 70% of revenue
       };
     });
-  }, [revenueDataFromApi]);
+  }, [revenueDataFromApi, i18n.language]);
 
   return (
     <div className="grid grid-cols-1 gap-8 mb-8 lg:grid-cols-3">

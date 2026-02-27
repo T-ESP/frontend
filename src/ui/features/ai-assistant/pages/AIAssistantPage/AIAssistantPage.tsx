@@ -8,8 +8,10 @@ import { MessageList } from "./MessageList";
 import { ThreadList } from "./ThreadList";
 import { aiInsightsService } from "@/infrastructure/api/services/aiInsightsService";
 import { agentService } from "@/infrastructure/api/services/agentService";
+import { useTranslation } from "react-i18next";
 
 export default function AIAssistantPage() {
+  const { t, i18n } = useTranslation();
   const threadsData = useMemo(() => initialThreads, []);
   const messagesData = useMemo(() => initialMessages, []);
 
@@ -46,8 +48,8 @@ export default function AIAssistantPage() {
     const nid = `t-${Date.now()}`;
     const newThread: ChatThread = {
       id: nid,
-      title: "New conversation",
-      lastMessagePreview: "Start a question…",
+      title: t("ai_assistant.new_conversation_title", "New conversation"),
+      lastMessagePreview: t("ai_assistant.start_question", "Start a question…"),
       avatar: botAvatar,
     };
     setThreads((prev) => [newThread, ...prev]);
@@ -82,7 +84,7 @@ export default function AIAssistantPage() {
     const loadingMsg: ChatMessage = {
       id: loadingId,
       role: "bot",
-      content: "Analyse en cours...",
+      content: t("ai_assistant.analyzing", "Analyse en cours..."),
       createdAt: Date.now() + 10,
     };
     setMessagesByThread((prev) => ({
@@ -100,7 +102,12 @@ export default function AIAssistantPage() {
       }));
 
       // 3. Appel Agent Service (boucle incluse)
-      const agentResponse = await agentService.handleUserMessage(text, historyForAgent, insightsContext);
+      const agentResponse = await agentService.handleUserMessage(
+        text,
+        historyForAgent,
+        insightsContext,
+        i18n.language.split('-')[0] // 'fr' ou 'en'
+      );
 
       // 4. Remplacer le loading par la réponse
       const botMsg: ChatMessage = {
@@ -131,7 +138,7 @@ export default function AIAssistantPage() {
         const errorMsg: ChatMessage = {
           id: `err-${Date.now()}`,
           role: "bot",
-          content: "Désolé, je rencontre des difficultés pour accéder aux services.",
+          content: t("ai_assistant.error_msg", "Désolé, je rencontre des difficultés pour accéder aux services."),
           createdAt: Date.now(),
         };
         return {
@@ -143,7 +150,7 @@ export default function AIAssistantPage() {
   };
 
   const handleRename = (threadId: string) => {
-    const name = prompt("Rename conversation:")?.trim();
+    const name = prompt(t("ai_assistant.rename_prompt", "Rename conversation:"))?.trim();
     if (!name) return;
     setThreads((prev) => prev.map((t) => (t.id === threadId ? { ...t, title: name } : t)));
     setOpenMenuThreadId(null);
@@ -165,7 +172,7 @@ export default function AIAssistantPage() {
 
   return (
     <div className="flex h-[calc(100vh-64px)] bg-white overflow-hidden">
-      <ThreadList
+      {/* <ThreadList
         threads={threads}
         activeThreadId={activeThreadId}
         onSelect={setActiveThreadId}
@@ -174,7 +181,7 @@ export default function AIAssistantPage() {
         setOpenMenuThreadId={setOpenMenuThreadId}
         onRename={handleRename}
         onDelete={handleDelete}
-      />
+      /> */}
 
       <section className="flex flex-col flex-1">
         <ChatHeader />

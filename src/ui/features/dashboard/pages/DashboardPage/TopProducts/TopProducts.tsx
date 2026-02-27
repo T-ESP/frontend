@@ -73,23 +73,23 @@ export function TopProducts({ products }: TopProductsProps) {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
-      <div className="flex justify-between items-center p-6 border-b border-gray-100">
+    <div className="bg-white border border-gray-100 shadow-sm rounded-2xl">
+      <div className="flex items-center justify-between p-6 border-b border-gray-100">
         <div>
           <h3 className="text-lg font-semibold text-gray-900">{t('dashboard.top_products.title')}</h3>
           <p className="mt-1 text-sm text-gray-500">{t('dashboard.top_products.subtitle')}</p>
         </div>
-        <div className="flex gap-3 items-center">
+        <div className="flex items-center gap-3">
           <div className="relative" ref={filterRef}>
             <button
               onClick={() => setShowFilter(!showFilter)}
-              className="flex gap-2 items-center px-3 py-2 text-sm font-medium text-gray-700 bg-gray-50 rounded-lg transition-colors hover:bg-gray-100"
+              className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 transition-colors rounded-lg bg-gray-50 hover:bg-gray-100"
             >
               <FiFilter size={14} />
               {t('dashboard.top_products.sort_by')}: {getSortLabel(sortBy)}
             </button>
             {showFilter && (
-              <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
+              <div className="absolute right-0 z-10 w-40 py-1 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg">
                 <button
                   onClick={() => { setSortBy('stock'); setShowFilter(false); }}
                   className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === 'stock' ? 'text-purple-600 font-medium' : 'text-gray-700'

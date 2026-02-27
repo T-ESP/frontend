@@ -7,16 +7,16 @@ export const items: SidebarItemType[][] = [
     { label: "sidebar.inventory", to: "/inventory", icon: Box },
     { label: "sidebar.orders", to: "/orders", icon: Package },
     { label: "sidebar.insights", to: "/insights", icon: ChartLine },
-    { label: "sidebar.sales", to: "/sales", icon: ShoppingCartIcon }
-  ],
-  [
-    { label: "sidebar.pricing_news", to: "/pricing-news-alerts", icon: Bell },
-    { label: "sidebar.suppliers", to: "/suppliers", icon: Truck },
+    { label: "sidebar.sales", to: "/sales", icon: ShoppingCartIcon },
     { label: "sidebar.ai_assistant", to: "/ai-assistant", icon: Brain },
-    { label: "sidebar.team", to: "/team", icon: Users }
   ],
   [
-    { label: "sidebar.settings", to: "/settings", icon: Settings },
+    // { label: "sidebar.pricing_news", to: "/pricing-news-alerts", icon: Bell },
+    // { label: "sidebar.suppliers", to: "/suppliers", icon: Truck },
+    // { label: "sidebar.team", to: "/team", icon: Users }
+  ],
+  [
+    { label: "sidebar.profile", to: "/profile", icon: Settings },
     { label: "sidebar.logout", to: "/logout", icon: LogOut }
   ]
 ];

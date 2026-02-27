@@ -10,6 +10,8 @@ type RawLoginApiResponse = {
   success: boolean;
   data?: {
     token?: string;
+    firstname?: string;
+    lastname?: string;
   };
   message?: string;
 };
@@ -42,13 +44,19 @@ export class HttpLoginUserGateway implements LoginUserGateway {
     }
 
     const token = body.data.token;
+    const firstname = body.data.firstname ?? "";
+    const lastname = body.data.lastname ?? "";
 
-    // Store token in localStorage for authenticated API calls
+    // Store token and names in localStorage for authenticated session
     localStorage.setItem('auth_token', token);
+    localStorage.setItem('auth_firstname', firstname);
+    localStorage.setItem('auth_lastname', lastname);
 
     return {
       success: true,
       token,
+      firstname,
+      lastname,
       message: body.message ?? "Login successful",
     };
   }

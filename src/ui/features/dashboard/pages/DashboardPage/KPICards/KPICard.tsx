@@ -3,13 +3,13 @@ import type { KPI } from "@/ui/features/dashboard/types";
 
 export function KPICard({ kpi }: { kpi: KPI }) {
   return (
-    <div className="p-6 bg-white rounded-2xl border border-gray-100 shadow-sm transition-all duration-200 hover:shadow-md group">
-      <div className="flex justify-between items-center">
-        <div className={`p-3 rounded-xl bg-${kpi.color}-50 group-hover:bg-${kpi.color}-100 transition-colors`}>
-          <kpi.icon className={`w-6 h-6 text-${kpi.color}-600`} />
+    <div className="p-6 transition-all duration-200 bg-white border border-gray-100 shadow-sm rounded-2xl hover:shadow-md group">
+      <div className="flex items-center justify-between">
+        <div className={`p-3 rounded-xl transition-colors`}>
+          <kpi.icon className={`w-6 h-6 text-primary`} />
         </div>
 
-        <div className="flex gap-1 items-center text-sm">
+        {/* <div className="flex items-center gap-1 text-sm">
           {kpi.trend === "up" ? (
             <FiArrowUpRight className="w-4 h-4 text-emerald-500" />
           ) : (
@@ -18,7 +18,7 @@ export function KPICard({ kpi }: { kpi: KPI }) {
           <span className={`font-medium ${kpi.trend === "up" ? "text-emerald-600" : "text-rose-600"}`}>
             {kpi.change}
           </span>
-        </div>
+        </div> */}
       </div>
 
       <div className="mt-4">

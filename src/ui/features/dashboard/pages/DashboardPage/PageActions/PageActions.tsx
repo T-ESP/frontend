@@ -51,14 +51,14 @@ export function PageActions({ onDateRangeChange, onExport, currentRange = 30 }: 
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setShowDateMenu(!showDateMenu)}
-          className="flex gap-2 items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-200 transition-colors hover:bg-gray-50"
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
         >
           <FiCalendar size={16} />
           {currentLabel}
           <FiChevronDown size={14} className={`transition-transform ${showDateMenu ? 'rotate-180' : ''}`} />
         </button>
         {showDateMenu && (
-          <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
+          <div className="absolute right-0 z-10 w-48 py-1 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg">
             {dateRanges.map(range => (
               <button
                 key={range.days}
@@ -75,13 +75,13 @@ export function PageActions({ onDateRangeChange, onExport, currentRange = 30 }: 
           </div>
         )}
       </div>
-      <button
+      {/* <button
         onClick={handleExport}
-        className="flex gap-2 items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-200 transition-colors hover:bg-gray-50"
+        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
       >
         <FiDownload size={16} />
         {t('common.export')}
-      </button>
+      </button> */}
     </div>
   );
 }

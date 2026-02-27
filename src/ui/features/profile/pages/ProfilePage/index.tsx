@@ -6,16 +6,18 @@ import { Button } from "@/ui/components/common/Button/Button";
 import { FormField } from "@/ui/components/common/FormField/FormField";
 import { Input } from "@/ui/components/common/Input/Input";
 import { PasswordInput } from "@/ui/components/common/PasswordInput/PasswordInput";
+import { useTranslation } from "react-i18next";
 
 export default function ProfilePage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { addToast } = useToast();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, firstname, lastname } = useAuth();
 
-  // État pour les informations personnelles (mockées pour l'instant)
+  // État pour les informations personnelles
   const [userInfo] = useState({
-    firstname: "John",
-    lastname: "Doe",
+    firstname: firstname,
+    lastname: lastname,
   });
 
   // État pour le changement d'email
@@ -49,7 +51,7 @@ export default function ProfilePage() {
 
     if (emailForm.email !== emailForm.confirmEmail) {
       setEmailStatus("error");
-      addToast("Erreur", "Les adresses email ne correspondent pas.", "error");
+      addToast(t("profile.toasts.error_title", "Erreur"), t("profile.toasts.email_mismatch", "Les adresses email ne correspondent pas."), "error");
       return;
     }
 
@@ -57,7 +59,7 @@ export default function ProfilePage() {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     setEmailStatus("success");
-    addToast("Email mis à jour", "Votre adresse email a été modifiée avec succès.", "success");
+    addToast(t("profile.toasts.email_success_title", "Email mis à jour"), t("profile.toasts.email_success_msg", "Votre adresse email a été modifiée avec succès."), "success");
     setEmailForm({ email: "", confirmEmail: "" });
   };
 
@@ -67,13 +69,13 @@ export default function ProfilePage() {
 
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
       setPasswordStatus("error");
-      addToast("Erreur", "Les mots de passe ne correspondent pas.", "error");
+      addToast(t("profile.toasts.error_title", "Erreur"), t("profile.toasts.password_mismatch", "Les mots de passe ne correspondent pas."), "error");
       return;
     }
 
     if (passwordForm.newPassword.length < 8) {
       setPasswordStatus("error");
-      addToast("Erreur", "Le mot de passe doit contenir au moins 8 caractères.", "error");
+      addToast(t("profile.toasts.error_title", "Erreur"), t("profile.toasts.password_length", "Le mot de passe doit contenir au moins 8 caractères."), "error");
       return;
     }
 
@@ -81,13 +83,13 @@ export default function ProfilePage() {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     setPasswordStatus("success");
-    addToast("Mot de passe mis à jour", "Votre mot de passe a été modifié avec succès.", "success");
+    addToast(t("profile.toasts.password_success_title", "Mot de passe mis à jour"), t("profile.toasts.password_success_msg", "Votre mot de passe a été modifié avec succès."), "success");
     setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
   };
 
   const handleLogout = () => {
     clearAuthToken();
-    addToast("Déconnexion", "Vous avez été déconnecté avec succès.", "info");
+    addToast(t("profile.toasts.logout_title", "Déconnexion"), t("profile.toasts.logout_msg", "Vous avez été déconnecté avec succès."), "info");
     navigate("/login", { replace: true });
   };
 
@@ -98,16 +100,16 @@ export default function ProfilePage() {
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-neutral-900">Mon Profil</h1>
-        <p className="mt-2 text-sm text-neutral-600">Gérez vos informations personnelles et vos paramètres de compte.</p>
+        <h1 className="text-3xl font-bold text-neutral-900">{t("profile.title", "Mon Profil")}</h1>
+        <p className="mt-2 text-sm text-neutral-600">{t("profile.subtitle", "Gérez vos informations personnelles et vos paramètres de compte.")}</p>
       </div>
 
       {/* Informations personnelles */}
       <section className="p-6 bg-white rounded-lg border border-neutral-200 shadow-sm">
-        <h2 className="text-xl font-semibold text-neutral-900 mb-4">Informations personnelles</h2>
+        <h2 className="text-xl font-semibold text-neutral-900 mb-4">{t("profile.personal_info.title", "Informations personnelles")}</h2>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-1">Prénom</label>
+            <label className="block text-sm font-medium text-neutral-700 mb-1">{t("profile.personal_info.firstname", "Prénom")}</label>
             <Input
               type="text"
               value={userInfo.firstname}
@@ -116,7 +118,7 @@ export default function ProfilePage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-1">Nom</label>
+            <label className="block text-sm font-medium text-neutral-700 mb-1">{t("profile.personal_info.lastname", "Nom")}</label>
             <Input
               type="text"
               value={userInfo.lastname}
@@ -129,14 +131,14 @@ export default function ProfilePage() {
 
       {/* Changement d'email */}
       <section className="p-6 bg-white rounded-lg border border-neutral-200 shadow-sm">
-        <h2 className="text-xl font-semibold text-neutral-900 mb-4">Changer l'adresse email</h2>
+        <h2 className="text-xl font-semibold text-neutral-900 mb-4">{t("profile.email.title", "Changer l'adresse email")}</h2>
         <form onSubmit={handleEmailSubmit} className="space-y-4">
           <Input
             id="email"
             name="email"
             type="email"
-            label="Nouvelle adresse email"
-            placeholder="nouveau@example.com"
+            label={t("profile.email.new_email_label", "Nouvelle adresse email")}
+            placeholder={t("profile.email.new_email_placeholder", "nouveau@example.com")}
             value={emailForm.email}
             onChange={handleEmailChange}
             required
@@ -145,8 +147,8 @@ export default function ProfilePage() {
             id="confirmEmail"
             name="confirmEmail"
             type="email"
-            label="Confirmer l'adresse email"
-            placeholder="nouveau@example.com"
+            label={t("profile.email.confirm_email_label", "Confirmer l'adresse email")}
+            placeholder={t("profile.email.confirm_email_placeholder", "nouveau@example.com")}
             value={emailForm.confirmEmail}
             onChange={handleEmailChange}
             required
@@ -156,40 +158,40 @@ export default function ProfilePage() {
             disabled={emailStatus === "loading"}
             className="w-full sm:w-auto"
           >
-            {emailStatus === "loading" ? "Mise à jour..." : "Mettre à jour l'email"}
+            {emailStatus === "loading" ? t("profile.email.updating", "Mise à jour...") : t("profile.email.update_btn", "Mettre à jour l'email")}
           </Button>
         </form>
       </section>
 
       {/* Changement de mot de passe */}
       <section className="p-6 bg-white rounded-lg border border-neutral-200 shadow-sm">
-        <h2 className="text-xl font-semibold text-neutral-900 mb-4">Changer le mot de passe</h2>
+        <h2 className="text-xl font-semibold text-neutral-900 mb-4">{t("profile.password.title", "Changer le mot de passe")}</h2>
         <form onSubmit={handlePasswordSubmit} className="space-y-4">
-          <FormField label="Mot de passe actuel">
+          <FormField label={t("profile.password.current_label", "Mot de passe actuel")}>
             <PasswordInput
               id="currentPassword"
               name="currentPassword"
-              placeholder="••••••••"
+              placeholder={t("profile.password.current_placeholder", "••••••••")}
               value={passwordForm.currentPassword}
               onChange={handlePasswordChange}
               required
             />
           </FormField>
-          <FormField label="Nouveau mot de passe">
+          <FormField label={t("profile.password.new_label", "Nouveau mot de passe")}>
             <PasswordInput
               id="newPassword"
               name="newPassword"
-              placeholder="••••••••"
+              placeholder={t("profile.password.new_placeholder", "••••••••")}
               value={passwordForm.newPassword}
               onChange={handlePasswordChange}
               required
             />
           </FormField>
-          <FormField label="Confirmer le nouveau mot de passe">
+          <FormField label={t("profile.password.confirm_label", "Confirmer le nouveau mot de passe")}>
             <PasswordInput
               id="confirmPassword"
               name="confirmPassword"
-              placeholder="••••••••"
+              placeholder={t("profile.password.confirm_placeholder", "••••••••")}
               value={passwordForm.confirmPassword}
               onChange={handlePasswordChange}
               required
@@ -200,20 +202,20 @@ export default function ProfilePage() {
             disabled={passwordStatus === "loading"}
             className="w-full sm:w-auto"
           >
-            {passwordStatus === "loading" ? "Mise à jour..." : "Mettre à jour le mot de passe"}
+            {passwordStatus === "loading" ? t("profile.password.updating", "Mise à jour...") : t("profile.password.update_btn", "Mettre à jour le mot de passe")}
           </Button>
         </form>
       </section>
 
       {/* Sécurité et session */}
       <section className="p-6 bg-white rounded-lg border border-neutral-200 shadow-sm">
-        <h2 className="text-xl font-semibold text-neutral-900 mb-4">Sécurité et session</h2>
+        <h2 className="text-xl font-semibold text-neutral-900 mb-4">{t("profile.security.title", "Sécurité et session")}</h2>
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-sm font-medium text-neutral-700">Token en session</p>
+              <p className="text-sm font-medium text-neutral-700">{t("profile.security.session_token", "Token en session")}</p>
               <p className="text-xs text-neutral-500 mt-1">
-                {getAuthToken() ? "Oui" : "Non"}
+                {getAuthToken() ? t("profile.security.yes", "Oui") : t("profile.security.no", "Non")}
               </p>
             </div>
           </div>
@@ -223,7 +225,7 @@ export default function ProfilePage() {
               onClick={handleLogout}
               className="w-full sm:w-auto bg-red-600 hover:bg-red-700"
             >
-              Se déconnecter
+              {t("profile.security.logout_btn", "Se déconnecter")}
             </Button>
           </div>
         </div>

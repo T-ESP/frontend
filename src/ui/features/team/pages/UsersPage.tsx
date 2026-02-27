@@ -26,22 +26,22 @@ export default function UsersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm">
+      <div className="bg-white border border-gray-100 shadow-sm rounded-xl">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
           <div>
             <h3 className="text-xl font-bold text-gray-900">{t('team.users.title')}</h3>
             <p className="text-sm text-gray-500 mt-0.5">{t('team.users.count', { count: filteredUsers.length })}</p>
           </div>
           <div className="flex items-center gap-2">
-            <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+            <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
               <FiRefreshCw className="w-4 h-4" />
               {t('common.refresh')}
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors">
+            {/* <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white transition-colors bg-green-600 rounded-lg hover:bg-green-700">
               <FiDownload className="w-4 h-4" />
               {t('common.export')}
-            </button>
-            <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors">
+            </button> */}
+            <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white transition-colors bg-purple-600 rounded-lg hover:bg-purple-700">
               <FiPlus className="w-4 h-4" />
               {t('team.users.add')}
             </button>
@@ -50,8 +50,8 @@ export default function UsersPage() {
 
         <div className="px-6 py-4">
           <div className="flex gap-3">
-            <div className="flex-1 relative">
-              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <div className="relative flex-1">
+              <FiSearch className="absolute w-5 h-5 text-gray-400 -translate-y-1/2 left-3 top-1/2" />
               <input
                 type="text"
                 value={searchQuery}
@@ -85,12 +85,12 @@ export default function UsersPage() {
 
       <div className="space-y-3">
         {filteredUsers.map((user) => (
-          <div key={user.id} className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:border-l-4 hover:border-l-purple-500 group">
+          <div key={user.id} className="transition-all duration-300 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md hover:border-l-4 hover:border-l-purple-500 group">
             <div className="flex items-center gap-4 p-4">
-              <img src={user.avatar} alt={user.name} className="w-12 h-12 rounded-full border-2 border-gray-200" />
+              <img src={user.avatar} alt={user.name} className="w-12 h-12 border-2 border-gray-200 rounded-full" />
 
               <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-gray-900 text-base leading-tight group-hover:text-purple-600 transition-colors">
+                <h3 className="text-base font-bold leading-tight text-gray-900 transition-colors group-hover:text-purple-600">
                   {user.name}
                 </h3>
                 <p className="text-sm text-gray-500 mt-0.5">{user.department}</p>
@@ -113,7 +113,7 @@ export default function UsersPage() {
                   }`}>
                   {t(`team.status.${user.status.toLowerCase()}`, { defaultValue: user.status })}
                 </span>
-                <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                <button className="p-2 text-gray-600 transition-colors rounded-lg hover:bg-gray-100">
                   <FiMoreVertical className="w-5 h-5" />
                 </button>
               </div>

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import PageLayout from "@/ui/components/layouts/PageLayout";
 import { InventoryStats } from "./InventoryStats";
 import { InventoryTable } from "./InventoryTable";
@@ -7,12 +8,14 @@ import { AddProductModal } from "../../components/AddProductModal";
 import { EditProductModal } from "../../components/EditProductModal";
 import { DeleteConfirmModal } from "../../components/DeleteConfirmModal";
 import { ProductKPIsModal } from "../../components/ProductKPIsModal";
+import { productService } from "@/infrastructure/api/services/productService";
 import type { InventoryItem } from "@/ui/features/inventory/types";
 import type { Product } from "@/domain/models/Product";
 import { useTranslation } from "react-i18next";
 
 export default function InventoryPage() {
   const { t } = useTranslation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -24,6 +27,26 @@ export default function InventoryPage() {
   const [kpiProductName, setKpiProductName] = useState("");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [products, setProducts] = useState<InventoryItem[]>([]);
+
+  // Effect to handle direct product links (e.g., from Dashboard)
+  useEffect(() => {
+    const productId = searchParams.get("productId");
+    if (productId) {
+      const id = parseInt(productId);
+      loadSingleProduct(id);
+    }
+  }, [searchParams]);
+
+  const loadSingleProduct = async (id: number) => {
+    try {
+      const product = await productService.getById(id);
+      if (product) {
+        handleViewKPIs(product.id, product.name);
+      }
+    } catch (error) {
+      console.error("Error loading single product:", error);
+    }
+  };
 
   const handleEdit = (item: InventoryItem) => {
     // Convert InventoryItem back to Product for editing
@@ -106,6 +129,12 @@ export default function InventoryPage() {
             setShowKPIsModal(false);
             setKpiProductId(null);
             setKpiProductName("");
+            // Clear productId from URL
+            if (searchParams.has("productId")) {
+              const newParams = new URLSearchParams(searchParams);
+              newParams.delete("productId");
+              setSearchParams(newParams);
+            }
           }}
           productId={kpiProductId}
           productName={kpiProductName}

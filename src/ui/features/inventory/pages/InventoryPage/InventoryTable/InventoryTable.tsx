@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
 import { productService } from "@/infrastructure/api/services/productService";
 import type { Product } from "@/domain/models/Product";
@@ -23,10 +24,13 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs, o
   const { addToast } = useToast();
   const { t } = useTranslation();
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialSearch = searchParams.get("search") || "";
+
   // Filter states
   const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
   const [selectedStatus, setSelectedStatus] = useState<string>("All Status");
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>(initialSearch);
   const [sortBy, setSortBy] = useState<string>("name");
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({ min: 0, max: 10000 });
@@ -35,10 +39,35 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs, o
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(25);
-
   useEffect(() => {
     loadProducts();
   }, [refreshTrigger]);
+
+  // Sync URL -> State
+  useEffect(() => {
+    const search = searchParams.get("search");
+    if (search !== null && search !== searchQuery) {
+      setSearchQuery(search);
+    }
+  }, [searchParams]);
+
+  // Sync State -> URL
+  useEffect(() => {
+    const currentSearch = searchParams.get("search") || "";
+    if (searchQuery !== currentSearch) {
+      if (searchQuery) {
+        setSearchParams(prev => {
+          prev.set("search", searchQuery);
+          return prev;
+        });
+      } else {
+        setSearchParams(prev => {
+          prev.delete("search");
+          return prev;
+        });
+      }
+    }
+  }, [searchQuery]);
 
   const loadProducts = async () => {
     try {
@@ -214,6 +243,12 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs, o
     document.body.removeChild(link);
   };
 
+  // Derive categories from data
+  const categories = useMemo(() => {
+    const cats = new Set(products.map(p => p.category));
+    return Array.from(cats).filter(Boolean).sort();
+  }, [products]);
+
   if (loading) {
     return <InventoryTableSkeleton />;
   }
@@ -224,6 +259,7 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs, o
         <InventoryTableHeader
           selectedCategory={selectedCategory}
           onCategoryChange={setSelectedCategory}
+          categories={categories}
           selectedStatus={selectedStatus}
           onStatusChange={setSelectedStatus}
           searchQuery={searchQuery}

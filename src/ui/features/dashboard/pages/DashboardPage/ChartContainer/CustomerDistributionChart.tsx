@@ -28,7 +28,7 @@ export function CustomerDistributionChart({ data }: CustomerDistributionChartPro
             </Pie>
             <Tooltip
               // @ts-ignore
-              formatter={(value: number) => [`${value}%`, 'Percentage']}
+              formatter={(value: number) => [`${value}%`, t('common.percentage')]}
               labelStyle={{ color: '#1f2937' }}
             />
           </PieChart>
