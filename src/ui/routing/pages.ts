@@ -2,6 +2,7 @@ import { lazy } from "react";
 
 export const PAGES = {
   Home: lazy(() => import("@/ui/features/home/pages/HomePage")),
+  DisplaySite: lazy(() => import("@/ui/features/home/pages/HomePage")),
   Login: lazy(() => import("@/ui/features/auth/pages/LoginPage")),
   Register: lazy(() => import("@/ui/features/auth/pages/RegisterPage")),
   Dashboard: lazy(() => import("@/ui/features/dashboard/pages/DashboardPage")),
