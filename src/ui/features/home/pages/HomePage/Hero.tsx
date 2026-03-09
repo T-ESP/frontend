@@ -14,6 +14,7 @@ import {
   useSpring,
   useVelocity,
   AnimatePresence,
+  MotionValue,
 } from "framer-motion";
 
 // ─── Mouse mesh gradient ──────────────────────────────────────────────────────
@@ -74,7 +75,7 @@ function TiltCard({ children }: { children: React.ReactNode }) {
 // ─── Scroll-driven bar chart ──────────────────────────────────────────────────
 // progress: 0→1 motion value that drives bar heights
 function ScrollBars({ values, color = "#7b5fa2", progress }: {
-  values: number[]; color?: string; progress: ReturnType<typeof useTransform>;
+  values: number[]; color?: string; progress: MotionValue<any>;
 }) {
   const max = Math.max(...values);
   return (
@@ -105,7 +106,7 @@ function ScrollBars({ values, color = "#7b5fa2", progress }: {
 // ─── Scroll-driven sparkline ──────────────────────────────────────────────────
 function ScrollSparkline({ values, color = "#7b5fa2", w = 88, h = 30, progress }: {
   values: number[]; color?: string; w?: number; h?: number;
-  progress: ReturnType<typeof useTransform>;
+  progress: MotionValue<any>;
 }) {
   const min = Math.min(...values), max = Math.max(...values), rng = max - min || 1;
   const allPts = values.map((v, i) =>
@@ -141,13 +142,14 @@ function ScrollSparkline({ values, color = "#7b5fa2", w = 88, h = 30, progress }
 
 // ─── Scroll-driven counter ────────────────────────────────────────────────────
 function ScrollCounter({ value, progress, suffix = "", prefix = "" }: {
-  value: number; progress: ReturnType<typeof useTransform>; suffix?: string; prefix?: string;
+  value: number; progress: MotionValue<any>; suffix?: string; prefix?: string;
 }) {
   const [display, setDisplay] = useState(0);
   useEffect(() => {
-    return (progress as any).on("change", (v: number) => {
+    const unsub = (progress as any).on("change", (v: number) => {
       setDisplay(Math.round(v * value));
     });
+    return () => unsub();
   }, [progress, value]);
   return <span>{prefix}{display.toLocaleString("fr-FR")}{suffix}</span>;
 }
@@ -576,7 +578,10 @@ export default function Hero() {
                     ].map(({ l, v, fmt, up, d, e, suffix }) => {
                       const statProgress = useTransform(smooth, [0.42, 0.82], [0, 1]);
                       const [display, setDisplay] = useState(0);
-                      useEffect(() => statProgress.on("change", p => setDisplay(Math.round(p * v))), []);
+                      useEffect(() => {
+                        const unsub = (statProgress as any).on("change", (p: number) => setDisplay(Math.round(p * v)));
+                        return () => unsub();
+                      }, [statProgress, v]);
                       return (
                         <div key={l} className="rounded-[1.1rem] px-4 py-3.5 border border-gray-100 bg-gray-50/60">
                           <div className="flex items-center justify-between mb-1.5">
