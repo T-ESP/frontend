@@ -1,14 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronDown, Menu, User, LogOut } from "lucide-react";
+import { ChevronDown, User, LogOut } from "lucide-react";
 import type { JSX } from "react";
-import type { HomeHeaderProps } from "./HomeHeader.types";
 import { clearAuthToken, useAuth } from "@/ui/features/auth/hooks/useAuth";
 import { useToast } from "@/ui/components/common/Toast";
 import { useTranslation } from "react-i18next";
 
 
-export function HomeHeader({ onMenuClick, isSidebarOpen }: HomeHeaderProps): JSX.Element {
+export function HomeHeader(): JSX.Element {
   const navigate = useNavigate();
   const { addToast } = useToast();
   const { t, i18n } = useTranslation();
@@ -58,16 +57,7 @@ export function HomeHeader({ onMenuClick, isSidebarOpen }: HomeHeaderProps): JSX
     <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-3 bg-white border-b border-gray-200 md:px-5">
       {/* Menu + Recherche */}
       <div className="flex items-center min-w-0 gap-3 md:gap-4">
-        <div className="absolute -left-1.75 w-4 h-full bg-white " />
-        <button
-          type="button"
-          className="inline-flex items-center justify-center text-gray-700 rounded-md w-9 h-9 hover:bg-gray-100"
-          onClick={onMenuClick}
-          aria-label={(isSidebarOpen ?? false) ? t('common.collapse_sidebar', 'Collapse sidebar') : t('common.expand_sidebar', 'Expand sidebar')}
-          aria-pressed={isSidebarOpen ?? false}
-        >
-          <Menu className="w-5 h-5" />
-        </button>
+        {/* Burger menu moved to Sidebar */}
       </div>
 
       {/* Actions droites */}

@@ -2,8 +2,11 @@ import { Logo } from "@/ui/components/common/Logo";
 import { items } from "@/ui/constants/sidebar/sidebarItem";
 import { SidebarSection } from "./SidebarSection";
 import type { SidebarProps } from "./Sidebar.types";
+import { Menu } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-export function Sidebar({ isOpen }: SidebarProps) {
+export function Sidebar({ isOpen, onToggle }: SidebarProps) {
+  const { t } = useTranslation();
   const topSections = items.slice(0, 2);
   const bottomSection = items[2] ?? [];
 
@@ -13,12 +16,22 @@ export function Sidebar({ isOpen }: SidebarProps) {
       ${isOpen ? "w-64" : "w-20"} flex flex-col`}
     >
       {/* Header */}
-      <div className={`flex items-center px-6 py-8 ${isOpen ? "gap-3" : "justify-center"}`}>
-        <Logo className="w-8 h-8 shrink-0" />
+      <div className={`flex items-center h-16 ${isOpen ? "px-5 border-b border-gray-100" : "justify-center"}`}>
+        <button
+          onClick={onToggle}
+          className="inline-flex items-center justify-center w-10 h-10 text-gray-700 rounded-xl hover:bg-gray-100 transition-colors shrink-0"
+          aria-label={isOpen ? t('common.collapse_sidebar', 'Collapse sidebar') : t('common.expand_sidebar', 'Expand sidebar')}
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
         {isOpen && (
-          <span className="text-xl font-extrabold tracking-tight text-gray-900 truncate">
-            Stocks
-          </span>
+          <div className="flex items-center gap-2 ml-2 overflow-hidden transition-opacity duration-300">
+            <Logo className="w-7 h-7 shrink-0" />
+            <span className="text-xl font-extrabold tracking-tight text-gray-900 truncate">
+              Stocks
+            </span>
+          </div>
         )}
       </div>
 

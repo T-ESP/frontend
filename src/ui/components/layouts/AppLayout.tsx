@@ -22,12 +22,12 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      <Sidebar isOpen={isSidebarOpen} />
+      <Sidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
       <div
         className="flex-1 flex flex-col overflow-hidden transition-[margin-left] duration-300"
         style={{ marginLeft: isSidebarOpen ? '256px' : '80px' }}
       >
-        <HomeHeader onMenuClick={toggleSidebar} isSidebarOpen={isSidebarOpen} />
+        <HomeHeader />
         <div className="flex-1 overflow-y-auto bg-gray-50">
           {/* C'est ICI que tu dois rendre children */}
           {children ?? <Outlet />}
