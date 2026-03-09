@@ -1,169 +1,155 @@
 import { motion } from "framer-motion";
 import { Check, Zap, Shield, Users, Clock } from "lucide-react";
 
-const BRAND = "#7b5fa2";
-
 const advantages = [
-  {
-    icon: <Zap size={20} style={{ color: BRAND }} />,
-    title: "Gain de temps",
-    desc: "Automatisez les tâches répétitives et concentrez-vous sur votre croissance",
-  },
-  {
-    icon: <Shield size={20} style={{ color: BRAND }} />,
-    title: "Sécurité maximale",
-    desc: "Vos données sont cryptées et sauvegardées en temps réel",
-  },
-  {
-    icon: <Users size={20} style={{ color: BRAND }} />,
-    title: "Collaboration facile",
-    desc: "Travaillez en équipe avec des droits d'accès personnalisés",
-  },
-  {
-    icon: <Clock size={20} style={{ color: BRAND }} />,
-    title: "Support 24/7",
-    desc: "Notre équipe est disponible pour vous accompagner à tout moment",
-  },
+  { icon: <Zap size={18} />, title: "Gain de temps", desc: "Automatisez les tâches répétitives, focus sur la croissance." },
+  { icon: <Shield size={18} />, title: "Sécurité maximale", desc: "Données chiffrées, sauvegardées en temps réel. RGPD." },
+  { icon: <Users size={18} />, title: "Collaboration", desc: "Travaillez en équipe avec des droits d'accès granulaires." },
+  { icon: <Clock size={18} />, title: "Support 24/7", desc: "Notre équipe expert disponible à tout moment." },
 ];
 
 const partners = [
-  { initials: "INT", name: "Intermarché", stores: "250 magasins connectés", color: "#fdd9d7", textColor: "#c0392b" },
-  { initials: "CAR", name: "Carrefour", stores: "180 magasins connectés", color: "#e8dff7", textColor: BRAND },
-  { initials: "AUC", name: "Auchan", stores: "120 magasins connectés", color: "#d4f0e0", textColor: "#27ae60" },
+  { initials: "INT", name: "Intermarché", stores: "250 magasins connectés", color: "rgba(239,68,68,0.08)", text: "#ef4444" },
+  { initials: "CAR", name: "Carrefour", stores: "180 magasins connectés", color: "rgba(123,95,162,0.08)", text: "#7b5fa2" },
+  { initials: "AUC", name: "Auchan", stores: "120 magasins connectés", color: "rgba(16,185,129,0.08)", text: "#10b981" },
 ];
+
+const fadeUp: any = {
+  hidden: { opacity: 0, y: 24, filter: "blur(5px)" },
+  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] } },
+};
 
 export default function Testimonials() {
   return (
-    <section id="advantages" className="bg-white py-24 px-8 md:px-16">
-      <div className="max-w-6xl mx-auto">
+    <section
+      id="advantages"
+      className="relative py-32 md:py-44 px-6 md:px-16"
+      style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}
+    >
+      {/* Background handled globaly by index.tsx */}
 
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
-          className="mb-14"
+          className="mb-20 md:mb-28"
         >
-          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#7b5fa2]/20 bg-[#7b5fa2]/5 text-[#7b5fa2] text-[11px] font-bold uppercase tracking-[0.18em] mb-7">
+            Avantages
+          </div>
+          <h2 className="text-[clamp(2.2rem,4.5vw,4rem)] font-[900] text-gray-900 tracking-[-0.035em] leading-[1.05] mb-5">
             Pourquoi choisir Stocks&nbsp;?
           </h2>
-          <p className="text-gray-500 text-lg max-w-xl">
-            Rejoignez les plus grandes enseignes qui nous font confiance pour optimiser leur gestion.
+          <p className="text-gray-400 text-lg font-light max-w-xl leading-relaxed">
+            Rejoignez les grandes enseignes qui nous font confiance pour optimiser chaque aspect de leur gestion.
           </p>
         </motion.div>
 
-        {/* Two-column layout */}
-        <div className="flex flex-col lg:flex-row gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
 
-          {/* Left — checklist + features grid */}
-          <div className="w-full lg:w-1/2">
+          {/* Left — checklist + 2×2 grid */}
+          <div className="flex flex-col gap-8">
             {/* Checklist */}
-            <div className="flex flex-col gap-5 mb-10">
+            <motion.div
+              initial="hidden" whileInView="show" viewport={{ once: true }}
+              transition={{ staggerChildren: 0.1 }}
+              className="flex flex-col gap-4"
+            >
               {[
-                { title: "Déploiement en 48h", desc: "Mise en place rapide sans interruption de votre activité" },
-                { title: "Formation incluse", desc: "Formation complète de vos équipes à l'utilisation de la plateforme" },
-                { title: "Intégration facile", desc: "Compatible avec vos outils existants (ERP, caisse, etc.)" },
+                { title: "Déploiement en 48h", desc: "Mise en place sans interruption de votre activité." },
+                { title: "Formation incluse", desc: "Accompagnement complet de vos équipes dès le jour 1." },
+                { title: "Intégration facile", desc: "Compatible ERP, caisse, et tous vos outils existants." },
               ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -16 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: i * 0.1 }}
-                  viewport={{ once: true }}
-                  className="flex items-start gap-3"
-                >
-                  <div
-                    className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
-                    style={{ backgroundColor: "#d4f0e0" }}
-                  >
-                    <Check size={11} style={{ color: "#27ae60" }} strokeWidth={3} />
+                <motion.div key={i} variants={fadeUp} className="flex items-start gap-3.5">
+                  <div className="w-6 h-6 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0 mt-0.5">
+                    <Check size={12} className="text-emerald-500" strokeWidth={3} />
                   </div>
                   <div>
                     <p className="text-sm font-bold text-gray-800">{item.title}</p>
-                    <p className="text-sm text-gray-500 mt-0.5">{item.desc}</p>
+                    <p className="text-sm text-gray-400 font-light mt-0.5">{item.desc}</p>
                   </div>
                 </motion.div>
               ))}
-            </div>
+            </motion.div>
 
-            {/* Features 2×2 grid */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* 2×2 advantage cards */}
+            <motion.div
+              initial="hidden" whileInView="show" viewport={{ once: true }}
+              transition={{ staggerChildren: 0.08 }}
+              className="grid grid-cols-2 gap-3"
+            >
               {advantages.map((adv, i) => (
                 <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.2 + i * 0.1 }}
-                  viewport={{ once: true }}
-                  className="bg-gray-50 rounded-2xl p-5 border border-gray-100"
+                  key={i} variants={fadeUp}
+                  className="group bg-[#fafafc] rounded-2xl p-5 border border-gray-100 hover:border-[#7b5fa2]/20 transition-all duration-300"
+                  whileHover={{ y: -3, boxShadow: "0 12px 32px rgba(123,95,162,0.09)" }}
                 >
-                  <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center mb-3"
-                    style={{ backgroundColor: "#ede6f7" }}
-                  >
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#7b5fa2] to-[#9d7bdd] flex items-center justify-center text-white mb-3 shadow-sm">
                     {adv.icon}
                   </div>
                   <p className="text-sm font-bold text-gray-800 mb-1">{adv.title}</p>
-                  <p className="text-xs text-gray-500 leading-relaxed">{adv.desc}</p>
+                  <p className="text-xs text-gray-400 font-light leading-relaxed">{adv.desc}</p>
                 </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
 
-          {/* Right — Partner card */}
+          {/* Right — partner card */}
           <motion.div
-            initial={{ opacity: 0, x: 32 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            initial={{ opacity: 0, x: 32, filter: "blur(8px)" }}
+            whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
-            className="w-full lg:w-1/2 bg-gray-50 rounded-3xl border border-gray-100 p-8 shadow-sm"
+            className="bg-[#fafafc] rounded-[2rem] border border-gray-100 p-8"
+            style={{ boxShadow: "0 4px 40px rgba(123,95,162,0.07)" }}
           >
-            {/* Card header */}
-            <div className="flex items-center justify-between mb-6">
-              <p className="text-sm font-semibold text-gray-500">Enseignes partenaires</p>
-              <span className="text-sm font-bold" style={{ color: BRAND }}>500+</span>
+            <div className="flex items-center justify-between mb-7">
+              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-[0.18em]">Enseignes partenaires</p>
+              <span className="text-sm font-extrabold text-[#7b5fa2]">500+ clients</span>
             </div>
 
-            {/* Partner rows */}
-            <div className="flex flex-col gap-4 mb-8">
+            <div className="flex flex-col gap-3 mb-8">
               {partners.map((p, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 12 }}
+                  initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.35, delay: 0.3 + i * 0.1 }}
+                  transition={{ duration: 0.45, delay: 0.25 + i * 0.1 }}
                   viewport={{ once: true }}
-                  className="flex items-center justify-between bg-white rounded-2xl px-5 py-4 border border-gray-100 shadow-sm"
+                  className="group flex items-center justify-between bg-white rounded-2xl px-5 py-4 border border-gray-100 hover:border-[#7b5fa2]/20 transition-all duration-300"
+                  style={{ boxShadow: "0 1px 8px rgba(0,0,0,0.03)" }}
                 >
                   <div className="flex items-center gap-4">
-                    <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center text-xs font-extrabold shrink-0"
-                      style={{ backgroundColor: p.color, color: p.textColor }}
-                    >
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center text-[11px] font-extrabold shrink-0"
+                      style={{ background: p.color, color: p.text }}>
                       {p.initials}
                     </div>
                     <div>
                       <p className="text-sm font-bold text-gray-800">{p.name}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">{p.stores}</p>
+                      <p className="text-xs text-gray-400 font-light mt-0.5">{p.stores}</p>
                     </div>
                   </div>
-                  <Check size={18} style={{ color: "#27ae60" }} strokeWidth={2.5} />
+                  <div className="w-6 h-6 rounded-full bg-emerald-50 flex items-center justify-center">
+                    <Check size={12} className="text-emerald-500" strokeWidth={3} />
+                  </div>
                 </motion.div>
               ))}
             </div>
 
-            {/* Footer */}
-            <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-              <p className="text-sm text-gray-500 font-medium">Satisfaction moyenne</p>
-              <div className="flex items-center gap-1.5">
-                <span className="text-sm font-bold text-gray-800">4.9/5</span>
-                <span className="text-yellow-400 text-base">★</span>
+            <div className="flex items-center justify-between pt-5 border-t border-gray-100">
+              <div className="flex items-center gap-0.5">
+                {[...Array(5)].map((_, i) => <span key={i} className="text-[#7b5fa2] text-base">★</span>)}
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-extrabold text-gray-900">4.9/5</span>
+                <span className="text-xs text-gray-400 font-light">satisfaction moyenne</span>
               </div>
             </div>
           </motion.div>
         </div>
-
       </div>
     </section>
   );
