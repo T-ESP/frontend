@@ -9,30 +9,28 @@ export function Sidebar({ isOpen }: SidebarProps) {
 
   return (
     <aside
-      className={`fixed left-0 top-0 h-screen bg-white transition-[width] duration-300 border-r border-gray-200 z-30
-      ${isOpen ? "w-64" : "w-16"} flex flex-col`}
+      className={`fixed left-0 top-0 h-screen bg-white transition-[width] duration-300 border-r border-gray-100 z-30
+      ${isOpen ? "w-64" : "w-20"} flex flex-col`}
     >
       {/* Header */}
-      <div className="flex justify-between items-center px-3 py-4">
-        <div className="flex gap-2 items-center">
-          <Logo className="w-10 h-10" />
-          {isOpen && (
-            <span className="text-xl font-bold text-primary">
-              Stock<span className="text-black">S</span>
-            </span>
-          )}
-        </div>
+      <div className={`flex items-center px-6 py-8 ${isOpen ? "gap-3" : "justify-center"}`}>
+        <Logo className="w-8 h-8 shrink-0" />
+        {isOpen && (
+          <span className="text-xl font-extrabold tracking-tight text-gray-900 truncate">
+            Stocks
+          </span>
+        )}
       </div>
 
       {/* Top sections */}
-      <div className="overflow-y-auto flex-1 space-y-4">
+      <div className="overflow-y-auto flex-1 py-2 space-y-6">
         {topSections.map((section, index) => (
           <SidebarSection key={index} items={section} isOpen={isOpen} />
         ))}
       </div>
 
       {/* Bottom section */}
-      <div className="px-2 py-4 border-t border-gray-200 space-y-4">
+      <div className="py-4 border-t border-gray-100 space-y-4">
         <SidebarSection items={bottomSection} isOpen={isOpen} />
       </div>
     </aside>

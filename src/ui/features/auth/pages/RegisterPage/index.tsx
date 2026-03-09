@@ -1,7 +1,6 @@
 import { RegisterHeader } from "./components/RegisterHeader";
 import { RegisterForm } from "./components/RegisterForm";
 import { RegisterFooter } from "./components/RegisterFooter";
-import { Logo } from "@/ui/components/common/Logo";
 import { Link } from "react-router-dom";
 
 export default function RegisterPage() {

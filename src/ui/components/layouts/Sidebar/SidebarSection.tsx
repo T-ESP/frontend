@@ -4,7 +4,7 @@ import { SidebarItem } from "./SidebarItem";
 
 export function SidebarSection({ items, isOpen }: SidebarSectionProps) {
   return (
-    <ul className="flex flex-col items-center space-y-1 px-2">
+    <ul className="flex flex-col space-y-1.5 w-full">
       {items.map((item) => (
         <li key={item.to} className="relative w-full">
           <SidebarItem {...item} isOpen={isOpen} />

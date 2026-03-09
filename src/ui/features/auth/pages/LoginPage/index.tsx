@@ -1,7 +1,6 @@
 import { LoginHeader } from "./components/LoginHeader";
 import { LoginForm } from "./components/LoginForm";
 import { LoginFooter } from "./components/LoginFooter";
-import { Logo } from "@/ui/components/common/Logo";
 import { Link } from "react-router-dom";
 
 export default function LoginPage() {

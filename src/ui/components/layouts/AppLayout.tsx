@@ -25,7 +25,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       <Sidebar isOpen={isSidebarOpen} />
       <div
         className="flex-1 flex flex-col overflow-hidden transition-[margin-left] duration-300"
-        style={{ marginLeft: isSidebarOpen ? '256px' : '64px' }}
+        style={{ marginLeft: isSidebarOpen ? '256px' : '80px' }}
       >
         <HomeHeader onMenuClick={toggleSidebar} isSidebarOpen={isSidebarOpen} />
         <div className="flex-1 overflow-y-auto bg-gray-50">
