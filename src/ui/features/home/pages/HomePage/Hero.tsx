@@ -81,8 +81,8 @@ function ScrollBars({ values, color = "#7b5fa2", progress }: {
     <div className="flex items-end gap-[3px] h-full w-full">
       {values.map((v, i) => {
         // Each bar starts animating slightly after the previous one (stagger via offset)
-        const barProgress = useTransform(progress, [i / values.length * 0.6, Math.min((i / values.length * 0.6) + 0.5, 1)], [0, 1]);
-        const height = useTransform(barProgress, p => `${p * (v / max) * 100}%`);
+        const barProgress = useTransform(progress as any, [i / values.length * 0.6, Math.min((i / values.length * 0.6) + 0.5, 1)], [0, 1]);
+        const height = useTransform(barProgress, p => `${(p as number) * (v / max) * 100}%`);
         return (
           <motion.div
             key={i}
@@ -117,7 +117,7 @@ function ScrollSparkline({ values, color = "#7b5fa2", w = 88, h = 30, progress }
   const id = `ssp${color.replace(/[^a-z0-9]/gi, "")}`;
 
   // Animate clipPath width from 0 to 100% driven by progress
-  const clipWidth = useTransform(progress, [0, 1], ["0%", "100%"]);
+  const clipWidth = useTransform(progress as any, [0, 1], ["0%", "100%"]);
   const pts = allPts.map(([x, y]) => `${x},${y}`).join(" ");
 
   return (
@@ -145,7 +145,7 @@ function ScrollCounter({ value, progress, suffix = "", prefix = "" }: {
 }) {
   const [display, setDisplay] = useState(0);
   useEffect(() => {
-    return progress.on("change", v => {
+    return (progress as any).on("change", (v: number) => {
       setDisplay(Math.round(v * value));
     });
   }, [progress, value]);
@@ -213,7 +213,7 @@ export default function Hero() {
 
   // Combined headline scale (scroll-driven × velocity-driven)
   const combinedHlScale = useTransform(
-    [hlScale, velocityScale],
+    [hlScale, velocityScale] as any,
     ([s, vs]: number[]) => (s as number) * (vs as number)
   );
 
