@@ -10,58 +10,107 @@ const points = [
 
 export default function AISection() {
   return (
-    <section className="bg-white py-24 px-8 md:px-16">
+    <section className="bg-[#fafafc] py-32 px-8 md:px-16 overflow-hidden">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="bg-gradient-to-br from-purple-600 to-purple-800 rounded-3xl overflow-hidden flex flex-col md:flex-row items-center gap-10 px-10 py-14"
+          transition={{ duration: 0.8 }}
+          className="relative bg-gradient-to-br from-gray-900 to-black rounded-[3rem] overflow-hidden flex flex-col md:flex-row items-center gap-16 px-12 py-20 border border-gray-800"
         >
-          {/* Left */}
-          <div className="flex-1 text-white">
-            <p className="text-purple-200 text-xs font-semibold uppercase tracking-widest mb-4">Intelligence Artificielle</p>
-            <h2 className="text-3xl md:text-4xl font-extrabold leading-tight mb-6">
-              Votre copilote IA pour<br />une gestion sans effort
+          {/* Decorative background aura for AI section */}
+          <div className="absolute top-0 right-0 w-[40%] h-[40%] bg-purple-600/20 blur-[120px] rounded-full -z-0" />
+
+          {/* Left Content */}
+          <div className="flex-1 text-white relative z-10">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+              className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 px-4 py-1.5 rounded-full text-purple-400 text-[10px] font-black uppercase tracking-widest mb-6"
+            >
+              Intelligence Artificielle Gen-2
+            </motion.div>
+
+            <h2 className="text-4xl md:text-5xl font-black leading-[1.05] tracking-tight mb-8">
+              Parlez à vos données <br />
+              <span className="text-purple-400">comme à un ami.</span>
             </h2>
-            <ul className="space-y-4 mb-8">
+
+            <ul className="space-y-6 mb-12">
               {points.map((p, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-lg bg-purple-100 flex items-center justify-center shrink-0 mt-0.5">
+                <motion.li
+                  key={i}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 + i * 0.1 }}
+                  className="flex items-start gap-4"
+                >
+                  <div className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 mt-0.5">
                     {p.icon}
                   </div>
-                  <span className="text-purple-100 text-sm leading-relaxed">{p.text}</span>
-                </li>
+                  <span className="text-gray-400 text-sm font-medium leading-relaxed max-w-sm">{p.text}</span>
+                </motion.li>
               ))}
             </ul>
+
             <Link
               to="/register"
-              className="inline-flex items-center gap-2 bg-white text-purple-700 font-semibold px-6 py-3 rounded-xl text-sm hover:bg-purple-50 transition-colors"
+              className="inline-flex items-center gap-2 bg-white text-gray-950 font-black px-8 py-4 rounded-2xl text-sm hover:bg-gray-100 transition-all hover:scale-105 active:scale-95"
             >
-              Essayer l'IA gratuitement →
+              Lancer l'assistant →
             </Link>
           </div>
 
-          {/* Right — decorative chat UI */}
-          <div className="hidden md:flex flex-1 justify-end">
-            <div className="bg-white/10 backdrop-blur rounded-2xl border border-white/20 p-5 w-72 space-y-3">
+          {/* Right — Immersive Glass Chat UI */}
+          <div className="flex-1 justify-end perspective-1000 hidden md:flex">
+            <motion.div
+              initial={{ scale: 0.9, rotateY: 20, opacity: 0 }}
+              whileInView={{ scale: 1, rotateY: 0, opacity: 1 }}
+              transition={{ duration: 1, ease: "circOut" }}
+              className="bg-white/5 backdrop-blur-2xl rounded-[2.5rem] border border-white/10 p-8 w-[380px] shadow-2xl space-y-6 relative"
+            >
+              {/* Live indicator on mockup */}
+              <div className="absolute top-4 right-6 flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[10px] text-gray-500 font-bold tracking-widest uppercase">AI Online</span>
+              </div>
+
               {[
-                { role: "user", msg: "Quel est mon produit le plus vendu ce mois ?" },
-                { role: "ai", msg: "🏆 Le produit #A-2312 « Yaourt bio 500g » avec 3 814 unités vendues, en hausse de +22%." },
-                { role: "user", msg: "Faut-il le réapprovisionner ?" },
-                { role: "ai", msg: "✅ Oui — stock actuel : 420 unités (5 jours). Je recommande une commande de 2 500 unités dès aujourd'hui." },
+                { role: "user", msg: "Besoin de stock pour ce week-end ?" },
+                { role: "ai", msg: "Analyse terminée. 🚀 Le produit 'Yaourt bio' est en rupture probable d'ici dimanche. Je suggère une commande de 150 unités." },
               ].map((m, i) => (
-                <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                  <div className={`text-xs px-3 py-2 rounded-xl max-w-[85%] leading-relaxed ${m.role === "user"
-                      ? "bg-white text-gray-800"
-                      : "bg-purple-500/60 text-white"
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ delay: 0.4 + i * 1.5, duration: 0.6 }}
+                  className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
+                >
+                  <div className={`text-xs px-5 py-4 rounded-2xl max-w-[85%] leading-relaxed shadow-lg ${m.role === "user"
+                    ? "bg-white text-gray-900 font-bold rounded-tr-none"
+                    : "bg-[#7b5fa2] text-white font-medium rounded-tl-none border border-white/10"
                     }`}>
                     {m.msg}
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+
+              {/* Typing indicator at the end */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ delay: 3, duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
+                className="flex justify-start"
+              >
+                <div className="bg-white/5 border border-white/10 px-4 py-3 rounded-full flex gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-gray-600 animate-bounce" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-gray-600 animate-bounce delay-100" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-gray-600 animate-bounce delay-200" />
+                </div>
+              </motion.div>
+            </motion.div>
           </div>
         </motion.div>
       </div>
