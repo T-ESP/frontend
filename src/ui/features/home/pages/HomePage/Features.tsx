@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { AlertCircle, Bell, RefreshCw, Workflow, Sparkles, PieChart, ShieldCheck } from "lucide-react";
+import { AlertCircle, Bell, Workflow, Sparkles, PieChart } from "lucide-react";
 
 // ─── Bento Sub-Visuals ────────────────────────────────────────────────────────
 function AIChartVisual() {

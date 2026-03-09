@@ -10,36 +10,11 @@ import {
   useScroll,
   useTransform,
   useMotionValue,
-  useMotionTemplate,
   useSpring,
   useVelocity,
   AnimatePresence,
   MotionValue,
 } from "framer-motion";
-
-// ─── Mouse mesh gradient ──────────────────────────────────────────────────────
-function MeshGradient() {
-  const mx = useMotionValue(0.5);
-  const my = useMotionValue(0.5);
-  const smx = useSpring(mx, { stiffness: 32, damping: 16 });
-  const smy = useSpring(my, { stiffness: 32, damping: 16 });
-  const px = useTransform(smx, v => `${(v * 100).toFixed(1)}%`);
-  const py = useTransform(smy, v => `${(v * 100).toFixed(1)}%`);
-  const rpx = useTransform(smx, v => `${((1 - v) * 100).toFixed(1)}%`);
-  const rpy = useTransform(smy, v => `${((1 - v) * 100).toFixed(1)}%`);
-  const bg = useMotionTemplate`radial-gradient(ellipse 80% 60% at ${px} ${py}, rgba(123,95,162,0.13) 0%, transparent 58%), radial-gradient(ellipse 60% 50% at ${rpx} ${rpy}, rgba(176,142,224,0.09) 0%, transparent 55%), #fafafc`;
-
-  useEffect(() => {
-    const move = (e: MouseEvent) => {
-      mx.set(e.clientX / window.innerWidth);
-      my.set(e.clientY / window.innerHeight);
-    };
-    window.addEventListener("mousemove", move);
-    return () => window.removeEventListener("mousemove", move);
-  }, [mx, my]);
-
-  return <motion.div className="absolute inset-0 pointer-events-none" style={{ background: bg }} />;
-}
 
 // ─── 3D Tilt card ─────────────────────────────────────────────────────────────
 function TiltCard({ children }: { children: React.ReactNode }) {
@@ -283,11 +258,7 @@ export default function Hero() {
         .float-c { animation: fa 4.9s ease-in-out infinite; animation-delay: -1.4s; }
         @keyframes fa { 0%,100%{transform:translateY(0)} 48%{transform:translateY(-9px)} }
 
-        .dot-grid {
-          background-image: radial-gradient(rgba(123,95,162,0.16) 1px, transparent 1px);
-          background-size: 28px 28px;
-        }
-        .card-edge::before {
+        /* Top-edge light on dashboard card */
           content: '';
           position: absolute; top: 0; left: 8%; right: 8%; height: 1px;
           background: linear-gradient(90deg, transparent, rgba(123,95,162,0.35), transparent);
@@ -295,9 +266,7 @@ export default function Hero() {
       `}</style>
 
       {/* ── Sticky viewport ─────────────────────────────────────────────────── */}
-      <div className="sticky top-0 h-screen overflow-hidden bg-[#fafafc]">
-        <MeshGradient />
-        <div className="absolute inset-0 dot-grid pointer-events-none opacity-[0.28]" />
+      <div className="sticky top-0 h-screen">
 
         {/* ── Navbar ────────────────────────────────────────────────────────── */}
         <motion.nav
