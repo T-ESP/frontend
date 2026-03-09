@@ -60,6 +60,11 @@ export default function AuthPage({ initialMode = "login" }: AuthPageProps) {
                             }`}
                         style={{ backgroundColor: BRAND }}
                     >
+                        {/* Logo */}
+                        <div className="flex items-center gap-2 mb-10">
+                            <Logo className="w-8 h-8 brightness-0 invert" />
+                            <span className="text-white font-bold text-lg tracking-tight">Stocks</span>
+                        </div>
 
                         <h3 className="text-3xl font-extrabold text-white mb-3 relative z-10">
                             {isLogin ? "Pas encore inscrit ?" : "Déjà un compte ?"}

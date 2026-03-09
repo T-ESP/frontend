@@ -4,6 +4,7 @@ export const PAGES = {
   Home: lazy(() => import("@/ui/features/home/pages/HomePage")),
   DisplaySite: lazy(() => import("@/ui/features/home/pages/HomePage")),
   Pricing: lazy(() => import("@/ui/features/home/pages/PricingPage")),
+  Terms: lazy(() => import("@/ui/features/home/pages/TermsPage")),
   Login: lazy(() =>
     import("@/ui/features/auth/pages/AuthPage").then((m) => ({
       default: () => m.default({ initialMode: "login" }),

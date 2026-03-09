@@ -181,4 +181,14 @@ export const ROUTES: Record<string, RouteMeta> = {
     title: 'StockS - Tarifs',
   },
 
+  TERMS: {
+    path: '/mentions-legales',
+    label: 'CGU',
+    page: 'Terms',
+    layout: 'none',
+    restricted: false,
+    hiddenInMenu: true,
+    title: 'StockS - Conditions Générales d\'Utilisation',
+  },
+
 };
