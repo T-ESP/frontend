@@ -164,11 +164,21 @@ export const ROUTES: Record<string, RouteMeta> = {
     title: 'StockS - Playground',
   },
   displaySite: {
-  path: '/DisplaySite',
-  label: 'Display Site',
-  page: 'DisplaySite',
-  layout: 'none', // or 'none' if you want NO layout at all
-  restricted: false,
-},
+    path: '/DisplaySite',
+    label: 'Display Site',
+    page: 'DisplaySite',
+    layout: 'none', // or 'none' if you want NO layout at all
+    restricted: false,
+  },
+
+  TARIFS: {
+    path: '/tarifs',
+    label: 'Tarifs',
+    page: 'Pricing',
+    layout: 'none',
+    restricted: false,
+    hiddenInMenu: true,
+    title: 'StockS - Tarifs',
+  },
 
 };

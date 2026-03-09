@@ -3,8 +3,17 @@ import { lazy } from "react";
 export const PAGES = {
   Home: lazy(() => import("@/ui/features/home/pages/HomePage")),
   DisplaySite: lazy(() => import("@/ui/features/home/pages/HomePage")),
-  Login: lazy(() => import("@/ui/features/auth/pages/LoginPage")),
-  Register: lazy(() => import("@/ui/features/auth/pages/RegisterPage")),
+  Pricing: lazy(() => import("@/ui/features/home/pages/PricingPage")),
+  Login: lazy(() =>
+    import("@/ui/features/auth/pages/AuthPage").then((m) => ({
+      default: () => m.default({ initialMode: "login" }),
+    }))
+  ),
+  Register: lazy(() =>
+    import("@/ui/features/auth/pages/AuthPage").then((m) => ({
+      default: () => m.default({ initialMode: "register" }),
+    }))
+  ),
   Dashboard: lazy(() => import("@/ui/features/dashboard/pages/DashboardPage")),
   Users: lazy(() => import("@/ui/features/team/pages/UsersPage")),
   NotFound: lazy(() => import("@/ui/pages/NotFoundPage")),

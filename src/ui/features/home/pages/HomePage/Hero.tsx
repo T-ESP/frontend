@@ -18,7 +18,7 @@ export default function Hero() {
         <div className="hidden md:flex items-center gap-8 text-sm text-gray-600">
           <a href="#features" className="transition-colors hover:opacity-80" style={{ color: "#7b5fa2" }}>Fonctionnalités</a>
           <a href="#advantages" className="transition-colors hover:opacity-80" style={{ color: "#7b5fa2" }}>Avantages</a>
-          <a href="#tarifs" className="transition-colors hover:opacity-80" style={{ color: "#7b5fa2" }}>Tarifs</a>
+          <Link to="/tarifs" className="transition-colors hover:opacity-80" style={{ color: "#7b5fa2" }}>Tarifs</Link>
         </div>
 
         {/* Right actions */}

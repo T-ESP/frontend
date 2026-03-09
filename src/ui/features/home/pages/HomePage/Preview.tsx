@@ -44,10 +44,10 @@ export default function Preview() {
           className="flex-1 grid grid-cols-2 gap-4"
         >
           {[
-            { label: "Enseignes utilisatrices", value: "800+", color: "bg-purple-50 border-purple-100" },
-            { label: "Réduction du surstockage", value: "-34%", color: "bg-green-50 border-green-100" },
-            { label: "Alertes générées / mois", value: "12K+", color: "bg-blue-50 border-blue-100" },
-            { label: "Satisfaction client", value: "98%", color: "bg-orange-50 border-orange-100" },
+            { label: "Modules disponibles", value: "10+", color: "bg-[#f7f3fc] border-[#c4b0dc]" },
+            { label: "Réduction du surstockage estimée", value: "-30%", color: "bg-green-50 border-green-100" },
+            { label: "Alertes prix & stocks actives", value: "Temps réel", color: "bg-blue-50 border-blue-100" },
+            { label: "Assistant IA intégré", value: "Inclus", color: "bg-orange-50 border-orange-100" },
           ].map((s, i) => (
             <div key={i} className={`${s.color} border rounded-2xl p-6`}>
               <p className="text-3xl font-extrabold text-gray-900 mb-1">{s.value}</p>

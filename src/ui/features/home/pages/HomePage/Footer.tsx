@@ -22,24 +22,24 @@ export default function Footer() {
                         <div>
                             <p className="font-semibold text-gray-700 mb-3">Produit</p>
                             <ul className="space-y-2 text-gray-400">
-                                <li><a href="#features" className="hover:text-purple-600 transition-colors">Fonctionnalités</a></li>
-                                <li><a href="#tarifs" className="hover:text-purple-600 transition-colors">Tarifs</a></li>
-                                <li><a href="#advantages" className="hover:text-purple-600 transition-colors">Avantages</a></li>
+                                <li><a href="#features" className="hover:text-[#7b5fa2] transition-colors">Fonctionnalités</a></li>
+                                <li><a href="#advantages" className="hover:text-[#7b5fa2] transition-colors">Avantages</a></li>
+                                <li><a href="#" className="hover:text-[#7b5fa2] transition-colors">Assistant IA</a></li>
                             </ul>
                         </div>
                         <div>
-                            <p className="font-semibold text-gray-700 mb-3">Entreprise</p>
+                            <p className="font-semibold text-gray-700 mb-3">Application</p>
                             <ul className="space-y-2 text-gray-400">
-                                <li><a href="#" className="hover:text-purple-600 transition-colors">À propos</a></li>
-                                <li><a href="#" className="hover:text-purple-600 transition-colors">Blog</a></li>
-                                <li><a href="#" className="hover:text-purple-600 transition-colors">Contact</a></li>
+                                <li><Link to="/dashboard" className="hover:text-[#7b5fa2] transition-colors">Tableau de bord</Link></li>
+                                <li><Link to="/inventory" className="hover:text-[#7b5fa2] transition-colors">Inventaire</Link></li>
+                                <li><Link to="/orders" className="hover:text-[#7b5fa2] transition-colors">Commandes</Link></li>
                             </ul>
                         </div>
                         <div>
                             <p className="font-semibold text-gray-700 mb-3">Compte</p>
                             <ul className="space-y-2 text-gray-400">
-                                <li><Link to="/login" className="hover:text-purple-600 transition-colors">Se connecter</Link></li>
-                                <li><Link to="/register" className="hover:text-purple-600 transition-colors">S'inscrire</Link></li>
+                                <li><Link to="/login" className="hover:text-[#7b5fa2] transition-colors">Se connecter</Link></li>
+                                <li><Link to="/register" className="hover:text-[#7b5fa2] transition-colors">S'inscrire</Link></li>
                             </ul>
                         </div>
                     </div>
