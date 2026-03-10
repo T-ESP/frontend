@@ -651,7 +651,8 @@
         "personal_info": {
             "title": "Informations personnelles",
             "firstname": "Prénom",
-            "lastname": "Nom"
+            "lastname": "Nom",
+            "phone": "Téléphone"
         },
         "email": {
             "title": "Changer l'adresse email",
@@ -690,7 +691,12 @@
             "password_success_title": "Mot de passe mis à jour",
             "password_success_msg": "Votre mot de passe a été modifié avec succès.",
             "logout_title": "Déconnexion",
-            "logout_msg": "Vous avez été déconnecté avec succès."
+            "logout_msg": "Vous avez été déconnecté avec succès.",
+            "fetch_error": "Impossible de charger votre profil.",
+            "info_success_title": "Profil mis à jour",
+            "info_success_msg": "Vos informations personnelles ont été modifiées avec succès.",
+            "update_error": "Échec de la mise à jour du profil.",
+            "email_error": "Échec du changement d'email."
         }
     },
     "ai_assistant": {

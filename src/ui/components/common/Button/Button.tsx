@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import type { ButtonProps } from "./index";
+import type { ButtonProps } from "./Button.types";
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
@@ -27,7 +27,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={`inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-medium focus:outline-none ${fullWidth ? "w-full" : ""
-          } ${variantClasses[variant]} ${className}`}
+          } ${variantClasses[variant as keyof typeof variantClasses]} ${className}`}
         {...props}
       >
         {children}

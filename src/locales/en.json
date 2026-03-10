@@ -666,7 +666,8 @@
         "personal_info": {
             "title": "Personal Information",
             "firstname": "First Name",
-            "lastname": "Last Name"
+            "lastname": "Last Name",
+            "phone": "Phone Number"
         },
         "email": {
             "title": "Change Email Address",
@@ -705,7 +706,12 @@
             "password_success_title": "Password Updated",
             "password_success_msg": "Your password has been successfully changed.",
             "logout_title": "Logout",
-            "logout_msg": "You have been successfully logged out."
+            "logout_msg": "You have been successfully logged out.",
+            "fetch_error": "Unable to load your profile.",
+            "info_success_title": "Profile Updated",
+            "info_success_msg": "Your personal information has been successfully modified.",
+            "update_error": "Failed to update profile.",
+            "email_error": "Failed to change email."
         }
     },
     "ai_assistant": {
