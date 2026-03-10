@@ -25,7 +25,7 @@ interface CategoryData {
   [key: string]: string | number; // Signature d'index pour Recharts
 }
 
-const COLORS = ['#9333ea', '#c084fc', '#6b21a8', '#d8b4fe', '#94a3b8'];
+const COLORS = ['#7b5fa2', '#a480d1', '#4d3c67', '#d7bff2', '#644d85'];
 
 export default function SalesPage() {
   const { t, i18n } = useTranslation();

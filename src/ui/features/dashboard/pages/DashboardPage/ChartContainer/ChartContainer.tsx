@@ -75,13 +75,13 @@ export function ChartContainer({ orders }: ChartContainerProps) {
         name: t('dashboard.charts.new_customers'),
         value: parseFloat(newPercentage.toFixed(1)),
         count: newCustomers,
-        color: "#9333ea"
+        color: "#7b5fa2"
       },
       {
         name: t('dashboard.charts.returning_customers'),
         value: parseFloat(returningPercentage.toFixed(1)),
         count: returningCustomers,
-        color: "#c084fc"
+        color: "#a480d1"
       },
     ];
   }, [orders, t]);
