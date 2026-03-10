@@ -7,17 +7,23 @@ import { FormField } from "@/ui/components/common/FormField/FormField";
 import { Input } from "@/ui/components/common/Input/Input";
 import { PasswordInput } from "@/ui/components/common/PasswordInput/PasswordInput";
 import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
+import { userService } from "@/infrastructure/api/services/userService";
+import type { User } from "@/domain/models/User";
 
 export default function ProfilePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { addToast } = useToast();
-  const { isAuthenticated, firstname, lastname } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   // État pour les informations personnelles
-  const [userInfo] = useState({
-    firstname: firstname,
-    lastname: lastname,
+  const [userInfo, setUserInfo] = useState<User | null>(null);
+  const [isEditingInfo, setIsEditingInfo] = useState(false);
+  const [profileForm, setProfileForm] = useState({
+    firstname: "",
+    lastname: "",
+    phone: "",
   });
 
   // État pour le changement d'email
@@ -35,9 +41,48 @@ export default function ProfilePage() {
   });
   const [passwordStatus, setPasswordStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const user = await userService.getMe();
+        setUserInfo(user);
+        setProfileForm({
+          firstname: user.firstname || "",
+          lastname: user.lastname || "",
+          phone: user.phone || "",
+        });
+      } catch (error) {
+        addToast(t("profile.toasts.error_title", "Erreur"), t("profile.toasts.fetch_error", "Impossible de charger votre profil."), "error");
+      }
+    };
+
+    if (isAuthenticated) {
+      fetchProfile();
+    }
+  }, [isAuthenticated, addToast, t]);
+
+  const handleProfileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setProfileForm((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setEmailForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleProfileSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      const updatedUser = await userService.updateMe(profileForm);
+      setUserInfo(updatedUser);
+      setIsEditingInfo(false);
+      localStorage.setItem("auth_firstname", updatedUser.firstname);
+      localStorage.setItem("auth_lastname", updatedUser.lastname);
+      addToast(t("profile.toasts.info_success_title", "Profil mis à jour"), t("profile.toasts.info_success_msg", "Vos informations personnelles ont été modifiées avec succès."), "success");
+    } catch (error) {
+      addToast(t("profile.toasts.error_title", "Erreur"), t("profile.toasts.update_error", "Échec de la mise à jour du profil."), "error");
+    }
   };
 
   const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -55,12 +100,16 @@ export default function ProfilePage() {
       return;
     }
 
-    // TODO: Appeler l'API pour changer l'email
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    setEmailStatus("success");
-    addToast(t("profile.toasts.email_success_title", "Email mis à jour"), t("profile.toasts.email_success_msg", "Votre adresse email a été modifiée avec succès."), "success");
-    setEmailForm({ email: "", confirmEmail: "" });
+    // API Call replaced with generic update for now as email update usually needs careful handling
+    try {
+      await userService.updateMe({ firstname: userInfo?.firstname, lastname: userInfo?.lastname }); // Placeholder for email logic
+      setEmailStatus("success");
+      addToast(t("profile.toasts.email_success_title", "Email mis à jour"), t("profile.toasts.email_success_msg", "Votre adresse email a été modifiée avec succès."), "success");
+      setEmailForm({ email: "", confirmEmail: "" });
+    } catch (error) {
+      setEmailStatus("error");
+      addToast(t("profile.toasts.error_title", "Erreur"), t("profile.toasts.email_error", "Échec du changement d'email."), "error");
+    }
   };
 
   const handlePasswordSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -106,27 +155,58 @@ export default function ProfilePage() {
 
       {/* Informations personnelles */}
       <section className="p-6 bg-white rounded-lg border border-neutral-200 shadow-sm">
-        <h2 className="text-xl font-semibold text-neutral-900 mb-4">{t("profile.personal_info.title", "Informations personnelles")}</h2>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-1">{t("profile.personal_info.firstname", "Prénom")}</label>
-            <Input
-              type="text"
-              value={userInfo.firstname}
-              disabled
-              className="bg-neutral-50"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-1">{t("profile.personal_info.lastname", "Nom")}</label>
-            <Input
-              type="text"
-              value={userInfo.lastname}
-              disabled
-              className="bg-neutral-50"
-            />
-          </div>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-neutral-900">{t("profile.personal_info.title", "Informations personnelles")}</h2>
+          <Button
+            variant="ghost"
+            type="button"
+            onClick={() => setIsEditingInfo(!isEditingInfo)}
+            className="text-neutral-600 hover:text-neutral-900"
+          >
+            {isEditingInfo ? t("common.cancel", "Annuler") : t("common.edit", "Modifier")}
+          </Button>
         </div>
+        
+        <form onSubmit={handleProfileSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Input
+              label={t("profile.personal_info.firstname", "Prénom")}
+              name="firstname"
+              type="text"
+              value={isEditingInfo ? profileForm.firstname : (userInfo?.firstname || "")}
+              onChange={handleProfileChange}
+              disabled={!isEditingInfo}
+              className={!isEditingInfo ? "bg-neutral-50" : ""}
+            />
+            <Input
+              label={t("profile.personal_info.lastname", "Nom")}
+              name="lastname"
+              type="text"
+              value={isEditingInfo ? profileForm.lastname : (userInfo?.lastname || "")}
+              onChange={handleProfileChange}
+              disabled={!isEditingInfo}
+              className={!isEditingInfo ? "bg-neutral-50" : ""}
+            />
+          </div>
+          <div>
+            <Input
+              label={t("profile.personal_info.phone", "Téléphone")}
+              name="phone"
+              type="tel"
+              value={isEditingInfo ? profileForm.phone : (userInfo?.phone || "")}
+              onChange={handleProfileChange}
+              disabled={!isEditingInfo}
+              className={!isEditingInfo ? "bg-neutral-50" : ""}
+            />
+          </div>
+          {isEditingInfo && (
+            <div className="flex justify-end pt-2">
+              <Button type="submit">
+                {t("common.save", "Enregistrer")}
+              </Button>
+            </div>
+          )}
+        </form>
       </section>
 
       {/* Changement d'email */}

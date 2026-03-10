@@ -15,6 +15,7 @@ import {
   AnimatePresence,
   MotionValue,
 } from "framer-motion";
+import { useAuth } from "@/ui/features/auth/hooks/useAuth";
 
 // ─── 3D Tilt card ─────────────────────────────────────────────────────────────
 function TiltCard({ children }: { children: React.ReactNode }) {
@@ -136,6 +137,7 @@ const SPARK = [30, 45, 38, 60, 55, 72, 65, 80, 74, 90, 84, 95, 100];
 export default function Hero() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const { isAuthenticated, email, firstname } = useAuth();
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -295,12 +297,25 @@ export default function Hero() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Link to="/login" className="hidden sm:block text-sm font-semibold text-gray-500 hover:text-gray-800 px-3 py-2 transition-colors">
-              Se connecter
-            </Link>
-            <Link to="/register" className="btn-primary text-white text-sm font-bold px-6 py-2.5 rounded-full">
-              S'inscrire
-            </Link>
+            {isAuthenticated ? (
+              <Link
+                to="/profile"
+                className="flex items-center justify-center w-10 h-10 rounded-full font-bold text-white shadow-[0_4px_14px_rgba(123,95,162,0.38)] transition-transform hover:scale-105"
+                style={{ background: "linear-gradient(135deg,#7b5fa2,#7b5fa2)" }}
+                title="Mon profil"
+              >
+                {email ? email.charAt(0).toUpperCase() : (firstname ? firstname.charAt(0).toUpperCase() : "U")}
+              </Link>
+            ) : (
+              <>
+                <Link to="/login" className="hidden sm:block text-sm font-semibold text-gray-500 hover:text-gray-800 px-3 py-2 transition-colors">
+                  Se connecter
+                </Link>
+                <Link to="/register" className="btn-primary text-white text-sm font-bold px-6 py-2.5 rounded-full">
+                  S'inscrire
+                </Link>
+              </>
+            )}
             <button className="md:hidden p-2 text-gray-600" onClick={() => setMobileOpen(o => !o)}>
               {mobileOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
@@ -318,7 +333,11 @@ export default function Hero() {
                   <a key={l} href={h} className="text-base font-bold text-gray-800" onClick={() => setMobileOpen(false)}>{l}</a>
                 ))}
                 <div className="border-t border-gray-100 pt-4">
-                  <Link to="/login" className="block text-center font-bold text-gray-500">Se connecter</Link>
+                  {isAuthenticated ? (
+                    <Link to="/profile" className="block text-center font-bold text-gray-500" onClick={() => setMobileOpen(false)}>Aller au profil</Link>
+                  ) : (
+                    <Link to="/login" className="block text-center font-bold text-gray-500" onClick={() => setMobileOpen(false)}>Se connecter</Link>
+                  )}
                 </div>
               </motion.div>
             )}

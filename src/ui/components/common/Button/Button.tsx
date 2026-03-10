@@ -19,6 +19,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         "bg-neutral200 text-neutral900 hover:bg-neutral300 focus:ring-2 focus:ring-neutral400",
       outline:
         "border border-border bg-white text-neutral900 hover:bg-neutral50 focus:ring-2 focus:ring-primary",
+      ghost:
+        "bg-transparent text-neutral600 hover:bg-neutral100 focus:ring-2 focus:ring-neutral200",
     };
 
     return (

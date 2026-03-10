@@ -51,6 +51,7 @@ export class HttpLoginUserGateway implements LoginUserGateway {
     localStorage.setItem('auth_token', token);
     localStorage.setItem('auth_firstname', firstname);
     localStorage.setItem('auth_lastname', lastname);
+    localStorage.setItem('auth_email', payload.email);
 
     return {
       success: true,

@@ -15,6 +15,7 @@ export function clearAuthToken() {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem("auth_firstname");
     localStorage.removeItem("auth_lastname");
+    localStorage.removeItem("auth_email");
   } catch {
     // ignore
   }
@@ -30,6 +31,7 @@ export function useAuth() {
 
   const firstname = useMemo(() => localStorage.getItem("auth_firstname") || "", []);
   const lastname = useMemo(() => localStorage.getItem("auth_lastname") || "", []);
+  const email = useMemo(() => localStorage.getItem("auth_email") || "", []);
 
   return {
     token,
@@ -37,6 +39,7 @@ export function useAuth() {
     role,
     firstname,
     lastname,
+    email,
   };
 }
 
