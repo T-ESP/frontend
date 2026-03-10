@@ -1,21 +1,25 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Logo } from "@/ui/components/common/Logo";
 import { Check, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@/ui/features/auth/hooks/useAuth";
 
 const BRAND = "#7b5fa2";
 
 export default function PricingPage() {
     const { t } = useTranslation();
+    const { isAuthenticated, firstname } = useAuth();
     const [isYearly, setIsYearly] = useState(false);
+    const location = useLocation();
+    const isAppMode = location.pathname === '/abonnement';
 
     const TIERS = [
         {
             name: t("pricing.tiers.starter"),
             description: t("pricing.tiers.starter_desc"),
-            priceMonthly: 29,
-            priceYearly: 290,
+            priceMonthly: isAuthenticated ? 19 : 29,
+            priceYearly: isAuthenticated ? 190 : 290,
             features: [
                 t("pricing.features.products_1k"),
                 t("pricing.features.dashboard_basic"),
@@ -30,13 +34,14 @@ export default function PricingPage() {
                 t("pricing.features.support_priority"),
             ],
             popular: false,
-            cta: t("pricing.cta.start_trial"),
+            cta: isAuthenticated ? "Plan Actuel" : t("pricing.cta.start_trial"),
+            isCurrent: isAuthenticated,
         },
         {
             name: t("pricing.tiers.professional"),
             description: t("pricing.tiers.professional_desc"),
-            priceMonthly: 99,
-            priceYearly: 990,
+            priceMonthly: isAuthenticated ? 79 : 99,
+            priceYearly: isAuthenticated ? 790 : 990,
             popular: true,
             features: [
                 t("pricing.features.products_50k"),
@@ -50,13 +55,14 @@ export default function PricingPage() {
                 t("pricing.features.erp_custom"),
                 t("pricing.features.account_manager"),
             ],
-            cta: t("pricing.cta.get_started"),
+            cta: isAuthenticated ? "Passer à Pro" : t("pricing.cta.get_started"),
+            isCurrent: false,
         },
         {
             name: t("pricing.tiers.enterprise"),
             description: t("pricing.tiers.enterprise_desc"),
-            priceMonthly: 299,
-            priceYearly: 2990,
+            priceMonthly: isAuthenticated ? 249 : 299,
+            priceYearly: isAuthenticated ? 2490 : 2990,
             popular: false,
             features: [
                 t("pricing.features.products_unlimited"),
@@ -68,34 +74,59 @@ export default function PricingPage() {
                 t("pricing.features.on_premise"),
             ],
             notIncluded: [],
-            cta: t("pricing.cta.contact_sales"),
+            cta: isAuthenticated ? "Contacter les ventes" : t("pricing.cta.contact_sales"),
+            isCurrent: false,
         },
     ];
 
     return (
         <div className="min-h-screen bg-white font-sans">
             {/* Navbar */}
-            <nav className="flex items-center justify-between px-8 md:px-16 py-5 border-b border-gray-100 bg-white sticky top-0 z-50">
-                <Link to="/" className="flex items-center gap-2">
-                    <Logo className="w-8 h-8" />
-                    <span className="text-lg font-bold text-gray-900 tracking-tight">Stocks</span>
-                </Link>
-                <div className="flex items-center gap-4">
-                    <Link to="/login" className="text-sm text-gray-700 font-medium transition-colors hover:opacity-70">
-                        Se connecter
+            {!isAppMode && (
+                <nav className="flex items-center justify-between px-8 md:px-16 py-5 border-b border-gray-100 bg-white sticky top-0 z-50">
+                    <Link to="/" className="flex items-center gap-2">
+                        <Logo className="w-8 h-8" />
+                        <span className="text-lg font-bold text-gray-900 tracking-tight">Stocks</span>
                     </Link>
-                    <Link
-                        to="/register"
-                        className="text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-opacity hover:opacity-90"
-                        style={{ backgroundColor: BRAND }}
-                    >
-                        Commencer gratuitement
-                    </Link>
-                </div>
-            </nav>
+                    <div className="flex items-center gap-4">
+                        {isAuthenticated ? (
+                            <>
+                                <span className="text-sm text-gray-700 font-medium">
+                                    Bonjour, {firstname || "Utilisateur"}
+                                </span>
+                                <Link
+                                    to="/dashboard"
+                                    className="text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-opacity hover:opacity-90"
+                                    style={{ backgroundColor: BRAND }}
+                                >
+                                    Mon Espace
+                                </Link>
+                            </>
+                        ) : (
+                            <>
+                                <Link to="/login" className="text-sm text-gray-700 font-medium transition-colors hover:opacity-70">
+                                    Se connecter
+                                </Link>
+                                <Link
+                                    to="/register"
+                                    className="text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-opacity hover:opacity-90"
+                                    style={{ backgroundColor: BRAND }}
+                                >
+                                    Commencer gratuitement
+                                </Link>
+                            </>
+                        )}
+                    </div>
+                </nav>
+            )}
 
             {/* Hero */}
             <div className="text-center pt-20 pb-12 px-8">
+                {isAuthenticated && (
+                    <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-sm font-bold shadow-sm">
+                        🎉 Tarifs préférentiels appliqués pour votre compte
+                    </div>
+                )}
                 <p className="text-sm font-semibold uppercase tracking-widest mb-4" style={{ color: BRAND }}>
                     Tarifs
                 </p>
@@ -151,13 +182,20 @@ export default function PricingPage() {
                                 {tier.name}
                             </h3>
                             <p className="text-gray-500 text-sm h-10">{tier.description}</p>
-                            <div className="mt-4 flex items-baseline justify-center gap-1">
-                                <span className="text-4xl font-extrabold text-gray-900">
-                                    €{isYearly ? tier.priceYearly : tier.priceMonthly}
-                                </span>
-                                <span className="text-gray-500">
-                                    /{isYearly ? t("pricing.billing.yearly").toLowerCase() : t("pricing.billing.monthly").toLowerCase()}
-                                </span>
+                            <div className="mt-4 flex flex-col items-center justify-center gap-1">
+                                <div className="flex items-baseline justify-center gap-1">
+                                    <span className="text-4xl font-extrabold text-gray-900">
+                                        €{isYearly ? tier.priceYearly : tier.priceMonthly}
+                                    </span>
+                                    <span className="text-gray-500">
+                                        /{isYearly ? t("pricing.billing.yearly").toLowerCase() : t("pricing.billing.monthly").toLowerCase()}
+                                    </span>
+                                </div>
+                                {isAuthenticated && !tier.isCurrent && (
+                                    <span className="text-xs text-emerald-600 font-semibold mt-1">
+                                        Prix membre appliqué
+                                    </span>
+                                )}
                             </div>
                         </div>
 
@@ -181,14 +219,17 @@ export default function PricingPage() {
                         </ul>
 
                         <Link
-                            to="/register"
+                            to={isAuthenticated ? "/dashboard" : "/register"}
                             className="block w-full py-3 rounded-xl font-semibold text-center text-sm transition-all"
                             style={
-                                tier.popular
-                                    ? { backgroundColor: BRAND, color: "white" }
-                                    : { backgroundColor: "#f3f4f6", color: "#111827" }
+                                tier.isCurrent
+                                    ? { backgroundColor: "#d4f0e0", color: "#27ae60", cursor: "default", pointerEvents: "none" }
+                                    : tier.popular
+                                        ? { backgroundColor: BRAND, color: "white" }
+                                        : { backgroundColor: "#f3f4f6", color: "#111827" }
                             }
                         >
+                            {tier.isCurrent && <Check size={16} className="inline mr-2" />}
                             {tier.cta}
                         </Link>
                     </div>
@@ -214,10 +255,12 @@ export default function PricingPage() {
             </div>
 
             {/* Footer CTA */}
-            <div className="text-center py-16 px-8 bg-white border-t border-gray-100">
-                <p className="text-gray-500 text-sm mb-4">Des questions ? <a href="mailto:contact@stocks.app" className="font-semibold" style={{ color: BRAND }}>Contactez-nous</a></p>
-                <Link to="/" className="text-sm text-gray-400 hover:text-gray-600 transition-colors">← Retour à l'accueil</Link>
-            </div>
+            {!isAppMode && (
+                <div className="text-center py-16 px-8 bg-white border-t border-gray-100">
+                    <p className="text-gray-500 text-sm mb-4">Des questions ? <a href="mailto:contact@stocks.app" className="font-semibold" style={{ color: BRAND }}>Contactez-nous</a></p>
+                    <Link to="/" className="text-sm text-gray-400 hover:text-gray-600 transition-colors">← Retour à l'accueil</Link>
+                </div>
+            )}
         </div>
     );
 }

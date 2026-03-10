@@ -180,6 +180,14 @@ export const ROUTES: Record<string, RouteMeta> = {
     hiddenInMenu: true,
     title: 'StockS - Tarifs',
   },
+  APP_PRICING: {
+    path: '/abonnement',
+    label: 'Abonnement',
+    page: 'Pricing',
+    layout: 'app',
+    restricted: true,
+    title: 'StockS - Abonnement',
+  },
 
   TERMS: {
     path: '/mentions-legales',

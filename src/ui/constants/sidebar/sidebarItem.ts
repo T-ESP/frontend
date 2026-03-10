@@ -1,5 +1,5 @@
 import type { SidebarItemType } from "@/ui/components/layouts/Sidebar/Sidebar.types";
-import { Box, Brain, ChartLine, LayoutDashboard, LogOut, Package, Settings, ShoppingCartIcon } from "lucide-react";
+import { Box, Brain, ChartLine, LayoutDashboard, LogOut, Package, Settings, ShoppingCartIcon, CreditCard } from "lucide-react";
 
 export const items: SidebarItemType[][] = [
   [
@@ -16,6 +16,7 @@ export const items: SidebarItemType[][] = [
     // { label: "sidebar.team", to: "/team", icon: Users }
   ],
   [
+    { label: "sidebar.pricing", to: "/abonnement", icon: CreditCard },
     { label: "sidebar.profile", to: "/profile", icon: Settings },
     { label: "sidebar.logout", to: "/logout", icon: LogOut }
   ]
