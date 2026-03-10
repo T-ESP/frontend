@@ -45,7 +45,7 @@ export default function Preview() {
                 to="/register"
                 className="inline-flex items-center gap-2 text-white font-bold text-sm px-8 py-4 rounded-2xl transition-all duration-300"
                 style={{
-                  background: "linear-gradient(135deg, #7b5fa2 0%, #9d7bdd 100%)",
+                  background: "linear-gradient(135deg, #7b5fa2 0%, #7b5fa2 100%)",
                   boxShadow: "0 6px 28px rgba(123,95,162,0.36), inset 0 1px 0 rgba(255,255,255,0.18)",
                 }}
               >

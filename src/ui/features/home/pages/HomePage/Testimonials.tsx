@@ -87,7 +87,7 @@ export default function Testimonials() {
                   className="group bg-[#fafafc] rounded-2xl p-5 border border-gray-100 hover:border-[#7b5fa2]/20 transition-all duration-300"
                   whileHover={{ y: -3, boxShadow: "0 12px 32px rgba(123,95,162,0.09)" }}
                 >
-                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#7b5fa2] to-[#9d7bdd] flex items-center justify-center text-white mb-3 shadow-sm">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#7b5fa2] to-[#7b5fa2] flex items-center justify-center text-white mb-3 shadow-sm">
                     {adv.icon}
                   </div>
                   <p className="text-sm font-bold text-gray-800 mb-1">{adv.title}</p>

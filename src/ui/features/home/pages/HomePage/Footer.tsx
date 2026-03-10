@@ -22,7 +22,7 @@ export default function Footer() {
                     {/* Brand */}
                     <div className="lg:col-span-1">
                         <div className="flex items-center gap-2.5 mb-4">
-                            <div className="p-1.5 rounded-xl" style={{ background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)", boxShadow: "0 4px 14px rgba(123,95,162,0.3)" }}>
+                            <div className="p-1.5 rounded-xl" style={{ background: "linear-gradient(135deg,#7b5fa2,#7b5fa2)", boxShadow: "0 4px 14px rgba(123,95,162,0.3)" }}>
                                 <Logo className="w-5 h-5 brightness-0 invert" />
                             </div>
                             <span className="text-[1.05rem] font-extrabold text-gray-900 tracking-tight">Stocks</span>
@@ -36,7 +36,7 @@ export default function Footer() {
                             to="/register"
                             className="inline-flex items-center gap-2 mt-6 text-white text-xs font-bold px-5 py-2.5 rounded-full transition-all"
                             style={{
-                                background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)",
+                                background: "linear-gradient(135deg,#7b5fa2,#7b5fa2)",
                                 boxShadow: "0 4px 18px rgba(123,95,162,0.3)",
                             }}
                         >

@@ -57,7 +57,7 @@ export default function AISection() {
                   viewport={{ once: true }}
                   className="flex items-start gap-4"
                 >
-                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#7b5fa2] to-[#9d7bdd] flex items-center justify-center text-white shrink-0 mt-0.5 shadow-sm">
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#7b5fa2] to-[#7b5fa2] flex items-center justify-center text-white shrink-0 mt-0.5 shadow-sm">
                     {p.icon}
                   </div>
                   <span className="text-gray-500 text-sm font-light leading-relaxed">{p.text}</span>
@@ -69,7 +69,7 @@ export default function AISection() {
               to="/register"
               className="inline-flex items-center gap-2 font-bold text-sm px-8 py-4 rounded-2xl text-white transition-all duration-300"
               style={{
-                background: "linear-gradient(135deg, #7b5fa2 0%, #9d7bdd 100%)",
+                background: "linear-gradient(135deg, #7b5fa2 0%, #7b5fa2 100%)",
                 boxShadow: "0 6px 28px rgba(123,95,162,0.36), inset 0 1px 0 rgba(255,255,255,0.18)",
               }}
             >
@@ -98,7 +98,7 @@ export default function AISection() {
               <div className="flex items-center justify-between pb-4 border-b border-gray-100">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm"
-                    style={{ background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)" }}>
+                    style={{ background: "linear-gradient(135deg,#7b5fa2,#7b5fa2)" }}>
                     <Sparkles size={15} />
                   </div>
                   <div>
@@ -165,7 +165,7 @@ export default function AISection() {
                   className="flex-1 bg-transparent text-sm text-gray-400 outline-none placeholder:text-gray-300 cursor-default font-light"
                 />
                 <div className="w-8 h-8 rounded-xl flex items-center justify-center"
-                  style={{ background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)" }}>
+                  style={{ background: "linear-gradient(135deg,#7b5fa2,#7b5fa2)" }}>
                   <ChevronRight size={14} className="text-white" />
                 </div>
               </div>

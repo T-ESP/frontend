@@ -198,7 +198,7 @@ export default function Features() {
           <div className="bento-card rounded-[2.2rem] md:col-span-2 relative overflow-hidden group">
             <AIChartVisual />
             <div className="absolute top-0 left-0 p-8 md:p-10 w-[85%] md:w-[60%] flex flex-col justify-end h-full z-10">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#7b5fa2] to-[#9d7bdd] flex items-center justify-center text-white mb-6 shadow-[0_8px_20px_rgba(123,95,162,0.3)] mt-auto">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#7b5fa2] to-[#7b5fa2] flex items-center justify-center text-white mb-6 shadow-[0_8px_20px_rgba(123,95,162,0.3)] mt-auto">
                 <Sparkles size={22} />
               </div>
               <h3 className="text-[1.6rem] font-[800] text-gray-900 tracking-tight mb-2.5">Prévisions Intelligentes</h3>

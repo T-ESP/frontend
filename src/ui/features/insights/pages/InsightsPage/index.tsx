@@ -17,15 +17,15 @@ import { KpiCard } from "@/ui/components/common/KpiCard";
 // Colors for charts (variants of primary purple)
 const COLORS = {
   // ABC Analysis
-  A: "#6d28d9", // Primary Dark (Violet 700)
-  B: "#8b5cf6", // Primary (Violet 500)
-  C: "#c4b5fd", // Primary Light (Violet 300)
+  A: "#362a49", // Primary Dark
+  B: "#644d85", // Primary
+  C: "#a480d1", // Primary Light
 
   // Stock Health
-  stockout: "#4c1d95", // Deepest (Violet 900)
-  low: "#7c3aed",      // Deep (Violet 600)
-  healthy: "#a78bfa",  // Medium (Violet 400)
-  overstock: "#ddd6fe" // Soft (Violet 200)
+  stockout: "#1d162a", // Deepest
+  low: "#4d3c67",      // Deep
+  healthy: "#8b65bc",  // Medium 
+  overstock: "#d7bff2" // Soft
 };
 
 export default function InsightsPage() {

@@ -205,7 +205,7 @@ export default function Hero() {
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300&display=swap');
 
         .grad-text {
-          background: linear-gradient(120deg, #5b3f80 0%, #9d7bdd 50%, #7b5fa2 100%);
+          background: linear-gradient(120deg, #7b5fa2 0%, #7b5fa2 50%, #7b5fa2 100%);
           background-size: 200% auto;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
@@ -232,7 +232,7 @@ export default function Hero() {
           border: 1px solid rgba(123,95,162,0.14);
         }
         .btn-primary {
-          background: linear-gradient(135deg, #7b5fa2, #9d7bdd);
+          background: linear-gradient(135deg, #7b5fa2, #7b5fa2);
           box-shadow: 0 6px 28px rgba(123,95,162,0.36), inset 0 1px 0 rgba(255,255,255,0.18);
           transition: all 0.24s cubic-bezier(0.16,1,0.3,1);
         }
@@ -280,7 +280,7 @@ export default function Hero() {
               whileHover={{ scale: 1.1, rotate: 5 }}
               transition={{ type: "spring", stiffness: 400 }}
               className="p-1.5 rounded-xl"
-              style={{ background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)", boxShadow: "0 4px 14px rgba(123,95,162,0.38)" }}
+              style={{ background: "linear-gradient(135deg,#7b5fa2,#7b5fa2)", boxShadow: "0 4px 14px rgba(123,95,162,0.38)" }}
             >
               <Logo className="w-5 h-5 brightness-0 invert" />
             </motion.div>
@@ -346,7 +346,7 @@ export default function Hero() {
               className="inline-flex items-center gap-2 pl-1.5 pr-5 py-1.5 rounded-full glass-purple mb-8"
             >
               <div className="w-6 h-6 rounded-full flex items-center justify-center"
-                style={{ background: "linear-gradient(135deg,#7b5fa2,#b08ee0)" }}>
+                style={{ background: "linear-gradient(135deg,#7b5fa2,#7b5fa2)" }}>
                 <Sparkles size={12} className="text-white" />
               </div>
               <span className="text-[11px] font-bold text-[#7b5fa2] tracking-wide uppercase">IA au service de vos stocks</span>
@@ -380,7 +380,7 @@ export default function Hero() {
               </Link>
               <button className="btn-ghost inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-[0.95rem] font-bold text-gray-700">
                 <div className="w-7 h-7 rounded-full flex items-center justify-center"
-                  style={{ background: "linear-gradient(135deg,#7b5fa2,#b08ee0)", boxShadow: "0 4px 14px rgba(123,95,162,0.3)" }}>
+                  style={{ background: "linear-gradient(135deg,#7b5fa2,#7b5fa2)", boxShadow: "0 4px 14px rgba(123,95,162,0.3)" }}>
                   <Play size={11} className="text-white fill-white ml-0.5" />
                 </div>
                 Voir la démo
@@ -518,7 +518,7 @@ export default function Hero() {
                     style={{ background: "linear-gradient(135deg,rgba(123,95,162,0.07),rgba(157,123,221,0.06))", border: "1px solid rgba(123,95,162,0.09)" }}>
                     <div className="flex items-center gap-4">
                       <div className="w-11 h-11 rounded-2xl flex items-center justify-center"
-                        style={{ background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)", boxShadow: "0 8px 20px rgba(123,95,162,0.28)" }}>
+                        style={{ background: "linear-gradient(135deg,#7b5fa2,#7b5fa2)", boxShadow: "0 8px 20px rgba(123,95,162,0.28)" }}>
                         <TrendingUp size={18} className="text-white" />
                       </div>
                       <div>
