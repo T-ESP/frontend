@@ -17,7 +17,7 @@ export const revenueData : RevenueData[] = [
 ];
 
 export const customerData : Customer[] = [
-  { name: "New Customers", value: 68.4, count: 34249, color: "#8b5cf6" },
+  { name: "New Customers", value: 68.4, count: 34249, color: "#7b5fa2" },
   { name: "Returning", value: 31.6, count: 15824, color: "#06b6d4" },
 ];
 

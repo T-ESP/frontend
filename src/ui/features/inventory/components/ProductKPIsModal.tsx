@@ -344,8 +344,8 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                                     <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                                   </linearGradient>
                                   <linearGradient id="colorBuy" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#6D4E98" stopOpacity={0.1} />
-                                    <stop offset="95%" stopColor="#6D4E98" stopOpacity={0} />
+                                    <stop offset="5%" stopColor="#7b5fa2" stopOpacity={0.1} />
+                                    <stop offset="95%" stopColor="#7b5fa2" stopOpacity={0} />
                                   </linearGradient>
                                 </defs>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -356,7 +356,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
                                   <Area type="monotone" dataKey="price" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorSell)" />
                                 )}
                                 {kpis.priceEvolution.buying_price_history.length > 0 && kpis.priceEvolution.selling_price_history.length === 0 && (
-                                  <Area type="monotone" dataKey="price" stroke="#6D4E98" strokeWidth={3} fillOpacity={1} fill="url(#colorBuy)" />
+                                  <Area type="monotone" dataKey="price" stroke="#7b5fa2" strokeWidth={3} fillOpacity={1} fill="url(#colorBuy)" />
                                 )}
                               </AreaChart>
                             </ResponsiveContainer>
