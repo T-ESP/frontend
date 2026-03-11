@@ -8,16 +8,28 @@ const advantages = [
   { icon: <Clock size={18} />, title: "Support 24/7", desc: "Notre équipe expert disponible à tout moment." },
 ];
 
-const partners = [
-  { initials: "INT", name: "Intermarché", stores: "250 magasins connectés", color: "rgba(239,68,68,0.08)", text: "#ef4444" },
-  { initials: "CAR", name: "Carrefour", stores: "180 magasins connectés", color: "rgba(123,95,162,0.15)", text: "#7b5fa2" },
-  { initials: "AUC", name: "Auchan", stores: "120 magasins connectés", color: "rgba(16,185,129,0.08)", text: "#10b981" },
-];
-
 const fadeUp: any = {
   hidden: { opacity: 0, y: 24, filter: "blur(5px)" },
   show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] } },
 };
+
+const steps = [
+  {
+    num: "01",
+    title: "Connectez",
+    desc: "Ajoutez vos produits, fournisseurs et entrepôts en quelques minutes depuis l'interface ou via import CSV.",
+  },
+  {
+    num: "02",
+    title: "Configurez",
+    desc: "Paramétrez vos seuils d'alerte, vos règles de réassort automatique et les accès de votre équipe.",
+  },
+  {
+    num: "03",
+    title: "Pilotez",
+    desc: "Suivez vos stocks en temps réel, recevez des alertes intelligentes et laissez l'IA gérer le reste.",
+  },
+];
 
 export default function Testimonials() {
   return (
@@ -44,7 +56,7 @@ export default function Testimonials() {
             Pourquoi choisir Stocks&nbsp;?
           </h2>
           <p className="text-purple-300/50 text-lg font-light max-w-xl leading-relaxed">
-            Rejoignez les grandes enseignes qui nous font confiance pour optimiser chaque aspect de leur gestion.
+            Conçu pour les gérants de commerce indépendant, les responsables logistique et les équipes e-commerce.
           </p>
         </motion.div>
 
@@ -59,9 +71,9 @@ export default function Testimonials() {
               className="flex flex-col gap-4"
             >
               {[
-                { title: "Déploiement en 48h", desc: "Mise en place sans interruption de votre activité." },
-                { title: "Formation incluse", desc: "Accompagnement complet de vos équipes dès le jour 1." },
-                { title: "Intégration facile", desc: "Compatible ERP, caisse, et tous vos outils existants." },
+                { title: "Prise en main rapide", desc: "Interface pensée pour les non-techniciens — aucune formation longue requise." },
+                { title: "Documentation intégrée", desc: "Guides et explications disponibles directement dans l'application." },
+                { title: "Données centralisées", desc: "Stocks, commandes et alertes réunis dans une seule interface unifiée." },
               ].map((item, i) => (
                 <motion.div key={i} variants={fadeUp} className="flex items-start gap-3.5">
                   <div className="w-6 h-6 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0 mt-0.5">
@@ -97,7 +109,7 @@ export default function Testimonials() {
             </motion.div>
           </div>
 
-          {/* Right — partner card */}
+          {/* Right — Comment ça marche */}
           <motion.div
             initial={{ opacity: 0, x: 32, filter: "blur(8px)" }}
             whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
@@ -106,49 +118,33 @@ export default function Testimonials() {
             className="bg-white rounded-[2rem] border border-gray-100 p-8"
             style={{ boxShadow: "0 4px 40px rgba(123,95,162,0.07)" }}
           >
-            <div className="flex items-center justify-between mb-7">
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-[0.18em]">Enseignes partenaires</p>
-              <span className="text-sm font-extrabold text-[#7b5fa2]">500+ clients</span>
-            </div>
+            <p className="text-[11px] font-bold text-gray-400 uppercase tracking-[0.18em] mb-8">Comment ça marche</p>
 
-            <div className="flex flex-col gap-3 mb-8">
-              {partners.map((p, i) => (
-                  <motion.div
+            <div className="flex flex-col gap-8">
+              {steps.map((step, i) => (
+                <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 14 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.45, delay: 0.25 + i * 0.1 }}
+                  transition={{ duration: 0.5, delay: 0.2 + i * 0.12 }}
                   viewport={{ once: true }}
-                  className="group flex items-center justify-between bg-gray-50/60 rounded-2xl px-5 py-4 border border-gray-100 hover:border-[#7b5fa2]/20 transition-all duration-300"
-                  style={{ boxShadow: "0 1px 8px rgba(0,0,0,0.03)" }}
+                  className="flex items-start gap-5"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="w-11 h-11 rounded-xl flex items-center justify-center text-[11px] font-extrabold shrink-0"
-                      style={{ background: p.color, color: p.text }}>
-                      {p.initials}
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-gray-900">{p.name}</p>
-                      <p className="text-xs text-gray-500 font-light mt-0.5">{p.stores}</p>
-                    </div>
+                  <div
+                    className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-[12px] font-[900] text-white"
+                    style={{ background: "linear-gradient(135deg, #7b5fa2, #9d7bdd)" }}
+                  >
+                    {step.num}
                   </div>
-                  <div className="w-6 h-6 rounded-full bg-emerald-50 flex items-center justify-center">
-                    <Check size={12} className="text-emerald-500" strokeWidth={3} />
+                  <div>
+                    <p className="text-sm font-bold text-gray-900 mb-1">{step.title}</p>
+                    <p className="text-xs text-gray-500 font-light leading-relaxed">{step.desc}</p>
                   </div>
                 </motion.div>
               ))}
             </div>
-
-            <div className="flex items-center justify-between pt-5 border-t border-gray-100">
-              <div className="flex items-center gap-0.5">
-                {[...Array(5)].map((_, i) => <span key={i} className="text-[#7b5fa2] text-base">★</span>)}
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-extrabold text-gray-900">4.9/5</span>
-                <span className="text-xs text-gray-500 font-light">satisfaction moyenne</span>
-              </div>
-            </div>
           </motion.div>
+
         </div>
       </div>
     </section>

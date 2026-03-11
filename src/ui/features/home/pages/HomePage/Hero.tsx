@@ -396,7 +396,7 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
             >
-              Ne tombez plus jamais en rupture. Notre IA anticipe la demande avec 94% de précision et automatise vos réassorts en 2 clics.
+              Ne tombez plus jamais en rupture. Notre IA anticipe la demande et automatise vos réassorts — en 2 clics.
             </motion.p>
 
             <motion.div
@@ -418,6 +418,15 @@ export default function Hero() {
                 className="btn-ghost inline-flex items-center gap-2 text-white font-bold px-8 py-4 rounded-2xl text-[0.95rem]">
                 Essai gratuit 14 jours <ChevronRight size={18} />
               </Link>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.55, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-6 text-[13px] font-medium text-purple-200/40 opacity-75"
+            >
+              Conçu pour les gérants de commerce, les responsables logistique et les équipes e-commerce.
             </motion.div>
 
             <motion.div
@@ -555,10 +564,10 @@ export default function Hero() {
                 className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 w-full"
               >
                 {[
-                  { value: "10+", label: "Modules disponibles" },
-                  { value: "−30%", label: "De surstockage moyen" },
+                  { value: "Temps réel", label: "Synchronisation globale" },
+                  { value: "Centralisé", label: "Gestion des commandes" },
                   { value: "En direct", label: "Alertes prix & stocks" },
-                  { value: "Inclus", label: "Assistant IA intégré" },
+                  { value: "Inclus", label: "Assistant IA interactif" },
                 ].map((stat, i) => (
                   <div key={i} className="flex flex-col items-center text-center">
                     <span className="text-3xl font-[900] text-white tracking-[-0.03em] leading-none mb-2">{stat.value}</span>
