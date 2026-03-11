@@ -31,12 +31,12 @@ export default function Preview() {
               Aperçu plateforme
             </div>
 
-            <h2 className="text-[clamp(2.2rem,4.5vw,4rem)] font-[900] text-gray-900 tracking-[-0.035em] leading-[1.05] mb-6">
+            <h2 className="text-[clamp(2.2rem,4.5vw,4rem)] font-[900] text-white tracking-[-0.035em] leading-[1.05] mb-6">
               Tout ce dont vous avez besoin,<br />
               <span className="text-[#7b5fa2]">en un seul endroit.</span>
             </h2>
 
-            <p className="text-gray-400 text-lg font-light leading-relaxed mb-10 max-w-md">
+            <p className="text-purple-300/50 text-lg font-light leading-relaxed mb-10 max-w-md">
               Stocks centralise vos données, vos équipes et vos décisions. Du suivi des stocks à la facturation — tout connecté, tout accessible.
             </p>
 
@@ -53,7 +53,7 @@ export default function Preview() {
               </Link>
               <a
                 href="#features"
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-500 hover:text-[#7b5fa2] transition-colors self-center"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-purple-200/60 hover:text-[#7b5fa2] transition-colors self-center"
               >
                 Toutes les fonctionnalités <ArrowUpRight size={14} />
               </a>
@@ -79,8 +79,8 @@ export default function Preview() {
                 className="rounded-[1.4rem] p-6 border transition-all duration-300 cursor-default"
                 style={{ background: s.bg, borderColor: s.border }}
               >
-                <p className="text-[1.8rem] font-[900] text-gray-900 tracking-tight leading-none mb-2">{s.value}</p>
-                <p className="text-xs text-gray-400 font-light leading-snug">{s.label}</p>
+                <p className="text-[1.8rem] font-[900] text-white tracking-tight leading-none mb-2">{s.value}</p>
+                <p className="text-xs text-purple-300/50 font-light leading-snug">{s.label}</p>
               </motion.div>
             ))}
           </motion.div>

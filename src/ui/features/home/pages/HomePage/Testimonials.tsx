@@ -10,7 +10,7 @@ const advantages = [
 
 const partners = [
   { initials: "INT", name: "Intermarché", stores: "250 magasins connectés", color: "rgba(239,68,68,0.08)", text: "#ef4444" },
-  { initials: "CAR", name: "Carrefour", stores: "180 magasins connectés", color: "rgba(123,95,162,0.08)", text: "#7b5fa2" },
+  { initials: "CAR", name: "Carrefour", stores: "180 magasins connectés", color: "rgba(123,95,162,0.15)", text: "#7b5fa2" },
   { initials: "AUC", name: "Auchan", stores: "120 magasins connectés", color: "rgba(16,185,129,0.08)", text: "#10b981" },
 ];
 
@@ -40,10 +40,10 @@ export default function Testimonials() {
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#7b5fa2]/20 bg-[#7b5fa2]/5 text-[#7b5fa2] text-[11px] font-bold uppercase tracking-[0.18em] mb-7">
             Avantages
           </div>
-          <h2 className="text-[clamp(2.2rem,4.5vw,4rem)] font-[900] text-gray-900 tracking-[-0.035em] leading-[1.05] mb-5">
+          <h2 className="text-[clamp(2.2rem,4.5vw,4rem)] font-[900] text-white tracking-[-0.035em] leading-[1.05] mb-5">
             Pourquoi choisir Stocks&nbsp;?
           </h2>
-          <p className="text-gray-400 text-lg font-light max-w-xl leading-relaxed">
+          <p className="text-purple-300/50 text-lg font-light max-w-xl leading-relaxed">
             Rejoignez les grandes enseignes qui nous font confiance pour optimiser chaque aspect de leur gestion.
           </p>
         </motion.div>
@@ -68,8 +68,8 @@ export default function Testimonials() {
                     <Check size={12} className="text-emerald-500" strokeWidth={3} />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-gray-800">{item.title}</p>
-                    <p className="text-sm text-gray-400 font-light mt-0.5">{item.desc}</p>
+                    <p className="text-sm font-bold text-gray-100">{item.title}</p>
+                    <p className="text-sm text-purple-300/50 font-light mt-0.5">{item.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -84,14 +84,14 @@ export default function Testimonials() {
               {advantages.map((adv, i) => (
                 <motion.div
                   key={i} variants={fadeUp}
-                  className="group bg-[#fafafc] rounded-2xl p-5 border border-gray-100 hover:border-[#7b5fa2]/20 transition-all duration-300"
+                  className="group bg-[#0c071e] rounded-2xl p-5 border border-white/10 hover:border-[#7b5fa2]/20 transition-all duration-300"
                   whileHover={{ y: -3, boxShadow: "0 12px 32px rgba(123,95,162,0.09)" }}
                 >
                   <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#7b5fa2] to-[#7b5fa2] flex items-center justify-center text-white mb-3 shadow-sm">
                     {adv.icon}
                   </div>
-                  <p className="text-sm font-bold text-gray-800 mb-1">{adv.title}</p>
-                  <p className="text-xs text-gray-400 font-light leading-relaxed">{adv.desc}</p>
+                  <p className="text-sm font-bold text-gray-100 mb-1">{adv.title}</p>
+                  <p className="text-xs text-purple-300/50 font-light leading-relaxed">{adv.desc}</p>
                 </motion.div>
               ))}
             </motion.div>
@@ -103,11 +103,11 @@ export default function Testimonials() {
             whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
-            className="bg-[#fafafc] rounded-[2rem] border border-gray-100 p-8"
+            className="bg-[#0c071e] rounded-[2rem] border border-white/10 p-8"
             style={{ boxShadow: "0 4px 40px rgba(123,95,162,0.07)" }}
           >
             <div className="flex items-center justify-between mb-7">
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-[0.18em]">Enseignes partenaires</p>
+              <p className="text-[11px] font-bold text-purple-300/50 uppercase tracking-[0.18em]">Enseignes partenaires</p>
               <span className="text-sm font-extrabold text-[#7b5fa2]">500+ clients</span>
             </div>
 
@@ -119,7 +119,7 @@ export default function Testimonials() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.45, delay: 0.25 + i * 0.1 }}
                   viewport={{ once: true }}
-                  className="group flex items-center justify-between bg-white rounded-2xl px-5 py-4 border border-gray-100 hover:border-[#7b5fa2]/20 transition-all duration-300"
+                  className="group flex items-center justify-between bg-[#120b29] rounded-2xl px-5 py-4 border border-white/10 hover:border-[#7b5fa2]/20 transition-all duration-300"
                   style={{ boxShadow: "0 1px 8px rgba(0,0,0,0.03)" }}
                 >
                   <div className="flex items-center gap-4">
@@ -128,8 +128,8 @@ export default function Testimonials() {
                       {p.initials}
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-gray-800">{p.name}</p>
-                      <p className="text-xs text-gray-400 font-light mt-0.5">{p.stores}</p>
+                      <p className="text-sm font-bold text-gray-100">{p.name}</p>
+                      <p className="text-xs text-purple-300/50 font-light mt-0.5">{p.stores}</p>
                     </div>
                   </div>
                   <div className="w-6 h-6 rounded-full bg-emerald-50 flex items-center justify-center">
@@ -139,13 +139,13 @@ export default function Testimonials() {
               ))}
             </div>
 
-            <div className="flex items-center justify-between pt-5 border-t border-gray-100">
+            <div className="flex items-center justify-between pt-5 border-t border-white/10">
               <div className="flex items-center gap-0.5">
                 {[...Array(5)].map((_, i) => <span key={i} className="text-[#7b5fa2] text-base">★</span>)}
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-extrabold text-gray-900">4.9/5</span>
-                <span className="text-xs text-gray-400 font-light">satisfaction moyenne</span>
+                <span className="text-sm font-extrabold text-white">4.9/5</span>
+                <span className="text-xs text-purple-300/50 font-light">satisfaction moyenne</span>
               </div>
             </div>
           </motion.div>

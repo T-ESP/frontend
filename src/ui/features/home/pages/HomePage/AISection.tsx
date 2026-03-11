@@ -38,12 +38,12 @@ export default function AISection() {
               Intelligence Artificielle
             </div>
 
-            <h2 className="text-[clamp(2.2rem,4vw,3.8rem)] font-[900] text-gray-900 tracking-[-0.035em] leading-[1.05] mb-6">
+            <h2 className="text-[clamp(2.2rem,4vw,3.8rem)] font-[900] text-white tracking-[-0.035em] leading-[1.05] mb-6">
               Parlez à vos données<br />
               <span className="text-[#7b5fa2]">comme à un ami.</span>
             </h2>
 
-            <p className="text-gray-400 text-lg font-light leading-relaxed mb-10 max-w-md">
+            <p className="text-purple-300/50 text-lg font-light leading-relaxed mb-10 max-w-md">
               Notre assistant IA analyse votre historique, anticipe vos besoins et vous guide vers les meilleures décisions — en langage naturel.
             </p>
 
@@ -60,7 +60,7 @@ export default function AISection() {
                   <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#7b5fa2] to-[#7b5fa2] flex items-center justify-center text-white shrink-0 mt-0.5 shadow-sm">
                     {p.icon}
                   </div>
-                  <span className="text-gray-500 text-sm font-light leading-relaxed">{p.text}</span>
+                  <span className="text-purple-200/60 text-sm font-light leading-relaxed">{p.text}</span>
                 </motion.li>
               ))}
             </ul>
@@ -86,7 +86,7 @@ export default function AISection() {
             className="hidden lg:block"
           >
             <div
-              className="rounded-[2.4rem] p-8 border border-gray-100 space-y-5"
+              className="rounded-[2.4rem] p-8 border border-white/10 space-y-5"
               style={{
                 background: "rgba(255,255,255,0.85)",
                 backdropFilter: "blur(24px)",
@@ -95,14 +95,14 @@ export default function AISection() {
               }}
             >
               {/* Chat header */}
-              <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+              <div className="flex items-center justify-between pb-4 border-b border-white/10">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm"
                     style={{ background: "linear-gradient(135deg,#7b5fa2,#7b5fa2)" }}>
                     <Sparkles size={15} />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-gray-900">Assistant Stocks IA</p>
+                    <p className="text-sm font-bold text-white">Assistant Stocks IA</p>
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                       <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">En ligne</span>
@@ -125,7 +125,7 @@ export default function AISection() {
                   <div
                     className={`text-[13px] px-5 py-3.5 rounded-2xl leading-relaxed max-w-[85%] ${m.role === "user"
                       ? "bg-gray-900 text-white font-medium rounded-tr-none"
-                      : "text-gray-700 font-light rounded-tl-none border border-gray-100"
+                      : "text-gray-200 font-light rounded-tl-none border border-white/10"
                       }`}
                     style={m.role === "ai" ? {
                       background: "rgba(255,255,255,0.95)",
@@ -145,7 +145,7 @@ export default function AISection() {
 
               {/* Typing indicator */}
               <div className="flex justify-start">
-                <div className="flex items-center gap-1.5 px-4 py-3 rounded-full border border-gray-100 bg-gray-50">
+                <div className="flex items-center gap-1.5 px-4 py-3 rounded-full border border-white/10 bg-[#120b29]/5">
                   {[0, 0.15, 0.3].map((delay, i) => (
                     <motion.div
                       key={i}
@@ -158,11 +158,11 @@ export default function AISection() {
               </div>
 
               {/* Input bar */}
-              <div className="flex items-center gap-3 mt-2 bg-gray-50 rounded-2xl px-4 py-3 border border-gray-100">
+              <div className="flex items-center gap-3 mt-2 bg-[#120b29]/5 rounded-2xl px-4 py-3 border border-white/10">
                 <input
                   readOnly
                   placeholder="Posez votre question..."
-                  className="flex-1 bg-transparent text-sm text-gray-400 outline-none placeholder:text-gray-300 cursor-default font-light"
+                  className="flex-1 bg-transparent text-sm text-purple-300/50 outline-none placeholder:text-gray-300 cursor-default font-light"
                 />
                 <div className="w-8 h-8 rounded-xl flex items-center justify-center"
                   style={{ background: "linear-gradient(135deg,#7b5fa2,#7b5fa2)" }}>

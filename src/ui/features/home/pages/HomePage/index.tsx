@@ -20,9 +20,9 @@ function GlobalBackground() {
   const rpy = useTransform(smy, (v) => `${((1 - v) * 100).toFixed(1)}%`);
 
   const bg = useMotionTemplate`
-    radial-gradient(circle at ${px} ${py}, rgba(123,95,162,0.08) 0%, transparent 45%),
-    radial-gradient(circle at ${rpx} ${rpy}, rgba(176,142,224,0.05) 0%, transparent 40%),
-    #fafafc`;
+    radial-gradient(circle at ${px} ${py}, rgba(123,95,162,0.15) 0%, transparent 45%),
+    radial-gradient(circle at ${rpx} ${rpy}, rgba(176,142,224,0.1) 0%, transparent 40%),
+    #0c071e`;
 
   useEffect(() => {
     const move = (e: MouseEvent) => {
@@ -42,7 +42,7 @@ function GlobalBackground() {
       <div
         className="absolute inset-0 opacity-[0.14]"
         style={{
-          backgroundImage: 'radial-gradient(rgba(123,95,162,0.2) 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(rgba(162,157,186,0.1) 1px, transparent 1px)',
           backgroundSize: '32px 32px'
         }}
       />

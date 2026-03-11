@@ -55,27 +55,27 @@ function AlertsVisual() {
       <motion.div
         animate={{ y: [0, -5, 0] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        className="glass-card flex items-center gap-3 p-3.5 rounded-2xl border border-rose-100 shadow-md w-[80%] bg-white/95"
+        className="glass-card flex items-center gap-3 p-3.5 rounded-2xl border border-rose-100 shadow-md w-[80%] bg-white/5"
       >
         <div className="w-8 h-8 rounded-xl bg-rose-50 flex items-center justify-center text-rose-500 shrink-0 border border-rose-100">
           <AlertCircle size={14} />
         </div>
         <div>
           <p className="text-[10px] font-[900] text-rose-600 uppercase tracking-wider mb-0.5">Stock critique</p>
-          <p className="text-[10px] text-gray-500 font-bold">Lait d'avoine (Reste 2 vitrines)</p>
+          <p className="text-[10px] text-purple-200/60 font-bold">Lait d'avoine (Reste 2 vitrines)</p>
         </div>
       </motion.div>
       <motion.div
         animate={{ y: [0, 4, 0] }}
         transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="glass-card flex items-center gap-3 p-3.5 rounded-2xl border border-gray-100 shadow-md w-[80%] bg-white/95 translate-x-4 opacity-80"
+        className="glass-card flex items-center gap-3 p-3.5 rounded-2xl border border-white/10 shadow-md w-[80%] bg-white/5 translate-x-4 opacity-80"
       >
         <div className="w-8 h-8 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500 shrink-0 border border-orange-100">
           <Bell size={14} />
         </div>
         <div>
-          <p className="text-[10px] font-[900] text-gray-800 uppercase tracking-wider mb-0.5">Camion retardé</p>
-          <p className="text-[10px] text-gray-500 font-bold">Fournisseur BioX (+2 jours)</p>
+          <p className="text-[10px] font-[900] text-white uppercase tracking-wider mb-0.5">Camion retardé</p>
+          <p className="text-[10px] text-purple-200/60 font-bold">Fournisseur BioX (+2 jours)</p>
         </div>
       </motion.div>
     </div>
@@ -87,12 +87,12 @@ function AutomationVisual() {
     <div className="absolute inset-0 pt-10 flex items-start justify-center pointer-events-none fade-b-glass">
       <div className="relative w-[180px] h-[180px]">
         {/* Hub */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-2xl bg-white border border-gray-100 shadow-[0_12px_24px_rgba(0,0,0,0.06)] flex items-center justify-center z-10">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-2xl bg-white/5 border border-white/10 shadow-[0_12px_24px_rgba(0,0,0,0.06)] flex items-center justify-center z-10">
           <Workflow size={20} className="text-[#7b5fa2]" />
         </div>
         {/* Orbital rings */}
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 15, ease: "linear", repeat: Infinity }} className="absolute inset-0 rounded-full border-[1.5px] border-dashed border-[#7b5fa2]/30" />
-        <motion.div animate={{ rotate: -360 }} transition={{ duration: 25, ease: "linear", repeat: Infinity }} className="absolute inset-4 rounded-full border border-gray-200" />
+        <motion.div animate={{ rotate: -360 }} transition={{ duration: 25, ease: "linear", repeat: Infinity }} className="absolute inset-4 rounded-full border border-white/20" />
         {/* Moving dots */}
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 4, ease: "linear", repeat: Infinity }} className="absolute inset-0">
           <div className="absolute top-0 left-1/2 w-2.5 h-2.5 -ml-[5px] -mt-[5px] rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)]" />
@@ -113,26 +113,26 @@ function DashboardsVisual() {
         whileInView={{ opacity: 1, x: 0, y: 0 }}
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         viewport={{ once: true, margin: "-50px" }}
-        className="w-[110%] h-[120%] bg-white/95 rounded-tl-[2rem] border-t border-l border-white p-6 md:p-8 flex flex-col gap-6 overflow-hidden shadow-[-20px_0_60px_rgba(0,0,0,0.06)]"
+        className="w-[110%] h-[120%] bg-white/5 rounded-tl-[2rem] border-t border-l border-white p-6 md:p-8 flex flex-col gap-6 overflow-hidden shadow-[-20px_0_60px_rgba(0,0,0,0.06)]"
       >
-        <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+        <div className="flex items-center justify-between border-b border-white/10 pb-4">
           <div className="w-28 h-4 rounded-full bg-gray-100" />
           <div className="w-16 h-4 rounded-full bg-emerald-50" />
         </div>
         <div className="flex gap-6 items-center">
           <div className="w-28 h-28 shrink-0 rounded-full border-[7px] border-gray-50 border-t-[#7b5fa2] border-r-[#7b5fa2] transform rotate-45" />
           <div className="flex flex-col gap-3 flex-1">
-            <div className="w-full h-2.5 rounded-full bg-gray-50 overflow-hidden"><div className="w-[85%] h-full bg-[#7b5fa2]" /></div>
-            <div className="w-full h-2.5 rounded-full bg-gray-50 overflow-hidden"><div className="w-[45%] h-full bg-emerald-400" /></div>
-            <div className="w-full h-2.5 rounded-full bg-gray-50 overflow-hidden"><div className="w-[60%] h-full bg-orange-400" /></div>
+            <div className="w-full h-2.5 rounded-full bg-white/5/5 overflow-hidden"><div className="w-[85%] h-full bg-[#7b5fa2]" /></div>
+            <div className="w-full h-2.5 rounded-full bg-white/5/5 overflow-hidden"><div className="w-[45%] h-full bg-emerald-400" /></div>
+            <div className="w-full h-2.5 rounded-full bg-white/5/5 overflow-hidden"><div className="w-[60%] h-full bg-orange-400" /></div>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4 mt-2">
-          <div className="h-24 rounded-2xl bg-gray-50/80 border border-gray-100 p-4 flex flex-col justify-end">
+          <div className="h-24 rounded-2xl bg-white/5/5/80 border border-white/10 p-4 flex flex-col justify-end">
             <div className="w-12 h-2 rounded-full bg-gray-200 mb-1.5" />
             <div className="w-20 h-4 rounded-full bg-gray-300" />
           </div>
-          <div className="h-24 rounded-2xl bg-gray-50/80 border border-gray-100 p-4 flex flex-col justify-end">
+          <div className="h-24 rounded-2xl bg-white/5/5/80 border border-white/10 p-4 flex flex-col justify-end">
             <div className="w-14 h-2 rounded-full bg-gray-200 mb-1.5" />
             <div className="w-16 h-4 rounded-full bg-gray-300" />
           </div>
@@ -156,17 +156,17 @@ export default function Features() {
           mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
         }
         .bento-card {
-          background: rgba(255, 255, 255, 0.5);
+          background: rgba(30, 22, 50, 0.4); border: 1px solid rgba(255,255,255,0.08);
           backdrop-filter: blur(24px) saturate(180%);
           -webkit-backdrop-filter: blur(24px) saturate(180%);
-          border: 1px solid rgba(255, 255, 255, 0.7);
-          box-shadow: 0 4px 32px rgba(0, 0, 0, 0.02);
+          /* border */
+          box-shadow: 0 4px 32px rgba(0, 0, 0, 0.5);
           transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .bento-card:hover {
-          background: rgba(255, 255, 255, 0.85);
-          border: 1px solid rgba(255, 255, 255, 0.9);
-          box-shadow: 0 20px 60px rgba(123, 95, 162, 0.12);
+          background: rgba(40, 30, 65, 0.5);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          box-shadow: 0 20px 60px rgba(123, 95, 162, 0.4);
           transform: translateY(-4px);
         }
       `}</style>
@@ -183,10 +183,10 @@ export default function Features() {
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#7b5fa2]/20 bg-[#7b5fa2]/5 text-[#7b5fa2] text-[11px] font-bold uppercase tracking-[0.18em] mb-7">
             L'Intelligence Logistique
           </div>
-          <h2 className="text-[clamp(2.5rem,5vw,4.5rem)] font-[900] text-gray-900 tracking-[-0.035em] leading-[1.05] mb-6">
+          <h2 className="text-[clamp(2.5rem,5vw,4.5rem)] font-[900] text-white tracking-[-0.035em] leading-[1.05] mb-6">
             Conçu pour la vitesse.<br className="hidden md:block" /> Propulsé par l'IA.
           </h2>
-          <p className="text-gray-500 text-lg md:text-xl font-light max-w-2xl mx-auto leading-relaxed">
+          <p className="text-purple-200/60 text-lg md:text-xl font-light max-w-2xl mx-auto leading-relaxed">
             Dites adieu aux tableaux Excel cassés. Une plateforme ultra-moderne conçue pour les équipes qui exigent précision et fluidité.
           </p>
         </motion.div>
@@ -201,8 +201,8 @@ export default function Features() {
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#7b5fa2] to-[#7b5fa2] flex items-center justify-center text-white mb-6 shadow-[0_8px_20px_rgba(123,95,162,0.3)] mt-auto">
                 <Sparkles size={22} />
               </div>
-              <h3 className="text-[1.6rem] font-[800] text-gray-900 tracking-tight mb-2.5">Prévisions Intelligentes</h3>
-              <p className="text-gray-500 leading-relaxed font-light text-[0.95rem]">
+              <h3 className="text-[1.6rem] font-[800] text-white tracking-tight mb-2.5">Prévisions Intelligentes</h3>
+              <p className="text-purple-200/60 leading-relaxed font-light text-[0.95rem]">
                 L'IA analyse vos historiques de vente pour anticiper la demande. Ne tombez plus en rupture, ne sur-stockez plus inutilement.
               </p>
             </div>
@@ -212,8 +212,8 @@ export default function Features() {
           <div className="bento-card rounded-[2.2rem] md:col-span-1 relative overflow-hidden group">
             <AlertsVisual />
             <div className="absolute bottom-0 left-0 p-8 md:p-9 w-full z-10 bg-gradient-to-t from-white/90 via-white/40 to-transparent pt-20">
-              <h3 className="text-[1.3rem] font-[800] text-gray-900 tracking-tight mb-2">Vigilance Continue</h3>
-              <p className="text-gray-500 leading-relaxed font-light text-[0.9rem]">
+              <h3 className="text-[1.3rem] font-[800] text-white tracking-tight mb-2">Vigilance Continue</h3>
+              <p className="text-purple-200/60 leading-relaxed font-light text-[0.9rem]">
                 Détection des anomalies et alertes en temps réel avant qu'elles n'impactent votre CA.
               </p>
             </div>
@@ -223,8 +223,8 @@ export default function Features() {
           <div className="bento-card rounded-[2.2rem] md:col-span-1 relative overflow-hidden group">
             <AutomationVisual />
             <div className="absolute bottom-0 left-0 p-8 md:p-9 w-full z-10 bg-gradient-to-t from-white/90 via-white/40 to-transparent pt-20">
-              <h3 className="text-[1.3rem] font-[800] text-gray-900 tracking-tight mb-2">Flux Automatisé</h3>
-              <p className="text-gray-500 leading-relaxed font-light text-[0.9rem]">
+              <h3 className="text-[1.3rem] font-[800] text-white tracking-tight mb-2">Flux Automatisé</h3>
+              <p className="text-purple-200/60 leading-relaxed font-light text-[0.9rem]">
                 Réassort 1-click et synchronisation des fournisseurs pour réduire la charge mentale.
               </p>
             </div>
@@ -237,8 +237,8 @@ export default function Features() {
               <div className="w-12 h-12 rounded-2xl bg-gray-900 flex items-center justify-center text-white mb-6 shadow-lg mt-auto">
                 <PieChart size={22} />
               </div>
-              <h3 className="text-[1.6rem] font-[800] text-gray-900 tracking-tight mb-2.5">KPIs & Métriques</h3>
-              <p className="text-gray-500 leading-relaxed font-light text-[0.95rem]">
+              <h3 className="text-[1.6rem] font-[800] text-white tracking-tight mb-2.5">KPIs & Métriques</h3>
+              <p className="text-purple-200/60 leading-relaxed font-light text-[0.95rem]">
                 Visualisez la santé complète de votre logistique : vitesse d'écoulement, marges générées, et coûts cachés.
               </p>
             </div>

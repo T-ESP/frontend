@@ -25,9 +25,9 @@ export default function Footer() {
                             <div className="p-1.5 rounded-xl" style={{ background: "linear-gradient(135deg,#7b5fa2,#7b5fa2)", boxShadow: "0 4px 14px rgba(123,95,162,0.3)" }}>
                                 <Logo className="w-5 h-5 brightness-0 invert" />
                             </div>
-                            <span className="text-[1.05rem] font-extrabold text-gray-900 tracking-tight">Stocks</span>
+                            <span className="text-[1.05rem] font-extrabold text-white tracking-tight">Stocks</span>
                         </div>
-                        <p className="text-sm text-gray-400 font-light leading-relaxed max-w-[220px]">
+                        <p className="text-sm text-purple-300/50 font-light leading-relaxed max-w-[220px]">
                             La plateforme tout-en-un pour gérer vos stocks, ventes et équipes — propulsée par l'IA.
                         </p>
 
@@ -47,13 +47,13 @@ export default function Footer() {
                     {/* Nav links */}
                     {Object.entries(links).map(([group, items]) => (
                         <div key={group}>
-                            <p className="text-[11px] font-bold text-gray-400 uppercase tracking-[0.18em] mb-4">{group}</p>
+                            <p className="text-[11px] font-bold text-purple-300/50 uppercase tracking-[0.18em] mb-4">{group}</p>
                             <ul className="space-y-2.5">
                                 {items.map(([href, label]) => (
                                     <li key={label}>
                                         <Link
                                             to={href}
-                                            className="text-sm text-gray-500 font-light hover:text-[#7b5fa2] transition-colors"
+                                            className="text-sm text-purple-200/60 font-light hover:text-[#7b5fa2] transition-colors"
                                         >
                                             {label}
                                         </Link>
@@ -70,7 +70,7 @@ export default function Footer() {
                     whileInView={{ opacity: 1 }}
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
-                    className="border-t border-gray-100 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-gray-400"
+                    className="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-purple-300/50"
                 >
                     <p className="font-light">© {new Date().getFullYear()} Stocks. Tous droits réservés. · Données hébergées en France 🇫🇷</p>
                     <div className="flex gap-6">
