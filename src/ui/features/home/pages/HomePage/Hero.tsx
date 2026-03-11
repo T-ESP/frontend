@@ -1,9 +1,10 @@
-import { useRef, useCallback, useState, useEffect } from "react";
+import { useRef, useCallback, useState } from "react";
 import { Link } from "react-router-dom";
+import dashboardImage from '@/assets/images/image.png';
 import { Logo } from "@/ui/components/common/Logo";
 import {
-  TrendingUp, BarChart2, Zap, Package, Menu, X, ChevronRight, Play,
-  ArrowUpRight, Sparkles,
+  BarChart2, Zap, Package, Menu, X, ChevronRight, Play,
+  Sparkles,
 } from "lucide-react";
 import {
   motion,
@@ -79,59 +80,7 @@ function ScrollBars({ values, color = "#7b5fa2", progress }: {
   );
 }
 
-// ─── Scroll-driven sparkline ──────────────────────────────────────────────────
-function ScrollSparkline({ values, color = "#7b5fa2", w = 88, h = 30, progress }: {
-  values: number[]; color?: string; w?: number; h?: number;
-  progress: MotionValue<any>;
-}) {
-  const min = Math.min(...values), max = Math.max(...values), rng = max - min || 1;
-  const allPts = values.map((v, i) =>
-    [
-      (i / (values.length - 1)) * w,
-      h - ((v - min) / rng) * (h - 6) - 3,
-    ] as [number, number]
-  );
-  const id = `ssp${color.replace(/[^a-z0-9]/gi, "")}`;
-
-  // Animate clipPath width from 0 to 100% driven by progress
-  const clipWidth = useTransform(progress as any, [0, 1], ["0%", "100%"]);
-  const pts = allPts.map(([x, y]) => `${x},${y}`).join(" ");
-
-  return (
-    <svg viewBox={`0 0 ${w} ${h}`} width={w} height={h} style={{ overflow: "visible" }}>
-      <defs>
-        <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.22" />
-          <stop offset="100%" stopColor={color} stopOpacity="0" />
-        </linearGradient>
-        <motion.clipPath id={`clip-${id}`} style={{}}>
-          <motion.rect x="0" y="0" height={h + 10} style={{ width: clipWidth }} />
-        </motion.clipPath>
-      </defs>
-      <g clipPath={`url(#clip-${id})`}>
-        <polyline points={`0,${h} ${pts} ${w},${h}`} fill={`url(#${id})`} stroke="none" />
-        <polyline points={pts} fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-      </g>
-    </svg>
-  );
-}
-
-// ─── Scroll-driven counter ────────────────────────────────────────────────────
-function ScrollCounter({ value, progress, suffix = "", prefix = "" }: {
-  value: number; progress: MotionValue<any>; suffix?: string; prefix?: string;
-}) {
-  const [display, setDisplay] = useState(0);
-  useEffect(() => {
-    const unsub = (progress as any).on("change", (v: number) => {
-      setDisplay(Math.round(v * value));
-    });
-    return () => unsub();
-  }, [progress, value]);
-  return <span>{prefix}{display.toLocaleString("fr-FR")}{suffix}</span>;
-}
-
-const BARS = [40, 60, 45, 70, 55, 80, 50, 75, 65, 90, 70, 100, 85];
-const SPARK = [30, 45, 38, 60, 55, 72, 65, 80, 74, 90, 84, 95, 100];
+// ─── Scroll-driven bar chart ──────────────────────────────────────────────────
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 export default function Hero() {
@@ -168,9 +117,6 @@ export default function Hero() {
   // Internal dashboard animations — driven by a sub-range of scroll
   // "content progress" goes 0→1 between scroll 0.40 and 0.85
   const contentProgress = useTransform(smooth, [0.40, 0.85], [0, 1]);
-
-  // Revenue counter: 0 → 248500
-  const revenueProgress = useTransform(smooth, [0.40, 0.80], [0, 1]);
 
   // Floating cards: each converges from a different direction
   // They start offset and move toward the main card as dashY settles
@@ -350,7 +296,7 @@ export default function Hero() {
 
           {/* ── LAYER 1: Headline ──────────────────────────────────────────── */}
           <motion.div
-            className="absolute inset-x-0 top-0 z-20 flex flex-col items-center text-center pt-14 md:pt-20 px-6"
+            className="absolute inset-x-0 top-0 z-20 flex flex-col items-center lg:items-start text-center lg:text-left pt-14 md:pt-20 px-6 lg:px-20 max-w-7xl mx-auto"
             style={{
               opacity: hlOp,
               y: hlY,
@@ -410,7 +356,7 @@ export default function Hero() {
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4 }}
               style={{ opacity: topFade }}
-              className="mt-10 flex flex-col items-center gap-2"
+              className="mt-10 flex flex-col items-center lg:items-start gap-2"
             >
               <motion.div
                 animate={{ y: [0, 7, 0] }} transition={{ duration: 1.7, repeat: Infinity, ease: "easeInOut" }}
@@ -418,8 +364,39 @@ export default function Hero() {
               >
                 <div className="w-1 h-1.5 rounded-full bg-gray-300" />
               </motion.div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-gray-300">Scroll</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-gray-300 pl-1">Scroll</span>
             </motion.div>
+
+            {/* Dashboard Preview - Absolute Right Side */}
+            <div 
+              className="hidden lg:block absolute top-[5%] -right-[15%] w-[850px] pointer-events-none z-0"
+              style={{ perspective: "2000px" }}
+            >
+              <motion.div
+                initial={{ opacity: 0, x: 150, rotateY: -35, rotateX: 15, rotateZ: -5 }}
+                animate={{ opacity: 0.35, x: 0, rotateY: -25, rotateX: 10, rotateZ: -2 }}
+                transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+                className="relative"
+              >
+                {/* The dashboard image */}
+                <img 
+                  src={dashboardImage} 
+                  alt="App Preview" 
+                  className="w-full h-auto rounded-3xl"
+                  style={{
+                    boxShadow: "-20px 40px 100px rgba(123, 95, 162, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1)"
+                  }}
+                />
+
+                {/* The "Fade Out" effect overlays */}
+                {/* 1. Fades the right edge into the dark background */}
+                <div className="absolute inset-0 bg-gradient-to-l from-[#0c071e] via-transparent to-transparent rounded-3xl" />
+                
+                {/* 2. Fades the bottom edge */}
+                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#0c071e] via-[#0c071e]/40 to-transparent rounded-b-3xl" />
+              </motion.div>
+            </div>
+
           </motion.div>
 
           {/* ── LAYER 2: Dashboard — centered, fully visible ───────────────────
@@ -512,90 +489,14 @@ export default function Hero() {
               {/* ── Main dashboard card ──────────────────────────────────────── */}
               <TiltCard>
                 <div
-                  className="card-edge relative bg-white rounded-[2.4rem] border border-gray-100 p-7"
+                  className="card-edge relative bg-white/5 rounded-[2.4rem] border border-white/10 p-3"
                   style={{ boxShadow: "0 32px 80px -16px rgba(123,95,162,0.18), 0 0 0 1px rgba(123,95,162,0.05)" }}
                 >
-                  {/* Chrome */}
-                  <div className="flex items-center justify-between mb-5">
-                    <div>
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.18em] mb-1">Tableau de bord</p>
-                      <div className="flex items-center gap-2.5">
-                        <h3 className="text-[1.1rem] font-[900] text-gray-900 tracking-tight">Vue d'ensemble</h3>
-                        <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> En direct
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex gap-1.5">
-                      {["bg-red-300/70", "bg-yellow-300/70", "bg-green-400/80"].map((c, i) => (
-                        <span key={i} className={`w-3 h-3 rounded-full ${c}`} />
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Revenue — scroll-driven counter */}
-                  <div className="flex items-center justify-between rounded-[1.2rem] px-5 py-4 mb-4"
-                    style={{ background: "linear-gradient(135deg,rgba(123,95,162,0.07),rgba(157,123,221,0.06))", border: "1px solid rgba(123,95,162,0.09)" }}>
-                    <div className="flex items-center gap-4">
-                      <div className="w-11 h-11 rounded-2xl flex items-center justify-center"
-                        style={{ background: "linear-gradient(135deg,#7b5fa2,#7b5fa2)", boxShadow: "0 8px 20px rgba(123,95,162,0.28)" }}>
-                        <TrendingUp size={18} className="text-white" />
-                      </div>
-                      <div>
-                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">CA Mensuel</p>
-                        <p className="text-[1.6rem] font-[900] text-gray-900 tabular-nums leading-none">
-                          €<ScrollCounter value={248500} progress={revenueProgress}
-                            suffix="" prefix="" />
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <div className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-600 px-3 py-1.5 rounded-full font-bold text-[11px] border border-emerald-100">
-                        <ArrowUpRight size={12} /> +14.2%
-                      </div>
-                      {/* Scroll-driven sparkline */}
-                      <ScrollSparkline values={SPARK} progress={revenueProgress} />
-                    </div>
-                  </div>
-
-                  {/* Stats — scroll-driven counters */}
-                  <div className="grid grid-cols-3 gap-3 mb-4">
-                    {[
-                      { l: "Stocks Actifs", v: 1284, fmt: (n: number) => n.toLocaleString("fr-FR"), up: true, d: "+7%", e: "📦", suffix: "" },
-                      { l: "Commandes", v: 42, fmt: (n: number) => String(n), up: false, d: "−2", e: "🛒", suffix: "" },
-                      { l: "Efficacité", v: 98, fmt: (n: number) => String(n), up: true, d: "+2%", e: "⚡", suffix: "%" },
-                    ].map(({ l, v, fmt, up, d, e, suffix }) => {
-                      const statProgress = useTransform(smooth, [0.42, 0.82], [0, 1]);
-                      const [display, setDisplay] = useState(0);
-                      useEffect(() => {
-                        const unsub = (statProgress as any).on("change", (p: number) => setDisplay(Math.round(p * v)));
-                        return () => unsub();
-                      }, [statProgress, v]);
-                      return (
-                        <div key={l} className="rounded-[1.1rem] px-4 py-3.5 border border-gray-100 bg-gray-50/60">
-                          <div className="flex items-center justify-between mb-1.5">
-                            <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">{l}</p>
-                            <span className="text-[0.85rem]">{e}</span>
-                          </div>
-                          <p className="text-[1.2rem] font-[900] text-gray-900 tabular-nums leading-none mb-1">
-                            {fmt(display)}{suffix}
-                          </p>
-                          <p className={`text-[10px] font-bold ${up ? "text-emerald-500" : "text-rose-400"}`}>{d}</p>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  {/* Bar chart — scroll-driven, fully rounded (card no longer bleeds) */}
-                  <div className="rounded-[1.1rem] p-4 border border-gray-100 bg-gray-50/60">
-                    <div className="flex items-center justify-between mb-3">
-                      <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Activité — 13 semaines</p>
-                      <span className="text-[10px] font-bold text-[#7b5fa2]">+31.4% ↑</span>
-                    </div>
-                    <div className="h-14">
-                      <ScrollBars values={BARS} progress={contentProgress} />
-                    </div>
-                  </div>
+                  <img 
+                    src={dashboardImage} 
+                    alt="Dashboard Preview" 
+                    className="w-full h-auto rounded-[2rem] shadow-2xl" 
+                  />
                 </div>
               </TiltCard>
 
