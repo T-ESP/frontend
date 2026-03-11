@@ -63,8 +63,8 @@ export default function HomePage() {
       <GlobalBackground />
       <Hero />
       <Features />
-      <Testimonials />
       <AISection />
+      <Testimonials />
       <Preview />
       <Footer />
     </main>

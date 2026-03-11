@@ -217,7 +217,7 @@ export default function Hero() {
         @keyframes shimmer { to { background-position: 200% center; } }
 
         .glass {
-          background: rgba(20, 15, 34, 0.4); border: 1px solid rgba(255,255,255,0.86); color: white;
+          background: rgba(20, 15, 34, 0.4);
           backdrop-filter: blur(24px) saturate(180%);
           -webkit-backdrop-filter: blur(24px) saturate(180%);
           /* border: 1px solid rgba(255,255,255,0.86); */
