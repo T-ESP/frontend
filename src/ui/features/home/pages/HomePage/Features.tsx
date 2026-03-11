@@ -156,17 +156,17 @@ export default function Features() {
           mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
         }
         .bento-card {
-          background: rgba(30, 22, 50, 0.4); border: 1px solid rgba(255,255,255,0.08);
+          background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(255,255,255,0.7);
           backdrop-filter: blur(24px) saturate(180%);
           -webkit-backdrop-filter: blur(24px) saturate(180%);
           /* border */
-          box-shadow: 0 4px 32px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 4px 32px rgba(0, 0, 0, 0.05);
           transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .bento-card:hover {
-          background: rgba(40, 30, 65, 0.5);
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          box-shadow: 0 20px 60px rgba(123, 95, 162, 0.4);
+          background: rgba(255, 255, 255, 0.95);
+          border: 1px solid rgba(255, 255, 255, 0.9);
+          box-shadow: 0 20px 60px rgba(123, 95, 162, 0.15);
           transform: translateY(-4px);
         }
       `}</style>
@@ -201,8 +201,8 @@ export default function Features() {
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#7b5fa2] to-[#7b5fa2] flex items-center justify-center text-white mb-6 shadow-[0_8px_20px_rgba(123,95,162,0.3)] mt-auto">
                 <Sparkles size={22} />
               </div>
-              <h3 className="text-[1.6rem] font-[800] text-white tracking-tight mb-2.5">Prévisions Intelligentes</h3>
-              <p className="text-purple-200/60 leading-relaxed font-light text-[0.95rem]">
+              <h3 className="text-[1.6rem] font-[800] text-gray-900 tracking-tight mb-2.5">Prévisions Intelligentes</h3>
+              <p className="text-gray-500 leading-relaxed font-light text-[0.95rem]">
                 L'IA analyse vos historiques de vente pour anticiper la demande. Ne tombez plus en rupture, ne sur-stockez plus inutilement.
               </p>
             </div>
@@ -212,8 +212,8 @@ export default function Features() {
           <div className="bento-card rounded-[2.2rem] md:col-span-1 relative overflow-hidden group">
             <AlertsVisual />
             <div className="absolute bottom-0 left-0 p-8 md:p-9 w-full z-10 bg-gradient-to-t from-white/90 via-white/40 to-transparent pt-20">
-              <h3 className="text-[1.3rem] font-[800] text-white tracking-tight mb-2">Vigilance Continue</h3>
-              <p className="text-purple-200/60 leading-relaxed font-light text-[0.9rem]">
+              <h3 className="text-[1.3rem] font-[800] text-gray-900 tracking-tight mb-2">Vigilance Continue</h3>
+              <p className="text-gray-500 leading-relaxed font-light text-[0.9rem]">
                 Détection des anomalies et alertes en temps réel avant qu'elles n'impactent votre CA.
               </p>
             </div>
@@ -223,8 +223,8 @@ export default function Features() {
           <div className="bento-card rounded-[2.2rem] md:col-span-1 relative overflow-hidden group">
             <AutomationVisual />
             <div className="absolute bottom-0 left-0 p-8 md:p-9 w-full z-10 bg-gradient-to-t from-white/90 via-white/40 to-transparent pt-20">
-              <h3 className="text-[1.3rem] font-[800] text-white tracking-tight mb-2">Flux Automatisé</h3>
-              <p className="text-purple-200/60 leading-relaxed font-light text-[0.9rem]">
+              <h3 className="text-[1.3rem] font-[800] text-gray-900 tracking-tight mb-2">Flux Automatisé</h3>
+              <p className="text-gray-500 leading-relaxed font-light text-[0.9rem]">
                 Réassort 1-click et synchronisation des fournisseurs pour réduire la charge mentale.
               </p>
             </div>
@@ -237,8 +237,8 @@ export default function Features() {
               <div className="w-12 h-12 rounded-2xl bg-gray-900 flex items-center justify-center text-white mb-6 shadow-lg mt-auto">
                 <PieChart size={22} />
               </div>
-              <h3 className="text-[1.6rem] font-[800] text-white tracking-tight mb-2.5">KPIs & Métriques</h3>
-              <p className="text-purple-200/60 leading-relaxed font-light text-[0.95rem]">
+              <h3 className="text-[1.6rem] font-[800] text-gray-900 tracking-tight mb-2.5">KPIs & Métriques</h3>
+              <p className="text-gray-500 leading-relaxed font-light text-[0.95rem]">
                 Visualisez la santé complète de votre logistique : vitesse d'écoulement, marges générées, et coûts cachés.
               </p>
             </div>

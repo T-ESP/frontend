@@ -199,4 +199,13 @@ export const ROUTES: Record<string, RouteMeta> = {
     title: 'StockS - Conditions Générales d\'Utilisation',
   },
 
+  DEMO: {
+    path: '/demo',
+    label: 'Demo',
+    page: 'Demo',
+    layout: 'none',
+    restricted: false,
+    title: 'StockS - Demo',
+  },
+
 };

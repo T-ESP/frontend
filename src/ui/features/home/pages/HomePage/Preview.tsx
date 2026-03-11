@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { ChevronRight, ArrowUpRight } from "lucide-react";
 
 const stats = [
-  { value: "10+", label: "Modules disponibles", bg: "rgba(123,95,162,0.06)", border: "rgba(123,95,162,0.12)" },
-  { value: "−30%", label: "Réduction du surstockage", bg: "rgba(16,185,129,0.06)", border: "rgba(16,185,129,0.14)" },
-  { value: "Temps réel", label: "Alertes prix & stocks", bg: "rgba(59,130,246,0.06)", border: "rgba(59,130,246,0.12)" },
-  { value: "Inclus", label: "Assistant IA intégré", bg: "rgba(249,115,22,0.06)", border: "rgba(249,115,22,0.12)" },
+  { value: "10+", label: "Modules disponibles", bg: "rgba(255,255,255,0.85)", border: "rgba(255,255,255,1)" },
+  { value: "−30%", label: "Réduction du surstockage", bg: "rgba(255,255,255,0.85)", border: "rgba(255,255,255,1)" },
+  { value: "Temps réel", label: "Alertes prix & stocks", bg: "rgba(255,255,255,0.85)", border: "rgba(255,255,255,1)" },
+  { value: "Inclus", label: "Assistant IA intégré", bg: "rgba(255,255,255,0.85)", border: "rgba(255,255,255,1)" },
 ];
 
 export default function Preview() {
@@ -79,8 +79,8 @@ export default function Preview() {
                 className="rounded-[1.4rem] p-6 border transition-all duration-300 cursor-default"
                 style={{ background: s.bg, borderColor: s.border }}
               >
-                <p className="text-[1.8rem] font-[900] text-white tracking-tight leading-none mb-2">{s.value}</p>
-                <p className="text-xs text-purple-300/50 font-light leading-snug">{s.label}</p>
+                <p className="text-[1.8rem] font-[900] text-gray-900 tracking-tight leading-none mb-2">{s.value}</p>
+                <p className="text-xs text-gray-500 font-light leading-snug">{s.label}</p>
               </motion.div>
             ))}
           </motion.div>

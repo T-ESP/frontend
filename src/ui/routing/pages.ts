@@ -31,4 +31,5 @@ export const PAGES = {
   Settings: lazy(() => import("@/ui/features/settings/pages/SettingsPage")),
   Profile: lazy(() => import("@/ui/features/profile/pages/ProfilePage")),
   Logout: lazy(() => import("@/ui/features/auth/pages/LogoutPage")),
+  Demo: lazy(() => import("@/ui/features/home/pages/Demo")),
 };

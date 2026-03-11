@@ -217,16 +217,16 @@ export default function Hero() {
         @keyframes shimmer { to { background-position: 200% center; } }
 
         .glass {
-          background: rgba(20, 15, 34, 0.4); border: 1px solid rgba(255,255,255,0.08); color: white;
+          background: rgba(20, 15, 34, 0.4); border: 1px solid rgba(255,255,255,0.86); color: white;
           backdrop-filter: blur(24px) saturate(180%);
           -webkit-backdrop-filter: blur(24px) saturate(180%);
-          /* border: 1px solid rgba(255,255,255,0.08); */
+          /* border: 1px solid rgba(255,255,255,0.86); */
         }
         .glass-card {
-          background: rgba(30, 22, 50, 0.4);
+          background: rgba(255,255,255,0.74);
           backdrop-filter: blur(20px) saturate(160%);
           -webkit-backdrop-filter: blur(20px) saturate(160%);
-          border: 1px solid rgba(255,255,255,0.08);
+          border: 1px solid rgba(255,255,255,0.86);
         }
         .glass-purple {
           background: rgba(123,95,162,0.06);
@@ -261,6 +261,7 @@ export default function Hero() {
         @keyframes fa { 0%,100%{transform:translateY(0)} 48%{transform:translateY(-9px)} }
 
         /* Top-edge light on dashboard card */
+        .card-edge::before {
           content: '';
           position: absolute; top: 0; left: 8%; right: 8%; height: 1px;
           background: linear-gradient(90deg, transparent, rgba(123,95,162,0.35), transparent);
@@ -275,7 +276,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-50 flex items-center justify-between px-6 md:px-14 py-5 glass border-b border-white/60"
+          className="relative z-50 flex items-center justify-between px-6 md:px-14 py-5 glass border-b border-white/10"
         >
           <Link to="/" className="flex items-center gap-2.5">
             <motion.div
@@ -453,7 +454,7 @@ export default function Hero() {
               >
                 <div className="glass-card rounded-2xl px-4 py-3.5 w-52"
                   style={{ boxShadow: "0 20px 48px rgba(123,95,162,0.13)" }}>
-                  <p className="text-[9px] font-bold text-purple-200/80 mb-2.5 flex items-center gap-1.5 uppercase tracking-[0.14em]">
+                  <p className="text-[9px] font-bold text-gray-400 mb-2.5 flex items-center gap-1.5 uppercase tracking-[0.14em]">
                     <BarChart2 size={10} className="text-[#7b5fa2]" /> Performances
                   </p>
                   {/* This mini chart is also scroll-driven */}
@@ -477,8 +478,8 @@ export default function Hero() {
                       <Zap size={15} className="text-orange-400" fill="currentColor" />
                     </div>
                     <div>
-                      <p className="text-[12px] font-extrabold text-white mb-0.5">Assistant IA</p>
-                      <p className="text-[11px] text-purple-100 leading-relaxed">
+                      <p className="text-[12px] font-extrabold text-gray-800 mb-0.5">Assistant IA</p>
+                      <p className="text-[11px] text-gray-500 leading-relaxed">
                         Réapprovisionnez vos stocks bio — demande{" "}
                         <span className="text-[#7b5fa2] font-bold">+45%</span> ce week-end.
                       </p>
@@ -502,7 +503,7 @@ export default function Hero() {
                     </div>
                     <div>
                       <p className="text-[10px] font-extrabold text-rose-500 uppercase tracking-widest mb-0.5">Stock Critique</p>
-                      <p className="text-[11px] text-purple-100 leading-relaxed">32 références sous le seuil.</p>
+                      <p className="text-[11px] text-gray-500 leading-relaxed">32 références sous le seuil.</p>
                     </div>
                   </div>
                 </div>
@@ -511,15 +512,15 @@ export default function Hero() {
               {/* ── Main dashboard card ──────────────────────────────────────── */}
               <TiltCard>
                 <div
-                  className="card-edge relative bg-[#120b29] rounded-[2.4rem] border border-white/10 p-7"
+                  className="card-edge relative bg-white rounded-[2.4rem] border border-gray-100 p-7"
                   style={{ boxShadow: "0 32px 80px -16px rgba(123,95,162,0.18), 0 0 0 1px rgba(123,95,162,0.05)" }}
                 >
                   {/* Chrome */}
                   <div className="flex items-center justify-between mb-5">
                     <div>
-                      <p className="text-[10px] font-bold text-purple-200/80 uppercase tracking-[0.18em] mb-1">Tableau de bord</p>
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.18em] mb-1">Tableau de bord</p>
                       <div className="flex items-center gap-2.5">
-                        <h3 className="text-[1.1rem] font-[900] text-white tracking-tight">Vue d'ensemble</h3>
+                        <h3 className="text-[1.1rem] font-[900] text-gray-900 tracking-tight">Vue d'ensemble</h3>
                         <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100">
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> En direct
                         </span>
@@ -541,8 +542,8 @@ export default function Hero() {
                         <TrendingUp size={18} className="text-white" />
                       </div>
                       <div>
-                        <p className="text-[10px] text-purple-200/80 font-bold uppercase tracking-widest">CA Mensuel</p>
-                        <p className="text-[1.6rem] font-[900] text-white tabular-nums leading-none">
+                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">CA Mensuel</p>
+                        <p className="text-[1.6rem] font-[900] text-gray-900 tabular-nums leading-none">
                           €<ScrollCounter value={248500} progress={revenueProgress}
                             suffix="" prefix="" />
                         </p>
@@ -571,12 +572,12 @@ export default function Hero() {
                         return () => unsub();
                       }, [statProgress, v]);
                       return (
-                        <div key={l} className="rounded-[1.1rem] px-4 py-3.5 border border-white/10 bg-white/5">
+                        <div key={l} className="rounded-[1.1rem] px-4 py-3.5 border border-gray-100 bg-gray-50/60">
                           <div className="flex items-center justify-between mb-1.5">
-                            <p className="text-[9px] text-purple-200/80 font-bold uppercase tracking-widest">{l}</p>
+                            <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">{l}</p>
                             <span className="text-[0.85rem]">{e}</span>
                           </div>
-                          <p className="text-[1.2rem] font-[900] text-white tabular-nums leading-none mb-1">
+                          <p className="text-[1.2rem] font-[900] text-gray-900 tabular-nums leading-none mb-1">
                             {fmt(display)}{suffix}
                           </p>
                           <p className={`text-[10px] font-bold ${up ? "text-emerald-500" : "text-rose-400"}`}>{d}</p>
@@ -586,9 +587,9 @@ export default function Hero() {
                   </div>
 
                   {/* Bar chart — scroll-driven, fully rounded (card no longer bleeds) */}
-                  <div className="rounded-[1.1rem] p-4 border border-white/10 bg-white/5">
+                  <div className="rounded-[1.1rem] p-4 border border-gray-100 bg-gray-50/60">
                     <div className="flex items-center justify-between mb-3">
-                      <p className="text-[9px] font-bold text-purple-200/80 uppercase tracking-widest">Activité — 13 semaines</p>
+                      <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Activité — 13 semaines</p>
                       <span className="text-[10px] font-bold text-[#7b5fa2]">+31.4% ↑</span>
                     </div>
                     <div className="h-14">

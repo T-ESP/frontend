@@ -21,8 +21,7 @@ function GlobalBackground() {
 
   const bg = useMotionTemplate`
     radial-gradient(circle at ${px} ${py}, rgba(123,95,162,0.15) 0%, transparent 45%),
-    radial-gradient(circle at ${rpx} ${rpy}, rgba(176,142,224,0.1) 0%, transparent 40%),
-    #0c071e`;
+    radial-gradient(circle at ${rpx} ${rpy}, rgba(176,142,224,0.1) 0%, transparent 40%)`;
 
   useEffect(() => {
     const move = (e: MouseEvent) => {
@@ -34,9 +33,9 @@ function GlobalBackground() {
   }, [mx, my]);
 
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+    <div className="fixed inset-0 -z-20 overflow-hidden pointer-events-none" style={{ backgroundColor: '#0c071e' }}>
       {/* Animated Mesh */}
-      <motion.div className="absolute inset-0" style={{ background: bg }} />
+      <motion.div className="absolute inset-0" style={{ backgroundImage: bg, backgroundColor: '#0c071e' }} />
 
       {/* Dot Grid Layer 1 */}
       <div
@@ -60,7 +59,7 @@ function GlobalBackground() {
 
 export default function HomePage() {
   return (
-    <main className="relative min-h-screen">
+    <main className="relative min-h-screen z-10">
       <GlobalBackground />
       <Hero />
       <Features />
