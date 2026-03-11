@@ -14,14 +14,14 @@ export default function PageLayout({
   icon?: ReactNode;
 }) {
   return (
-    <div className="min-h-screen p-8 bg-slate-50">
+    <div className="min-h-screen p-8 bg-transparent">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="flex items-center gap-3 text-3xl font-bold text-slate-900">
+          <h1 className="flex items-center gap-3 text-3xl font-bold text-gray-900">
             {/* {icon && icon} */}
             {title}
           </h1>
-          {subtitle && <p className="mt-2 text-base text-slate-500">{subtitle}</p>}
+          {subtitle && <p className="mt-2 text-base text-gray-500">{subtitle}</p>}
         </div>
         {actions && <div>{actions}</div>}
       </div>

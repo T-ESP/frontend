@@ -8,6 +8,7 @@ export type KPI = {
   icon: IconType;
   color: string;
   description: string;
+  isPrimary?: boolean;
 };
 
 export type TopProduct = {

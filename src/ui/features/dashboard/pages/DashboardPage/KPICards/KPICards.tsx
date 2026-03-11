@@ -50,7 +50,8 @@ export function KPICards({ orders, products, users, totalRevenue, evolution, dat
       trend: evolution >= 0 ? "up" : "down",
       icon: FiDollarSign,
       color: "emerald",
-      description: getDateRangeLabel()
+      description: getDateRangeLabel(),
+      isPrimary: true
     },
     {
       title: t('dashboard.kpi.total_orders'),

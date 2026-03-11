@@ -79,14 +79,14 @@ export function HomeHeader(): JSX.Element {
                         <div className="absolute right-0 z-20 w-40 py-1 mt-2 overflow-hidden duration-200 bg-white border border-gray-100 shadow-lg top-full rounded-xl animate-in fade-in slide-in-from-top-2">
                             <button
                                 onClick={() => handleLanguageChange('en')}
-                                className={`flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors ${i18n.language !== 'fr' ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700 hover:bg-gray-50'
+                                className={`flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors ${i18n.language !== 'fr' ? 'bg-purple-50 text-purple-700 font-medium' : 'text-gray-700 hover:bg-gray-50'
                                     }`}
                             >
                                 <span className="text-lg">🇬🇧</span> English
                             </button>
                             <button
                                 onClick={() => handleLanguageChange('fr')}
-                                className={`flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors ${i18n.language === 'fr' ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700 hover:bg-gray-50'
+                                className={`flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors ${i18n.language === 'fr' ? 'bg-purple-50 text-purple-700 font-medium' : 'text-gray-700 hover:bg-gray-50'
                                     }`}
                             >
                                 <span className="text-lg">🇫🇷</span> Français
@@ -101,7 +101,7 @@ export function HomeHeader(): JSX.Element {
                         onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
                         className="flex gap-2 items-center px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
                     >
-                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold text-sm shrink-0">
+                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 text-purple-700 font-bold text-sm shrink-0">
                             {email ? email.charAt(0).toUpperCase() : (firstname ? firstname.charAt(0).toUpperCase() : "U")}
                         </div>
                         <div className="flex-col items-start hidden leading-tight md:flex">
