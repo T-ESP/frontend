@@ -4,11 +4,11 @@ import {
     useScroll, useSpring, motion, AnimatePresence,
 } from "framer-motion";
 import {
-    BarChart2, Package, ShoppingCart, Users, Sparkles, Bell,
+    BarChart2, Package, ShoppingCart, Sparkles, Bell,
     TrendingUp, ChevronRight, ArrowLeft,
-    AlertTriangle, Check, RefreshCw,
+    AlertTriangle, Check, RefreshCw, Award,
 } from "lucide-react";
-import { FiPackage as FiPkg, FiShoppingCart, FiUsers, FiEdit2 } from "react-icons/fi";
+import { FiPackage as FiPkg, FiShoppingCart, FiUsers } from "react-icons/fi";
 
 // ─── Design tokens — exact match to real app ──────────────────────────────────
 const BRAND = "#7b5fa2";
@@ -280,53 +280,57 @@ function PanelSales({ active }: { active: boolean }) {
     );
 }
 
-// ─── Panel 4: Clients — generic, no named retailers ───────────────────────────
-function PanelClients({ active }: { active: boolean }) {
-    const clients = [
-        { initials: "CA", name: "Client A", segment: "Commerce indépendant", color: BRAND },
-        { initials: "CB", name: "Client B", segment: "E-commerce",           color: "#10b981" },
-        { initials: "CC", name: "Client C", segment: "Distribution",         color: "#3b82f6" },
-        { initials: "CD", name: "Client D", segment: "Restauration",         color: "#f59e0b" },
+// ─── Panel 4: Ventes — top products and revenue ────────────────────────────────
+function PanelVentes({ active }: { active: boolean }) {
+    const topProducts = [
+        { name: "Référence A", quantity: 145, revenue: 5800, maxRev: 5800 },
+        { name: "Référence C", quantity: 82, revenue: 2460, maxRev: 5800 },
+        { name: "Référence B", quantity: 45, revenue: 900, maxRev: 5800 },
+        { name: "Référence D", quantity: 28, revenue: 560, maxRev: 5800 },
     ];
 
     return (
         <div className="w-full h-full flex flex-col gap-2">
             <div className="flex items-center justify-between mb-1">
-                <p className="text-[9px] font-bold uppercase tracking-widest text-gray-400">Comptes clients</p>
+                <p className="text-[9px] font-bold uppercase tracking-widest text-gray-400">Top Produits</p>
                 <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-purple-50 border border-purple-200 text-[#7b5fa2]">
-                    {clients.length} actifs
+                    Démo
                 </span>
             </div>
 
-            {clients.map((c, i) => (
-                <motion.div
-                    key={c.name}
-                    initial={{ opacity: 0, x: -12 }}
-                    animate={{ opacity: active ? 1 : 0, x: active ? 0 : -12 }}
-                    transition={{ duration: 0.4, delay: active ? i * 0.08 : 0, ease: [0.16, 1, 0.3, 1] }}
-                    className="rounded-[1rem] px-3.5 py-3 border border-gray-100 bg-white hover:bg-purple-50/30 transition-colors"
-                >
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-xl flex items-center justify-center text-[10px] font-extrabold shrink-0"
-                            style={{ background: `${c.color}14`, color: c.color }}>
-                            {c.initials}
+            <div className="flex flex-col gap-1.5">
+                {topProducts.map((p, i) => (
+                    <motion.div
+                        key={p.name}
+                        initial={{ opacity: 0, x: -12 }}
+                        animate={{ opacity: active ? 1 : 0, x: active ? 0 : -12 }}
+                        transition={{ duration: 0.4, delay: active ? i * 0.08 : 0, ease: [0.16, 1, 0.3, 1] }}
+                        className="rounded-[1rem] px-3.5 py-3 border border-gray-100 bg-white hover:bg-purple-50/30 transition-colors"
+                    >
+                        <div className="flex items-center gap-3">
+                            <div className="w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold bg-slate-50 text-slate-500 shrink-0 border border-slate-100">
+                                #{i + 1}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <p className="text-[12px] font-bold text-gray-800 truncate">{p.name}</p>
+                                <p className="text-[9px] text-gray-400">{p.quantity} unités vérifiées</p>
+                            </div>
+                            <div className="flex flex-col items-end gap-1.5">
+                                <p className="text-[12px] font-[900] text-gray-900 tabular-nums">€{p.revenue.toLocaleString()}</p>
+                                <div className="w-16 bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                    <div 
+                                        className="bg-[#f59e0b] h-1.5 rounded-full" 
+                                        style={{ width: `${(p.revenue / p.maxRev) * 100}%` }}
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                            <p className="text-[12px] font-bold text-gray-800 truncate">{c.name}</p>
-                            <p className="text-[9px] text-gray-400">{c.segment}</p>
-                        </div>
-                        {/* Actions — matches real app row actions */}
-                        <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button className="p-1.5 rounded-lg text-gray-300 hover:text-purple-600 hover:bg-purple-50 transition-colors">
-                                <FiEdit2 size={13} />
-                            </button>
-                        </div>
-                    </div>
-                </motion.div>
-            ))}
+                    </motion.div>
+                ))}
+            </div>
 
             <p className="text-[10px] text-gray-300 text-center mt-1 italic">
-                Historique d'achat · Segmentation · Notes internes
+                Performance produit · Suivi du C.A. · Indicateurs clés
             </p>
         </div>
     );
@@ -465,12 +469,12 @@ const ACTS = [
         color: "#3b82f6", panelKey: "sales",
     },
     {
-        step: "04", badge: "Clients",
-        icon: <Users size={18} />,
-        title: "Gestion client centralisée",
-        body: "Consultez l'historique d'achat, segmentez vos comptes, ajoutez des notes internes. Identifiez vos meilleurs clients en un coup d'œil.",
-        highlight: "Historique d'achat · Segmentation · Notes internes",
-        color: "#f59e0b", panelKey: "clients",
+        step: "04", badge: "Ventes",
+        icon: <Award size={18} />,
+        title: "Tableau de Bord Ventes",
+        body: "Analysez la performance de vos produits, suivez le chiffre d'affaires et identifiez vos meilleures ventes instantanément.",
+        highlight: "Performance produit · Suivi du C.A. · Indicateurs clés",
+        color: "#f59e0b", panelKey: "ventes",
     },
     {
         step: "05", badge: "Assistant IA",
@@ -494,7 +498,7 @@ const PANELS: Record<string, (props: { active: boolean }) => JSX.Element> = {
     dashboard: PanelDashboard,
     inventory: PanelInventory,
     sales: PanelSales,
-    clients: PanelClients,
+    ventes: PanelVentes,
     ai: PanelAI,
     alerts: PanelAlerts,
 };
