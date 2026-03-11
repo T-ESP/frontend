@@ -396,7 +396,7 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
             >
-              La plateforme tout-en-un pour les équipes ambitieuses. Anticipez la demande, automatisez les commandes, maximisez vos marges.
+              Ne tombez plus jamais en rupture. Notre IA anticipe la demande avec 94% de précision et automatise vos réassorts en 2 clics.
             </motion.p>
 
             <motion.div
@@ -406,18 +406,17 @@ export default function Hero() {
               transition={{ duration: 0.7, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col sm:flex-row items-center gap-4"
             >
-              <Link to="/register"
-                className="btn-primary inline-flex items-center gap-2 text-white font-bold px-9 py-4 rounded-2xl text-[0.95rem]">
-                Commencer gratuitement <ChevronRight size={18} />
-              </Link>
-              {/* "Voir la démo" now routes to /demo — not a dead button */}
+              {/* Demo is now the primary action */}
               <Link to="/demo"
-                className="btn-ghost inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-[0.95rem] font-bold text-white">
-                <div className="w-7 h-7 rounded-full flex items-center justify-center"
-                  style={{ background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)", boxShadow: "0 4px 14px rgba(123,95,162,0.3)" }}>
-                  <Play size={11} className="text-white fill-white ml-0.5" />
+                className="btn-primary inline-flex items-center gap-3 px-9 py-4 rounded-2xl text-[0.95rem] font-bold text-white">
+                <div className="w-6 h-6 rounded-full flex items-center justify-center bg-white/20 backdrop-blur-md">
+                  <Play size={10} className="text-white fill-white ml-0.5" />
                 </div>
-                Voir la démo
+                Voir la démo interactive
+              </Link>
+              <Link to="/register"
+                className="btn-ghost inline-flex items-center gap-2 text-white font-bold px-8 py-4 rounded-2xl text-[0.95rem]">
+                Essai gratuit 14 jours <ChevronRight size={18} />
               </Link>
             </motion.div>
 
@@ -547,6 +546,26 @@ export default function Hero() {
                   />
                 </motion.div>
               </TiltCard>
+
+              {/* ── Outcome Metrics Strip ──────────────────────────────────────
+                   Fades in along with the pins using pinsOp to answer "so what?"
+                   after the image has landed. */}
+              <motion.div
+                style={{ opacity: pinsOp }}
+                className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 w-full"
+              >
+                {[
+                  { value: "10+", label: "Modules disponibles" },
+                  { value: "−30%", label: "De surstockage moyen" },
+                  { value: "En direct", label: "Alertes prix & stocks" },
+                  { value: "Inclus", label: "Assistant IA intégré" },
+                ].map((stat, i) => (
+                  <div key={i} className="flex flex-col items-center text-center">
+                    <span className="text-3xl font-[900] text-white tracking-[-0.03em] leading-none mb-2">{stat.value}</span>
+                    <span className="text-[10px] font-bold text-purple-200/50 uppercase tracking-[0.16em] leading-snug">{stat.label}</span>
+                  </div>
+                ))}
+              </motion.div>
             </motion.div>
           </div>
 
