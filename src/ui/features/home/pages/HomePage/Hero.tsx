@@ -19,7 +19,6 @@ import {
 import { useAuth } from "@/ui/features/auth/hooks/useAuth";
 
 // ─── Mouse-tracking mesh gradient ─────────────────────────────────────────────
-// Separated into its own component so its useMotionValue calls are isolated.
 function MeshGradient() {
   const mx = useMotionValue(0.5);
   const my = useMotionValue(0.5);
@@ -29,7 +28,6 @@ function MeshGradient() {
   const py = useTransform(smy, v => `${(v * 100).toFixed(1)}%`);
   const bg = useMotionTemplate`radial-gradient(ellipse 70% 55% at ${px} ${py}, rgba(123,95,162,0.18) 0%, transparent 60%), radial-gradient(ellipse 50% 45% at 80% 20%, rgba(176,142,224,0.10) 0%, transparent 55%)`;
 
-  // addEventListener in a ref-callback so it runs once and cleans up
   const attachRef = useCallback((node: HTMLDivElement | null) => {
     if (!node) return;
     const move = (e: MouseEvent) => {
@@ -44,8 +42,6 @@ function MeshGradient() {
 }
 
 // ─── 3D Tilt card ─────────────────────────────────────────────────────────────
-// Hover-driven rotateX/Y. Operates on separate transform properties from the
-// scroll-driven wrapper, so the two systems don't fight each other.
 function TiltCard({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const rX = useMotionValue(0), rY = useMotionValue(0), gX = useMotionValue(50);
@@ -80,9 +76,6 @@ function TiltCard({ children }: { children: React.ReactNode }) {
 }
 
 // ─── Annotation pin ────────────────────────────────────────────────────────────
-// Positioned by % relative to the image card so it scales with the card.
-// Appears only after the image has fully arrived (driven by pinsOp in Hero).
-// Pulse ring provides the "live" signal feel.
 function AnnotationPin({
   top, left, icon, label, delay, color,
 }: {
@@ -98,7 +91,6 @@ function AnnotationPin({
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] }}
     >
-      {/* Dot with pulse ring */}
       <div className="relative shrink-0">
         <div
           className="w-2.5 h-2.5 rounded-full"
@@ -111,7 +103,6 @@ function AnnotationPin({
           style={{ background: color }}
         />
       </div>
-      {/* Label pill */}
       <div
         className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap"
         style={{
@@ -143,7 +134,6 @@ export default function Hero() {
   const velocity = useVelocity(smooth);
   const velocityScale = useTransform(velocity, [-0.5, 0, 0.5], [1.03, 1, 0.97]);
 
-  // ── Headline keypoints ────────────────────────────────────────────────────
   const hlOp = useTransform(smooth, [0.08, 0.36], [1, 0]);
   const hlY = useTransform(smooth, [0, 0.36], ["0%", "-12%"]);
   const hlScale = useTransform(smooth, [0, 0.36], [1, 0.9]);
@@ -155,24 +145,6 @@ export default function Hero() {
     ([s, vs]: number[]) => (s as number) * (vs as number)
   );
 
-  // ── Dashboard image: ONE continuous scroll-driven animation ──────────────
-  //
-  // Three acts, zero scene switching:
-  //
-  // ACT 1 [0 → 0.1]   Image is present from frame 1, oblique and semi-transparent.
-  //                    It coexists with the headline as part of the composition.
-  //                    The right/bottom edge fades keep it from competing with the text.
-  //
-  // ACT 2 [0.1 → 0.72] As the user scrolls, all skew values interpolate to 0.
-  //                     Opacity, scale, and blur also resolve simultaneously.
-  //                     The headline is fading in [0.08–0.36] — they overlap.
-  //                     This overlap is the handoff: the image responds to the
-  //                     user leaving the headline, creating one continuous motion
-  //                     instead of two sequential scenes.
-  //
-  // ACT 3 [0.72+]      Image rests. Annotation pins appear.
-  //                     Edge fades are fully dissolved. TiltCard hover activates.
-
   const imgX = useTransform(smooth, [0, 0.72], ["45%", "0%"]);
   const imgRotY = useTransform(smooth, [0, 0.72], [-35, 0]);
   const imgRotX = useTransform(smooth, [0, 0.72], [15, 0]);
@@ -182,14 +154,9 @@ export default function Hero() {
   const imgBlur = useTransform(smooth, [0, 0.55], [2, 0]);
   const imgFilter = useTransform(imgBlur, v => `blur(${v}px)`);
 
-  // Edge gradients — dissolve as image arrives so they don't look wrong at rest
   const edgeRightOp = useTransform(smooth, [0.20, 0.65], [1, 0]);
   const edgeBottomOp = useTransform(smooth, [0.20, 0.65], [1, 0]);
-
-  // Ambient glow — grows behind image as it arrives
   const glowOp = useTransform(smooth, [0.25, 0.70], [0, 0.85]);
-
-  // Annotation pins — appear after image has settled
   const pinsOp = useTransform(smooth, [0.70, 0.84], [0, 1]);
 
   return (
@@ -200,7 +167,6 @@ export default function Hero() {
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300&display=swap');
-
         .grad-text {
           background: linear-gradient(120deg, #a480d1 0%, #ffffff 50%, #a480d1 100%);
           background-size: 200% auto;
@@ -210,7 +176,6 @@ export default function Hero() {
           animation: shimmer 6s linear infinite;
         }
         @keyframes shimmer { to { background-position: 200% center; } }
-
         .glass-nav {
           background: rgba(12,7,30,0.45);
           backdrop-filter: blur(24px) saturate(180%);
@@ -251,12 +216,16 @@ export default function Hero() {
           background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
           background-size: 28px 28px;
         }
+        .feature-pill {
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.08);
+          backdrop-filter: blur(12px);
+        }
       `}</style>
 
       {/* ── Sticky viewport ─────────────────────────────────────────────────── */}
       <div className="sticky top-0 h-screen overflow-hidden">
 
-        {/* Background */}
         <div
           className="absolute inset-0 z-0"
           style={{ background: "linear-gradient(155deg, #0c071e 0%, #110a2a 45%, #0e0820 100%)" }}
@@ -406,7 +375,6 @@ export default function Hero() {
               transition={{ duration: 0.7, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col sm:flex-row items-center gap-4"
             >
-              {/* Demo is now the primary action */}
               <Link to="/demo"
                 className="btn-primary inline-flex items-center gap-3 px-9 py-4 rounded-2xl text-[0.95rem] font-bold text-white">
                 <div className="w-6 h-6 rounded-full flex items-center justify-center bg-white/20 backdrop-blur-md">
@@ -424,7 +392,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.55, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-6 text-[13px] font-medium text-purple-200/40 opacity-75"
+              className="mt-6 text-[13px] font-medium text-purple-200/40"
             >
               Conçu pour les gérants de commerce, les responsables logistique et les équipes e-commerce.
             </motion.div>
@@ -447,11 +415,7 @@ export default function Hero() {
             </motion.div>
           </motion.div>
 
-          {/* ── LAYER 2: Dashboard — single continuous scroll animation ─────────
-               This div starts oblique (right-biased, rotated, faded) and
-               smoothly resolves to centered + flat + full opacity as scroll
-               progresses. No scene switching. No second sticky section.
-               One object. One motion.                                          */}
+          {/* ── LAYER 2: Dashboard ──────────────────────────────────────────── */}
           <div className="absolute inset-0 flex items-center justify-center z-10"
             style={{ paddingLeft: "clamp(1rem,5vw,8rem)", paddingRight: "clamp(1rem,5vw,8rem)" }}>
             <motion.div
@@ -469,7 +433,6 @@ export default function Hero() {
                 willChange: "transform, opacity, filter",
               }}
             >
-              {/* Ambient glow — grows as image arrives */}
               <motion.div
                 style={{ opacity: glowOp }}
                 className="absolute -inset-20 pointer-events-none -z-10"
@@ -481,7 +444,6 @@ export default function Hero() {
                 }} />
               </motion.div>
 
-              {/* TiltCard: hover-driven rotateX/Y on top of scroll-driven transforms */}
               <TiltCard>
                 <div
                   className="relative rounded-[2rem] overflow-hidden"
@@ -495,8 +457,6 @@ export default function Hero() {
                     className="w-full h-auto block"
                     draggable={false}
                   />
-
-                  {/* Right edge fade: hides the cut-off edge during ACT 1 */}
                   <motion.div
                     className="absolute inset-0 pointer-events-none"
                     style={{
@@ -504,8 +464,6 @@ export default function Hero() {
                       opacity: edgeRightOp,
                     }}
                   />
-
-                  {/* Bottom edge fade: grounds the image during ACT 1 */}
                   <motion.div
                     className="absolute inset-x-0 bottom-0 pointer-events-none"
                     style={{
@@ -514,64 +472,55 @@ export default function Hero() {
                       opacity: edgeBottomOp,
                     }}
                   />
-
-                  {/* Top-edge highlight: always on */}
                   <div className="absolute inset-x-0 top-0 h-px pointer-events-none"
                     style={{ background: "linear-gradient(90deg, transparent 5%, rgba(123,95,162,0.45) 50%, transparent 95%)" }}
                   />
                 </div>
 
-                {/* ── Annotation pins ──────────────────────────────────────────
-                     Appear after the image lands. Positioned by % of the card
-                     so they stay anchored to the dashboard regions they point at.
-                     Each has a pulse ring to signal "live data".               */}
                 <motion.div
                   className="absolute inset-0 pointer-events-none"
                   style={{ opacity: pinsOp }}
                 >
                   <AnnotationPin
-                    top="16%"
-                    left="5%"
+                    top="16%" left="5%"
                     icon={<TrendingUp size={11} />}
                     label="CA en temps réel"
-                    delay={0.05}
-                    color="#9d7bdd"
+                    delay={0.05} color="#9d7bdd"
                   />
                   <AnnotationPin
-                    top="10%"
-                    left="56%"
+                    top="10%" left="56%"
                     icon={<Zap size={11} />}
                     label="Alertes IA"
-                    delay={0.18}
-                    color="#f59e0b"
+                    delay={0.18} color="#f59e0b"
                   />
                   <AnnotationPin
-                    top="46%"
-                    left="72%"
+                    top="46%" left="72%"
                     icon={<Bell size={11} />}
                     label="Alertes critiques"
-                    delay={0.30}
-                    color="#ef4444"
+                    delay={0.30} color="#ef4444"
                   />
                 </motion.div>
               </TiltCard>
 
-              {/* ── Outcome Metrics Strip ──────────────────────────────────────
-                   Fades in along with the pins using pinsOp to answer "so what?"
-                   after the image has landed. */}
+              {/* ── Feature strip ────────────────────────────────────────────────
+                   Describes what the platform includes — capability language only.
+                   No numbers implying measured outcomes. No external validation.  */}
               <motion.div
                 style={{ opacity: pinsOp }}
-                className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 w-full"
+                className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3 w-full"
               >
                 {[
-                  { value: "Temps réel", label: "Synchronisation globale" },
-                  { value: "Centralisé", label: "Gestion des commandes" },
-                  { value: "En direct", label: "Alertes prix & stocks" },
-                  { value: "Inclus", label: "Assistant IA interactif" },
-                ].map((stat, i) => (
-                  <div key={i} className="flex flex-col items-center text-center">
-                    <span className="text-3xl font-[900] text-white tracking-[-0.03em] leading-none mb-2">{stat.value}</span>
-                    <span className="text-[10px] font-bold text-purple-200/50 uppercase tracking-[0.16em] leading-snug">{stat.label}</span>
+                  { label: "Synchronisation", sub: "Temps réel" },
+                  { label: "Commandes", sub: "Centralisées" },
+                  { label: "Alertes prix", sub: "& ruptures" },
+                  { label: "Assistant IA", sub: "Intégré" },
+                ].map((item, i) => (
+                  <div
+                    key={i}
+                    className="feature-pill flex flex-col items-center text-center px-3 py-3 rounded-2xl"
+                  >
+                    <span className="text-[13px] font-[800] text-white leading-none mb-1">{item.label}</span>
+                    <span className="text-[10px] font-semibold text-purple-300/50 uppercase tracking-[0.14em]">{item.sub}</span>
                   </div>
                 ))}
               </motion.div>
