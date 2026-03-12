@@ -81,44 +81,7 @@ export default function PricingPage() {
 
     return (
         <div className="min-h-screen bg-white font-sans">
-            {/* Navbar */}
-            {!isAppMode && (
-                <nav className="flex items-center justify-between px-8 md:px-16 py-5 border-b border-gray-100 bg-white sticky top-0 z-50">
-                    <Link to="/" className="flex items-center gap-2">
-                        <Logo className="w-8 h-8" />
-                        <span className="text-lg font-bold text-gray-900 tracking-tight">Stocks</span>
-                    </Link>
-                    <div className="flex items-center gap-4">
-                        {isAuthenticated ? (
-                            <>
-                                <span className="text-sm text-gray-700 font-medium">
-                                    Bonjour, {firstname || "Utilisateur"}
-                                </span>
-                                <Link
-                                    to="/dashboard"
-                                    className="text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-opacity hover:opacity-90"
-                                    style={{ backgroundColor: BRAND }}
-                                >
-                                    Mon Espace
-                                </Link>
-                            </>
-                        ) : (
-                            <>
-                                <Link to="/login" className="text-sm text-gray-700 font-medium transition-colors hover:opacity-70">
-                                    Se connecter
-                                </Link>
-                                <Link
-                                    to="/register"
-                                    className="text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-opacity hover:opacity-90"
-                                    style={{ backgroundColor: BRAND }}
-                                >
-                                    Commencer gratuitement
-                                </Link>
-                            </>
-                        )}
-                    </div>
-                </nav>
-            )}
+
 
             {/* Hero */}
             <div className="text-center pt-20 pb-12 px-8">
