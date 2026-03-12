@@ -1,4 +1,4 @@
-import { useRef, useCallback, useState } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import dashboardImage from '@/assets/images/image.png';
 import { Logo } from "@/ui/components/common/Logo";
@@ -145,12 +145,23 @@ export default function Hero() {
     ([s, vs]: number[]) => (s as number) * (vs as number)
   );
 
-  const imgX = useTransform(smooth, [0, 0.48], ["45%", "0%"]);
-  const imgRotY = useTransform(smooth, [0, 0.48], [-35, 0]);
-  const imgRotX = useTransform(smooth, [0, 0.48], [15, 0]);
-  const imgRotZ = useTransform(smooth, [0, 0.48], [-4, 0]);
+  // Responsive transforms (reactive to resize; avoids one-time window checks)
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener?.("change", update);
+    return () => mq.removeEventListener?.("change", update);
+  }, []);
+  
+  const imgX = useTransform(smooth, [0, 0.48], [isMobile ? "0%" : "45%", "0%"]);
+  const imgRotY = useTransform(smooth, [0, 0.48], [isMobile ? -15 : -35, 0]);
+  const imgRotX = useTransform(smooth, [0, 0.48], [isMobile ? 10 : 15, 0]);
+  const imgRotZ = useTransform(smooth, [0, 0.48], [isMobile ? -2 : -4, 0]);
   const imgOpacity = useTransform(smooth, [0, 0.48], [0.4, 1]);
-  const imgScale = useTransform(smooth, [0, 0.48], [1.15, 1]);
+  const imgScale = useTransform(smooth, [0, 0.48], [isMobile ? 1.05 : 1.15, 1]);
   const imgBlur = useTransform(smooth, [0, 0.55], [2, 0]);
   const imgFilter = useTransform(imgBlur, v => `blur(${v}px)`);
 
@@ -162,7 +173,7 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-[350vh]"
+      className="relative h-[260vh] sm:h-[320vh] lg:h-[350vh]"
       style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}
     >
       <style>{`
@@ -238,7 +249,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-50 flex items-center justify-between px-6 md:px-14 py-5 glass-nav border-b border-white/[0.07]"
+          className="relative z-50 flex items-center justify-between px-5 md:px-14 py-4 md:py-5 glass-nav border-b border-white/[0.07]"
         >
           <Link to="/" className="flex items-center gap-2.5">
             <motion.div
@@ -350,7 +361,7 @@ export default function Hero() {
             </motion.div>
 
             <motion.h1
-              className="text-[clamp(3rem,7vw,6.5rem)] font-[900] text-white leading-[0.95] tracking-[-0.04em] mb-7"
+              className="text-[clamp(2.5rem,8vw,6.5rem)] font-[900] text-white leading-[1.05] lg:leading-[0.95] tracking-[-0.04em] mb-6 md:mb-7"
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
@@ -360,12 +371,12 @@ export default function Hero() {
             </motion.h1>
 
             <motion.p
-              className="text-purple-200/65 text-lg md:text-xl max-w-xl leading-relaxed mb-10 font-light"
+              className="text-purple-200/65 text-base md:text-xl max-w-xl leading-relaxed mb-8 md:mb-10 font-light"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
             >
-              Ne tombez plus jamais en rupture. Notre IA anticipe la demande et automatise vos réassorts — en 2 clics.
+              Ne tombez plus jamais en rupture. Notre IA anticipe la demande et automatise vos réassorts <br className="hidden md:block" /> — en 2 clics.
             </motion.p>
 
             <motion.div
@@ -376,14 +387,14 @@ export default function Hero() {
               className="flex flex-col sm:flex-row items-center gap-4"
             >
               <Link to="/demo"
-                className="btn-primary inline-flex items-center gap-3 px-9 py-4 rounded-2xl text-[0.95rem] font-bold text-white">
+                className="w-full sm:w-auto btn-primary inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-[0.9rem] md:text-[0.95rem] font-bold text-white">
                 <div className="w-6 h-6 rounded-full flex items-center justify-center bg-white/20 backdrop-blur-md">
                   <Play size={10} className="text-white fill-white ml-0.5" />
                 </div>
                 Voir la démo interactive
               </Link>
               <Link to="/register"
-                className="btn-ghost inline-flex items-center gap-2 text-white font-bold px-8 py-4 rounded-2xl text-[0.95rem]">
+                className="w-full sm:w-auto btn-ghost inline-flex items-center justify-center gap-2 text-white font-bold px-8 py-4 rounded-2xl text-[0.9rem] md:text-[0.95rem]">
                 Essai gratuit 14 jours <ChevronRight size={18} />
               </Link>
             </motion.div>
@@ -416,8 +427,7 @@ export default function Hero() {
           </motion.div>
 
           {/* ── LAYER 2: Dashboard ──────────────────────────────────────────── */}
-          <div className="absolute inset-0 flex items-center justify-center z-10"
-            style={{ paddingLeft: "clamp(1rem,5vw,8rem)", paddingRight: "clamp(1rem,5vw,8rem)" }}>
+          <div className="absolute inset-x-0 bottom-[6%] sm:bottom-[10%] lg:inset-0 flex items-center justify-center z-10 px-5 md:px-14 lg:px-20">
             <motion.div
               className="w-full max-w-[860px]"
               style={{
@@ -478,7 +488,7 @@ export default function Hero() {
                 </div>
 
                 <motion.div
-                  className="absolute inset-0 pointer-events-none"
+                  className="absolute inset-0 pointer-events-none hidden sm:block"
                   style={{ opacity: pinsOp }}
                 >
                   <AnnotationPin

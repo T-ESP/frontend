@@ -192,7 +192,7 @@ export default function Features() {
         </motion.div>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 auto-rows-[360px]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 auto-rows-[320px] sm:auto-rows-[360px]">
 
           {/* Card 1 - AI (2 cols) */}
           <div className="bento-card rounded-[2.2rem] md:col-span-2 relative overflow-hidden group">

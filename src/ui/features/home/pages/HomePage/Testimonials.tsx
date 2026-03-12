@@ -98,7 +98,7 @@ export default function Testimonials() {
             <motion.div
               initial="hidden" whileInView="show" viewport={{ once: true }}
               transition={{ staggerChildren: 0.08 }}
-              className="grid grid-cols-2 gap-3"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-3"
             >
               {advantages.map((adv, i) => (
                 <motion.div

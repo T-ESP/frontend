@@ -212,11 +212,10 @@ export default function ContactSection() {
           <div className="grid md:grid-cols-5 gap-0">
             {/* Left info panel */}
             <div
-              className="md:col-span-2 p-8 md:p-10 flex flex-col justify-between"
+              className="md:col-span-2 p-8 md:p-10 flex flex-col justify-between md:border-r md:border-white/[0.06]"
               style={{
                 background:
                   "linear-gradient(135deg, rgba(123,95,162,0.12) 0%, rgba(123,95,162,0.04) 100%)",
-                borderRight: "1px solid rgba(255,255,255,0.06)",
               }}
             >
               <div>

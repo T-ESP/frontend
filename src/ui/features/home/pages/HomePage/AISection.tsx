@@ -83,10 +83,10 @@ export default function AISection() {
             whileInView={{ opacity: 1, x: 0, scale: 1, filter: "blur(0px)" }}
             transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
-            className="hidden lg:block"
+            className="mt-10 lg:mt-0"
           >
             <div
-              className="rounded-[2.4rem] p-8 border border-gray-100 space-y-5"
+              className="rounded-[2.4rem] p-6 sm:p-7 lg:p-8 border border-gray-100 space-y-5 max-w-xl mx-auto"
               style={{
                 background: "rgba(255,255,255,0.85)",
                 backdropFilter: "blur(24px)",

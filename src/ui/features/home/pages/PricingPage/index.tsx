@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Logo } from "@/ui/components/common/Logo";
 import { Check, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/ui/features/auth/hooks/useAuth";
@@ -9,7 +8,7 @@ const BRAND = "#7b5fa2";
 
 export default function PricingPage() {
     const { t } = useTranslation();
-    const { isAuthenticated, firstname } = useAuth();
+    const { isAuthenticated } = useAuth();
     const [isYearly, setIsYearly] = useState(false);
     const location = useLocation();
     const isAppMode = location.pathname === '/abonnement';
