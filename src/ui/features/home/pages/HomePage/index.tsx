@@ -4,6 +4,7 @@ import Hero from './Hero';
 import Features from './Features';
 import Testimonials from './Testimonials';
 import AISection from './AISection';
+import ContactSection from './ContactSection';
 import Footer from './Footer';
 
 function GlobalBackground() {
@@ -64,6 +65,7 @@ export default function HomePage() {
       <Features />
       <AISection />
       <Testimonials />
+      <ContactSection />
       <Footer />
     </main>
   );
