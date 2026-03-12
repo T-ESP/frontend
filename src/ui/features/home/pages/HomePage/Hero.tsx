@@ -145,19 +145,19 @@ export default function Hero() {
     ([s, vs]: number[]) => (s as number) * (vs as number)
   );
 
-  const imgX = useTransform(smooth, [0, 0.72], ["45%", "0%"]);
-  const imgRotY = useTransform(smooth, [0, 0.72], [-35, 0]);
-  const imgRotX = useTransform(smooth, [0, 0.72], [15, 0]);
-  const imgRotZ = useTransform(smooth, [0, 0.72], [-4, 0]);
-  const imgOpacity = useTransform(smooth, [0, 0.62], [0.4, 1]);
-  const imgScale = useTransform(smooth, [0, 0.72], [1.15, 1]);
+  const imgX = useTransform(smooth, [0, 0.48], ["45%", "0%"]);
+  const imgRotY = useTransform(smooth, [0, 0.48], [-35, 0]);
+  const imgRotX = useTransform(smooth, [0, 0.48], [15, 0]);
+  const imgRotZ = useTransform(smooth, [0, 0.48], [-4, 0]);
+  const imgOpacity = useTransform(smooth, [0, 0.48], [0.4, 1]);
+  const imgScale = useTransform(smooth, [0, 0.48], [1.15, 1]);
   const imgBlur = useTransform(smooth, [0, 0.55], [2, 0]);
   const imgFilter = useTransform(imgBlur, v => `blur(${v}px)`);
 
   const edgeRightOp = useTransform(smooth, [0.20, 0.65], [1, 0]);
   const edgeBottomOp = useTransform(smooth, [0.20, 0.65], [1, 0]);
   const glowOp = useTransform(smooth, [0.25, 0.70], [0, 0.85]);
-  const pinsOp = useTransform(smooth, [0.70, 0.84], [0, 1]);
+  const pinsOp = useTransform(smooth, [0.48, 0.60], [0, 1]);
 
   return (
     <section
