@@ -3,13 +3,12 @@ import type {
   RegisterResult,
   RegisterUserGateway,
 } from "@/application/usecases/RegisterUser/RegisterUser.types";
-
-const DEFAULT_API_URL = import.meta.env.VITE_API_URL || "http://localhost:8090";
+import { getApiUrl } from "@/lib/api-url";
 
 export class HttpRegisterUserGateway implements RegisterUserGateway {
   private readonly baseUrl: string;
 
-  constructor(baseUrl: string = DEFAULT_API_URL) {
+  constructor(baseUrl: string = getApiUrl()) {
     this.baseUrl = baseUrl;
   }
 
@@ -26,15 +25,15 @@ export class HttpRegisterUserGateway implements RegisterUserGateway {
 
     if (!response.ok) {
       const errorMessage =
-        (maybeJson && (maybeJson.message as string | undefined)) ??
-        "Unable to create account.";
+          (maybeJson && (maybeJson.message as string | undefined)) ??
+          "Unable to create account.";
       throw new Error(errorMessage);
     }
 
     return {
       message:
-        (maybeJson && (maybeJson.message as string | undefined)) ??
-        "Account created successfully.",
+          (maybeJson && (maybeJson.message as string | undefined)) ??
+          "Account created successfully.",
     };
   }
 
@@ -51,4 +50,3 @@ export class HttpRegisterUserGateway implements RegisterUserGateway {
     }
   }
 }
-

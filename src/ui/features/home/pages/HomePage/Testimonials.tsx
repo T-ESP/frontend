@@ -59,7 +59,7 @@ export default function Testimonials() {
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#7b5fa2]/20 bg-[#7b5fa2]/5 text-[#7b5fa2] text-[11px] font-bold uppercase tracking-[0.18em] mb-7">
             Avantages
           </div>
-          <h2 className="text-[clamp(2.2rem,4.5vw,4rem)] font-[900] text-white tracking-[-0.035em] leading-[1.05] mb-5">
+          <h2 className="text-[clamp(2.2rem,4.5vw,4rem)] font-black text-white tracking-[-0.035em] leading-[1.05] mb-5">
             Pourquoi choisir Stocks&nbsp;?
           </h2>
           <p className="text-purple-300/50 text-lg font-light max-w-xl leading-relaxed">
@@ -125,7 +125,7 @@ export default function Testimonials() {
             whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
-            className="bg-white rounded-[2rem] border border-gray-100 p-8"
+            className="bg-white rounded-4xl border border-gray-100 p-8"
             style={{ boxShadow: "0 4px 40px rgba(123,95,162,0.07)" }}
           >
             <div className="mb-7">

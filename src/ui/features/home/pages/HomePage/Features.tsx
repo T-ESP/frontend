@@ -61,7 +61,7 @@ function AlertsVisual() {
           <AlertCircle size={14} />
         </div>
         <div>
-          <p className="text-[10px] font-[900] text-rose-600 uppercase tracking-wider mb-0.5">Stock critique</p>
+          <p className="text-[10px] font-black text-rose-600 uppercase tracking-wider mb-0.5">Stock critique</p>
           <p className="text-[10px] text-purple-200/60 font-bold">Lait d'avoine (Reste 2 vitrines)</p>
         </div>
       </motion.div>
@@ -74,7 +74,7 @@ function AlertsVisual() {
           <Bell size={14} />
         </div>
         <div>
-          <p className="text-[10px] font-[900] text-white uppercase tracking-wider mb-0.5">Camion retardé</p>
+          <p className="text-[10px] font-black text-white uppercase tracking-wider mb-0.5">Camion retardé</p>
           <p className="text-[10px] text-purple-200/60 font-bold">Fournisseur BioX (+2 jours)</p>
         </div>
       </motion.div>
@@ -183,7 +183,7 @@ export default function Features() {
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#7b5fa2]/20 bg-[#7b5fa2]/5 text-[#7b5fa2] text-[11px] font-bold uppercase tracking-[0.18em] mb-7">
             L'Intelligence Logistique
           </div>
-          <h2 className="text-[clamp(2.5rem,5vw,4.5rem)] font-[900] text-white tracking-[-0.035em] leading-[1.05] mb-6">
+          <h2 className="text-[clamp(2.5rem,5vw,4.5rem)] font-black text-white tracking-[-0.035em] leading-[1.05] mb-6">
             Conçu pour la vitesse.<br className="hidden md:block" /> Propulsé par l'IA.
           </h2>
           <p className="text-purple-200/60 text-lg md:text-xl font-light max-w-2xl mx-auto leading-relaxed">

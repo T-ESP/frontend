@@ -31,7 +31,7 @@ export default function Preview() {
               Aperçu plateforme
             </div>
 
-            <h2 className="text-[clamp(2.2rem,4.5vw,4rem)] font-[900] text-white tracking-[-0.035em] leading-[1.05] mb-6">
+            <h2 className="text-[clamp(2.2rem,4.5vw,4rem)] font-black text-white tracking-[-0.035em] leading-[1.05] mb-6">
               Tout ce dont vous avez besoin,<br />
               <span className="text-[#7b5fa2]">en un seul endroit.</span>
             </h2>
@@ -79,7 +79,7 @@ export default function Preview() {
                 className="rounded-[1.4rem] p-6 border transition-all duration-300 cursor-default"
                 style={{ background: s.bg, borderColor: s.border }}
               >
-                <p className="text-[1.8rem] font-[900] text-gray-900 tracking-tight leading-none mb-2">{s.value}</p>
+                <p className="text-[1.8rem] font-black text-gray-900 tracking-tight leading-none mb-2">{s.value}</p>
                 <p className="text-xs text-gray-500 font-light leading-snug">{s.label}</p>
               </motion.div>
             ))}

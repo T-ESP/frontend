@@ -69,7 +69,7 @@ function TiltCard({ children }: { children: React.ReactNode }) {
       {children}
       <motion.div
         style={{ background: glare }}
-        className="absolute inset-0 rounded-[2rem] pointer-events-none z-10"
+        className="absolute inset-0 rounded-4xl pointer-events-none z-10"
       />
     </motion.div>
   );
@@ -140,10 +140,7 @@ export default function Hero() {
   const topFade = useTransform(smooth, [0.05, 0.24], [1, 0]);
   const ctaOp = useTransform(smooth, [0.05, 0.24], [1, 0]);
 
-  const combinedHlScale = useTransform(
-    [hlScale, velocityScale] as any,
-    ([s, vs]: number[]) => (s as number) * (vs as number)
-  );
+  const combinedHlScale = hlScale;
 
   // Responsive transforms (reactive to resize; avoids one-time window checks)
   const [isMobile, setIsMobile] = useState(false);
@@ -279,14 +276,9 @@ export default function Hero() {
                 {email ? email.charAt(0).toUpperCase() : (firstname ? firstname.charAt(0).toUpperCase() : "U")}
               </Link>
             ) : (
-              <>
-                <Link to="/login" className="hidden sm:block text-sm font-semibold text-purple-200/70 hover:text-white px-3 py-2 transition-colors">
-                  Se connecter
-                </Link>
-                <Link to="/register" className="btn-primary text-white text-sm font-bold px-6 py-2.5 rounded-full">
-                  S'inscrire
-                </Link>
-              </>
+              <Link to="/login" className="hidden sm:block text-sm font-semibold text-purple-200/70 hover:text-white px-3 py-2 transition-colors">
+                Se connecter
+              </Link>
             )}
             <button className="md:hidden p-2 text-purple-200/60" onClick={() => setMobileOpen(o => !o)}>
               {mobileOpen ? <X size={22} /> : <Menu size={22} />}
@@ -359,7 +351,7 @@ export default function Hero() {
             </motion.div>
 
             <motion.h1
-              className="text-[clamp(2.5rem,8vw,6.5rem)] font-[900] text-white leading-[1.05] lg:leading-[0.95] tracking-[-0.04em] mb-6 md:mb-7"
+              className="text-[clamp(2.5rem,8vw,6.5rem)] font-black text-white leading-[1.05] lg:leading-[0.95] tracking-[-0.04em] mb-6 md:mb-7"
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
@@ -453,7 +445,7 @@ export default function Hero() {
 
               <TiltCard>
                 <div
-                  className="relative rounded-[2rem] overflow-hidden"
+                  className="relative rounded-4xl overflow-hidden"
                   style={{
                     boxShadow: "0 40px 100px -20px rgba(123,95,162,0.38), 0 0 0 1px rgba(255,255,255,0.08), -20px 20px 60px rgba(0,0,0,0.45)",
                   }}

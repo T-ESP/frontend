@@ -176,7 +176,7 @@ export default function ContactSection() {
           </div>
 
           <h2
-            className="text-[clamp(2rem,5vw,3.5rem)] font-[900] text-white leading-[1.05] tracking-[-0.03em] mb-4"
+            className="text-[clamp(2rem,5vw,3.5rem)] font-black text-white leading-[1.05] tracking-[-0.03em] mb-4"
           >
             Intéressé ? Parlons-en.
           </h2>
