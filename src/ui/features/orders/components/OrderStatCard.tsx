@@ -44,7 +44,7 @@ export function OrderStatCard({ label, value, icon: Icon, color }: OrderStatCard
   const colors = colorClasses[color];
 
   return (
-    <div className={`bg-gradient-to-r ${colors.gradient} p-4 rounded-xl border ${colors.border}`}>
+    <div className={`bg-linear-to-r ${colors.gradient} p-4 rounded-xl border ${colors.border}`}>
       <div className="flex justify-between items-center">
         <div>
           <p className={`${colors.text} text-sm font-medium`}>{label}</p>

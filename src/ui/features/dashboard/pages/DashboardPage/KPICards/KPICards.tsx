@@ -4,6 +4,7 @@ import type { KPI } from "@/ui/features/dashboard/types";
 import type { Order } from "@/domain/models/Order";
 import type { Product } from "@/domain/models/Product";
 import type { User } from "@/domain/models/User";
+import { useTranslation } from "react-i18next";
 
 interface KPICardsProps {
   orders: Order[];
@@ -15,6 +16,8 @@ interface KPICardsProps {
 }
 
 export function KPICards({ orders, products, users, totalRevenue, evolution, dateRange = 30 }: KPICardsProps) {
+  console.log("🚀 ~ KPICards ~ totalRevenue:", totalRevenue)
+  const { t } = useTranslation();
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
@@ -32,42 +35,50 @@ export function KPICards({ orders, products, users, totalRevenue, evolution, dat
   // Calculate low stock products (stock < 10)
   const lowStockProducts = products.filter(p => p.stock_quantity < 10).length;
 
+  const getDateRangeLabel = () => {
+    if (dateRange === 7) return t('common.date_range.last_7_days');
+    if (dateRange === 90) return t('common.date_range.last_90_days');
+    if (dateRange === 365) return t('common.date_range.last_year');
+    return t('common.date_range.last_30_days');
+  };
+
   const kpiData: KPI[] = [
     {
-      title: "Total Revenue",
+      title: t('dashboard.kpi.total_revenue'),
       value: formatCurrency(totalRevenue),
       change: formatPercentage(evolution),
       trend: evolution >= 0 ? "up" : "down",
       icon: FiDollarSign,
       color: "emerald",
-      description: dateRange === 7 ? "Last 7 days" : dateRange === 90 ? "Last 90 days" : dateRange === 365 ? "Last year" : "Last 30 days"
+      description: getDateRangeLabel(),
+      isPrimary: false
     },
     {
-      title: "Total Orders",
+      title: t('dashboard.kpi.total_orders'),
       value: orders.length.toString(),
       change: "+0.0%",
       trend: "up",
       icon: FiShoppingCart,
       color: "blue",
-      description: "All time"
+      description: t('common.all_time')
     },
     {
-      title: "Low Stock Alert",
+      title: t('dashboard.kpi.low_stock_alert'),
       value: lowStockProducts.toString(),
-      change: lowStockProducts > 5 ? "High" : "Normal",
+      change: lowStockProducts > 5 ? t('dashboard.kpi.high') : t('dashboard.kpi.normal'),
       trend: lowStockProducts > 5 ? "down" : "up",
       icon: FiPackage,
       color: lowStockProducts > 5 ? "amber" : "purple",
-      description: "Products < 10 units"
+      description: t('dashboard.kpi.products_low_units')
     },
     {
-      title: "Total Users",
+      title: t('dashboard.kpi.total_users'),
       value: users.length.toString(),
       change: "+0.0%",
       trend: "up",
       icon: FiUsers,
       color: "purple",
-      description: "All time"
+      description: t('common.all_time')
     },
   ];
 

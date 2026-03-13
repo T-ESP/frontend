@@ -91,6 +91,46 @@ Tes instructions :
       return "Désolé, une erreur technique est survenue lors de la communication avec l'assistant.";
     }
   }
+  /**
+   * Envoie un message à Mistral avec support des outils (Agent mode)
+   */
+  async agentChat(
+    messages: any[],
+    tools: any[]
+  ): Promise<any> {
+    if (!this.apiKey) {
+      throw new Error("Clé API Mistral manquante.");
+    }
+
+    try {
+      const response = await fetch(this.baseUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${this.apiKey}`,
+        },
+        body: JSON.stringify({
+          model: "mistral-small-latest", // As requested
+          messages: messages,
+          tools: tools,
+          tool_choice: "any", // Force tool use as requested
+          temperature: 0.7,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error("Mistral API Error:", errorData);
+        throw new Error(`Erreur API Mistral: ${response.statusText}`);
+      }
+
+      const data: MistralResponse = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Erreur agent Mistral:", error);
+      throw error;
+    }
+  }
 }
 
 export const mistralService = new MistralService();

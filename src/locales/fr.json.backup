@@ -1,0 +1,416 @@
+{
+    "common": {
+        "edit": "Modifier",
+        "export": "Exporter",
+        "actions": "Actions",
+        "cancel": "Annuler",
+        "save": "Enregistrer",
+        "delete": "Supprimer",
+        "confirm": "Confirmer",
+        "creating": "Création...",
+        "updating": "Mise à jour...",
+        "deleting": "Suppression...",
+        "refresh": "Actualiser",
+        "view_details": "Voir les détails",
+        "sold": "vendus",
+        "units": "unités",
+        "of": "sur",
+        "date_range": {
+            "last_7_days": "7 derniers jours",
+            "last_30_days": "30 derniers jours",
+            "last_90_days": "90 derniers jours",
+            "last_year": "Dernière année"
+        },
+        "all_time": "Tout le temps"
+    },
+    "sidebar": {
+        "dashboard": "Tableau de bord",
+        "inventory": "Inventaire",
+        "orders": "Commandes",
+        "insights": "Analyses",
+        "sales": "Ventes",
+        "pricing_news": "Prix & Actualités",
+        "suppliers": "Fournisseurs",
+        "ai_assistant": "Assistant IA",
+        "team": "Équipe",
+        "settings": "Paramètres",
+        "logout": "Déconnexion"
+    },
+    "dashboard": {
+        "title": "Tableau de bord",
+        "subtitle": "Suivez les performances de votre entreprise en temps réel",
+        "export": {
+            "title": "Export du tableau de bord",
+            "metric": "Métrique",
+            "value": "Valeur"
+        },
+        "kpi": {
+            "total_revenue": "Revenu Total",
+            "revenue_evolution": "Évolution du Revenu",
+            "total_orders": "Commandes Totales",
+            "total_products": "Produits Totaux",
+            "total_users": "Utilisateurs Totaux",
+            "low_stock": "Produits en stock faible",
+            "low_stock_alert": "Alerte Stock Faible",
+            "high": "Élevé",
+            "normal": "Normal",
+            "products_low_units": "Produits < 10 unités"
+        },
+        "top_products": {
+            "title": "Produits Performants",
+            "subtitle": "Produits avec le plus de stock",
+            "sort_by": "Trier par",
+            "stock": "Quantité Stock",
+            "value": "Valeur Totale",
+            "name": "Nom Produit",
+            "no_products": "Aucun produit trouvé",
+            "stock_label": "Stock",
+            "value_label": "Valeur",
+            "name_label": "Nom"
+        },
+        "charts": {
+            "revenue_title": "Analyse des Revenus",
+            "revenue_subtitle": "Suivez vos tendances de revenus et profits",
+            "range": {
+                "last_12": "12 derniers mois",
+                "last_6": "6 derniers mois",
+                "last_3": "3 derniers mois"
+            },
+            "customer_title": "Distribution Clients",
+            "customer_subtitle": "Nouveaux vs récurrents",
+            "new_customers": "Nouveaux Clients",
+            "returning_customers": "Récurrents",
+            "revenue": "Revenu",
+            "profit": "Profit"
+        }
+    },
+    "inventory": {
+        "title": "Inventaire",
+        "subtitle": "Gérez votre stock, vos produits et leur disponibilité.",
+        "add_product": "Ajouter un produit",
+        "management": "Gestion de l'inventaire",
+        "products_count": "{{val}} produits",
+        "filtered_count": "{{filtered}} sur {{total}} produits",
+        "stats": {
+            "in_stock": "En stock",
+            "low_stock": "Stock faible",
+            "out_of_stock": "Rupture de stock",
+            "total_products": "Produits Totaux"
+        },
+        "table": {
+            "product": "Produit",
+            "category": "Catégorie",
+            "price": "Prix",
+            "stock": "Stock",
+            "status": "Statut",
+            "no_products_title": "Aucun produit trouvé",
+            "no_products_desc": "Essayez d'ajuster vos filtres ou votre recherche.",
+            "showing_range": "Affichage de {{start}} à {{end}} sur {{total}} produits",
+            "per_page": "par page",
+            "first": "Premier",
+            "previous": "Précédent",
+            "next": "Suivant",
+            "last": "Dernier"
+        },
+        "header": {
+            "clear_filters": "Effacer {{quantity}} filtres",
+            "refresh": "Actualiser",
+            "search_placeholder": "Rechercher par nom, SKU ou catégorie..."
+        },
+        "filters": {
+            "title": "Filtres",
+            "advanced": "Filtres avancés",
+            "reset": "Réinitialiser",
+            "price_range": "Fourchette de prix (€)",
+            "stock_range": "Quantité en stock",
+            "min": "Min",
+            "max": "Max",
+            "all_categories": "Toutes les catégories",
+            "all_status": "Tous les statuts"
+        },
+        "status": {
+            "in_stock": "En stock",
+            "low_stock": "Stock faible",
+            "out_of_stock": "Rupture de stock"
+        },
+        "sort": {
+            "name": "Trier: Nom",
+            "price": "Trier: Prix",
+            "stock": "Trier: Stock",
+            "category": "Trier: Catégorie",
+            "updated": "Trier: Mis à jour",
+            "asc": "Croissant",
+            "desc": "Décroissant",
+            "a_z": "A-Z",
+            "z_a": "Z-A"
+        },
+        "form": {
+            "product_name": "Nom du produit",
+            "reference": "Référence (SKU)",
+            "category": "Catégorie",
+            "stock_quantity": "Quantité en stock",
+            "buying_price": "Prix d'achat (€)",
+            "supplier_id": "ID Fournisseur",
+            "create_submit": "Créer le produit",
+            "update_submit": "Mettre à jour",
+            "delete_submit": "Supprimer le produit",
+            "error": {
+                "numbers": "Veuillez vous assurer que tous les champs numériques sont valides."
+            }
+        },
+        "add_modal": {
+            "title": "Créer un nouveau produit"
+        },
+        "edit_modal": {
+            "title": "Modification : {{name}}",
+            "subtitle": "Mise à jour produit ID: {{id}}"
+        },
+        "delete_modal": {
+            "title": "Supprimer le produit",
+            "message": "Êtes-vous sûr de vouloir supprimer {{name}} ? Cette action est irréversible."
+        },
+        "orders": {
+            "title": "Gestion des Commandes",
+            "subtitle": "{{count}} commandes enregistrées dans le système.",
+            "orders_label": "commandes",
+            "new_order": "Nouvelle Commande",
+            "list_title": "Liste des Commandes",
+            "clear_filters": "Effacer {{count}} filtres",
+            "table": {
+                "id": "ID",
+                "user": "Utilisateur",
+                "date": "Date & Heure",
+                "status": "Statut",
+                "amount": "Montant",
+                "actions": "Actions"
+            }
+        },
+        "sales": {
+            "title": "Tableau de Bord Ventes",
+            "subtitle": "Aperçu des performances et analyses des 30 derniers jours",
+            "refresh": "Actualiser",
+            "top_products": "Produits les plus performants",
+            "by_category": "Ventes par Catégorie",
+            "table": {
+                "product": "Nom Produit",
+                "units": "Unités Vendues",
+                "revenue": "Revenu",
+                "performance": "Performance"
+            },
+            "stats": {
+                "total_revenue": "Revenu Total",
+                "total_orders": "Commandes Totales",
+                "avg_basket": "Panier Moyen",
+                "revenue_growth": "Croissance Revenu",
+                "last_30_days": "30 derniers jours",
+                "trend": "Tendance"
+            }
+        },
+        "suppliers": {
+            "title": "Gestion Fournisseurs",
+            "total": "Total Fournisseurs",
+            "active": "Actifs",
+            "with_phone": "Avec Téléphone",
+            "locations": "Emplacements",
+            "search_placeholder": "Rechercher par nom, email...",
+            "add": "Ajouter Fournisseur",
+            "no_suppliers": "Aucun fournisseur trouvé",
+            "try_adjusting": "Essayez d'ajuster votre recherche",
+            "get_started": "Ajoutez un fournisseur pour commencer",
+            "table": {
+                "name": "Nom",
+                "email": "Email",
+                "phone": "Téléphone",
+                "address": "Adresse",
+                "actions": "Actions"
+            }
+        },
+        "kpi_modal": {
+            "tabs": {
+                "overview": "Aperçu",
+                "pricing": "Prix",
+                "stock": "Stock",
+                "sales": "Ventes",
+                "profitability": "Rentabilité",
+                "restock": "Réappro",
+                "predictions": "Prédictions",
+                "classification": "Scoring",
+                "comparative": "Marché"
+            },
+            "tab_desc": {
+                "overview": "Résumé des indicateurs",
+                "pricing": "Marges & historique",
+                "stock": "Niveaux & disponibilité",
+                "sales": "Vélocité & rotation",
+                "profitability": "ROI & contribution",
+                "restock": "Chaîne logistique",
+                "predictions": "Prévisions IA",
+                "classification": "ABC & Rang",
+                "comparative": "Analyse concurrentielle"
+            },
+            "sections": {
+                "overview": "Aperçu des performances",
+                "overview_desc": "Instantané de la santé du produit",
+                "pricing": "Stratégie de prix",
+                "pricing_desc": "Analyse des coûts et marges",
+                "stock": "Santé de l'inventaire",
+                "stock_desc": "Niveaux de stock et disponibilité",
+                "sales": "Performance des ventes",
+                "sales_desc": "Vélocité et tendances de la demande",
+                "profitability": "Performance financière",
+                "profitability_desc": "ROI, marges et contribution",
+                "restock": "Analyse de réapprovisionnement",
+                "restock_desc": "Recommandations logistiques",
+                "predictions": "Prédictions IA",
+                "predictions_desc": "Prévisions et conseils intelligents",
+                "classification": "Scoring produit",
+                "classification_desc": "Classification ABC et Matrice",
+                "comparative": "Position sur le marché",
+                "comparative_desc": "Analyse comparative et benchmarking"
+            },
+            "metrics": {
+                "global_score": "Score Global",
+                "margin_rate": "Taux de Marge",
+                "current_stock": "Stock Actuel",
+                "turnover_rate": "Taux de Rotation",
+                "selling_price": "Prix de Vente",
+                "buying_price": "Prix d'Achat",
+                "margin": "Marge",
+                "price_evolution": "Évolution des Prix",
+                "stockout_analysis": "Analyse Rupture",
+                "historical_rate": "Taux Historique",
+                "occurrences": "Occurrences",
+                "avg_duration": "Durée Moyenne",
+                "abc_class": "Classe ABC",
+                "score_breakdown": "Détail du Score",
+                "sales_velocity": "Vitesse de Vente",
+                "total_sold": "Total Vendu",
+                "rotation_analysis": "Analyse Rotation",
+                "avg_storage": "Stockage Moyen",
+                "avg_per_order": "Moyenne par Commande",
+                "revenue": "Revenu",
+                "sales_trend": "Tendance Ventes",
+                "roi": "ROI",
+                "total_profit": "Profit Total",
+                "avg_profit_sale": "Profit Moyen/Vente",
+                "revenue_percent": "Part Revenu",
+                "profit_metrics": "Métriques Profit",
+                "contribution": "Analyse Contribution",
+                "restock_count": "Nombre Réappr.",
+                "avg_quantity": "Quantité Moy.",
+                "avg_delay": "Délai Moy.",
+                "supply_chain": "Métriques Supply Chain",
+                "total_cost": "Coût Total",
+                "reception_rate": "Taux Réception",
+                "optimal_strategy": "Stratégie Optimale",
+                "frequency": "Fréquence",
+                "avg_cost": "Coût Moy.",
+                "alert_status": "Statut Alerte",
+                "days_coverage": "Jours Couverture",
+                "stockout_date": "Date Rupture",
+                "reorder_recs": "Recomm. Commande",
+                "optimal_qty": "Quantité Optimale",
+                "reorder_point": "Point de Commande",
+                "coverage_analysis": "Analyse Couverture",
+                "vs_category": "vs Moy. Catégorie",
+                "category_rank": "Rang Catégorie",
+                "market_share": "Part de Marché",
+                "competitive_position": "Position Concurrentielle",
+                "vs_supplier": "Perf. vs Fournisseur"
+            },
+            "labels": {
+                "per_day": "par jour",
+                "orders": "commandes",
+                "days": "jours",
+                "times": "fois",
+                "performance": "Performance",
+                "revenue_share": "Part Revenu",
+                "profit_share": "Part Profit"
+            },
+            "ai_recommendation": "Recommandation IA",
+            "analytics": "Analytique",
+            "loading_insights": "Analyse en cours...",
+            "failed_load": "Échec du chargement des KPIs."
+        }
+    },
+    "pricing": {
+        "title": "Plans d'abonnement",
+        "subtitle": "Choisissez le plan idéal pour votre commerce",
+        "billing": {
+            "monthly": "Mensuel",
+            "yearly": "Annuel"
+        },
+        "most_popular": "Le plus populaire",
+        "cta": {
+            "start_trial": "Essai gratuit",
+            "get_started": "Commencer",
+            "contact_sales": "Contacter les ventes"
+        },
+        "tiers": {
+            "starter": "Démarrage",
+            "starter_desc": "Parfait pour les supérettes.",
+            "professional": "Professionnel",
+            "professional_desc": "Pour les supermarchés en croissance.",
+            "enterprise": "Entreprise",
+            "enterprise_desc": "Contrôle total pour les grands réseaux."
+        },
+        "features": {
+            "products_1k": "Jusqu'à 1 000 produits",
+            "products_50k": "Jusqu'à 50 000 produits",
+            "products_unlimited": "Produits illimités",
+            "dashboard_basic": "Tableau de bord basique",
+            "analytics_advanced": "Analytique avancée & KPIs",
+            "users_1": "1 compte utilisateur",
+            "users_5": "5 comptes utilisateurs",
+            "users_unlimited": "Utilisateurs illimités",
+            "support_email": "Support Email",
+            "support_priority": "Support Prioritaire",
+            "support_phone": "Support Téléphonique 24/7",
+            "backups_manual": "Sauvegardes manuelles",
+            "backups_daily": "Sauvegardes automatiques quotidiennes",
+            "predictions_ai": "Prédictions IA",
+            "predictions_stock": "Prévisions de stock IA",
+            "models_custom": "Modèles IA personnalisés",
+            "integration_supplier": "Intégration API Fournisseur",
+            "multi_store": "Gestion multi-magasins",
+            "multi_store_sync": "Synchro Multi-Magasins",
+            "erp_custom": "Intégrations ERP personnalisées",
+            "account_manager": "Gestionnaire de compte dédié",
+            "on_premise": "Option de déploiement sur site"
+        },
+        "faq": {
+            "title": "Questions Fréquentes",
+            "upgrade": {
+                "q": "Puis-je changer de plan ?",
+                "a": "Oui, vous pouvez changer de plan à tout moment. Le prix sera calculé au prorata."
+            },
+            "setup_fee": {
+                "q": "Y a-t-il des frais d'installation ?",
+                "a": "Non, pas de frais cachés. Vous ne payez que l'abonnement."
+            }
+        }
+    },
+    "team": {
+        "users": {
+            "title": "Gestion des utilisateurs",
+            "count": "{{count}} utilisateurs",
+            "add": "Ajouter un utilisateur",
+            "search_placeholder": "Rechercher par nom ou email...",
+            "role": "Rôle",
+            "status": "Statut"
+        },
+        "filters": {
+            "all_roles": "Tous les rôles",
+            "all_status": "Tous les statuts"
+        },
+        "roles": {
+            "admin": "Admin",
+            "manager": "Manager",
+            "employee": "Employé"
+        },
+        "status": {
+            "active": "Actif",
+            "inactive": "Inactif"
+        }
+    }
+}

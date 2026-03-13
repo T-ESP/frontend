@@ -13,9 +13,11 @@ export function createLoginUserUsecase(gateway: LoginUserGateway) {
 
     const response = await gateway.login(payload);
 
-    // Stockage simple du token pour que le layout/ProtectedRoute puissent le lire
+    // Stockage simple pour que le layout/ProtectedRoute puissent le lire
     try {
       localStorage.setItem("auth_token", response.token);
+      localStorage.setItem("auth_firstname", response.firstname);
+      localStorage.setItem("auth_lastname", response.lastname);
     } catch {
       // ignore storage errors
     }

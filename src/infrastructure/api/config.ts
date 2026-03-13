@@ -15,6 +15,8 @@ export const API_ENDPOINTS = {
     updateStock: (id: number) => `/products/${id}/stock`,
     lowStock: '/products/low-stock',
     withSupplier: '/products/with-supplier',
+    searchLight: '/products/light',
+    getAllKpis: (id: number) => `/products/${id}/kpis/all`,
   },
   suppliers: {
     getAll: '/suppliers',

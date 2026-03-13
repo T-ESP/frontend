@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { CustomerDistributionChart } from "./CustomerDistributionChart";
 import { RevenueChart } from "./RevenueChart";
 import { salesService } from "@/infrastructure/api/services/salesService";
@@ -11,34 +12,37 @@ interface ChartContainerProps {
 }
 
 export function ChartContainer({ orders }: ChartContainerProps) {
+  const { t } = useTranslation();
   const [revenueDataFromApi, setRevenueDataFromApi] = useState<EvolutionDataPoint[]>([]);
+  console.log("🚀 ~ ChartContainer ~ revenueDataFromApi:", revenueDataFromApi)
 
   // Fetch revenue data from sales API
   useEffect(() => {
     const fetchRevenueData = async () => {
       try {
-        // Get last 12 months date range
+        // We fetch 12 months regardless of the dashboard global range
+        // because the Revenue Chart has its own internal range selector (12, 6, 3 months)
         const endDate = new Date();
         const startDate = new Date();
-        startDate.setMonth(startDate.getMonth() - 12);
+        startDate.setFullYear(startDate.getFullYear() - 1); // Exact 1 year ago
 
         const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
         const response = await salesService.getEvolutionByGrain({
           start_date: formatDate(startDate),
           end_date: formatDate(endDate),
-          grain: 'month'
+          grain: "month",
         });
 
         setRevenueDataFromApi(response.data);
       } catch (error) {
-        console.error('Error fetching revenue data:', error);
+        console.error("Error fetching revenue data:", error);
         setRevenueDataFromApi([]);
       }
     };
 
     fetchRevenueData();
-  }, []);
+  }, []); // Only fetch on mount or if we want it to be truly static
 
   // Calculate customer distribution (new vs returning)
   const customerData = useMemo(() => {
@@ -68,33 +72,39 @@ export function ChartContainer({ orders }: ChartContainerProps) {
 
     return [
       {
-        name: "New Customers",
+        name: t('dashboard.charts.new_customers'),
         value: parseFloat(newPercentage.toFixed(1)),
         count: newCustomers,
-        color: "#8b5cf6"
+        color: "#7b5fa2"
       },
       {
-        name: "Returning",
+        name: t('dashboard.charts.returning_customers'),
         value: parseFloat(returningPercentage.toFixed(1)),
         count: returningCustomers,
-        color: "#06b6d4"
+        color: "#a480d1"
       },
     ];
-  }, [orders]);
+  }, [orders, t]);
 
   // Transform API data to chart format
+  const { i18n } = useTranslation();
   const revenueData = useMemo(() => {
-    return revenueDataFromApi.map(dataPoint => {
+    return revenueDataFromApi.map((dataPoint) => {
       const date = new Date(dataPoint.date);
-      const monthName = date.toLocaleDateString('en-US', { month: 'short' });
+      // Since we forced grain='month', we always show the month
+      // Use current i18n language for proper locale translation
+      let label = date.toLocaleDateString(i18n.language, { month: "short" });
+
+      // Capitalize first letter (often cleaner for UI)
+      label = label.charAt(0).toUpperCase() + label.slice(1);
 
       return {
-        month: monthName,
+        month: label,
         revenue: Math.round(dataPoint.revenue),
         profit: Math.round(dataPoint.revenue * 0.7), // Estimate profit as 70% of revenue
       };
     });
-  }, [revenueDataFromApi]);
+  }, [revenueDataFromApi, i18n.language]);
 
   return (
     <div className="grid grid-cols-1 gap-8 mb-8 lg:grid-cols-3">

@@ -180,10 +180,4 @@ export default tseslint.config([
 4. Write meaningful commit messages
 5. Update documentation as needed
 
-## 📄 License
 
-[Your License]
-
----
-
-**Built with** ❤️ **using Clean Architecture principles**

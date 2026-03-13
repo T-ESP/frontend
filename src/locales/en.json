@@ -1,0 +1,732 @@
+{
+    "common": {
+        "edit": "Edit",
+        "export": "Export",
+        "actions": "Actions",
+        "cancel": "Cancel",
+        "save": "Save",
+        "delete": "Delete",
+        "confirm": "Confirm",
+        "creating": "Creating...",
+        "updating": "Updating...",
+        "deleting": "Deleting...",
+        "refresh": "Refresh",
+        "view_details": "View Details",
+        "sold": "sold",
+        "units": "units",
+        "of": "of",
+        "date_range": {
+            "last_7_days": "Last 7 days",
+            "last_30_days": "Last 30 days",
+            "last_90_days": "Last 90 days",
+            "last_year": "Last year"
+        },
+        "all_time": "All time",
+        "others": "Others",
+        "percentage": "Percentage",
+        "collapse_sidebar": "Collapse sidebar",
+        "expand_sidebar": "Expand sidebar"
+    },
+    "sidebar": {
+        "dashboard": "Dashboard",
+        "inventory": "Inventory",
+        "orders": "Orders",
+        "insights": "Insights",
+        "sales": "Sales",
+        "pricing": "Pricing",
+        "pricing_news": "Pricing & News",
+        "suppliers": "Suppliers",
+        "ai_assistant": "AI Assistant",
+        "team": "Team",
+        "settings": "Settings",
+        "logout": "Logout",
+        "profile": "Profile"
+    },
+    "dashboard": {
+        "title": "Dashboard",
+        "subtitle": "Monitor your business performance in real-time",
+        "export": {
+            "title": "Dashboard Export",
+            "metric": "Metric",
+            "value": "Value"
+        },
+        "kpi": {
+            "total_revenue": "Total Revenue",
+            "revenue_evolution": "Revenue Evolution",
+            "total_orders": "Total Orders",
+            "total_products": "Total Products",
+            "total_users": "Total Users",
+            "low_stock": "Low Stock Products",
+            "low_stock_alert": "Low Stock Alert",
+            "high": "High",
+            "normal": "Normal",
+            "products_low_units": "Products < 10 units"
+        },
+        "top_products": {
+            "title": "Best Performing Products",
+            "subtitle": "Products with highest inventory",
+            "sort_by": "Sort by",
+            "stock": "Stock Quantity",
+            "value": "Total Value",
+            "name": "Product Name",
+            "no_products": "No products found",
+            "stock_label": "Stock",
+            "value_label": "Value",
+            "name_label": "Name"
+        },
+        "charts": {
+            "revenue_title": "Revenue Analytics",
+            "revenue_subtitle": "Track your revenue and profit trends",
+            "range": {
+                "last_12": "Last 12 months",
+                "last_6": "Last 6 months",
+                "last_3": "Last 3 months"
+            },
+            "customer_title": "Customer Distribution",
+            "customer_subtitle": "New vs returning customers",
+            "new_customers": "New Customers",
+            "returning_customers": "Returning",
+            "revenue": "Revenue",
+            "profit": "Profit"
+        }
+    },
+    "insights": {
+        "title": "Inventory Intelligence",
+        "subtitle": "Stock optimization, health monitoring, and risk prediction",
+        "kpi": {
+            "inventory_value": "Inventory Value",
+            "turnover_rate": "Turnover Rate",
+            "stockout_risk": "Stockout Risk",
+            "overstock_alerts": "Overstock Alerts"
+        },
+        "charts": {
+            "health_title": "Stock Health Status",
+            "health_subtitle": "Distribution of inventory levels",
+            "abc_title": "ABC Classification",
+            "abc_subtitle": "Pareto Analysis (80/20 Rule)",
+            "abc_description": "Class A: Vital products generating 80% of revenue."
+        },
+        "risks": {
+            "title": "Critical Alerts",
+            "subtitle": "High-value items nearly depleted",
+            "remaining": "{{count}} remaining",
+            "order_now": "Order now",
+            "view_plan": "View full Replenishment Plan"
+        },
+        "status": {
+            "stockout": "Stockout",
+            "low": "Low Stock",
+            "healthy": "Healthy",
+            "overstock": "Overstock"
+        },
+        "abc": {
+            "class_a": "Class A (High Value)",
+            "class_b": "Class B (Medium Value)",
+            "class_c": "Class C (Low Value)"
+        }
+    },
+    "inventory": {
+        "title": "Inventory",
+        "subtitle": "Manage your stock, products and availability.",
+        "add_product": "Add Product",
+        "management": "Inventory Management",
+        "products_count": "{{val}} products",
+        "filtered_count": "{{filtered}} of {{total}} products",
+        "stats": {
+            "in_stock": "In Stock",
+            "low_stock": "Low Stock",
+            "out_of_stock": "Out of Stock",
+            "total_products": "Total Products"
+        },
+        "table": {
+            "product": "Product",
+            "category": "Category",
+            "price": "Price",
+            "stock": "Stock",
+            "status": "Status",
+            "no_products_title": "No products found",
+            "no_products_desc": "Try adjusting your filters or search query to find what you're looking for.",
+            "showing_range": "Showing {{start}} to {{end}} of {{total}} products",
+            "per_page": "per page",
+            "first": "First",
+            "previous": "Previous",
+            "next": "Next",
+            "last": "Last"
+        },
+        "card": {
+            "sku": "Reference",
+            "updated_at": "Updated",
+            "view_kpis": "View KPIs",
+            "edit_product": "Edit product",
+            "delete_product": "Delete product",
+            "decrease_stock": "Decrease stock",
+            "increase_stock": "Increase stock"
+        },
+        "header": {
+            "clear_filters": "Clear {{quantity}} filters",
+            "refresh": "Refresh",
+            "search_label": "Search",
+            "search_placeholder": "Search by product name, SKU...",
+            "category_label": "Category",
+            "status_label": "Status",
+            "sort_label": "Sort By",
+            "order_label": "Order"
+        },
+        "filters": {
+            "title": "Filters",
+            "advanced": "Advanced Filters",
+            "reset": "Reset Filters",
+            "price_range": "Price Range (€)",
+            "stock_range": "Stock Quantity Range",
+            "min": "Min",
+            "max": "Max",
+            "all_categories": "All Categories",
+            "all_status": "All Status"
+        },
+        "status": {
+            "in_stock": "In Stock",
+            "low_stock": "Low Stock",
+            "out_of_stock": "Out of Stock"
+        },
+        "sort": {
+            "label": "Sort By",
+            "name": "Name",
+            "price": "Price",
+            "stock": "Stock",
+            "category": "Category",
+            "updated": "Updated",
+            "asc": "Ascending",
+            "desc": "Descending",
+            "a_z": "A-Z",
+            "z_a": "Z-A"
+        },
+        "form": {
+            "product_name": "Product Name",
+            "reference": "Reference (SKU)",
+            "category": "Category",
+            "stock_quantity": "Stock Quantity",
+            "buying_price": "Buying Price (€)",
+            "supplier_id": "Supplier ID",
+            "create_submit": "Create Product",
+            "update_submit": "Update Product",
+            "delete_submit": "Delete Product",
+            "error": {
+                "numbers": "Please ensure all number fields contain valid numbers."
+            }
+        },
+        "add_modal": {
+            "title": "Create New Product"
+        },
+        "edit_modal": {
+            "title": "Editing: {{name}}",
+            "subtitle": "Update product ID: {{id}}"
+        },
+        "delete_modal": {
+            "title": "Delete Product",
+            "message": "Are you sure you want to delete {{name}}? This action cannot be undone."
+        },
+        "kpi_modal": {
+            "tabs": {
+                "overview": "Overview",
+                "pricing": "Pricing",
+                "stock": "Stock",
+                "sales": "Sales",
+                "profitability": "Profit",
+                "restock": "Restock",
+                "predictions": "Predictions",
+                "classification": "Scoring",
+                "comparative": "Market"
+            },
+            "tab_desc": {
+                "overview": "Key metrics summary",
+                "pricing": "Margins & history",
+                "stock": "Levels & availability",
+                "sales": "Velocity & turnover",
+                "profitability": "ROI & contribution",
+                "restock": "Supply chain",
+                "predictions": "AI Forecasts",
+                "classification": "ABC & Rank",
+                "comparative": "Competitor analysis"
+            },
+            "sections": {
+                "overview": "Performance Overview",
+                "overview_desc": "High-level snapshot of product health",
+                "pricing": "Pricing Strategy",
+                "pricing_desc": "Cost, margin analysis and price history",
+                "stock": "Inventory Health",
+                "stock_desc": "Stock levels and availability analysis",
+                "sales": "Sales Performance",
+                "sales_desc": "Velocity, rotation and demand trends",
+                "profitability": "Profitability Analysis",
+                "profitability_desc": "Margins, ROI and contribution to revenue",
+                "restock": "Restocking Intelligence",
+                "restock_desc": "Supplier info and lead time tracking",
+                "predictions": "AI Predictions",
+                "predictions_desc": "Forecasted demand and stock needs",
+                "classification": "Product Classification",
+                "classification_desc": "ABC analysis and performance ranking",
+                "comparative": "Competitive Analysis",
+                "comparative_desc": "Market positioning and competitor pricing"
+            },
+            "metrics": {
+                "abc_class": "ABC Class",
+                "above_avg": "Above category average",
+                "ai_active": "AI Model Active",
+                "alert_status": "Alert Status",
+                "availability": "Availability",
+                "avg_cost": "Avg Cost",
+                "avg_delay": "Avg Delay",
+                "avg_delay_label": "Avg Delay",
+                "avg_duration": "Avg Duration",
+                "avg_per_order": "Avg per Order",
+                "avg_profit_sale": "Avg Profit/Sale",
+                "avg_qty_label": "Avg Quantity",
+                "avg_quantity": "Avg Quantity",
+                "avg_storage": "Avg Storage Duration",
+                "based_on_forecast": "Based on forecast",
+                "below_avg": "Below category average",
+                "buying": "Buying",
+                "buying_price": "Buying Price",
+                "category_rank": "Category Rank",
+                "competitive_position": "Competitive Position",
+                "contribution": "Contribution Analysis",
+                "coverage_analysis": "Coverage Analysis",
+                "current_coverage": "Current stock coverage",
+                "current_model": "Current prediction model",
+                "current_status": "Current Status",
+                "current_stock": "Current Stock",
+                "days_coverage": "Days of Coverage",
+                "every": "Every",
+                "frequency": "Frequency",
+                "global_score": "Global Score",
+                "historical_rate": "Historical Rate",
+                "in_hand": "In Hand",
+                "margin": "Margin",
+                "margin_rate": "Margin Rate",
+                "market_pos_label": "Market position",
+                "market_share": "Market Share",
+                "no_price_history": "No Price History Available",
+                "occurrences": "Occurrences",
+                "optimal_qty": "Optimal Qty",
+                "optimal_strategy": "Optimal Strategy",
+                "perf_vs_avg": "Performance vs Average",
+                "perf_vs_category": "Performance vs Category",
+                "perf_vs_supplier": "Performance vs Supplier",
+                "price_evolution": "Price Evolution",
+                "price_evolution_title": "Price Evolution",
+                "price_history_empty": "Price changes will appear here once recorded",
+                "profit_metrics": "Profit Metrics",
+                "profit_share": "Profit Share",
+                "rank_prefix": "Rank",
+                "rank_suffix": "in category",
+                "reception_rate": "Reception Rate",
+                "reorder_point": "Reorder Point",
+                "reorder_qty": "Reorder Qty",
+                "reorder_recs": "Reorder Recommendations",
+                "restock_count": "Restock Count",
+                "restock_count_label": "Restock Count",
+                "revenue": "Revenue",
+                "revenue_percent": "Revenue Share",
+                "revenue_share": "Revenue Share",
+                "roi": "ROI",
+                "rotation_analysis": "Rotation Analysis",
+                "rotation_desc": "Stock movement velocity",
+                "safety_level": "Safety Level",
+                "sales_trend": "Sales Trend",
+                "sales_velocity": "Sales Velocity",
+                "score_breakdown": "Score Breakdown",
+                "score_popularity": "Popularity",
+                "score_profitability": "Profitability",
+                "score_reliability": "Reliability",
+                "selling": "Selling",
+                "selling_price": "Selling Price",
+                "status": "Status",
+                "stockout_analysis": "Stockout Analysis",
+                "stockout_date": "Stockout Date",
+                "strategy_desc": "Based on historical data and supply chain analysis",
+                "supply_chain": "Supply Chain Metrics",
+                "total_cost": "Total Cost",
+                "total_profit": "Total Profit",
+                "total_restocks": "Total Restocks",
+                "total_sold": "Total Sold",
+                "trigger_threshold": "Trigger threshold",
+                "turnover_rate": "Turnover Rate",
+                "vs_category": "vs Category Avg",
+                "vs_category_avg": "vs Category Avg",
+                "vs_supplier": "Perf. vs Supplier"
+            },
+            "trends": {
+                "inc": "+Inc",
+                "dec": "-Dec",
+                "stable": "Stable"
+            },
+            "labels": {
+                "units": "units",
+                "days": "days",
+                "times_year": "times/year",
+                "units_day": "units/day",
+                "vs_cost": "vs cost",
+                "of_revenue": "of revenue",
+                "of_profit": "of profit",
+                "times": "times",
+                "performance": "Performance",
+                "next_30_days": "Next 30 days",
+                "in_30_days": "in 30 days",
+                "order_now": "Order now",
+                "high": "High",
+                "medium": "Medium",
+                "low": "Low",
+                "above_market": "Above market",
+                "at_market": "At market",
+                "below_market": "Below market",
+                "revenue_share": "Revenue Share",
+                "profit_share": "Profit Share",
+                "per_day": "per day",
+                "orders": "orders"
+            },
+            "ai_recommendation": "AI Recommendation",
+            "analytics": "Analytics",
+            "loading_insights": "Gathering insights...",
+            "failed_load": "Failed to load KPIs.",
+            "status_values": {
+                "critical": "Critical",
+                "stockout": "Stockout",
+                "below": "Below",
+                "warning": "Warning",
+                "low": "Low",
+                "average": "Average",
+                "optimal": "Optimal",
+                "good": "Good",
+                "fast": "Fast",
+                "above": "Above",
+                "excess": "Excess",
+                "high": "High",
+                "overstock": "Overstock",
+                "star": "Star"
+            }
+        }
+    },
+    "orders": {
+        "title": "Orders",
+        "subtitle": "{{count}} total orders",
+        "orders_label": "orders",
+        "new_order": "New Order",
+        "list_title": "Orders List",
+        "clear_filters": "Clear {{count}} filter(s)",
+        "filters": {
+            "all_status": "All Status",
+            "pending": "⏳ Pending",
+            "confirmed": "✓ Confirmed",
+            "shipped": "📦 Shipped",
+            "delivered": "✅ Delivered",
+            "cancelled": "❌ Cancelled",
+            "sort_date": "Sort: Date",
+            "sort_amount": "Sort: Amount",
+            "sort_status": "Sort: Status",
+            "sort_user": "Sort: User ID",
+            "asc": "↑ A-Z",
+            "desc": "↓ Z-A",
+            "btn": "Filters",
+            "advanced": "Advanced Filters",
+            "reset": "Reset Filters",
+            "amount_range": "Amount Range (€)",
+            "min": "Min",
+            "max": "Max",
+            "search": "Search by order ID, user ID, or status..."
+        },
+        "table": {
+            "id": "ORDER ID",
+            "user": "USER",
+            "date": "DATE",
+            "status": "STATUS",
+            "amount": "AMOUNT",
+            "actions": "ACTIONS",
+            "no_orders": "No orders found"
+        },
+        "pagination": {
+            "showing": "Showing {{start}} to {{end}} of {{total}} orders",
+            "per_page": "per page",
+            "first": "First",
+            "previous": "Previous",
+            "next": "Next",
+            "last": "Last"
+        },
+        "status": {
+            "pending": "Pending",
+            "confirmed": "Confirmed",
+            "shipped": "Shipped",
+            "delivered": "Delivered",
+            "cancelled": "Cancelled"
+        },
+        "loading": "Loading orders...",
+        "fetching": "Fetching data from server.",
+        "load_error": "Failed to load orders. Check API connection.",
+        "load_error_toast": "Failed to load orders",
+        "load_retry_hint": "Please check your connection and try again.",
+        "error_title": "Error",
+        "retry": "Try Again",
+        "user_label": "User",
+        "delete_modal": {
+            "title": "Delete Order",
+            "confirm_msg": "Are you sure you want to delete this order?",
+            "warning": "This action is irreversible and will also delete all items in the order.",
+            "id_label": "ID",
+            "user_label": "User",
+            "date_label": "Date",
+            "status_label": "Status",
+            "amount_label": "Amount",
+            "deleting": "Deleting...",
+            "delete_btn": "Delete",
+            "deleted_toast": "Order deleted",
+            "deleted_toast_msg": "Order #{{id}} has been removed successfully.",
+            "delete_error_toast": "Failed to delete order"
+        },
+        "view_modal": {
+            "title": "Order details #{{id}}",
+            "user_label": "User",
+            "date_label": "Date",
+            "status_label": "Status",
+            "amount_label": "Total amount",
+            "items_title": "Order items",
+            "loading_items": "Loading items...",
+            "no_items": "No items in this order",
+            "col_product": "Product ID",
+            "col_qty": "Quantity",
+            "col_total": "Line total",
+            "total_label": "Total:",
+            "created_at": "Created at",
+            "updated_at": "Updated at",
+            "close_btn": "Close",
+            "product_label": "Product"
+        },
+        "add_modal": {
+            "title": "Create New Order",
+            "loading_data": "Loading user and product data...",
+            "user_label": "User *",
+            "select_user": "Select a user",
+            "status_label": "Status *",
+            "items_label": "Order Items *",
+            "add_item": "Add Item",
+            "select_product": "Select a product",
+            "quantity_placeholder": "Qty",
+            "delete_item": "Delete this item",
+            "cancel": "Cancel",
+            "creating": "Creating...",
+            "submit": "Create Order",
+            "created_toast": "Order created",
+            "created_msg": "The order has been successfully created.",
+            "create_error": "Failed to create order",
+            "user_error": "Please select a user.",
+            "product_error": "Please select a product for each item.",
+            "quantity_error": "Each item quantity must be greater than zero."
+        },
+        "edit_modal": {
+            "title": "Edit Order #{{id}}",
+            "user_label": "User:",
+            "date_label": "Date:",
+            "amount_label": "Amount:",
+            "status_label": "Status *",
+            "cancel": "Cancel",
+            "updating": "Updating...",
+            "submit": "Update",
+            "updated_toast": "Order updated",
+            "updated_msg": "Order #{{id}} has been updated successfully.",
+            "update_error": "Failed to update order"
+        }
+    },
+    "sales": {
+        "title": "Sales Dashboard",
+        "subtitle": "Performance overview and analytics for the last 30 days",
+        "refresh": "Refresh",
+        "top_products": "Top Performing Products",
+        "by_category": "Sales by Category",
+        "uncategorized": "Uncategorized",
+        "charts": {
+            "revenue_trend": "Revenue Trend",
+            "daily_revenue_30d": "Daily revenue over the last 30 days",
+            "revenue": "Revenue"
+        },
+        "table": {
+            "product": "Product Name",
+            "units": "Units Sold",
+            "revenue": "Revenue",
+            "performance": "Performance"
+        },
+        "stats": {
+            "total_revenue": "Total Revenue",
+            "total_orders": "Total Orders",
+            "avg_basket": "Average Basket",
+            "revenue_growth": "Revenue Growth",
+            "last_30_days": "Last 30 days",
+            "trend": "Trend"
+        }
+    },
+    "suppliers": {
+        "title": "Supplier Management",
+        "total": "Total Suppliers",
+        "active": "Active",
+        "with_phone": "With Phone",
+        "locations": "Locations",
+        "search_placeholder": "Search by name, email, phone, address...",
+        "add": "Add Supplier",
+        "no_suppliers": "No suppliers found",
+        "try_adjusting": "Try adjusting your search",
+        "get_started": "Add a supplier to get started",
+        "table": {
+            "name": "Name",
+            "email": "Email",
+            "phone": "Phone",
+            "address": "Address",
+            "actions": "Actions"
+        }
+    },
+    "pricing": {
+        "title": "Subscription Plans",
+        "subtitle": "Choose the perfect plan for your retail business",
+        "billing": {
+            "monthly": "Monthly",
+            "yearly": "Yearly"
+        },
+        "most_popular": "Most Popular",
+        "cta": {
+            "start_trial": "Start Free Trial",
+            "get_started": "Get Started",
+            "contact_sales": "Contact Sales"
+        },
+        "tiers": {
+            "starter": "Starter",
+            "starter_desc": "Perfect for small convenience stores.",
+            "professional": "Professional",
+            "professional_desc": "For growing supermarkets and chains.",
+            "enterprise": "Enterprise",
+            "enterprise_desc": "Full control for large retail networks."
+        },
+        "features": {
+            "products_1k": "Up to 1,000 Products",
+            "products_50k": "Up to 50,000 Products",
+            "products_unlimited": "Unlimited Products",
+            "dashboard_basic": "Basic Sales Dashboard",
+            "analytics_advanced": "Advanced Analytics & KPIs",
+            "users_1": "1 User Account",
+            "users_5": "5 User Accounts",
+            "users_unlimited": "Unlimited Users",
+            "support_email": "Email Support",
+            "support_priority": "Priority Support",
+            "support_phone": "24/7 Phone Support",
+            "backups_manual": "Manual Backups",
+            "backups_daily": "Daily Automated Backups",
+            "predictions_ai": "AI Predictions",
+            "predictions_stock": "AI Stock Predictions",
+            "models_custom": "Custom AI Models",
+            "integration_supplier": "Supplier API Integration",
+            "multi_store": "Multi-store Management",
+            "multi_store_sync": "Multi-Store Sync",
+            "erp_custom": "Custom ERP Integrations",
+            "account_manager": "Dedicated Account Manager",
+            "on_premise": "On-premise Deployment Option"
+        },
+        "faq": {
+            "title": "Frequently Asked Questions",
+            "upgrade": {
+                "q": "Can I upgrade later?",
+                "a": "Yes, you can upgrade or downgrade your plan at any time. The price will be prorated based on your billing cycle."
+            },
+            "setup_fee": {
+                "q": "Is there a setup fee?",
+                "a": "No, there are no hidden setup fees. You only pay the monthly or yearly subscription cost."
+            }
+        }
+    },
+    "team": {
+        "users": {
+            "title": "User Management",
+            "count": "{{count}} users",
+            "add": "Add User",
+            "search_placeholder": "Search by name or email...",
+            "role": "Role",
+            "status": "Status"
+        },
+        "filters": {
+            "all_roles": "All Roles",
+            "all_status": "All Status"
+        },
+        "roles": {
+            "admin": "Admin",
+            "manager": "Manager",
+            "employee": "Employee"
+        },
+        "status": {
+            "active": "Active",
+            "inactive": "Inactive"
+        }
+    },
+    "profile": {
+        "title": "My Profile",
+        "subtitle": "Manage your personal information and account settings.",
+        "personal_info": {
+            "title": "Personal Information",
+            "firstname": "First Name",
+            "lastname": "Last Name",
+            "phone": "Phone Number"
+        },
+        "email": {
+            "title": "Change Email Address",
+            "new_email_label": "New Email Address",
+            "new_email_placeholder": "new@example.com",
+            "confirm_email_label": "Confirm Email Address",
+            "confirm_email_placeholder": "new@example.com",
+            "updating": "Updating...",
+            "update_btn": "Update Email"
+        },
+        "password": {
+            "title": "Change Password",
+            "current_label": "Current Password",
+            "current_placeholder": "••••••••",
+            "new_label": "New Password",
+            "new_placeholder": "••••••••",
+            "confirm_label": "Confirm New Password",
+            "confirm_placeholder": "••••••••",
+            "updating": "Updating...",
+            "update_btn": "Update Password"
+        },
+        "security": {
+            "title": "Security and Session",
+            "session_token": "Session Token",
+            "yes": "Yes",
+            "no": "No",
+            "logout_btn": "Logout"
+        },
+        "toasts": {
+            "error_title": "Error",
+            "email_mismatch": "Email addresses do not match.",
+            "email_success_title": "Email Updated",
+            "email_success_msg": "Your email address has been successfully changed.",
+            "password_mismatch": "Passwords do not match.",
+            "password_length": "Password must be at least 8 characters long.",
+            "password_success_title": "Password Updated",
+            "password_success_msg": "Your password has been successfully changed.",
+            "logout_title": "Logout",
+            "logout_msg": "You have been successfully logged out.",
+            "fetch_error": "Unable to load your profile.",
+            "info_success_title": "Profile Updated",
+            "info_success_msg": "Your personal information has been successfully modified.",
+            "update_error": "Failed to update profile.",
+            "email_error": "Failed to change email."
+        }
+    },
+    "ai_assistant": {
+        "title": "AI Assistant",
+        "online": "Online",
+        "conversations": "Conversations",
+        "new_chat": "New Chat",
+        "rename": "Rename",
+        "delete": "Delete",
+        "rename_prompt": "Rename conversation:",
+        "new_conversation_title": "New conversation",
+        "start_question": "Start a question…",
+        "analyzing": "Analyzing...",
+        "error_msg": "Sorry, I am having trouble accessing the services.",
+        "placeholder": "Ask a question about your stock or sales...",
+        "send": "Send"
+    }
+}

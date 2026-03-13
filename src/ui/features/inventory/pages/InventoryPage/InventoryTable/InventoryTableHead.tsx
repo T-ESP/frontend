@@ -1,24 +1,27 @@
+import { useTranslation } from "react-i18next";
+
 export function InventoryTableHead() {
+  const { t } = useTranslation();
   return (
     <thead>
       <tr className="border-b border-gray-100 bg-gray-50/50">
         <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
-          Product
+          {t('inventory.table.product')}
         </th>
         <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
-          Category
+          {t('inventory.table.category')}
         </th>
         <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
-          Price
+          {t('inventory.table.price')}
         </th>
         <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
-          Stock
+          {t('inventory.table.stock')}
         </th>
         <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
-          Status
+          {t('inventory.table.status')}
         </th>
         <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
-          Actions
+          {t('common.actions')}
         </th>
       </tr>
     </thead>

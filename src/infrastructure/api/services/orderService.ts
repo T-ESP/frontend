@@ -1,13 +1,13 @@
 import { apiClient } from '../client';
 import type { ApiResponse } from '../client';
 import { API_ENDPOINTS } from '../config';
-import type { 
-  Order, 
-  OrderWithItems, 
-  CreateOrderDto, 
-  UpdateOrderDto, 
+import type {
+  Order,
+  OrderWithItems,
+  CreateOrderDto,
+  UpdateOrderDto,
   LineItem,
-  OrderStats 
+  OrderStats
 } from '@/domain/models/Order';
 
 export const orderService = {
@@ -35,6 +35,8 @@ export const orderService = {
     const response = await apiClient.get<ApiResponse<OrderStats>>(API_ENDPOINTS.orders.getStats);
     return response.data;
   },
+
+
 
   async create(data: CreateOrderDto): Promise<Order> {
     const response = await apiClient.post<ApiResponse<Order>>(API_ENDPOINTS.orders.create, data);

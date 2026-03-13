@@ -6,6 +6,8 @@ export type LoginRequest = {
 export type LoginResponse = {
   success: boolean;
   token: string;
+  firstname: string;
+  lastname: string;
   message?: string;
 };
 

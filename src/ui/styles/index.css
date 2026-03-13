@@ -3,17 +3,45 @@
 
 html, body, #root {
   font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+  height: 100%;
+  margin: 0;
+  padding: 0;
   background-color: #f3f4f6;
 }
 
 @theme {
-  /* ---- Branding / Violet ---- */
-  --color-primary: #6D4E98;            /* Violet principal (boutons, accents majeurs) */
-  --color-primary-plus: #a08ef9;       /* Hover, focus, accents secondaires */
-  --color-primary-dark: #6b5e8a;       /* Variant foncé (texte, hover dark) */
-  --color-primary-deep: #574576;       /* AppBar, fond profond, footer, dark section */
-  --color-primary-night: #35275d;      /* Pour borders, focus state, ou dark très poussé */
-  --color-primary-bg: #f4f6fa;
+  /* ---- Branding / Violet (#7b5fa2 Unified) ---- */
+  --color-primary: #7b5fa2;
+  --color-primary-plus: #a480d1;
+  --color-primary-dark: #644d85;
+  --color-primary-deep: #4d3c67;
+  --color-primary-night: #1d162a;
+  --color-primary-bg: #f5f0fc;
+
+  /* Force all Tailwind Purples/Indigos to use our unified #7b5fa2 scale */
+  --color-purple-50: #f5f0fc;
+  --color-purple-100: #ebdcf9;
+  --color-purple-200: #d7bff2;
+  --color-purple-300: #c0a2e5;
+  --color-purple-400: #a480d1;
+  --color-purple-500: #8b65bc;
+  --color-purple-600: #7b5fa2;
+  --color-purple-700: #644d85;
+  --color-purple-800: #4d3c67;
+  --color-purple-900: #362a49;
+  --color-purple-950: #1d162a;
+
+  --color-indigo-50: #f5f0fc;
+  --color-indigo-100: #ebdcf9;
+  --color-indigo-200: #d7bff2;
+  --color-indigo-300: #c0a2e5;
+  --color-indigo-400: #a480d1;
+  --color-indigo-500: #8b65bc;
+  --color-indigo-600: #7b5fa2;
+  --color-indigo-700: #644d85;
+  --color-indigo-800: #4d3c67;
+  --color-indigo-900: #362a49;
+  --color-indigo-950: #1d162a;
 
   /* ---- Neutres (Modernized) ---- */
   --color-bg: #f3f4f6;                 /* Fond global (light gray) */
@@ -30,8 +58,8 @@ html, body, #root {
   --color-warning-bg: #fef9c3;
   --color-error: #ef4444;              /* Erreur */
   --color-error-bg: #ffe7e7;
-  --color-info: #a08ef9;               /* Info = violet secondaire */
-  --color-info-bg: #f4f0fd;            /* Fond info, violet très clair */
+  --color-info: #a480d1;               /* Info = violet secondaire */
+  --color-info-bg: #f5f0fc;            /* Fond info, violet très clair */
 
   /* ---- Autres ---- */
   --color-blue-dark: #1e40af;          /* Ancienne palette bleu, gardée pour compat éventuelle */

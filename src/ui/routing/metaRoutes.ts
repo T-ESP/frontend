@@ -164,11 +164,48 @@ export const ROUTES: Record<string, RouteMeta> = {
     title: 'StockS - Playground',
   },
   displaySite: {
-  path: '/DisplaySite',
-  label: 'Display Site',
-  page: 'DisplaySite',
-  layout: 'none', // or 'none' if you want NO layout at all
-  restricted: false,
-},
+    path: '/DisplaySite',
+    label: 'Display Site',
+    page: 'DisplaySite',
+    layout: 'none', // or 'none' if you want NO layout at all
+    restricted: false,
+  },
+
+  TARIFS: {
+    path: '/tarifs',
+    label: 'Tarifs',
+    page: 'Pricing',
+    layout: 'none',
+    restricted: false,
+    hiddenInMenu: true,
+    title: 'StockS - Tarifs',
+  },
+  APP_PRICING: {
+    path: '/abonnement',
+    label: 'Abonnement',
+    page: 'Pricing',
+    layout: 'app',
+    restricted: true,
+    title: 'StockS - Abonnement',
+  },
+
+  TERMS: {
+    path: '/mentions-legales',
+    label: 'CGU',
+    page: 'Terms',
+    layout: 'none',
+    restricted: false,
+    hiddenInMenu: true,
+    title: 'StockS - Conditions Générales d\'Utilisation',
+  },
+
+  DEMO: {
+    path: '/demo',
+    label: 'Demo',
+    page: 'Demo',
+    layout: 'none',
+    restricted: false,
+    title: 'StockS - Demo',
+  },
 
 };

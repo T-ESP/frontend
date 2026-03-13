@@ -1,9 +1,9 @@
 import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
+import { Link } from "react-router-dom";
 import { createRegisterUserUsecase } from "@/application/usecases/RegisterUser/RegisterUser";
 import type { RegisterRequest } from "@/application/usecases/RegisterUser/RegisterUser.types";
 import { HttpRegisterUserGateway } from "@/infrastructure/http/registerUserGateway";
 import { Button } from "@/ui/components/common/Button/Button";
-import { Checkbox } from "@/ui/components/common/Checkbox/Checkbox";
 import { FormField } from "@/ui/components/common/FormField/FormField";
 import { Input } from "@/ui/components/common/Input/Input";
 import { PasswordInput } from "@/ui/components/common/PasswordInput/PasswordInput";
@@ -129,23 +129,28 @@ export function RegisterForm() {
         />
       </FormField>
 
-      <Checkbox
-        id="terms"
-        name="terms"
-        label="I accept terms and conditions"
-        className="pt-2"
-        checked={formValues.terms}
-        onChange={handleCheckboxChange}
-        onKeyDown={(event) => {
-          if (event.key === "Enter") {
-            event.preventDefault();
-            setFormValues((prev) => ({
-              ...prev,
-              terms: !prev.terms,
-            }) as FormValues);
-          }
-        }}
-      />
+      <div className="flex items-start gap-2.5 pt-2">
+        <input
+          type="checkbox"
+          id="terms"
+          name="terms"
+          checked={formValues.terms}
+          onChange={handleCheckboxChange}
+          className="mt-0.5 h-4 w-4 rounded border-gray-300 accent-[#7b5fa2] cursor-pointer"
+        />
+        <label htmlFor="terms" className="text-sm text-gray-500 leading-snug cursor-pointer">
+          J'accepte les{" "}
+          <Link
+            to="/mentions-legales"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold underline underline-offset-2 transition-colors hover:opacity-70"
+            style={{ color: "#7b5fa2" }}
+          >
+            conditions générales d'utilisation
+          </Link>
+        </label>
+      </div>
 
       {feedback && (
         <p

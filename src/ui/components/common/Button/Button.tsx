@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import type { ButtonProps } from "./index";
+import type { ButtonProps } from "./Button.types";
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
@@ -19,13 +19,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         "bg-neutral200 text-neutral900 hover:bg-neutral300 focus:ring-2 focus:ring-neutral400",
       outline:
         "border border-border bg-white text-neutral900 hover:bg-neutral50 focus:ring-2 focus:ring-primary",
+      ghost:
+        "bg-transparent text-neutral600 hover:bg-neutral100 focus:ring-2 focus:ring-neutral200",
     };
 
     return (
       <button
         ref={ref}
         className={`inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-medium focus:outline-none ${fullWidth ? "w-full" : ""
-          } ${variantClasses[variant]} ${className}`}
+          } ${variantClasses[variant as keyof typeof variantClasses]} ${className}`}
         {...props}
       >
         {children}

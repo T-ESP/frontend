@@ -79,7 +79,7 @@ export function InventoryTableRow({ item, index, onEdit, onDelete, onStockUpdate
           >
             <FiMinus size={14} />
           </button>
-          <span className="inline-flex gap-1 items-center font-medium text-gray-700 min-w-[60px] justify-center">
+          <span className="inline-flex gap-1 items-center font-medium text-gray-700 min-w-15 justify-center">
             {item.piece.toLocaleString()}
             <span className="text-xs text-gray-400">units</span>
           </span>

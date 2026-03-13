@@ -75,4 +75,18 @@ export const productService = {
     );
     return response.data;
   },
+
+  async searchLight(query: string): Promise<{ id: number; name: string; category: string }[]> {
+    const response = await apiClient.get<ApiResponse<{ id: number; name: string; category: string }[]>>(
+      `${API_ENDPOINTS.products.searchLight}?q=${encodeURIComponent(query)}`
+    );
+    return response.data;
+  },
+
+  async getAllKpis(id: number): Promise<any> {
+    const response = await apiClient.get<ApiResponse<any>>(
+      API_ENDPOINTS.products.getAllKpis(id)
+    );
+    return response.data;
+  },
 };

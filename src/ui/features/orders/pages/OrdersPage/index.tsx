@@ -1,13 +1,14 @@
 import { useState, useEffect, useMemo } from 'react';
 import { orderService } from '@/infrastructure/api/services/orderService';
 import type { Order } from '@/domain/models/Order';
-import { Edit, Trash2, Plus, Eye, ShoppingCart, Loader2, RefreshCw, AlertTriangle, Search, Filter, Download, X, ChevronDown } from 'lucide-react'; // Switched to Lucide
+import { Edit, Trash2, Eye, ShoppingCart, Loader2, RefreshCw, AlertTriangle, Search, Filter, X, ChevronDown } from 'lucide-react'; // Switched to Lucide
 import { AddOrderModal } from '@/ui/features/orders/components/AddOrderModal';
 import { EditOrderModal } from '@/ui/features/orders/components/EditOrderModal';
 import { DeleteOrderModal } from '@/ui/features/orders/components/DeleteOrderModal';
 import { ViewOrderModal } from '@/ui/features/orders/components/ViewOrderModal';
 import { OrderStats } from '@/ui/features/orders/components/OrderStats';
 import { useToast } from '@/ui/components/common/Toast';
+import { useTranslation } from 'react-i18next';
 
 // --- Helper Functions (Refined for Consistency) ---
 
@@ -18,16 +19,16 @@ const formatAmount = (amount: number) => {
   }).format(amount);
 };
 
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('fr-FR', {
+const formatDate = (dateString: string, locale: string) => {
+  return new Date(dateString).toLocaleDateString(locale, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
   });
 };
 
-const formatTime = (dateString: string) => {
-  return new Date(dateString).toLocaleTimeString('fr-FR', {
+const formatTime = (dateString: string, locale: string) => {
+  return new Date(dateString).toLocaleTimeString(locale, {
     hour: '2-digit',
     minute: '2-digit',
   });
@@ -49,11 +50,13 @@ const getStatusColor = (status: string) => {
 // --- Component ---
 
 export default function OrdersPage() {
+  const { t, i18n } = useTranslation();
+  const currentLocale = i18n.language || 'fr-FR';
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false); // Changed to false to show skeleton initially if desired
   const [error, setError] = useState<string | null>(null);
   const { addToast } = useToast();
-  
+
   // Modals
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -84,8 +87,8 @@ export default function OrdersPage() {
       const data = await orderService.getAll();
       setOrders(data);
     } catch (err) {
-      setError('Failed to load orders. Check API connection.');
-      addToast('Failed to load orders', 'Please check your connection and try again.', 'error');
+      setError(t('orders.load_error'));
+      addToast(t('orders.load_error_toast'), t('orders.load_retry_hint'), 'error');
       console.error('Error loading orders:', err);
     } finally {
       setLoading(false);
@@ -105,9 +108,9 @@ export default function OrdersPage() {
     if (type === 'edit') setShowEditModal(false);
     if (type === 'delete') setShowDeleteModal(false);
     if (type === 'view') setShowViewModal(false);
-    
+
     // Clear selection after closing edit/delete/view modals
-    if (type !== 'add') setSelectedOrder(null); 
+    if (type !== 'add') setSelectedOrder(null);
 
     if (shouldReload) loadOrders();
   };
@@ -124,7 +127,7 @@ export default function OrdersPage() {
     // Search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(o => 
+      filtered = filtered.filter(o =>
         o.id.toString().includes(query) ||
         o.user_id.toString().includes(query) ||
         o.status.toLowerCase().includes(query)
@@ -132,14 +135,14 @@ export default function OrdersPage() {
     }
 
     // Amount range filter
-    filtered = filtered.filter(o => 
+    filtered = filtered.filter(o =>
       o.amount >= amountRange.min && o.amount <= amountRange.max
     );
 
     // Sorting
     filtered.sort((a, b) => {
       let comparison = 0;
-      
+
       switch (sortBy) {
         case 'date':
           comparison = new Date(a.order_date).getTime() - new Date(b.order_date).getTime();
@@ -156,7 +159,7 @@ export default function OrdersPage() {
         default:
           comparison = 0;
       }
-      
+
       return sortOrder === 'asc' ? comparison : -comparison;
     });
 
@@ -186,44 +189,15 @@ export default function OrdersPage() {
     setSearchQuery("");
     setAmountRange({ min: 0, max: 10000 });
   };
-
-  const handleExport = () => {
-    // Create CSV content
-    const headers = ['ID', 'User ID', 'Date', 'Status', 'Amount'];
-    const rows = filteredAndSortedOrders.map(o => [
-      o.id,
-      o.user_id,
-      o.order_date,
-      o.status,
-      o.amount
-    ]);
-    
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-    ].join('\n');
-
-    // Download CSV
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', `orders_export_${new Date().toISOString().split('T')[0]}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   // --- Render Loading/Error States ---
 
   if (loading) {
     return (
-      <div className="p-8 h-full flex items-center justify-center">
+      <div className="flex items-center justify-center h-full p-8">
         <div className="text-center text-slate-500">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
-            <div className="text-xl font-medium">Loading orders...</div>
-            <p className="text-sm mt-1">Fetching {orders.length > 0 ? 'latest data' : 'initial data'} from server.</p>
+          <Loader2 className="w-8 h-8 mx-auto mb-4 text-purple-600 animate-spin" />
+          <div className="text-xl font-medium">{t('orders.loading')}</div>
+          <p className="mt-1 text-sm">{t('orders.fetching')}</p>
         </div>
       </div>
     );
@@ -231,18 +205,18 @@ export default function OrdersPage() {
 
   if (error) {
     return (
-      <div className="p-8 h-full flex flex-col items-center justify-center">
-        <div className="text-center p-6 rounded-xl border border-rose-200 bg-rose-50 text-rose-700">
-            <AlertTriangle className="w-8 h-8 mx-auto mb-3" />
-            <h2 className="text-xl font-bold mb-2">Error</h2>
-            <p>{error}</p>
-            <button
-                onClick={loadOrders}
-                className="mt-4 flex items-center gap-2 px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors mx-auto"
-            >
-                <RefreshCw size={16} />
-                Try Again
-            </button>
+      <div className="flex flex-col items-center justify-center h-full p-8">
+        <div className="p-6 text-center border rounded-xl border-rose-200 bg-rose-50 text-rose-700">
+          <AlertTriangle className="w-8 h-8 mx-auto mb-3" />
+          <h2 className="mb-2 text-xl font-bold">{t('orders.error_title')}</h2>
+          <p>{error}</p>
+          <button
+            onClick={loadOrders}
+            className="flex items-center gap-2 px-4 py-2 mx-auto mt-4 text-white transition-colors rounded-lg bg-rose-600 hover:bg-rose-700"
+          >
+            <RefreshCw size={16} />
+            {t('orders.retry')}
+          </button>
         </div>
       </div>
     );
@@ -252,27 +226,25 @@ export default function OrdersPage() {
 
   return (
     <>
-      <div className="p-8 bg-slate-50 min-h-screen">
-        
+      <div className="min-h-screen p-8 bg-slate-50">
+
         {/* Header Component (Consistent Styling) */}
-        <div className="mb-8 flex items-center justify-between">
+        <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
-                <ShoppingCart className="w-7 h-7 text-blue-600" />
-                Orders Management
+            <h1 className="flex items-center gap-3 text-3xl font-bold text-slate-900">
+              {t('orders.title')}
             </h1>
-            <p className="text-slate-500 mt-2">
-              {filteredAndSortedOrders.length === orders.length 
-                ? `${orders.length} order${orders.length !== 1 ? 's' : ''} currently registered in the system.`
-                : `${filteredAndSortedOrders.length} of ${orders.length} orders`}
+            <p className="mt-2 text-slate-500">
+              {filteredAndSortedOrders.length === orders.length
+                ? t('orders.subtitle', { count: orders.length })
+                : `${filteredAndSortedOrders.length} ${t('common.of')} ${orders.length} ${t('orders.orders_label')}`}
             </p>
           </div>
           <button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/30 hover:bg-blue-700 transition-colors"
+            className="px-4 py-2 text-sm font-medium text-white transition-colors bg-purple-600 border border-purple-600 rounded-lg hover:bg-purple-700"
           >
-            <Plus size={20} />
-            New Order
+            {t('orders.new_order')}
           </button>
         </div>
 
@@ -280,158 +252,181 @@ export default function OrdersPage() {
         <OrderStats orders={orders} />
 
         {/* Filter and Search Bar */}
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 mb-6">
+        <div className="mb-6 bg-white rounded-xl border border-gray-100 shadow-sm">
           {/* Header Row */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
             <div className="flex items-center gap-4">
               <div>
-                <h3 className="text-lg font-bold text-slate-900">Orders List</h3>
-                <p className="text-sm text-slate-500 mt-0.5">
-                  {filteredAndSortedOrders.length === orders.length 
-                    ? `${orders.length.toLocaleString()} orders` 
-                    : `${filteredAndSortedOrders.length.toLocaleString()} of ${orders.length.toLocaleString()} orders`}
+                <h3 className="text-xl font-bold text-gray-900">{t('orders.list_title')}</h3>
+                <p className="text-sm text-gray-500 mt-0.5">
+                  {filteredAndSortedOrders.length === orders.length
+                    ? `${orders.length.toLocaleString()} ${t('orders.orders_label')}`
+                    : `${filteredAndSortedOrders.length.toLocaleString()} ${t('common.of')} ${orders.length.toLocaleString()} ${t('orders.orders_label')}`}
                 </p>
               </div>
               {activeFiltersCount > 0 && (
                 <button
                   onClick={clearAllFilters}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-100 rounded-full hover:bg-slate-200 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
                 >
                   <X className="w-3 h-3" />
-                  Clear {activeFiltersCount} filter{activeFiltersCount > 1 ? 's' : ''}
+                  {t('orders.clear_filters', { count: activeFiltersCount })}
                 </button>
               )}
             </div>
-            
+
             <div className="flex items-center gap-2">
               <button
                 onClick={loadOrders}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
-                title="Refresh data"
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                title={t('common.refresh')}
               >
                 <RefreshCw className="w-4 h-4" />
-                Refresh
+                {t('common.refresh')}
               </button>
-              <button
+              {/* <button
                 onClick={handleExport}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition-colors"
-                title="Export to CSV"
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white transition-colors rounded-lg bg-emerald-600 hover:bg-emerald-700"
+                title={t('common.export')}
               >
                 <Download className="w-4 h-4" />
-                Export
-              </button>
+                {t('common.export')}
+              </button> */}
             </div>
           </div>
 
           {/* Search and Quick Filters Row */}
-          <div className="px-6 py-4 space-y-4">
-            <div className="flex gap-3">
+          <div className="px-6 py-4">
+            <div className="grid items-end grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6">
               {/* Search Bar */}
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search by order ID, user ID, or status..."
-                  className="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-all"
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
+              <div className="space-y-1.5 lg:col-span-2">
+                <label className="ml-1 text-xs font-semibold tracking-wider text-gray-500 uppercase">
+                  {t('orders.filters.search')}
+                </label>
+                <div className="relative">
+                  <Search className="absolute w-4 h-4 text-gray-400 -translate-y-1/2 left-3 top-1/2" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder={t('orders.filters.search')}
+                    className="w-full py-2 pl-9 pr-8 text-sm transition-all border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent focus:bg-white"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery("")}
+                      className="absolute text-gray-400 -translate-y-1/2 right-2.5 top-1/2 hover:text-gray-600 p-1"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* Status Filter */}
-              <select 
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-                className="px-4 py-2.5 text-sm font-medium bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all cursor-pointer min-w-[160px]"
-              >
-                <option value="All Status">All Status</option>
-                <option value="Pending">⏳ Pending</option>
-                <option value="Confirmed">✓ Confirmed</option>
-                <option value="Shipped">📦 Shipped</option>
-                <option value="Delivered">✅ Delivered</option>
-                <option value="Cancelled">❌ Cancelled</option>
-              </select>
+              <div className="space-y-1.5">
+                <label className="ml-1 text-xs font-semibold tracking-wider text-gray-500 uppercase">
+                  {t('inventory.header.status_label', 'Status')}
+                </label>
+                <select
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value)}
+                  className="w-full px-3 py-2 text-sm font-medium transition-all bg-white border border-gray-200 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent hover:border-gray-300"
+                >
+                  <option value="All Status">{t('orders.filters.all_status')}</option>
+                  <option value="Pending">{t('orders.filters.pending')}</option>
+                  <option value="Confirmed">{t('orders.filters.confirmed')}</option>
+                  <option value="Shipped">{t('orders.filters.shipped')}</option>
+                  <option value="Delivered">{t('orders.filters.delivered')}</option>
+                  <option value="Cancelled">{t('orders.filters.cancelled')}</option>
+                </select>
+              </div>
 
               {/* Sort By */}
-              <select 
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2.5 text-sm font-medium bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-slate-300 transition-all cursor-pointer min-w-[160px]"
-              >
-                <option value="date">Sort: Date</option>
-                <option value="amount">Sort: Amount</option>
-                <option value="status">Sort: Status</option>
-                <option value="user">Sort: User ID</option>
-              </select>
+              <div className="space-y-1.5">
+                <label className="ml-1 text-xs font-semibold tracking-wider text-gray-500 uppercase">
+                  {t('inventory.header.sort_label', 'Sort By')}
+                </label>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="w-full px-3 py-2 text-sm font-medium transition-all bg-white border border-gray-200 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent hover:border-gray-300"
+                >
+                  <option value="date">{t('orders.filters.sort_date')}</option>
+                  <option value="amount">{t('orders.filters.sort_amount')}</option>
+                  <option value="status">{t('orders.filters.sort_status')}</option>
+                  <option value="user">{t('orders.filters.sort_user')}</option>
+                </select>
+              </div>
 
-              {/* Sort Order */}
-              <button
-                onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                className="px-4 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
-                title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
-              >
-                {sortOrder === 'asc' ? '↑ A-Z' : '↓ Z-A'}
-              </button>
+              {/* Order & Advanced */}
+              <div className="flex gap-2">
+                <div className="flex-1 space-y-1.5">
+                  <label className="ml-1 text-xs font-semibold tracking-wider text-gray-500 uppercase">
+                    {t('inventory.header.order_label', 'Order')}
+                  </label>
+                  <button
+                    onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                    className="flex items-center justify-center w-full gap-2 px-3 py-2 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+                  >
+                    {sortOrder === 'asc' ? `↑ ${t('orders.filters.asc', 'Asc')}` : `↓ ${t('orders.filters.desc', 'Desc')}`}
+                  </button>
+                </div>
 
-              {/* Advanced Filters Toggle */}
-              <button
-                onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-                className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border rounded-lg transition-colors ${
-                  showAdvancedFilters 
-                    ? 'text-blue-700 bg-blue-50 border-blue-200' 
-                    : 'text-slate-700 bg-white border-slate-200 hover:bg-slate-50'
-                }`}
-              >
-                <Filter className="w-4 h-4" />
-                Filters
-                <ChevronDown className={`w-4 h-4 transition-transform ${showAdvancedFilters ? 'rotate-180' : ''}`} />
-              </button>
+                <div className="space-y-1.5">
+                  <label className="ml-1 text-xs font-semibold tracking-wider text-gray-500 uppercase opacity-0">
+                    .
+                  </label>
+                  <button
+                    onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                    className={`flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium border rounded-lg transition-colors ${showAdvancedFilters
+                      ? 'text-purple-700 bg-purple-50 border-purple-200'
+                      : 'text-gray-700 bg-white border-gray-200 hover:bg-gray-50'
+                      }`}
+                  >
+                    <Filter className="w-4 h-4" />
+                    <ChevronDown className={`w-4 h-4 transition-transform ${showAdvancedFilters ? 'rotate-180' : ''}`} />
+                  </button>
+                </div>
+              </div>
             </div>
 
             {/* Advanced Filters Panel */}
             {showAdvancedFilters && (
-              <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-4 animate-in slide-in-from-top-2 duration-200">
+              <div className="p-4 mt-4 space-y-4 duration-200 border border-gray-200 rounded-lg bg-gray-50 animate-in slide-in-from-top-2">
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-sm font-semibold text-slate-700">Advanced Filters</h4>
+                  <h4 className="text-sm font-semibold text-gray-700">{t('orders.filters.advanced', 'Advanced')}</h4>
                   <button
                     onClick={() => {
                       setAmountRange({ min: 0, max: 10000 });
                     }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:border-gray-300 transition-colors"
                   >
                     <X className="w-3 h-3" />
-                    Reset Filters
+                    {t('orders.filters.reset', 'Reset')}
                   </button>
                 </div>
                 <div className="grid grid-cols-1 gap-4">
                   {/* Amount Range */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-slate-700">
-                      Amount Range (€)
+                      {t('orders.filters.amount_range')}
                     </label>
                     <div className="flex items-center gap-3">
                       <input
                         type="number"
                         value={amountRange.min}
                         onChange={(e) => setAmountRange({ ...amountRange, min: Number(e.target.value) })}
-                        placeholder="Min"
-                        className="flex-1 px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder={t('orders.filters.min')}
+                        className="flex-1 px-3 py-2 text-sm bg-white border rounded-lg border-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                       />
                       <span className="text-slate-400">—</span>
                       <input
                         type="number"
                         value={amountRange.max}
                         onChange={(e) => setAmountRange({ ...amountRange, max: Number(e.target.value) })}
-                        placeholder="Max"
-                        className="flex-1 px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder={t('orders.filters.max')}
+                        className="flex-1 px-3 py-2 text-sm bg-white border rounded-lg border-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -442,80 +437,80 @@ export default function OrdersPage() {
         </div>
 
         {/* Modern Data Grid Container */}
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200">
+        <div className="overflow-hidden bg-white border shadow-xl rounded-2xl border-gray-200">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200">
-              <thead className="bg-slate-100/70">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-100/70">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                    ID
+                  <th className="px-6 py-3 text-xs font-semibold tracking-wider text-left uppercase text-slate-600">
+                    {t('orders.table.id')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                    User
+                  <th className="px-6 py-3 text-xs font-semibold tracking-wider text-left uppercase text-slate-600">
+                    {t('orders.table.user')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                    Date & Time
+                  <th className="px-6 py-3 text-xs font-semibold tracking-wider text-left uppercase text-slate-600">
+                    {t('orders.table.date')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                    Status
+                  <th className="px-6 py-3 text-xs font-semibold tracking-wider text-left uppercase text-slate-600">
+                    {t('orders.table.status')}
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                    Amount
+                  <th className="px-6 py-3 text-xs font-semibold tracking-wider text-right uppercase text-slate-600">
+                    {t('orders.table.amount')}
                   </th>
-                  <th className="px-6 py-3 text-center text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                    Actions
+                  <th className="px-6 py-3 text-xs font-semibold tracking-wider text-center uppercase text-gray-600">
+                    {t('orders.table.actions')}
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-slate-100">
+              <tbody className="bg-white divide-y divide-gray-100">
                 {paginatedOrders.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center text-slate-500 bg-white">
-                      <ShoppingCart className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                      {orders.length === 0 ? 'No orders found. Click "New Order" to get started.' : 'No orders match your filters.'}
+                    <td colSpan={6} className="px-6 py-12 text-center bg-white text-gray-500">
+                      <ShoppingCart className="w-8 h-8 mx-auto mb-2 text-slate-300" />
+                      {orders.length === 0 ? t('orders.table.no_orders') : t('inventory.table.no_products_desc')}
                     </td>
                   </tr>
                 ) : (
                   paginatedOrders.map((order) => (
-                    <tr key={order.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
+                    <tr key={order.id} className="transition-colors hover:bg-slate-50">
+                      <td className="px-6 py-4 text-sm font-medium whitespace-nowrap text-slate-900">
                         #{order.id}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700">
-                        User #{order.user_id}
+                      <td className="px-6 py-4 text-sm whitespace-nowrap text-slate-700">
+                        {t('orders.user_label')} #{order.user_id}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-                        <div className="font-medium text-slate-700">{formatDate(order.order_date)}</div>
-                        <div className="text-xs">{formatTime(order.order_date)}</div>
+                      <td className="px-6 py-4 text-sm whitespace-nowrap text-slate-500">
+                        <div className="font-medium text-slate-700">{formatDate(order.order_date, currentLocale)}</div>
+                        <div className="text-xs">{formatTime(order.order_date, currentLocale)}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ring-1 ring-inset ${getStatusColor(order.status)}`}>
-                          {order.status.toUpperCase()}
+                          {t(`orders.status.${order.status.toLowerCase()}`, order.status).toUpperCase()}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-right text-slate-900">
+                      <td className="px-6 py-4 text-sm font-bold text-right whitespace-nowrap text-slate-900">
                         {formatAmount(order.amount)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
+                      <td className="px-6 py-4 text-sm font-medium text-center whitespace-nowrap">
                         <div className="flex items-center justify-center gap-2">
                           <button
                             onClick={() => handleOpenModal('view', order)}
-                            className="p-2 text-blue-600 rounded-full hover:bg-blue-50 transition-colors"
-                            title="View Details"
+                            className="p-2 text-purple-600 transition-colors rounded-lg bg-purple-50 hover:bg-purple-100 hover:text-purple-700"
+                            title={t('common.view_details')}
                           >
                             <Eye size={16} />
                           </button>
                           <button
                             onClick={() => handleOpenModal('edit', order)}
-                            className="p-2 text-amber-600 rounded-full hover:bg-amber-50 transition-colors"
-                            title="Edit"
+                            className="p-2 text-purple-600 transition-colors rounded-lg bg-purple-50 hover:bg-purple-100 hover:text-purple-700"
+                            title={t('common.edit')}
                           >
                             <Edit size={16} />
                           </button>
                           <button
                             onClick={() => handleOpenModal('delete', order)}
-                            className="p-2 text-rose-600 rounded-full hover:bg-rose-50 transition-colors"
-                            title="Delete"
+                            className="p-2 text-purple-600 transition-colors rounded-lg bg-purple-50 hover:bg-rose-50 hover:text-rose-600"
+                            title={t('common.delete')}
                           >
                             <Trash2 size={16} />
                           </button>
@@ -531,11 +526,11 @@ export default function OrdersPage() {
 
         {/* Pagination */}
         {filteredAndSortedOrders.length > 0 && (
-          <div className="mt-6 bg-white rounded-2xl shadow-xl border border-slate-200 px-6 py-4">
+          <div className="px-6 py-4 mt-6 bg-white border shadow-xl rounded-2xl border-slate-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <span className="text-sm text-slate-600">
-                  Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredAndSortedOrders.length)} of {filteredAndSortedOrders.length} orders
+                  {t('orders.pagination.showing', { start: ((currentPage - 1) * itemsPerPage) + 1, end: Math.min(currentPage * itemsPerPage, filteredAndSortedOrders.length), total: filteredAndSortedOrders.length })}
                 </span>
                 <select
                   value={itemsPerPage}
@@ -543,31 +538,31 @@ export default function OrdersPage() {
                     setItemsPerPage(Number(e.target.value));
                     setCurrentPage(1);
                   }}
-                  className="px-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="px-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                 >
-                  <option value={10}>10 per page</option>
-                  <option value={25}>25 per page</option>
-                  <option value={50}>50 per page</option>
-                  <option value={100}>100 per page</option>
+                  <option value={10}>10 {t('orders.pagination.per_page')}</option>
+                  <option value={25}>25 {t('orders.pagination.per_page')}</option>
+                  <option value={50}>50 {t('orders.pagination.per_page')}</option>
+                  <option value={100}>100 {t('orders.pagination.per_page')}</option>
                 </select>
               </div>
-              
+
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setCurrentPage(1)}
                   disabled={currentPage === 1}
                   className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  First
+                  {t('orders.pagination.first')}
                 </button>
                 <button
                   onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                   disabled={currentPage === 1}
                   className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  Previous
+                  {t('orders.pagination.previous')}
                 </button>
-                
+
                 <div className="flex items-center gap-1">
                   {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                     let pageNum;
@@ -580,36 +575,35 @@ export default function OrdersPage() {
                     } else {
                       pageNum = currentPage - 2 + i;
                     }
-                    
+
                     return (
                       <button
                         key={pageNum}
                         onClick={() => setCurrentPage(pageNum)}
-                        className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
-                          currentPage === pageNum
-                            ? 'text-white bg-blue-600'
-                            : 'text-slate-700 bg-white border border-slate-200 hover:bg-slate-50'
-                        }`}
+                        className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${currentPage === pageNum
+                          ? 'text-white bg-purple-600'
+                          : 'text-slate-700 bg-white border border-slate-200 hover:bg-slate-50'
+                          }`}
                       >
                         {pageNum}
                       </button>
                     );
                   })}
                 </div>
-                
+
                 <button
                   onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
                   className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  Next
+                  {t('orders.pagination.next')}
                 </button>
                 <button
                   onClick={() => setCurrentPage(totalPages)}
                   disabled={currentPage === totalPages}
                   className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  Last
+                  {t('orders.pagination.last')}
                 </button>
               </div>
             </div>

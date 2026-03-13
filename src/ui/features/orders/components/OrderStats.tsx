@@ -1,12 +1,14 @@
-import { Clock, CheckCircle, Truck, Package, XCircle } from "lucide-react";
-import { OrderStatCard } from "./OrderStatCard";
+import { KpiCard } from "@/ui/components/common/KpiCard";
 import type { Order } from "@/domain/models/Order";
+import { useTranslation } from "react-i18next";
 
 interface OrderStatsProps {
   orders: Order[];
 }
 
 export function OrderStats({ orders }: OrderStatsProps) {
+  const { t } = useTranslation();
+
   // Calculate stats from orders
   const pendingCount = orders.filter(o => o.status.toLowerCase() === 'pending').length;
   const confirmedCount = orders.filter(o => o.status.toLowerCase() === 'confirmed').length;
@@ -16,35 +18,30 @@ export function OrderStats({ orders }: OrderStatsProps) {
 
   return (
     <div className="grid grid-cols-1 gap-4 mb-6 md:grid-cols-5">
-      <OrderStatCard
-        label="Pending"
+      <KpiCard
+        label={t('orders.status.pending')}
         value={pendingCount}
-        icon={Clock}
-        color="amber"
+        color="primary"
       />
-      <OrderStatCard
-        label="Confirmed"
+      <KpiCard
+        label={t('orders.status.confirmed')}
         value={confirmedCount}
-        icon={CheckCircle}
-        color="blue"
+        color="primary"
       />
-      <OrderStatCard
-        label="Shipped"
+      <KpiCard
+        label={t('orders.status.shipped')}
         value={shippedCount}
-        icon={Truck}
-        color="purple"
+        color="primary"
       />
-      <OrderStatCard
-        label="Delivered"
+      <KpiCard
+        label={t('orders.status.delivered')}
         value={deliveredCount}
-        icon={Package}
-        color="emerald"
+        color="primary"
       />
-      <OrderStatCard
-        label="Cancelled"
+      <KpiCard
+        label={t('orders.status.cancelled')}
         value={cancelledCount}
-        icon={XCircle}
-        color="rose"
+        color="primary"
       />
     </div>
   );

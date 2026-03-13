@@ -20,6 +20,7 @@ export const salesService = {
     const response = await apiClient.get<ApiResponse<TotalRevenueResponse>>(
       `${API_ENDPOINTS.sales.totalRevenue}?${queryString}`
     );
+    console.log("🚀 ~ response:", response)
     return response.data;
   },
 

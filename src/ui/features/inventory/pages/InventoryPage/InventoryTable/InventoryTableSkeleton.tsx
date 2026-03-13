@@ -20,7 +20,7 @@ export function InventoryTableSkeleton() {
             className="bg-white rounded-lg border border-gray-200 shadow-sm p-4 flex items-center gap-4 animate-pulse"
           >
             {/* Image Skeleton */}
-            <div className="flex-shrink-0 w-16 h-16 bg-gray-200 rounded-lg" />
+            <div className="shrink-0 w-16 h-16 bg-gray-200 rounded-lg" />
 
             {/* Info Skeleton */}
             <div className="flex-1 min-w-0 space-y-2">
