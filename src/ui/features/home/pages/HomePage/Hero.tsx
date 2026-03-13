@@ -130,7 +130,7 @@ export default function Hero() {
     target: sectionRef,
     offset: ["start start", "end start"],
   });
-  const smooth = useSpring(scrollYProgress, { stiffness: 55, damping: 22, restDelta: 0.0004 });
+  const smooth = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.0001 });
   const velocity = useVelocity(smooth);
   const velocityScale = useTransform(velocity, [-0.5, 0, 0.5], [1.03, 1, 0.97]);
 
@@ -155,15 +155,13 @@ export default function Hero() {
     mq.addEventListener?.("change", update);
     return () => mq.removeEventListener?.("change", update);
   }, []);
-  
+
   const imgX = useTransform(smooth, [0, 0.48], [isMobile ? "0%" : "45%", "0%"]);
   const imgRotY = useTransform(smooth, [0, 0.48], [isMobile ? -15 : -35, 0]);
   const imgRotX = useTransform(smooth, [0, 0.48], [isMobile ? 10 : 15, 0]);
   const imgRotZ = useTransform(smooth, [0, 0.48], [isMobile ? -2 : -4, 0]);
   const imgOpacity = useTransform(smooth, [0, 0.48], [0.4, 1]);
   const imgScale = useTransform(smooth, [0, 0.48], [isMobile ? 1.05 : 1.15, 1]);
-  const imgBlur = useTransform(smooth, [0, 0.55], [2, 0]);
-  const imgFilter = useTransform(imgBlur, v => `blur(${v}px)`);
 
   const edgeRightOp = useTransform(smooth, [0.20, 0.65], [1, 0]);
   const edgeBottomOp = useTransform(smooth, [0.20, 0.65], [1, 0]);
@@ -437,7 +435,6 @@ export default function Hero() {
                 rotateZ: imgRotZ,
                 scale: imgScale,
                 opacity: imgOpacity,
-                filter: imgFilter,
                 transformStyle: "preserve-3d",
                 perspective: "1800px",
                 willChange: "transform, opacity, filter",
