@@ -68,7 +68,7 @@ function TiltCard({ children }: { children: React.ReactNode }) {
       {children}
       <motion.div
         style={{ background: glare }}
-        className="absolute inset-0 rounded-[2rem] pointer-events-none z-10"
+        className="absolute inset-0 rounded-4xl pointer-events-none z-10"
       />
     </motion.div>
   );
@@ -149,7 +149,7 @@ export default function Hero() {
     mq.addEventListener?.("change", update);
     return () => mq.removeEventListener?.("change", update);
   }, []);
-  
+
   const imgX = useTransform(smooth, [0, 0.48], [isMobile ? "0%" : "45%", "0%"]);
   const imgRotY = useTransform(smooth, [0, 0.48], [isMobile ? -15 : -35, 0]);
   const imgRotX = useTransform(smooth, [0, 0.48], [isMobile ? 10 : 15, 0]);
@@ -350,7 +350,7 @@ export default function Hero() {
             </motion.div>
 
             <motion.h1
-              className="text-[clamp(2.5rem,8vw,6.5rem)] font-[900] text-white leading-[1.05] lg:leading-[0.95] tracking-[-0.04em] mb-6 md:mb-7"
+              className="text-[clamp(2.5rem,8vw,6.5rem)] font-black text-white leading-[1.05] lg:leading-[0.95] tracking-[-0.04em] mb-6 md:mb-7"
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
@@ -445,7 +445,7 @@ export default function Hero() {
 
               <TiltCard>
                 <div
-                  className="relative rounded-[2rem] overflow-hidden"
+                  className="relative rounded-4xl overflow-hidden"
                   style={{
                     boxShadow: "0 40px 100px -20px rgba(123,95,162,0.38), 0 0 0 1px rgba(255,255,255,0.08), -20px 20px 60px rgba(0,0,0,0.45)",
                   }}

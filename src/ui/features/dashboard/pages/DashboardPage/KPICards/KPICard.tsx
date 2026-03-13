@@ -1,5 +1,5 @@
 import type { KPI } from "@/ui/features/dashboard/types";
-import { TrendingUp, ArrowUpRight } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 
 export function KPICard({ kpi }: { kpi: KPI }) {
   return (
@@ -29,7 +29,7 @@ export function KPICard({ kpi }: { kpi: KPI }) {
               style={{ color: kpi.isPrimary ? "var(--color-primary-dark)" : "#6b7280" }}>
               {kpi.title}
             </h3>
-            <p className="mt-0.5 text-[1.6rem] font-[900] tabular-nums leading-none text-gray-900">{kpi.value}</p>
+            <p className="mt-0.5 text-[1.6rem] font-black tabular-nums leading-none text-gray-900">{kpi.value}</p>
           </div>
         </div>
 

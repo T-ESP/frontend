@@ -78,7 +78,7 @@ export default function AuthPage({ initialMode = "login" }: AuthPageProps) {
             }} aria-hidden />
 
             {/* Page */}
-            <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-12"
+            <div className="flex relative z-10 flex-col justify-center items-center px-4 py-12 min-h-screen"
                 style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
 
                 {/* Logo */}
@@ -102,7 +102,7 @@ export default function AuthPage({ initialMode = "login" }: AuthPageProps) {
                     initial={{ opacity: 0, y: 28 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                    className="w-full max-w-sm rounded-[2rem] p-8"
+                    className="p-8 w-full max-w-sm rounded-4xl"
                     style={{
                         background: "rgba(255,255,255,0.04)",
                         border: "1px solid rgba(123,95,162,0.22)",
@@ -112,13 +112,13 @@ export default function AuthPage({ initialMode = "login" }: AuthPageProps) {
                     }}
                 >
                     {/* Header */}
-                    <div className="flex items-center gap-3 mb-7">
-                        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                    <div className="flex gap-3 items-center mb-7">
+                        <div className="flex justify-center items-center w-10 h-10 rounded-xl shrink-0"
                             style={{ background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)", boxShadow: "0 4px 14px rgba(123,95,162,0.38)" }}>
                             <Lock size={16} className="text-white" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-[900] text-white leading-none mb-0.5">
+                            <h1 className="text-xl font-black text-white leading-none mb-0.5">
                                 {initialMode === "login" ? "Bon retour" : "Créer un compte"}
                             </h1>
                             <p className="text-[12px]" style={{ color: "rgba(176,142,224,0.55)" }}>

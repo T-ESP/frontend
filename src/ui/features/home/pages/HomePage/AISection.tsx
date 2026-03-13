@@ -38,7 +38,7 @@ export default function AISection() {
               Intelligence Artificielle
             </div>
 
-            <h2 className="text-[clamp(2.2rem,4vw,3.8rem)] font-[900] text-white tracking-[-0.035em] leading-[1.05] mb-6">
+            <h2 className="text-[clamp(2.2rem,4vw,3.8rem)] font-black text-white tracking-[-0.035em] leading-[1.05] mb-6">
               Parlez à vos données<br />
               <span className="text-[#7b5fa2]">comme à un ami.</span>
             </h2>
