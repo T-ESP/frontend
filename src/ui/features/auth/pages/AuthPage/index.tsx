@@ -1,118 +1,170 @@
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Logo } from "@/ui/components/common/Logo";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Logo } from "@/ui/components/common/Logo";
 import { LoginForm } from "../LoginPage/components/LoginForm";
 import { RegisterForm } from "../RegisterPage/components/RegisterForm";
+import { Lock } from "lucide-react";
 
 const BRAND = "#7b5fa2";
+const BRAND_L = "#9d7bdd";
 
-type Mode = "login" | "register";
-
-interface AuthPageProps {
-    initialMode?: Mode;
-}
+type AuthPageProps = {
+    initialMode?: "login" | "register";
+};
 
 export default function AuthPage({ initialMode = "login" }: AuthPageProps) {
-    const [mode, setMode] = useState<Mode>(initialMode);
-
-    const isLogin = mode === "login";
-
     return (
-        <div className="min-h-screen bg-[#f4f3f8] font-sans flex items-center justify-center p-4 md:p-6 relative overflow-hidden">
+        <>
+            <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+        *, *::before, *::after { box-sizing: border-box; }
+        body { margin: 0; background: #0c071e; }
+        .auth-dot-grid {
+          background-image: radial-gradient(rgba(123,95,162,0.14) 1px, transparent 1px);
+          background-size: 28px 28px;
+        }
+        .auth-input-override input,
+        .auth-input-override input[type="email"],
+        .auth-input-override input[type="password"],
+        .auth-input-override input[type="text"] {
+          background: rgba(255,255,255,0.06) !important;
+          border-color: rgba(123,95,162,0.25) !important;
+          color: #fff !important;
+          border-radius: 0.875rem !important;
+        }
+        .auth-input-override input::placeholder {
+          color: rgba(176,142,224,0.35) !important;
+        }
+        .auth-input-override input:focus {
+          border-color: rgba(157,123,221,0.55) !important;
+          box-shadow: 0 0 0 3px rgba(123,95,162,0.18) !important;
+          outline: none !important;
+        }
+        .auth-input-override label {
+          color: rgba(176,142,224,0.75) !important;
+          font-size: 0.8rem !important;
+          font-weight: 600 !important;
+        }
+        .auth-input-override button[type="submit"] {
+          background: linear-gradient(135deg, ${BRAND}, ${BRAND_L}) !important;
+          box-shadow: 0 6px 24px rgba(123,95,162,0.40) !important;
+          border-radius: 0.875rem !important;
+          color: #fff !important;
+          font-weight: 700 !important;
+          border: none !important;
+          transition: transform 0.2s, box-shadow 0.2s !important;
+        }
+        .auth-input-override button[type="submit"]:hover {
+          transform: translateY(-2px) !important;
+          box-shadow: 0 12px 32px rgba(123,95,162,0.52) !important;
+        }
+        .auth-input-override [type="checkbox"] {
+          accent-color: ${BRAND_L};
+        }
+        .auth-input-override span,
+        .auth-input-override p {
+          color: rgba(176,142,224,0.55);
+        }
+        .auth-input-override .text-red-600 { color: #f87171 !important; }
+        .auth-input-override .text-emerald-600 { color: #34d399 !important; }
+      `}</style>
 
-            {/* Main card */}
-            <div className="relative w-full max-w-4xl min-h-[620px] bg-white rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col md:block">
+            {/* Fixed dark background */}
+            <div className="fixed inset-0 z-0"
+                style={{ background: "linear-gradient(155deg, #0c071e 0%, #110a2a 45%, #0e0820 100%)" }} />
+            <div className="fixed inset-0 z-0 auth-dot-grid" style={{ opacity: 0.55 }} aria-hidden />
+            <div className="fixed inset-0 z-0 pointer-events-none" style={{
+                background: "radial-gradient(ellipse 70% 60% at 30% 20%, rgba(123,95,162,0.14) 0%, transparent 60%), radial-gradient(ellipse 50% 50% at 75% 80%, rgba(176,142,224,0.07) 0%, transparent 55%)",
+            }} aria-hidden />
 
-                {/* ─── Mobile Logo Header ─── */}
-                <div className="md:hidden flex items-center justify-center gap-2 pt-8 pb-4" style={{ color: BRAND }}>
-                    <Logo className="w-8 h-8" />
-                    <span className="font-bold text-xl tracking-tight">Stocks</span>
-                </div>
+            {/* Page */}
+            <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-12"
+                style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
 
-                {/* ─── Login form panel (always rendered on the left slot on desktop) ─── */}
-                <div
-                    className={`
-                        w-full md:absolute md:inset-y-0 md:left-0 md:w-1/2 flex flex-col justify-center px-6 py-6 md:p-12 transition-all duration-700 overflow-y-auto
-                        ${isLogin ? "relative md:opacity-100 md:z-10 md:translate-x-0 flex-1" : "hidden md:flex md:opacity-0 md:z-0 md:-translate-x-8 md:pointer-events-none"}
-                    `}
+                {/* Logo */}
+                <motion.div
+                    initial={{ opacity: 0, y: -16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                    className="flex items-center gap-2.5 mb-10"
                 >
-                    <div className="my-auto md:my-0">
-                        <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-2">Bon retour 👋</h2>
-                        <p className="text-sm text-gray-500 mb-8">Connectez-vous pour accéder à votre espace</p>
-                        <LoginForm />
-                        <Link to="/" className="inline-block mt-8 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">← Retour à l'accueil</Link>
-                    </div>
-                </div>
+                    <Link to="/" className="flex items-center gap-2.5">
+                        <div className="p-1.5 rounded-xl"
+                            style={{ background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)", boxShadow: "0 4px 14px rgba(123,95,162,0.42)" }}>
+                            <Logo className="w-5 h-5 brightness-0 invert" />
+                        </div>
+                        <span className="text-[1.2rem] font-extrabold text-white tracking-tight">Stocks</span>
+                    </Link>
+                </motion.div>
 
-                {/* ─── Register form panel (always rendered on the right slot on desktop) ─── */}
-                <div
-                    className={`
-                        w-full md:absolute md:inset-y-0 md:right-0 md:w-1/2 flex flex-col justify-center px-6 py-6 md:p-12 transition-all duration-700 overflow-y-auto
-                        ${!isLogin ? "relative md:opacity-100 md:z-10 md:translate-x-0 flex-1" : "hidden md:flex md:opacity-0 md:z-0 md:translate-x-8 md:pointer-events-none"}
-                    `}
+                {/* Card */}
+                <motion.div
+                    initial={{ opacity: 0, y: 28 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                    className="w-full max-w-sm rounded-[2rem] p-8"
+                    style={{
+                        background: "rgba(255,255,255,0.04)",
+                        border: "1px solid rgba(123,95,162,0.22)",
+                        backdropFilter: "blur(24px) saturate(180%)",
+                        WebkitBackdropFilter: "blur(24px) saturate(180%)",
+                        boxShadow: "0 32px 80px -12px rgba(123,95,162,0.24), 0 0 0 1px rgba(123,95,162,0.1)",
+                    }}
                 >
-                    <div className="my-auto md:my-0">
-                        <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-2">Créer un compte</h2>
-                        <p className="text-sm text-gray-500 mb-8">Remplissez les informations pour commencer</p>
-                        <RegisterForm />
-                        <Link to="/" className="inline-block mt-8 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">← Retour à l'accueil</Link>
-                    </div>
-                </div>
-
-                {/* ─── Mobile toggle panel (visible only on small screens) ─── */}
-                <div className="md:hidden mt-auto bg-[#f9f8fa] border-t border-gray-100 p-6 text-center">
-                    <p className="text-sm text-gray-600 mb-3">
-                        {isLogin ? "Pas encore inscrit ?" : "Déjà un compte ?"}
-                    </p>
-                    <button
-                        onClick={() => setMode(isLogin ? "register" : "login")}
-                        className="w-full border-2 text-sm font-semibold px-6 py-2.5 rounded-xl transition-all duration-300"
-                        style={{ borderColor: BRAND, color: BRAND }}
-                    >
-                        {isLogin ? "Créer un compte" : "Se connecter"}
-                    </button>
-                </div>
-
-                {/* ─── Sliding brand panel (Desktop only) ─── */}
-                <div className="hidden md:block">
-                    <AnimatePresence initial={false}>
-                        <motion.div
-                            key={mode}
-                            initial={{ x: isLogin ? "-100%" : "100%" }}
-                            animate={{ x: "0%" }}
-                            exit={{ x: isLogin ? "100%" : "-100%" }}
-                            transition={{ duration: 0.6, ease: [0.77, 0, 0.175, 1] }}
-                            className={`absolute inset-y-0 w-1/2 z-20 flex flex-col items-center justify-center text-center px-10 ${isLogin ? "right-0" : "left-0"
-                                }`}
-                            style={{ backgroundColor: BRAND }}
-                        >
-                            {/* Logo */}
-                            <div className="flex items-center gap-2 mb-10">
-                                <Logo className="w-9 h-9 brightness-0 invert" />
-                                <span className="text-white font-bold text-xl tracking-tight">Stocks</span>
-                            </div>
-
-                            <h3 className="text-3xl font-extrabold text-white mb-4 relative z-10">
-                                {isLogin ? "Pas encore inscrit ?" : "Déjà un compte ?"}
-                            </h3>
-                            <p className="text-white/80 text-base leading-relaxed mb-10 max-w-xs relative z-10">
-                                {isLogin
-                                    ? "Créez votre compte et commencez à gérer vos stocks avec l'IA."
-                                    : "Connectez-vous pour retrouver votre tableau de bord."}
+                    {/* Header */}
+                    <div className="flex items-center gap-3 mb-7">
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                            style={{ background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)", boxShadow: "0 4px 14px rgba(123,95,162,0.38)" }}>
+                            <Lock size={16} className="text-white" />
+                        </div>
+                        <div>
+                            <h1 className="text-xl font-[900] text-white leading-none mb-0.5">
+                                {initialMode === "login" ? "Bon retour" : "Créer un compte"}
+                            </h1>
+                            <p className="text-[12px]" style={{ color: "rgba(176,142,224,0.55)" }}>
+                                {initialMode === "login"
+                                    ? "Connectez-vous à votre espace"
+                                    : "Renseignez vos informations pour commencer"}
                             </p>
-                            <button
-                                onClick={() => setMode(isLogin ? "register" : "login")}
-                                className="relative z-10 border-2 border-white text-white font-semibold px-10 py-3 rounded-full text-sm hover:bg-white transition-all duration-300 hover:text-[#7b5fa2] tracking-wide"
-                            >
-                                {isLogin ? "S'inscrire" : "Se connecter"}
-                            </button>
-                        </motion.div>
-                    </AnimatePresence>
-                </div>
+                        </div>
+                    </div>
 
+                    {/* Form */}
+                    <div className="auth-input-override">
+                        {initialMode === "login" ? <LoginForm /> : <RegisterForm />}
+                    </div>
+                </motion.div>
+
+                {/* Back link */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                    className="mt-6"
+                >
+                    {initialMode === "login" ? (
+                        <Link
+                            to="/register"
+                            className="text-xs font-medium transition-colors"
+                            style={{ color: "rgba(176,142,224,0.4)" }}
+                            onMouseEnter={e => (e.currentTarget.style.color = BRAND_L)}
+                            onMouseLeave={e => (e.currentTarget.style.color = "rgba(176,142,224,0.4)")}
+                        >
+                            Pas encore de compte ? Créer un compte
+                        </Link>
+                    ) : (
+                        <Link
+                            to="/login"
+                            className="text-xs font-medium transition-colors"
+                            style={{ color: "rgba(176,142,224,0.4)" }}
+                            onMouseEnter={e => (e.currentTarget.style.color = BRAND_L)}
+                            onMouseLeave={e => (e.currentTarget.style.color = "rgba(176,142,224,0.4)")}
+                        >
+                            Déjà un compte ? Se connecter
+                        </Link>
+                    )}
+                </motion.div>
             </div>
-        </div>
+        </>
     );
 }
-

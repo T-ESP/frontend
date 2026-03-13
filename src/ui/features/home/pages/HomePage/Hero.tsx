@@ -12,7 +12,6 @@ import {
   useTransform,
   useMotionValue,
   useSpring,
-  useVelocity,
   AnimatePresence,
   useMotionTemplate,
 } from "framer-motion";
@@ -130,9 +129,7 @@ export default function Hero() {
     target: sectionRef,
     offset: ["start start", "end start"],
   });
-  const smooth = useSpring(scrollYProgress, { stiffness: 55, damping: 22, restDelta: 0.0004 });
-  const velocity = useVelocity(smooth);
-  const velocityScale = useTransform(velocity, [-0.5, 0, 0.5], [1.03, 1, 0.97]);
+  const smooth = useSpring(scrollYProgress, { stiffness: 36, damping: 18, restDelta: 0.0003 });
 
   const hlOp = useTransform(smooth, [0.08, 0.36], [1, 0]);
   const hlY = useTransform(smooth, [0, 0.36], ["0%", "-12%"]);
@@ -140,10 +137,7 @@ export default function Hero() {
   const topFade = useTransform(smooth, [0.05, 0.24], [1, 0]);
   const ctaOp = useTransform(smooth, [0.05, 0.24], [1, 0]);
 
-  const combinedHlScale = useTransform(
-    [hlScale, velocityScale] as any,
-    ([s, vs]: number[]) => (s as number) * (vs as number)
-  );
+  const combinedHlScale = hlScale;
 
   // Responsive transforms (reactive to resize; avoids one-time window checks)
   const [isMobile, setIsMobile] = useState(false);
@@ -281,14 +275,9 @@ export default function Hero() {
                 {email ? email.charAt(0).toUpperCase() : (firstname ? firstname.charAt(0).toUpperCase() : "U")}
               </Link>
             ) : (
-              <>
-                <Link to="/login" className="hidden sm:block text-sm font-semibold text-purple-200/70 hover:text-white px-3 py-2 transition-colors">
-                  Se connecter
-                </Link>
-                <Link to="/register" className="btn-primary text-white text-sm font-bold px-6 py-2.5 rounded-full">
-                  S'inscrire
-                </Link>
-              </>
+              <Link to="/login" className="hidden sm:block text-sm font-semibold text-purple-200/70 hover:text-white px-3 py-2 transition-colors">
+                Se connecter
+              </Link>
             )}
             <button className="md:hidden p-2 text-purple-200/60" onClick={() => setMobileOpen(o => !o)}>
               {mobileOpen ? <X size={22} /> : <Menu size={22} />}
