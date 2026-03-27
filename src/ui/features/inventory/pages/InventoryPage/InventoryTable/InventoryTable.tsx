@@ -5,7 +5,8 @@ import { productService } from "@/infrastructure/api/services/productService";
 import type { Product } from "@/domain/models/Product";
 import type { InventoryItem } from "@/ui/features/inventory/types";
 import { InventoryTableHeader } from "./InventoryTableHeader";
-import { InventoryCardGrid } from "./InventoryCardGrid";
+import { InventoryTableHead } from "./InventoryTableHead";
+import { InventoryTableBody } from "./InventoryTableBody";
 import { InventoryTableSkeleton } from "./InventoryTableSkeleton";
 import { useToast } from "@/ui/components/common/Toast";
 import { useTranslation } from "react-i18next";
@@ -293,13 +294,20 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs, o
         </div>
       ) : (
         <>
-          <InventoryCardGrid
-            data={paginatedProducts}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onStockUpdate={handleStockUpdate}
-            onViewKPIs={onViewKPIs}
-          />
+          <div className="overflow-hidden bg-white border shadow-xl rounded-2xl border-gray-200">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <InventoryTableHead />
+                <InventoryTableBody
+                  data={paginatedProducts}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  onStockUpdate={handleStockUpdate}
+                  onViewKPIs={onViewKPIs}
+                />
+              </table>
+            </div>
+          </div>
 
           {/* Pagination */}
           <div className="bg-white rounded-xl border border-gray-100 shadow-sm px-6 py-4">

@@ -55,4 +55,7 @@ export const API_ENDPOINTS = {
     getAll: '/stocks',
     update: (id: number) => `/stocks/${id}`,
   },
+  kpis: {
+    topFlop: '/kpis/top-flop',
+  },
 } as const;

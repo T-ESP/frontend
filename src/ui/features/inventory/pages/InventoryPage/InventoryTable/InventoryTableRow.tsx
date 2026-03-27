@@ -30,97 +30,70 @@ export function InventoryTableRow({ item, index, onEdit, onDelete, onStockUpdate
   };
 
   return (
-    <tr
-      key={item.id}
-      className="transition-colors duration-150 hover:bg-purple-50/30 group"
-      style={{ animationDelay: `${index * 50}ms` }}
-    >
-      <td className="px-6 py-4">
+    <tr className="transition-colors hover:bg-slate-50">
+      <td className="px-6 py-4 whitespace-nowrap">
         <div className="flex gap-3 items-center">
-          <div className="relative">
-            <img
-              src={item.image || 'https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg?semt=ais_hybrid&w=740&q=80'}
-              alt={item.name}
-              onError={(e) => {
-                e.currentTarget.src = 'https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg?semt=ais_hybrid&w=740&q=80';
-              }}
-              className="w-10 h-10 rounded-full ring-2 ring-white shadow-sm object-cover"
-            />
-            <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-          </div>
           <div>
-            <span className="font-medium text-gray-900 transition-colors group-hover:text-purple-600">
-              {item.name}
-            </span>
-            <div className="text-xs text-gray-500 mt-0.5">
-              SKU: {item.sku}
-            </div>
+            <div className="text-sm font-medium text-slate-900">{item.name}</div>
+            <div className="text-xs text-slate-500 mt-0.5">SKU: {item.sku}</div>
           </div>
         </div>
       </td>
-      <td className="px-6 py-4">
-        <div className="flex gap-2 items-center text-gray-600">
+      <td className="px-6 py-4 text-sm whitespace-nowrap text-slate-700">
+        <div className="flex gap-2 items-center">
           <FiPackage className="w-4 h-4 text-gray-400" />
-          <span className="text-sm">{item.category}</span>
+          {item.category}
         </div>
       </td>
-      <td className="px-6 py-4">
-        <span className="text-base font-semibold text-gray-900">
-          {item.price}
-        </span>
+      <td className="px-6 py-4 text-sm font-bold whitespace-nowrap text-slate-900">
+        {item.price}
       </td>
-      <td className="px-6 py-4">
+      <td className="px-6 py-4 whitespace-nowrap">
         <div className="flex items-center gap-2">
           <button
             onClick={() => handleStockChange(-1)}
             disabled={updating || item.piece <= 0}
             className="p-1 text-gray-400 rounded hover:text-red-600 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Decrease stock"
           >
             <FiMinus size={14} />
           </button>
-          <span className="inline-flex gap-1 items-center font-medium text-gray-700 min-w-15 justify-center">
-            {item.piece.toLocaleString()}
-            <span className="text-xs text-gray-400">units</span>
+          <span className="text-sm font-medium text-slate-700 min-w-[3rem] text-center">
+            {item.piece.toLocaleString()} <span className="text-xs text-gray-400">u.</span>
           </span>
           <button
             onClick={() => handleStockChange(1)}
             disabled={updating}
             className="p-1 text-gray-400 rounded hover:text-green-600 hover:bg-green-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Increase stock"
           >
             <FiPlus size={14} />
           </button>
         </div>
       </td>
-      <td className="px-6 py-4">
-        <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full ${statusStyles[item.status]}`}>
-          <span className={`w-1.5 h-1.5 rounded-full ${item.status === 'In Stock' ? 'bg-emerald-500' :
-            item.status === 'Low Stock' ? 'bg-amber-500' :
-              'bg-rose-500'
-            }`}></span>
+      <td className="px-6 py-4 whitespace-nowrap">
+        <span className={`px-3 py-1 inline-flex items-center gap-1.5 text-xs leading-5 font-semibold rounded-full ring-1 ring-inset ${statusStyles[item.status]}`}>
+          <span className={`w-1.5 h-1.5 rounded-full ${item.status === 'In Stock' ? 'bg-emerald-500' : item.status === 'Low Stock' ? 'bg-amber-500' : 'bg-rose-500'}`} />
           {item.status}
         </span>
       </td>
-      <td className="px-6 py-4">
-        <div className="flex gap-2">
+      <td className="px-6 py-4 text-sm font-medium text-center whitespace-nowrap">
+        <div className="flex items-center justify-center gap-2">
           <button
             onClick={() => onViewKPIs(item.id, item.name)}
-            className="p-2 text-gray-400 rounded-lg transition-all duration-150 hover:text-blue-600 hover:bg-blue-50"
+            className="p-2 text-purple-600 transition-colors rounded-lg bg-purple-50 hover:bg-purple-100 hover:text-purple-700"
             title="View KPIs"
           >
             <FiBarChart2 size={16} />
           </button>
           <button
             onClick={() => onEdit(item)}
-            className="p-2 text-gray-400 rounded-lg transition-all duration-150 hover:text-purple-600 hover:bg-purple-50"
+            className="p-2 text-purple-600 transition-colors rounded-lg bg-purple-50 hover:bg-purple-100 hover:text-purple-700"
             title="Edit product"
           >
             <FiEdit2 size={16} />
           </button>
           <button
             onClick={() => onDelete(item.id, item.name)}
-            className="p-2 text-gray-400 rounded-lg transition-all duration-150 hover:text-rose-600 hover:bg-rose-50"
+            className="p-2 text-purple-600 transition-colors rounded-lg bg-purple-50 hover:bg-rose-50 hover:text-rose-600"
             title="Delete product"
           >
             <FiTrash size={16} />

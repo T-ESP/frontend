@@ -4,6 +4,7 @@ import { usePageTitle } from '@/ui/hooks/usePageTitle';
 import type { ReactNode } from 'react';
 import { Outlet } from 'react-router-dom';
 import { HomeHeader } from '@/ui/components/layouts/HomeHeader';
+import { FloatingChat } from '@/ui/components/FloatingChat/FloatingChat';
 
 type AppLayoutProps = {
   children?: ReactNode;
@@ -33,6 +34,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           {children ?? <Outlet />}
         </div>
       </div>
+      <FloatingChat />
     </div>
   );
 }

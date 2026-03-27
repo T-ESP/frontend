@@ -64,6 +64,12 @@
             "normal": "Normal",
             "products_low_units": "Produits < 10 unités"
         },
+        "flop_products": {
+            "title": "Produits les moins performants",
+            "subtitle": "Produits avec les plus faibles ventes ou profits",
+            "by_sales": "Ventes",
+            "by_profit": "Profit"
+        },
         "top_products": {
             "title": "Produits Performants",
             "subtitle": "Produits avec le plus de stock",

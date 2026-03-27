@@ -29,7 +29,7 @@ export function ChartContainer({ orders, dateRange }: ChartContainerProps) {
 
         const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
-        const grain = dateRange <= 30 ? "day" : "month";
+        const grain = dateRange > 0 && dateRange <= 30 ? "day" : "month";
 
         const response = await salesService.getEvolutionByGrain({
           start_date: formatDate(startDate),
@@ -96,7 +96,7 @@ export function ChartContainer({ orders, dateRange }: ChartContainerProps) {
       const date = new Date(dataPoint.date);
       let label: string;
 
-      if (dateRange <= 30) {
+      if (dateRange > 0 && dateRange <= 30) {
         // day grain → "14 Mar"
         label = date.toLocaleDateString(i18n.language, { day: "numeric", month: "short" });
       } else {
@@ -115,9 +115,9 @@ export function ChartContainer({ orders, dateRange }: ChartContainerProps) {
   }, [revenueDataFromApi, i18n.language, dateRange]);
 
   return (
-    <div className="grid grid-cols-1 gap-8 mb-8 lg:grid-cols-3">
+    <div className="mb-8">
       <RevenueChart data={revenueData} />
-      <CustomerDistributionChart data={customerData} />
+      {/* <CustomerDistributionChart data={customerData} /> */}
     </div>
   );
 }

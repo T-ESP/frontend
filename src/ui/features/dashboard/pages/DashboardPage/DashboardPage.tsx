@@ -3,11 +3,14 @@ import PageLayout from "@/ui/components/layouts/PageLayout";
 import { KPICards } from "./KPICards";
 import { ChartContainer } from "./ChartContainer";
 import { TopProducts } from "./TopProducts";
+import { FlopProducts } from "./TopProducts/FlopProducts";
 import { PageActions } from "./PageActions/PageActions";
 import { orderService } from "@/infrastructure/api/services/orderService";
 import { productService } from "@/infrastructure/api/services/productService";
 import { userService } from "@/infrastructure/api/services/userService";
 import { salesService } from "@/infrastructure/api/services/salesService";
+import { globalKpisService } from "@/infrastructure/api/services/globalKpisService";
+import type { TopFlopProduct } from "@/infrastructure/api/services/globalKpisService";
 import type { Order } from "@/domain/models/Order";
 import type { Product } from "@/domain/models/Product";
 import type { User } from "@/domain/models/User";
@@ -22,6 +25,9 @@ export default function DashboardPage() {
   const [evolution, setEvolution] = useState(0);
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState(30);
+  const [flopBySales, setFlopBySales] = useState<TopFlopProduct[]>([]);
+  const [flopByProfit, setFlopByProfit] = useState<TopFlopProduct[]>([]);
+  const [flopLoading, setFlopLoading] = useState(true);
 
   useEffect(() => {
     loadDashboardData();
@@ -65,6 +71,28 @@ export default function DashboardPage() {
       console.error('Error loading dashboard data:', error);
     } finally {
       setLoading(false);
+    }
+
+    try {
+      setFlopLoading(true);
+      const endDate = new Date();
+      const startDate = new Date();
+      if (dateRange === 0) {
+        startDate.setFullYear(2000, 0, 1);
+      } else {
+        startDate.setDate(startDate.getDate() - dateRange);
+      }
+      const formatDate = (d: Date) => d.toISOString().split('T')[0];
+      const topFlop = await globalKpisService.getTopFlop({
+        start_date: formatDate(startDate),
+        end_date: formatDate(endDate),
+      });
+      setFlopBySales(topFlop.flop_10_by_sales);
+      setFlopByProfit(topFlop.flop_10_by_profit);
+    } catch (error) {
+      console.error('Error loading flop data:', error);
+    } finally {
+      setFlopLoading(false);
     }
   };
 
@@ -125,7 +153,10 @@ export default function DashboardPage() {
 
           <ChartContainer orders={orders} dateRange={dateRange} />
 
-          <TopProducts products={products} />
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+            <TopProducts products={products} />
+            <FlopProducts flopBySales={flopBySales} flopByProfit={flopByProfit} loading={flopLoading} />
+          </div>
         </>
       )}
     </PageLayout>

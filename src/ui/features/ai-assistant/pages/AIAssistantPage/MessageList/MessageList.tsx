@@ -3,6 +3,7 @@ import type { ChatMessage } from "@/ui/features/ai-assistant/types";
 
 type MessageListProps = {
   messages: ChatMessage[];
+  bubbleMaxWidth?: string;
 };
 
 const FormattedMessage = ({ content }: { content: string }) => {
@@ -20,7 +21,7 @@ const FormattedMessage = ({ content }: { content: string }) => {
   );
 };
 
-export function MessageList({ messages }: MessageListProps) {
+export function MessageList({ messages, bubbleMaxWidth = "min(45%,calc(100vw-16rem))" }: MessageListProps) {
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -33,7 +34,8 @@ export function MessageList({ messages }: MessageListProps) {
         <div key={m.id} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
           <div
             className={`${m.role === "user" ? "bg-primary text-white" : "bg-gray-100 text-gray-900"}
-              w-fit max-w-[min(45%,calc(100vw-16rem))] rounded-2xl px-3 py-2 text-sm overflow-hidden`}
+              w-fit rounded-2xl px-3 py-2 text-sm overflow-hidden`}
+            style={{ maxWidth: bubbleMaxWidth }}
             style={{ overflowWrap: "anywhere" }}
           >
             {m.role === "user" ? (
