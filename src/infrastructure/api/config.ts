@@ -1,6 +1,8 @@
+import { getApiUrl } from "@/lib/api-url";
+
 // API Configuration
 export const API_CONFIG = {
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8090',
+  baseURL: getApiUrl(),
   timeout: 10000,
 } as const;
 
