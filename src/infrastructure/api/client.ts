@@ -53,6 +53,14 @@ class ApiClient {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.removeItem('auth_token');
+          localStorage.removeItem('auth_firstname');
+          localStorage.removeItem('auth_lastname');
+          localStorage.removeItem('auth_email');
+          window.location.href = '/login';
+          throw new Error('Session expirée. Veuillez vous reconnecter.');
+        }
         const error: ApiError = await response.json().catch(() => ({
           code: 'UNKNOWN_ERROR',
           message: `HTTP ${response.status}: ${response.statusText}`,

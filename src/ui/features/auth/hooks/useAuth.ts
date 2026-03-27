@@ -2,9 +2,24 @@ import { useMemo } from "react";
 
 const TOKEN_KEY = "auth_token";
 
+function isJwtExpired(token: string): boolean {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    if (typeof payload.exp !== "number") return false;
+    return Date.now() / 1000 > payload.exp;
+  } catch {
+    return false;
+  }
+}
+
 export function getAuthToken(): string | null {
   try {
-    return localStorage.getItem(TOKEN_KEY);
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (token && isJwtExpired(token)) {
+      clearAuthToken();
+      return null;
+    }
+    return token;
   } catch {
     return null;
   }
