@@ -4,6 +4,7 @@ import { Logo } from "@/ui/components/common/Logo";
 import { LoginForm } from "../LoginPage/components/LoginForm";
 import { Lock } from "lucide-react";
 
+const BRAND = "#7b5fa2";
 const BRAND_L = "#9d7bdd";
 
 export default function AuthPage() {

@@ -5,11 +5,7 @@ export const PAGES = {
   DisplaySite: lazy(() => import("@/ui/features/home/pages/HomePage")),
   Pricing: lazy(() => import("@/ui/features/home/pages/PricingPage")),
   Terms: lazy(() => import("@/ui/features/home/pages/TermsPage")),
-  Login: lazy(() =>
-    import("@/ui/features/auth/pages/AuthPage").then((m) => ({
-      default: () => m.default({ initialMode: "login" }),
-    }))
-  ),
+  Login: lazy(() => import("@/ui/features/auth/pages/AuthPage")),
   Dashboard: lazy(() => import("@/ui/features/dashboard/pages/DashboardPage")),
   Users: lazy(() => import("@/ui/features/team/pages/UsersPage")),
   NotFound: lazy(() => import("@/ui/pages/NotFoundPage")),

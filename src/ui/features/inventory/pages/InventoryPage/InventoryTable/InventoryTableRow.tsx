@@ -17,7 +17,7 @@ const statusStyles = {
   "Out of Stock": "bg-rose-50 text-rose-700 border border-rose-200"
 };
 
-export function InventoryTableRow({ item, index, onEdit, onDelete, onStockUpdate, onViewKPIs }: InventoryTableRowProps) {
+export function InventoryTableRow({ item, onEdit, onDelete, onStockUpdate, onViewKPIs }: InventoryTableRowProps) {
   const [updating, setUpdating] = useState(false);
 
   const handleStockChange = async (change: number) => {

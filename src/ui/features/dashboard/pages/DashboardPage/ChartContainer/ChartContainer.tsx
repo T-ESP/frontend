@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { CustomerDistributionChart } from "./CustomerDistributionChart";
 import { RevenueChart } from "./RevenueChart";
 import { salesService } from "@/infrastructure/api/services/salesService";
 import type { Order } from "@/domain/models/Order";
@@ -11,8 +10,7 @@ interface ChartContainerProps {
   dateRange: number;
 }
 
-export function ChartContainer({ orders, dateRange }: ChartContainerProps) {
-  const { t } = useTranslation();
+export function ChartContainer({ dateRange }: ChartContainerProps) {
   const [revenueDataFromApi, setRevenueDataFromApi] = useState<EvolutionDataPoint[]>([]);
 
   // Fetch revenue data using the global date range
@@ -46,48 +44,6 @@ export function ChartContainer({ orders, dateRange }: ChartContainerProps) {
 
     fetchRevenueData();
   }, [dateRange]);
-
-  // Calculate customer distribution (new vs returning)
-  const customerData = useMemo(() => {
-    const userOrderCounts = new Map<number, number>();
-
-    // Count orders per user
-    orders.forEach(order => {
-      const count = userOrderCounts.get(order.user_id) || 0;
-      userOrderCounts.set(order.user_id, count + 1);
-    });
-
-    // Classify as new (1 order) or returning (2+ orders)
-    let newCustomers = 0;
-    let returningCustomers = 0;
-
-    userOrderCounts.forEach(orderCount => {
-      if (orderCount === 1) {
-        newCustomers++;
-      } else {
-        returningCustomers++;
-      }
-    });
-
-    const total = newCustomers + returningCustomers || 1;
-    const newPercentage = (newCustomers / total) * 100;
-    const returningPercentage = (returningCustomers / total) * 100;
-
-    return [
-      {
-        name: t('dashboard.charts.new_customers'),
-        value: parseFloat(newPercentage.toFixed(1)),
-        count: newCustomers,
-        color: "#7b5fa2"
-      },
-      {
-        name: t('dashboard.charts.returning_customers'),
-        value: parseFloat(returningPercentage.toFixed(1)),
-        count: returningCustomers,
-        color: "#a480d1"
-      },
-    ];
-  }, [orders, t]);
 
   // Transform API data to chart format
   const { i18n } = useTranslation();

@@ -35,8 +35,7 @@ export function MessageList({ messages, bubbleMaxWidth = "min(45%,calc(100vw-16r
           <div
             className={`${m.role === "user" ? "bg-primary text-white" : "bg-gray-100 text-gray-900"}
               w-fit rounded-2xl px-3 py-2 text-sm overflow-hidden`}
-            style={{ maxWidth: bubbleMaxWidth }}
-            style={{ overflowWrap: "anywhere" }}
+            style={{ maxWidth: bubbleMaxWidth, overflowWrap: "anywhere" }}
           >
             {m.role === "user" ? (
               <div className="whitespace-pre-wrap">{m.content}</div>
