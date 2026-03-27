@@ -16,8 +16,15 @@ interface KPICardsProps {
 }
 
 export function KPICards({ orders, products, users, totalRevenue, evolution, dateRange = 30 }: KPICardsProps) {
-  console.log("🚀 ~ KPICards ~ totalRevenue:", totalRevenue)
   const { t } = useTranslation();
+
+  const filteredOrders = dateRange === 0 ? orders : orders.filter(order => {
+    const orderDate = new Date(order.order_date);
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - dateRange);
+    return orderDate >= startDate;
+  });
+
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
@@ -36,6 +43,7 @@ export function KPICards({ orders, products, users, totalRevenue, evolution, dat
   const lowStockProducts = products.filter(p => p.stock_quantity < 10).length;
 
   const getDateRangeLabel = () => {
+    if (dateRange === 0) return t('common.date_range.all_time');
     if (dateRange === 7) return t('common.date_range.last_7_days');
     if (dateRange === 90) return t('common.date_range.last_90_days');
     if (dateRange === 365) return t('common.date_range.last_year');
@@ -55,12 +63,12 @@ export function KPICards({ orders, products, users, totalRevenue, evolution, dat
     },
     {
       title: t('dashboard.kpi.total_orders'),
-      value: orders.length.toString(),
+      value: filteredOrders.length.toString(),
       change: "+0.0%",
       trend: "up",
       icon: FiShoppingCart,
       color: "blue",
-      description: t('common.all_time')
+      description: getDateRangeLabel()
     },
     {
       title: t('dashboard.kpi.low_stock_alert'),
@@ -78,7 +86,7 @@ export function KPICards({ orders, products, users, totalRevenue, evolution, dat
       trend: "up",
       icon: FiUsers,
       color: "purple",
-      description: t('common.all_time')
+      description: t('common.total_active')
     },
   ];
 

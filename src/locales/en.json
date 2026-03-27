@@ -19,9 +19,11 @@
             "last_7_days": "Last 7 days",
             "last_30_days": "Last 30 days",
             "last_90_days": "Last 90 days",
-            "last_year": "Last year"
+            "last_year": "Last year",
+            "all_time": "All time"
         },
         "all_time": "All time",
+        "total_active": "Total active",
         "others": "Others",
         "percentage": "Percentage",
         "collapse_sidebar": "Collapse sidebar",
@@ -72,7 +74,8 @@
             "no_products": "No products found",
             "stock_label": "Stock",
             "value_label": "Value",
-            "name_label": "Name"
+            "name_label": "Name",
+            "stock_value": "Stock value"
         },
         "charts": {
             "revenue_title": "Revenue Analytics",

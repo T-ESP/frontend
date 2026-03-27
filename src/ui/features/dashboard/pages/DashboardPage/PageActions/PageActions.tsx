@@ -29,6 +29,7 @@ export function PageActions({ onDateRangeChange, currentRange = 30 }: PageAction
     { label: t('common.date_range.last_30_days'), days: 30 },
     { label: t('common.date_range.last_90_days'), days: 90 },
     { label: t('common.date_range.last_year'), days: 365 },
+    { label: t('common.date_range.all_time'), days: 0 },
   ];
 
   const currentLabel = dateRanges.find(r => r.days === currentRange)?.label || t('common.date_range.last_30_days');

@@ -2,17 +2,11 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Logo } from "@/ui/components/common/Logo";
 import { LoginForm } from "../LoginPage/components/LoginForm";
-import { RegisterForm } from "../RegisterPage/components/RegisterForm";
 import { Lock } from "lucide-react";
 
-const BRAND = "#7b5fa2";
 const BRAND_L = "#9d7bdd";
 
-type AuthPageProps = {
-    initialMode?: "login" | "register";
-};
-
-export default function AuthPage({ initialMode = "login" }: AuthPageProps) {
+export default function AuthPage() {
     return (
         <>
             <style>{`
@@ -118,51 +112,17 @@ export default function AuthPage({ initialMode = "login" }: AuthPageProps) {
                             <Lock size={16} className="text-white" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-black text-white leading-none mb-0.5">
-                                {initialMode === "login" ? "Bon retour" : "Créer un compte"}
-                            </h1>
+                            <h1 className="text-xl font-black text-white leading-none mb-0.5">Bon retour</h1>
                             <p className="text-[12px]" style={{ color: "rgba(176,142,224,0.55)" }}>
-                                {initialMode === "login"
-                                    ? "Connectez-vous à votre espace"
-                                    : "Renseignez vos informations pour commencer"}
+                                Connectez-vous à votre espace
                             </p>
                         </div>
                     </div>
 
                     {/* Form */}
                     <div className="auth-input-override">
-                        {initialMode === "login" ? <LoginForm /> : <RegisterForm />}
+                        <LoginForm />
                     </div>
-                </motion.div>
-
-                {/* Back link */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
-                    className="mt-6"
-                >
-                    {initialMode === "login" ? (
-                        <Link
-                            to="/register"
-                            className="text-xs font-medium transition-colors"
-                            style={{ color: "rgba(176,142,224,0.4)" }}
-                            onMouseEnter={e => (e.currentTarget.style.color = BRAND_L)}
-                            onMouseLeave={e => (e.currentTarget.style.color = "rgba(176,142,224,0.4)")}
-                        >
-                            Pas encore de compte ? Créer un compte
-                        </Link>
-                    ) : (
-                        <Link
-                            to="/login"
-                            className="text-xs font-medium transition-colors"
-                            style={{ color: "rgba(176,142,224,0.4)" }}
-                            onMouseEnter={e => (e.currentTarget.style.color = BRAND_L)}
-                            onMouseLeave={e => (e.currentTarget.style.color = "rgba(176,142,224,0.4)")}
-                        >
-                            Déjà un compte ? Se connecter
-                        </Link>
-                    )}
                 </motion.div>
             </div>
         </>

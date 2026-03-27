@@ -980,7 +980,7 @@ export default function DemoPage() {
                         Créez votre compte et commencez à piloter vos stocks depuis le tableau de bord.
                     </p>
                     <div className="flex flex-col gap-4 items-center sm:flex-row">
-                        <Link to="/register"
+                        <Link to="/login"
                             className="inline-flex items-center gap-2 px-9 py-4 rounded-2xl text-[0.95rem] font-bold text-white transition-all duration-200"
                             style={{
                                 background: `linear-gradient(135deg, ${BRAND}, ${BRAND_L})`,
@@ -989,7 +989,7 @@ export default function DemoPage() {
                             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
                             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
                         >
-                            Commencer gratuitement <ChevronRight size={16} />
+                            Se connecter <ChevronRight size={16} />
                         </Link>
                         <Link to="/"
                             className="inline-flex items-center gap-1.5 text-sm font-semibold transition-colors"

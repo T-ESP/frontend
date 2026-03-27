@@ -181,7 +181,7 @@ export default function PricingPage() {
                         </ul>
 
                         <Link
-                            to={isAuthenticated ? "/dashboard" : "/register"}
+                            to={isAuthenticated ? "/dashboard" : "/login"}
                             className="block w-full py-3 rounded-xl font-semibold text-center text-sm transition-all"
                             style={
                                 tier.isCurrent

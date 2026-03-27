@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 const links = {
     Produit: [["#features", "Fonctionnalités"], ["#advantages", "Avantages"], ["#", "Assistant IA"]],
     Application: [["/dashboard", "Tableau de bord"], ["/inventory", "Inventaire"], ["/orders", "Commandes"]],
-    Compte: [["/login", "Se connecter"], ["/register", "S'inscrire"]],
+    Compte: [["/login", "Se connecter"]],
 };
 
 export default function Footer() {
@@ -33,14 +33,14 @@ export default function Footer() {
 
                         {/* CTA in footer */}
                         <Link
-                            to="/register"
+                            to="/login"
                             className="inline-flex items-center gap-2 mt-6 text-white text-xs font-bold px-5 py-2.5 rounded-full transition-all"
                             style={{
                                 background: "linear-gradient(135deg,#7b5fa2,#7b5fa2)",
                                 boxShadow: "0 4px 18px rgba(123,95,162,0.3)",
                             }}
                         >
-                            Commencer gratuitement
+                            Se connecter
                         </Link>
                     </div>
 

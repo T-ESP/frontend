@@ -19,15 +19,6 @@ export const ROUTES: Record<string, RouteMeta> = {
     hiddenInMenu: true,
     title: 'StockS - Connexion',
   },
-  REGISTER: {
-    path: '/register',
-    label: 'Register',
-    page: 'Register',
-    layout: 'auth',
-    restricted: false,
-    hiddenInMenu: true,
-    title: 'StockS - Inscription',
-  },
   DASHBOARD: {
     path: '/dashboard',
     label: 'Dashboard',

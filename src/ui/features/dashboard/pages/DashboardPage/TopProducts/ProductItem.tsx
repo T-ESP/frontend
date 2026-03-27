@@ -36,11 +36,12 @@ export function ProductItem({ product }: ProductItemProps) {
                 </div>
                 <div className="flex items-center gap-1">
                   <FiShoppingCart className="w-4 h-4 text-gray-400" />
-                  <span className="text-sm text-gray-600">{product.sales.toLocaleString()} {t('common.sold')}</span>
+                  <span className="text-sm text-gray-600">{product.sales.toLocaleString()} {t('common.units')}</span>
                 </div>
               </div>
             </div>
             <div className="text-right">
+              <div className="text-xs text-gray-400 mb-0.5">{t('dashboard.top_products.stock_value')}</div>
               <div className="text-lg font-bold text-gray-900">{product.revenue}</div>
               {/* <div className="flex items-center gap-1 mt-1">
                 {product.trend === 'up' ? (

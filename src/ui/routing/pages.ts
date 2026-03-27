@@ -10,11 +10,6 @@ export const PAGES = {
       default: () => m.default({ initialMode: "login" }),
     }))
   ),
-  Register: lazy(() =>
-    import("@/ui/features/auth/pages/AuthPage").then((m) => ({
-      default: () => m.default({ initialMode: "register" }),
-    }))
-  ),
   Dashboard: lazy(() => import("@/ui/features/dashboard/pages/DashboardPage")),
   Users: lazy(() => import("@/ui/features/team/pages/UsersPage")),
   NotFound: lazy(() => import("@/ui/pages/NotFoundPage")),

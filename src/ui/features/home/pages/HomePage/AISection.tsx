@@ -66,7 +66,7 @@ export default function AISection() {
             </ul>
 
             <Link
-              to="/register"
+              to="/login"
               className="inline-flex items-center gap-2 font-bold text-sm px-8 py-4 rounded-2xl text-white transition-all duration-300"
               style={{
                 background: "linear-gradient(135deg, #7b5fa2 0%, #7b5fa2 100%)",

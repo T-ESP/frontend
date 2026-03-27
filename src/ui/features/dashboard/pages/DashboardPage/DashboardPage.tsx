@@ -31,10 +31,13 @@ export default function DashboardPage() {
     try {
       setLoading(true);
 
-      // Get date ranges based on selected range
       const endDate = new Date();
       const startDate = new Date();
-      startDate.setDate(startDate.getDate() - dateRange);
+      if (dateRange === 0) {
+        startDate.setFullYear(2000, 0, 1);
+      } else {
+        startDate.setDate(startDate.getDate() - dateRange);
+      }
 
       const formatDate = (date: Date) => date.toISOString().split('T')[0];
 

@@ -19,9 +19,11 @@
             "last_7_days": "7 derniers jours",
             "last_30_days": "30 derniers jours",
             "last_90_days": "90 derniers jours",
-            "last_year": "Dernière année"
+            "last_year": "Dernière année",
+            "all_time": "Toute la période"
         },
         "all_time": "Tout le temps",
+        "total_active": "Total actifs",
         "others": "Autres",
         "percentage": "Pourcentage",
         "collapse_sidebar": "Réduire la barre latérale",
@@ -72,7 +74,8 @@
             "no_products": "Aucun produit trouvé",
             "stock_label": "Stock",
             "value_label": "Valeur",
-            "name_label": "Nom"
+            "name_label": "Nom",
+            "stock_value": "Valeur stock"
         },
         "charts": {
             "revenue_title": "Analyse des Revenus",

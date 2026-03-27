@@ -382,9 +382,9 @@ export default function Hero() {
                 </div>
                 Voir la démo interactive
               </Link>
-              <Link to="/register"
+              <Link to="/login"
                 className="w-full sm:w-auto btn-ghost inline-flex items-center justify-center gap-2 text-white font-bold px-8 py-4 rounded-2xl text-[0.9rem] md:text-[0.95rem]">
-                Essai gratuit 14 jours <ChevronRight size={18} />
+                Se connecter <ChevronRight size={18} />
               </Link>
             </motion.div>
 

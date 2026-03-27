@@ -11,20 +11,21 @@ interface ChartContainerProps {
   dateRange: number;
 }
 
-export function ChartContainer({ orders }: ChartContainerProps) {
+export function ChartContainer({ orders, dateRange }: ChartContainerProps) {
   const { t } = useTranslation();
   const [revenueDataFromApi, setRevenueDataFromApi] = useState<EvolutionDataPoint[]>([]);
-  console.log("🚀 ~ ChartContainer ~ revenueDataFromApi:", revenueDataFromApi)
 
-  // Fetch revenue data from sales API
+  // Fetch revenue data using the global date range
   useEffect(() => {
     const fetchRevenueData = async () => {
       try {
-        // We fetch 12 months regardless of the dashboard global range
-        // because the Revenue Chart has its own internal range selector (12, 6, 3 months)
         const endDate = new Date();
         const startDate = new Date();
-        startDate.setFullYear(startDate.getFullYear() - 1); // Exact 1 year ago
+        if (dateRange === 0) {
+          startDate.setFullYear(2000, 0, 1);
+        } else {
+          startDate.setDate(startDate.getDate() - dateRange);
+        }
 
         const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
@@ -42,7 +43,7 @@ export function ChartContainer({ orders }: ChartContainerProps) {
     };
 
     fetchRevenueData();
-  }, []); // Only fetch on mount or if we want it to be truly static
+  }, [dateRange]);
 
   // Calculate customer distribution (new vs returning)
   const customerData = useMemo(() => {
@@ -101,7 +102,7 @@ export function ChartContainer({ orders }: ChartContainerProps) {
       return {
         month: label,
         revenue: Math.round(dataPoint.revenue),
-        profit: Math.round(dataPoint.revenue * 0.7), // Estimate profit as 70% of revenue
+        profit: dataPoint.profit != null ? Math.round(dataPoint.profit) : Math.round(dataPoint.revenue * 0.7),
       };
     });
   }, [revenueDataFromApi, i18n.language]);

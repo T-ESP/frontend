@@ -96,11 +96,11 @@ export default function TermsPage() {
                     <span className="text-gray-900 font-bold text-base tracking-tight">Stocks</span>
                 </Link>
                 <Link
-                    to="/register"
+                    to="/login"
                     className="text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-opacity hover:opacity-90"
                     style={{ backgroundColor: BRAND }}
                 >
-                    Créer un compte
+                    Se connecter
                 </Link>
             </nav>
 
@@ -128,8 +128,8 @@ export default function TermsPage() {
                 <div className="mt-16 pt-8 border-t border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <p className="text-xs text-gray-400">© {new Date().getFullYear()} StockS SAS. Tous droits réservés.</p>
                     <div className="flex gap-4">
-                        <Link to="/register" className="text-sm font-semibold transition-colors" style={{ color: BRAND }}>
-                            Créer un compte →
+                        <Link to="/login" className="text-sm font-semibold transition-colors" style={{ color: BRAND }}>
+                            Se connecter →
                         </Link>
                         <Link to="/" className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
                             Retour à l'accueil

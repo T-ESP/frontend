@@ -9,6 +9,7 @@ export interface EvolutionResponse {
 export interface EvolutionDataPoint {
   date: string;
   revenue: number;
+  profit?: number;
 }
 
 export interface EvolutionByGrainResponse {
