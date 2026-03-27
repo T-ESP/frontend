@@ -30,3 +30,5 @@ build_errors.txt
 *.njsproj
 *.sln
 *.sw?
+
+/.claude
