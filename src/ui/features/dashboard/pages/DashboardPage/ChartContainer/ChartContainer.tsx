@@ -29,10 +29,12 @@ export function ChartContainer({ orders, dateRange }: ChartContainerProps) {
 
         const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
+        const grain = dateRange <= 30 ? "day" : "month";
+
         const response = await salesService.getEvolutionByGrain({
           start_date: formatDate(startDate),
           end_date: formatDate(endDate),
-          grain: "month",
+          grain,
         });
 
         setRevenueDataFromApi(response.data);
@@ -92,11 +94,16 @@ export function ChartContainer({ orders, dateRange }: ChartContainerProps) {
   const revenueData = useMemo(() => {
     return revenueDataFromApi.map((dataPoint) => {
       const date = new Date(dataPoint.date);
-      // Since we forced grain='month', we always show the month
-      // Use current i18n language for proper locale translation
-      let label = date.toLocaleDateString(i18n.language, { month: "short" });
+      let label: string;
 
-      // Capitalize first letter (often cleaner for UI)
+      if (dateRange <= 30) {
+        // day grain → "14 Mar"
+        label = date.toLocaleDateString(i18n.language, { day: "numeric", month: "short" });
+      } else {
+        // month grain → "Mar."
+        label = date.toLocaleDateString(i18n.language, { month: "short" });
+      }
+
       label = label.charAt(0).toUpperCase() + label.slice(1);
 
       return {
@@ -105,7 +112,7 @@ export function ChartContainer({ orders, dateRange }: ChartContainerProps) {
         profit: dataPoint.profit != null ? Math.round(dataPoint.profit) : Math.round(dataPoint.revenue * 0.7),
       };
     });
-  }, [revenueDataFromApi, i18n.language]);
+  }, [revenueDataFromApi, i18n.language, dateRange]);
 
   return (
     <div className="grid grid-cols-1 gap-8 mb-8 lg:grid-cols-3">
