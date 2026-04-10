@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { orderService } from '@/infrastructure/api/services/orderService';
 import type { Order } from '@/domain/models/Order';
-import { Edit, Trash2, Eye, ShoppingCart, Loader2, RefreshCw, AlertTriangle, Search, Filter, X, ChevronDown } from 'lucide-react'; // Switched to Lucide
+import { Edit, Eye, ShoppingCart, Loader2, RefreshCw, AlertTriangle, Search, Filter, X, ChevronDown, FileDown } from 'lucide-react';
 import { AddOrderModal } from '@/ui/features/orders/components/AddOrderModal';
 import { EditOrderModal } from '@/ui/features/orders/components/EditOrderModal';
 import { DeleteOrderModal } from '@/ui/features/orders/components/DeleteOrderModal';
@@ -9,6 +9,7 @@ import { ViewOrderModal } from '@/ui/features/orders/components/ViewOrderModal';
 import { OrderStats } from '@/ui/features/orders/components/OrderStats';
 import { useToast } from '@/ui/components/common/Toast';
 import { useTranslation } from 'react-i18next';
+import { useExportInvoice } from '@/ui/features/orders/hooks/useExportInvoice';
 
 // --- Helper Functions (Refined for Consistency) ---
 
@@ -52,6 +53,7 @@ const getStatusColor = (status: string) => {
 export default function OrdersPage() {
   const { t, i18n } = useTranslation();
   const currentLocale = i18n.language || 'fr-FR';
+  const { exportInvoice, isExporting } = useExportInvoice();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false); // Changed to false to show skeleton initially if desired
   const [error, setError] = useState<string | null>(null);
@@ -508,11 +510,12 @@ export default function OrdersPage() {
                             <Edit size={16} />
                           </button>
                           <button
-                            onClick={() => handleOpenModal('delete', order)}
-                            className="p-2 text-purple-600 transition-colors rounded-lg bg-purple-50 hover:bg-rose-50 hover:text-rose-600"
-                            title={t('common.delete')}
+                            onClick={() => exportInvoice(order, currentLocale)}
+                            disabled={isExporting === order.id}
+                            className="p-2 text-purple-600 transition-colors rounded-lg bg-purple-50 hover:bg-purple-100 hover:text-purple-700 disabled:opacity-50 disabled:cursor-wait"
+                            title={t('orders.export_invoice', 'Exporter la facture')}
                           >
-                            <Trash2 size={16} />
+                            <FileDown size={16} />
                           </button>
                         </div>
                       </td>
@@ -624,6 +627,10 @@ export default function OrdersPage() {
           order={selectedOrder}
           onClose={() => handleCloseModal('edit')}
           onSuccess={() => handleCloseModal('edit', true)}
+          onDeleteRequest={() => {
+            handleCloseModal('edit');
+            handleOpenModal('delete', selectedOrder);
+          }}
         />
       )}
 

@@ -1,13 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronDown, User, LogOut } from "lucide-react";
+import { ChevronDown, User, LogOut, Menu } from "lucide-react";
 import type { JSX } from "react";
 import { clearAuthToken, useAuth } from "@/ui/features/auth/hooks/useAuth";
 import { useToast } from "@/ui/components/common/Toast";
 import { useTranslation } from "react-i18next";
 
 
-export function HomeHeader(): JSX.Element {
+type HomeHeaderProps = {
+    onMenuToggle?: () => void;
+};
+
+export function HomeHeader({ onMenuToggle }: HomeHeaderProps): JSX.Element {
     const navigate = useNavigate();
     const { addToast } = useToast();
     const { t, i18n } = useTranslation();
@@ -55,9 +59,15 @@ export function HomeHeader(): JSX.Element {
 
     return (
         <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-3 bg-white border-b border-gray-200 md:px-5">
-            {/* Menu + Recherche */}
+            {/* Burger mobile */}
             <div className="flex items-center min-w-0 gap-3 md:gap-4">
-                {/* Burger menu moved to Sidebar */}
+                <button
+                    onClick={onMenuToggle}
+                    className="inline-flex items-center justify-center w-10 h-10 text-gray-700 rounded-xl hover:bg-gray-100 transition-colors md:hidden"
+                    aria-label="Ouvrir le menu"
+                >
+                    <Menu className="w-5 h-5" />
+                </button>
             </div>
 
             {/* Actions droites */}

@@ -14,19 +14,18 @@ export default function PageLayout({
   icon?: ReactNode;
 }) {
   return (
-    <div className="min-h-screen p-8 bg-transparent">
-      <div className="flex items-center justify-between mb-8">
+    <div className="min-h-screen p-4 md:p-8 bg-transparent">
+      <div className="flex flex-wrap items-start justify-between gap-4 mb-6 md:mb-8">
         <div>
-          <h1 className="flex items-center gap-3 text-3xl font-bold text-gray-900">
-            {/* {icon && icon} */}
+          <h1 className="flex items-center gap-3 text-xl md:text-3xl font-bold text-gray-900">
             {title}
           </h1>
-          {subtitle && <p className="mt-2 text-base text-gray-500">{subtitle}</p>}
+          {subtitle && <p className="mt-1 md:mt-2 text-sm md:text-base text-gray-500">{subtitle}</p>}
         </div>
-        {actions && <div>{actions}</div>}
+        {actions && <div className="shrink-0">{actions}</div>}
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6">
         {children}
       </div>
     </div>

@@ -11,6 +11,7 @@ export const PAGES = {
   NotFound: lazy(() => import("@/ui/pages/NotFoundPage")),
   Playground: lazy(() => import("@/ui/pages/PlaygroundPage")),
   Inventory: lazy(() => import("@/ui/features/inventory/pages/InventoryPage")),
+  ProductKPIs: lazy(() => import("@/ui/features/inventory/pages/ProductKPIsPage/ProductKPIsPage")),
   Insights: lazy(() => import("@/ui/features/insights/pages/InsightsPage")),
   Sales: lazy(() => import("@/ui/features/sales/pages/SalesPage")),
   Clients: lazy(() => import("@/ui/features/clients/pages/ClientsPage")),

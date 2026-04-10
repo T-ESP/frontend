@@ -12,8 +12,12 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
 
   return (
     <aside
-      className={`fixed left-0 top-0 h-screen bg-white transition-[width] duration-300 border-r border-gray-100 z-30
-      ${isOpen ? "w-64" : "w-20"} flex flex-col`}
+      className={`fixed left-0 top-0 h-screen bg-white border-r border-gray-100 z-40 flex flex-col
+        transition-all duration-300
+        ${isOpen
+          ? "translate-x-0 w-64"
+          : "-translate-x-full md:translate-x-0 w-64 md:w-20"
+        }`}
     >
       {/* Header */}
       <div className={`flex items-center h-16 ${isOpen ? "px-5 border-b border-gray-100" : "justify-center"}`}>

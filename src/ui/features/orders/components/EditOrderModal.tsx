@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FiX } from "react-icons/fi";
+import { Trash2 } from "lucide-react";
 import { orderService } from "@/infrastructure/api/services/orderService";
 import type { Order, UpdateOrderDto } from "@/domain/models/Order";
 import { useToast } from "@/ui/components/common/Toast";
@@ -9,9 +10,10 @@ interface EditOrderModalProps {
   order: Order;
   onClose: () => void;
   onSuccess: () => void;
+  onDeleteRequest?: () => void;
 }
 
-export function EditOrderModal({ order, onClose, onSuccess }: EditOrderModalProps) {
+export function EditOrderModal({ order, onClose, onSuccess, onDeleteRequest }: EditOrderModalProps) {
   const { t, i18n } = useTranslation();
   const locale = i18n.language || 'fr-FR';
 
@@ -117,6 +119,19 @@ export function EditOrderModal({ order, onClose, onSuccess }: EditOrderModalProp
               {loading ? t('orders.edit_modal.updating') : t('orders.edit_modal.submit')}
             </button>
           </div>
+
+          {onDeleteRequest && (
+            <div className="pt-4 mt-2 border-t border-gray-100">
+              <button
+                type="button"
+                onClick={onDeleteRequest}
+                className="flex items-center gap-2 w-full px-4 py-2.5 text-sm font-medium text-rose-600 bg-rose-50 border border-rose-200 rounded-lg hover:bg-rose-100 transition-colors"
+              >
+                <Trash2 size={15} />
+                {t('orders.edit_modal.delete_order', 'Supprimer cette commande')}
+              </button>
+            </div>
+          )}
         </form>
       </div>
     </div>

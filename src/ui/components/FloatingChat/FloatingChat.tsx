@@ -111,11 +111,11 @@ export function FloatingChat() {
   };
 
   return (
-    <div className="fixed z-50" style={{ bottom: "80px", right: "80px" }}>
+    <div className="fixed z-50 bottom-4 right-4 md:bottom-20 md:right-20">
       {/* Chat panel */}
       {isOpen && (
         <div
-          className="absolute bottom-16 right-0 w-[380px] h-[520px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden"
+          className="absolute bottom-16 right-0 w-[calc(100vw-2rem)] sm:w-[380px] h-[520px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden"
         >
           <div className="flex justify-between items-center pr-2 border-b border-gray-200">
             <div className="flex-1">

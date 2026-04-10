@@ -48,6 +48,16 @@ export const ROUTES: Record<string, RouteMeta> = {
     roles: ['admin', 'manager'],
     title: 'StockS - Inventory',
   },
+  PRODUCT_KPIS: {
+    path: '/inventory/:id/kpis',
+    label: 'Product KPIs',
+    page: 'ProductKPIs',
+    layout: 'app',
+    restricted: true,
+    roles: ['admin', 'manager'],
+    hiddenInMenu: true,
+    title: 'StockS - Product KPIs',
+  },
   INSIGHTS: {
     path: '/insights',
     label: 'Insights',
