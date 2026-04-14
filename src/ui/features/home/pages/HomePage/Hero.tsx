@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useRef, useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import dashboardImage from '@/assets/images/image.png';
 import { Logo } from "@/ui/components/common/Logo";
@@ -8,14 +8,13 @@ import {
 } from "lucide-react";
 import {
   motion,
-  useScroll,
-  useTransform,
   useMotionValue,
   useSpring,
-  useVelocity,
   AnimatePresence,
   useMotionTemplate,
+  useTransform,
 } from "framer-motion";
+import { useEffect } from "react";
 import { useAuth } from "@/ui/features/auth/hooks/useAuth";
 
 // ─── Mouse-tracking mesh gradient ─────────────────────────────────────────────
@@ -126,23 +125,7 @@ export default function Hero() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const { isAuthenticated, email, firstname } = useAuth();
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"],
-  });
-  const smooth = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.0001 });
-  const velocity = useVelocity(smooth);
-  const velocityScale = useTransform(velocity, [-0.5, 0, 0.5], [1.03, 1, 0.97]);
-
-  const hlOp = useTransform(smooth, [0.08, 0.36], [1, 0]);
-  const hlY = useTransform(smooth, [0, 0.36], ["0%", "-12%"]);
-  const hlScale = useTransform(smooth, [0, 0.36], [1, 0.9]);
-  const topFade = useTransform(smooth, [0.05, 0.24], [1, 0]);
-  const ctaOp = useTransform(smooth, [0.05, 0.24], [1, 0]);
-
-  const combinedHlScale = hlScale;
-
-  // Responsive transforms (reactive to resize; avoids one-time window checks)
+  // Responsive check
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -153,22 +136,10 @@ export default function Hero() {
     return () => mq.removeEventListener?.("change", update);
   }, []);
 
-  const imgX = useTransform(smooth, [0, 0.48], [isMobile ? "0%" : "45%", "0%"]);
-  const imgRotY = useTransform(smooth, [0, 0.48], [isMobile ? -15 : -35, 0]);
-  const imgRotX = useTransform(smooth, [0, 0.48], [isMobile ? 10 : 15, 0]);
-  const imgRotZ = useTransform(smooth, [0, 0.48], [isMobile ? -2 : -4, 0]);
-  const imgOpacity = useTransform(smooth, [0, 0.48], [0.4, 1]);
-  const imgScale = useTransform(smooth, [0, 0.48], [isMobile ? 1.05 : 1.15, 1]);
-
-  const edgeRightOp = useTransform(smooth, [0.20, 0.65], [1, 0]);
-  const edgeBottomOp = useTransform(smooth, [0.20, 0.65], [1, 0]);
-  const glowOp = useTransform(smooth, [0.25, 0.70], [0, 0.85]);
-  const pinsOp = useTransform(smooth, [0.48, 0.60], [0, 1]);
-
   return (
     <section
       ref={sectionRef}
-      className="relative h-[260vh] sm:h-[320vh] lg:h-[350vh]"
+      className="relative h-screen min-h-[700px] overflow-hidden"
       style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}
     >
       <style>{`
@@ -229,303 +200,216 @@ export default function Hero() {
         }
       `}</style>
 
-      {/* ── Sticky viewport ─────────────────────────────────────────────────── */}
-      <div className="sticky top-0 h-screen overflow-hidden">
+      <div className="absolute inset-0 z-0" style={{ background: "linear-gradient(155deg, #0c071e 0%, #110a2a 45%, #0e0820 100%)" }} />
+      <div className="absolute inset-0 z-0 hero-dot-grid" />
+      <MeshGradient />
 
-        <div
-          className="absolute inset-0 z-0"
-          style={{ background: "linear-gradient(155deg, #0c071e 0%, #110a2a 45%, #0e0820 100%)" }}
-        />
-        <div className="absolute inset-0 z-0 hero-dot-grid" />
-        <MeshGradient />
-
-        {/* ── Navbar ──────────────────────────────────────────────────────── */}
-        <motion.nav
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-50 flex items-center justify-between px-5 md:px-14 py-4 md:py-5 glass-nav border-b border-white/[0.07]"
-        >
-          <Link to="/" className="flex items-center gap-2.5">
-            <motion.div
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              transition={{ type: "spring", stiffness: 400 }}
-              className="p-1.5 rounded-xl"
-              style={{ background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)", boxShadow: "0 4px 14px rgba(123,95,162,0.42)" }}
-            >
-              <Logo className="w-5 h-5 brightness-0 invert" />
-            </motion.div>
-            <span className="text-[1.15rem] font-extrabold text-white tracking-tight">Stocks</span>
-          </Link>
-
-          <div className="hidden md:flex items-center gap-8 text-sm font-semibold">
-            {[["#features", "Fonctionnalités"], ["#advantages", "Avantages"]].map(([h, l]) => (
-              <a key={l} href={h} className="nav-link text-purple-200/70 hover:text-white transition-colors">{l}</a>
-            ))}
-            <Link to="/tarifs" className="nav-link text-purple-200/70 hover:text-white transition-colors">Tarifs</Link>
-          </div>
-
-          <div className="flex items-center gap-3">
-            {isAuthenticated ? (
-              <Link
-                to="/profile"
-                className="flex items-center justify-center w-10 h-10 rounded-full font-bold text-white transition-transform hover:scale-105"
-                style={{ background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)", boxShadow: "0 4px 14px rgba(123,95,162,0.38)" }}
-                title="Mon profil"
-              >
-                {email ? email.charAt(0).toUpperCase() : (firstname ? firstname.charAt(0).toUpperCase() : "U")}
-              </Link>
-            ) : (
-              <Link to="/login" className="hidden sm:block text-sm font-semibold text-purple-200/70 hover:text-white px-3 py-2 transition-colors">
-                Se connecter
-              </Link>
-            )}
-            <button className="md:hidden p-2 text-purple-200/60" onClick={() => setMobileOpen(o => !o)}>
-              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
-          </div>
-
-          <AnimatePresence>
-            {mobileOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -10, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -10, scale: 0.97 }}
-                transition={{ duration: 0.2 }}
-                className="absolute top-full left-4 right-4 mt-2 rounded-2xl p-6 flex flex-col gap-5 md:hidden"
-                style={{
-                  background: "rgba(12,7,30,0.92)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  backdropFilter: "blur(24px)",
-                  boxShadow: "0 32px 64px rgba(0,0,0,0.5)",
-                  zIndex: 99,
-                }}
-              >
-                {[["#features", "Fonctionnalités"], ["#advantages", "Avantages"], ["/tarifs", "Tarifs"]].map(([h, l]) => (
-                  <a key={l} href={h} className="text-base font-bold text-white" onClick={() => setMobileOpen(false)}>{l}</a>
-                ))}
-                <div className="border-t border-white/10 pt-4">
-                  {isAuthenticated ? (
-                    <Link to="/profile" className="block text-center font-bold text-purple-200/70" onClick={() => setMobileOpen(false)}>
-                      Aller au profil
-                    </Link>
-                  ) : (
-                    <Link to="/login" className="block text-center font-bold text-purple-200/70" onClick={() => setMobileOpen(false)}>
-                      Se connecter
-                    </Link>
-                  )}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.nav>
-
-        {/* ── Stage ──────────────────────────────────────────────────────────── */}
-        <div className="relative h-[calc(100vh-73px)] overflow-hidden">
-
-          {/* ── LAYER 1: Headline ───────────────────────────────────────────── */}
+      <motion.nav
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-50 flex items-center justify-between px-5 md:px-14 py-4 md:py-5 glass-nav border-b border-white/[0.07]"
+      >
+        <Link to="/" className="flex items-center gap-2.5">
           <motion.div
-            className="absolute inset-x-0 top-0 z-20 flex flex-col items-center lg:items-start text-center lg:text-left pt-14 md:pt-20 px-6 lg:px-20 max-w-7xl mx-auto"
-            style={{
-              opacity: hlOp,
-              y: hlY,
-              scale: combinedHlScale,
-              transformOrigin: "top left",
-              willChange: "transform, opacity",
-            }}
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            transition={{ type: "spring", stiffness: 400 }}
+            className="p-1.5 rounded-xl"
+            style={{ background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)", boxShadow: "0 4px 14px rgba(123,95,162,0.42)" }}
           >
-            <motion.div
-              style={{ opacity: topFade }}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-flex items-center gap-2 pl-1.5 pr-5 py-1.5 rounded-full glass-purple mb-8"
-            >
-              <div className="w-6 h-6 rounded-full flex items-center justify-center"
-                style={{ background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)" }}>
-                <Sparkles size={12} className="text-white" />
-              </div>
-              <span className="text-[11px] font-bold text-purple-300 tracking-wide uppercase">
-                IA au service de vos stocks
-              </span>
-            </motion.div>
-
-            <motion.h1
-              className="text-[clamp(2.5rem,8vw,6.5rem)] font-black text-white leading-[1.05] lg:leading-[0.95] tracking-[-0.04em] mb-6 md:mb-7"
-              initial={{ opacity: 0, y: 28 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            >
-              Gérez vos stocks.<br />
-              <span className="grad-text">Libérez votre temps.</span>
-            </motion.h1>
-
-            <motion.p
-              className="text-purple-200/65 text-base md:text-xl max-w-xl leading-relaxed mb-8 md:mb-10 font-light"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
-            >
-              Ne tombez plus jamais en rupture. Notre IA anticipe la demande et automatise vos réassorts <br className="hidden md:block" /> — en 2 clics.
-            </motion.p>
-
-            <motion.div
-              style={{ opacity: ctaOp }}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col sm:flex-row items-center gap-4"
-            >
-              <Link to="/demo"
-                className="w-full sm:w-auto btn-primary inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-[0.9rem] md:text-[0.95rem] font-bold text-white">
-                <div className="w-6 h-6 rounded-full flex items-center justify-center bg-white/20 backdrop-blur-md">
-                  <Play size={10} className="text-white fill-white ml-0.5" />
-                </div>
-                Voir la démo interactive
-              </Link>
-              <Link to="/register"
-                className="w-full sm:w-auto btn-ghost inline-flex items-center justify-center gap-2 text-white font-bold px-8 py-4 rounded-2xl text-[0.9rem] md:text-[0.95rem]">
-                Essai gratuit 14 jours <ChevronRight size={18} />
-              </Link>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.55, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-6 text-[13px] font-medium text-purple-200/40"
-            >
-              Conçu pour les gérants de commerce, les responsables logistique et les équipes e-commerce.
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.4 }}
-              style={{ opacity: topFade }}
-              className="mt-10 flex flex-col items-center lg:items-start gap-2"
-            >
-              <motion.div
-                animate={{ y: [0, 7, 0] }}
-                transition={{ duration: 1.7, repeat: Infinity, ease: "easeInOut" }}
-                className="w-5 h-8 rounded-full border-2 border-white/20 flex items-start justify-center pt-1.5"
-              >
-                <div className="w-1 h-1.5 rounded-full bg-white/30" />
-              </motion.div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-white/25 pl-1">Scroll</span>
-            </motion.div>
+            <Logo className="w-5 h-5 brightness-0 invert" />
           </motion.div>
+          <span className="text-[1.15rem] font-extrabold text-white tracking-tight">Stocks</span>
+        </Link>
 
-          {/* ── LAYER 2: Dashboard ──────────────────────────────────────────── */}
-          <div className="absolute inset-x-0 bottom-[6%] sm:bottom-[10%] lg:inset-0 flex items-center justify-center z-10 px-5 md:px-14 lg:px-20">
+        <div className="hidden md:flex items-center gap-8 text-sm font-semibold">
+          {[["#features", "Fonctionnalités"], ["#advantages", "Avantages"]].map(([h, l]) => (
+            <a key={l} href={h} className="nav-link text-purple-200/70 hover:text-white transition-colors">{l}</a>
+          ))}
+          <Link to="/tarifs" className="nav-link text-purple-200/70 hover:text-white transition-colors">Tarifs</Link>
+        </div>
+
+        <div className="flex items-center gap-3">
+          {isAuthenticated ? (
+            <Link
+              to="/profile"
+              className="flex items-center justify-center w-10 h-10 rounded-full font-bold text-white transition-transform hover:scale-105"
+              style={{ background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)", boxShadow: "0 4px 14px rgba(123,95,162,0.38)" }}
+              title="Mon profil"
+            >
+              {email ? email.charAt(0).toUpperCase() : (firstname ? firstname.charAt(0).toUpperCase() : "U")}
+            </Link>
+          ) : (
+            <Link to="/login" className="hidden sm:block text-sm font-semibold text-purple-200/70 hover:text-white px-3 py-2 transition-colors">
+              Se connecter
+            </Link>
+          )}
+          <button className="md:hidden p-2 text-purple-200/60" onClick={() => setMobileOpen(o => !o)}>
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
+
+        <AnimatePresence>
+          {mobileOpen && (
             <motion.div
-              className="w-full max-w-[860px]"
+              initial={{ opacity: 0, y: -10, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.97 }}
+              transition={{ duration: 0.2 }}
+              className="absolute top-full left-4 right-4 mt-2 rounded-2xl p-6 flex flex-col gap-5 md:hidden"
               style={{
-                x: imgX,
-                rotateY: imgRotY,
-                rotateX: imgRotX,
-                rotateZ: imgRotZ,
-                scale: imgScale,
-                opacity: imgOpacity,
-                transformStyle: "preserve-3d",
-                perspective: "1800px",
-                willChange: "transform, opacity, filter",
+                background: "rgba(12,7,30,0.92)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                backdropFilter: "blur(24px)",
+                boxShadow: "0 32px 64px rgba(0,0,0,0.5)",
+                zIndex: 99,
               }}
             >
-              <motion.div
-                style={{ opacity: glowOp }}
-                className="absolute -inset-20 pointer-events-none -z-10"
-              >
-                <div style={{
-                  width: "100%", height: "100%",
-                  background: "radial-gradient(ellipse at 50% 55%, rgba(123,95,162,0.30) 0%, transparent 65%)",
-                  filter: "blur(48px)",
-                }} />
-              </motion.div>
-
-              <TiltCard>
-                <div
-                  className="relative rounded-4xl overflow-hidden"
-                  style={{
-                    boxShadow: "0 40px 100px -20px rgba(123,95,162,0.38), 0 0 0 1px rgba(255,255,255,0.08), -20px 20px 60px rgba(0,0,0,0.45)",
-                  }}
-                >
-                  <img
-                    src={dashboardImage}
-                    alt="Stocks — Tableau de bord"
-                    className="w-full h-auto block"
-                    draggable={false}
-                  />
-                  <motion.div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      background: "linear-gradient(to left, #0c071e 0%, #0c071e 6%, transparent 38%)",
-                      opacity: edgeRightOp,
-                    }}
-                  />
-                  <motion.div
-                    className="absolute inset-x-0 bottom-0 pointer-events-none"
-                    style={{
-                      background: "linear-gradient(to top, #0c071e 0%, rgba(12,7,30,0.5) 28%, transparent 62%)",
-                      height: "55%",
-                      opacity: edgeBottomOp,
-                    }}
-                  />
-                  <div className="absolute inset-x-0 top-0 h-px pointer-events-none"
-                    style={{ background: "linear-gradient(90deg, transparent 5%, rgba(123,95,162,0.45) 50%, transparent 95%)" }}
-                  />
-                </div>
-
-                <motion.div
-                  className="absolute inset-0 pointer-events-none hidden sm:block"
-                  style={{ opacity: pinsOp }}
-                >
-                  <AnnotationPin
-                    top="16%" left="5%"
-                    icon={<TrendingUp size={11} />}
-                    label="CA en temps réel"
-                    delay={0.05} color="#9d7bdd"
-                  />
-                  <AnnotationPin
-                    top="10%" left="56%"
-                    icon={<Zap size={11} />}
-                    label="Alertes IA"
-                    delay={0.18} color="#f59e0b"
-                  />
-                  <AnnotationPin
-                    top="46%" left="72%"
-                    icon={<Bell size={11} />}
-                    label="Alertes critiques"
-                    delay={0.30} color="#ef4444"
-                  />
-                </motion.div>
-              </TiltCard>
-
-              {/* ── Feature strip ────────────────────────────────────────────────
-                   Describes what the platform includes — capability language only.
-                   No numbers implying measured outcomes. No external validation.  */}
-              <motion.div
-                style={{ opacity: pinsOp }}
-                className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3 w-full"
-              >
-                {[
-                  { label: "Synchronisation", sub: "Temps réel" },
-                  { label: "Commandes", sub: "Centralisées" },
-                  { label: "Alertes prix", sub: "& ruptures" },
-                  { label: "Assistant IA", sub: "Intégré" },
-                ].map((item, i) => (
-                  <div
-                    key={i}
-                    className="feature-pill flex flex-col items-center text-center px-3 py-3 rounded-2xl"
-                  >
-                    <span className="text-[13px] font-[800] text-white leading-none mb-1">{item.label}</span>
-                    <span className="text-[10px] font-semibold text-purple-300/50 uppercase tracking-[0.14em]">{item.sub}</span>
-                  </div>
-                ))}
-              </motion.div>
+              {[["#features", "Fonctionnalités"], ["#advantages", "Avantages"], ["/tarifs", "Tarifs"]].map(([h, l]) => (
+                <a key={l} href={h} className="text-base font-bold text-white" onClick={() => setMobileOpen(false)}>{l}</a>
+              ))}
+              <div className="border-t border-white/10 pt-4">
+                {isAuthenticated ? (
+                  <Link to="/profile" className="block text-center font-bold text-purple-200/70" onClick={() => setMobileOpen(false)}>
+                    Aller au profil
+                  </Link>
+                ) : (
+                  <Link to="/login" className="block text-center font-bold text-purple-200/70" onClick={() => setMobileOpen(false)}>
+                    Se connecter
+                  </Link>
+                )}
+              </div>
             </motion.div>
-          </div>
+          )}
+        </AnimatePresence>
+      </motion.nav>
 
+      <div className="relative h-[calc(100vh-73px)]">
+        <motion.div
+          className="absolute inset-x-0 top-0 z-20 flex flex-col items-center lg:items-start text-center lg:text-left pt-14 md:pt-20 px-6 lg:px-20 max-w-7xl mx-auto"
+          style={{ transformOrigin: "top left", willChange: "transform, opacity" }}
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="inline-flex items-center gap-2 pl-1.5 pr-5 py-1.5 rounded-full glass-purple mb-8"
+          >
+            <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)" }}>
+              <Sparkles size={12} className="text-white" />
+            </div>
+            <span className="text-[11px] font-bold text-purple-300 tracking-wide uppercase">IA au service de vos stocks</span>
+          </motion.div>
+
+          <motion.h1
+            className="text-[clamp(2.5rem,8vw,6.5rem)] font-black text-white leading-[1.05] lg:leading-[0.95] tracking-[-0.04em] mb-6 md:mb-7"
+            initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          >
+            Gérez vos stocks.<br /><span className="grad-text">Libérez votre temps.</span>
+          </motion.h1>
+
+          <motion.p
+            className="text-purple-200/65 text-base md:text-xl max-w-xl leading-relaxed mb-8 md:mb-10 font-light"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
+          >
+            Ne tombez plus jamais en rupture. Notre IA anticipe la demande et automatise vos réassorts <br className="hidden md:block" /> — en 2 clics.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col sm:flex-row items-center gap-4"
+          >
+            <Link to="/demo" className="w-full sm:w-auto btn-primary inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-[0.9rem] md:text-[0.95rem] font-bold text-white">
+              <div className="w-6 h-6 rounded-full flex items-center justify-center bg-white/20 backdrop-blur-md">
+                <Play size={10} className="text-white fill-white ml-0.5" />
+              </div>
+              Voir la démo interactive
+            </Link>
+            <Link to="/register" className="w-full sm:w-auto btn-ghost inline-flex items-center justify-center gap-2 text-white font-bold px-8 py-4 rounded-2xl text-[0.9rem] md:text-[0.95rem]">
+              Essai gratuit 14 jours <ChevronRight size={18} />
+            </Link>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.55, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-6 text-[13px] font-medium text-purple-200/40"
+          >
+            Conçu pour les gérants de commerce, les responsables logistique et les équipes e-commerce.
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ delay: 1.4 }}
+            className="mt-10 flex flex-col items-center lg:items-start gap-2"
+          >
+            <motion.div
+              animate={{ y: [0, 7, 0] }} transition={{ duration: 1.7, repeat: Infinity, ease: "easeInOut" }}
+              className="w-5 h-8 rounded-full border-2 border-white/20 flex items-start justify-center pt-1.5"
+            >
+              <div className="w-1 h-1.5 rounded-full bg-white/30" />
+            </motion.div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-white/25 pl-1">Scroll</span>
+          </motion.div>
+        </motion.div>
+
+        <div className="absolute inset-x-0 bottom-[6%] sm:bottom-[10%] lg:inset-0 flex items-center justify-center z-10 px-5 md:px-14 lg:px-20">
+          <motion.div
+            className="w-full max-w-[860px]"
+            initial={{
+              opacity: 0,
+              x: isMobile ? "0%" : "45%",
+              rotateY: isMobile ? -15 : -35,
+              rotateX: isMobile ? 10 : 15,
+              rotateZ: isMobile ? -2 : -4,
+              scale: isMobile ? 1.05 : 1.15
+            }}
+            animate={{
+              opacity: 0.4,
+              x: isMobile ? "0%" : "45%",
+              rotateY: isMobile ? -15 : -35,
+              rotateX: isMobile ? 10 : 15,
+              rotateZ: isMobile ? -2 : -4,
+              scale: isMobile ? 1.05 : 1.15
+            }}
+            transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            style={{ transformStyle: "preserve-3d", perspective: "1800px", willChange: "transform, opacity" }}
+          >
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 0.85 }} transition={{ duration: 1.5, delay: 0.8 }} className="absolute -inset-20 pointer-events-none -z-10">
+              <div style={{ width: "100%", height: "100%", background: "radial-gradient(ellipse at 50% 55%, rgba(123,95,162,0.30) 0%, transparent 65%)", filter: "blur(48px)" }} />
+            </motion.div>
+
+            <TiltCard>
+              <div className="relative rounded-4xl overflow-hidden" style={{ boxShadow: "0 40px 100px -20px rgba(123,95,162,0.38), 0 0 0 1px rgba(255,255,255,0.08), -20px 20px 60px rgba(0,0,0,0.45)" }}>
+                <img src={dashboardImage} alt="Stocks — Tableau de bord" className="w-full h-auto block" draggable={false} />
+                <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(to left, #0c071e 0%, #0c071e 6%, transparent 38%)" }} />
+                <div className="absolute inset-x-0 bottom-0 pointer-events-none" style={{ background: "linear-gradient(to top, #0c071e 0%, rgba(12,7,30,0.5) 28%, transparent 62%)", height: "55%" }} />
+                <div className="absolute inset-x-0 top-0 h-px pointer-events-none" style={{ background: "linear-gradient(90deg, transparent 5%, rgba(123,95,162,0.45) 50%, transparent 95%)" }} />
+              </div>
+
+              <div className="absolute inset-0 pointer-events-none hidden sm:block">
+                <AnnotationPin top="16%" left="5%" icon={<TrendingUp size={11} />} label="CA en temps réel" delay={0.05} color="#9d7bdd" />
+                <AnnotationPin top="10%" left="56%" icon={<Zap size={11} />} label="Alertes IA" delay={0.18} color="#f59e0b" />
+                <AnnotationPin top="46%" left="72%" icon={<Bell size={11} />} label="Alertes critiques" delay={0.30} color="#ef4444" />
+              </div>
+            </TiltCard>
+
+            <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3 w-full">
+              {[
+                { label: "Synchronisation", sub: "Temps réel" },
+                { label: "Commandes", sub: "Centralisées" },
+                { label: "Alertes prix", sub: "& ruptures" },
+                { label: "Assistant IA", sub: "Intégré" },
+              ].map((item, i) => (
+                <div key={i} className="feature-pill flex flex-col items-center text-center px-3 py-3 rounded-2xl">
+                  <span className="text-[13px] font-[800] text-white leading-none mb-1">{item.label}</span>
+                  <span className="text-[10px] font-semibold text-purple-300/50 uppercase tracking-[0.14em]">{item.sub}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
