@@ -8,110 +8,135 @@ import type { EvolutionDataPoint } from "@/domain/models/Sales";
 
 interface ChartContainerProps {
   orders: Order[];
-  dateRange: number;
+  dateRange: number; // days selected globally (7, 30, 90, 365)
 }
 
-export function ChartContainer({ orders }: ChartContainerProps) {
-  const { t } = useTranslation();
-  const [revenueDataFromApi, setRevenueDataFromApi] = useState<EvolutionDataPoint[]>([]);
-  console.log("🚀 ~ ChartContainer ~ revenueDataFromApi:", revenueDataFromApi)
+/** Pick the best grain for the API given the number of days selected. */
+function grainForRange(days: number): "day" | "week" | "month" {
+  if (days <= 30) return "day";
+  if (days <= 90) return "week";
+  return "month";
+}
 
-  // Fetch revenue data from sales API
+/** Human-readable X-axis label format per grain. */
+function formatLabel(
+  dateStr: string,
+  grain: "day" | "week" | "month",
+  locale: string
+): string {
+  const d = new Date(dateStr);
+  if (grain === "month") {
+    const label = d.toLocaleDateString(locale, { month: "short", year: "2-digit" });
+    return label.charAt(0).toUpperCase() + label.slice(1);
+  }
+  if (grain === "week") {
+    return d.toLocaleDateString(locale, { day: "2-digit", month: "short" });
+  }
+  // day
+  return d.toLocaleDateString(locale, { day: "2-digit", month: "short" });
+}
+
+export function ChartContainer({ orders, dateRange }: ChartContainerProps) {
+  const { t, i18n } = useTranslation();
+  const [revenueDataFromApi, setRevenueDataFromApi] = useState<EvolutionDataPoint[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // Re-fetch whenever the global dateRange changes
   useEffect(() => {
     const fetchRevenueData = async () => {
+      setLoading(true);
       try {
-        // We fetch 12 months regardless of the dashboard global range
-        // because the Revenue Chart has its own internal range selector (12, 6, 3 months)
         const endDate = new Date();
         const startDate = new Date();
-        startDate.setFullYear(startDate.getFullYear() - 1); // Exact 1 year ago
+        startDate.setDate(startDate.getDate() - dateRange);
 
-        const formatDate = (date: Date) => date.toISOString().split('T')[0];
+        const formatDate = (d: Date) => d.toISOString().split("T")[0];
+        const grain = grainForRange(dateRange);
 
         const response = await salesService.getEvolutionByGrain({
           start_date: formatDate(startDate),
           end_date: formatDate(endDate),
-          grain: "month",
+          grain,
         });
 
         setRevenueDataFromApi(response.data);
       } catch (error) {
         console.error("Error fetching revenue data:", error);
         setRevenueDataFromApi([]);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchRevenueData();
-  }, []); // Only fetch on mount or if we want it to be truly static
+  }, [dateRange]); // 👈 re-runs whenever the global range changes
 
-  // Calculate customer distribution (new vs returning)
+  // Transform API points → chart-friendly format
+  const revenueData = useMemo(() => {
+    const grain = grainForRange(dateRange);
+    return revenueDataFromApi.map((point) => ({
+      month: formatLabel(point.date, grain, i18n.language),
+      revenue: Math.round(point.revenue),
+      profit: Math.round(point.revenue * 0.7),
+    }));
+  }, [revenueDataFromApi, dateRange, i18n.language]);
+
+  // Filter the orders fetched by the parent to the same window
+  // (parent already fetches with dateRange; this just gives the chart the right slice)
+  const windowStart = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() - dateRange);
+    return d;
+  }, [dateRange]);
+
+  const filteredOrders = useMemo(
+    () => orders.filter((o) => new Date(o.order_date) >= windowStart),
+    [orders, windowStart]
+  );
+
+  // Customer distribution from filtered orders
   const customerData = useMemo(() => {
     const userOrderCounts = new Map<number, number>();
-
-    // Count orders per user
-    orders.forEach(order => {
-      const count = userOrderCounts.get(order.user_id) || 0;
-      userOrderCounts.set(order.user_id, count + 1);
+    filteredOrders.forEach((order) => {
+      userOrderCounts.set(order.user_id, (userOrderCounts.get(order.user_id) ?? 0) + 1);
     });
 
-    // Classify as new (1 order) or returning (2+ orders)
     let newCustomers = 0;
     let returningCustomers = 0;
-
-    userOrderCounts.forEach(orderCount => {
-      if (orderCount === 1) {
-        newCustomers++;
-      } else {
-        returningCustomers++;
-      }
+    userOrderCounts.forEach((count) => {
+      if (count === 1) newCustomers++;
+      else returningCustomers++;
     });
 
     const total = newCustomers + returningCustomers || 1;
-    const newPercentage = (newCustomers / total) * 100;
-    const returningPercentage = (returningCustomers / total) * 100;
-
     return [
       {
-        name: t('dashboard.charts.new_customers'),
-        value: parseFloat(newPercentage.toFixed(1)),
+        name: t("dashboard.charts.new_customers"),
+        value: parseFloat(((newCustomers / total) * 100).toFixed(1)),
         count: newCustomers,
-        color: "#7b5fa2"
+        color: "#7b5fa2",
       },
       {
-        name: t('dashboard.charts.returning_customers'),
-        value: parseFloat(returningPercentage.toFixed(1)),
+        name: t("dashboard.charts.returning_customers"),
+        value: parseFloat(((returningCustomers / total) * 100).toFixed(1)),
         count: returningCustomers,
-        color: "#a480d1"
+        color: "#a480d1",
       },
     ];
-  }, [orders, t]);
+  }, [filteredOrders, t]);
 
-  // Transform API data to chart format
-  const { i18n } = useTranslation();
-  const revenueData = useMemo(() => {
-    return revenueDataFromApi.map((dataPoint) => {
-      const date = new Date(dataPoint.date);
-      // Since we forced grain='month', we always show the month
-      // Use current i18n language for proper locale translation
-      let label = date.toLocaleDateString(i18n.language, { month: "short" });
-
-      // Capitalize first letter (often cleaner for UI)
-      label = label.charAt(0).toUpperCase() + label.slice(1);
-
-      return {
-        month: label,
-        revenue: Math.round(dataPoint.revenue),
-        profit: Math.round(dataPoint.revenue * 0.7), // Estimate profit as 70% of revenue
-      };
-    });
-  }, [revenueDataFromApi, i18n.language]);
+  // Label shown in the chart header
+  const rangeLabel = (() => {
+    if (dateRange === 7) return t("common.date_range.last_7_days");
+    if (dateRange === 90) return t("common.date_range.last_90_days");
+    if (dateRange === 365) return t("common.date_range.last_year");
+    return t("common.date_range.last_30_days");
+  })();
 
   return (
     <div className="grid grid-cols-1 gap-8 mb-8 lg:grid-cols-3">
-      <RevenueChart data={revenueData} />
-      <CustomerDistributionChart data={customerData} />
+      <RevenueChart data={revenueData} rangeLabel={rangeLabel} loading={loading} />
+      <CustomerDistributionChart data={customerData} rangeLabel={rangeLabel} />
     </div>
   );
 }
-
-
