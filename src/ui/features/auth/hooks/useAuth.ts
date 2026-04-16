@@ -31,6 +31,8 @@ export function clearAuthToken() {
     localStorage.removeItem("auth_firstname");
     localStorage.removeItem("auth_lastname");
     localStorage.removeItem("auth_email");
+    localStorage.removeItem("commerce_id");
+    localStorage.removeItem("commerce_slug");
   } catch {
     // ignore
   }

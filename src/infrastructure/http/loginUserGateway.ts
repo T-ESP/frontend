@@ -51,6 +51,18 @@ export class HttpLoginUserGateway implements LoginUserGateway {
     localStorage.setItem('auth_lastname', lastname);
     localStorage.setItem('auth_email', payload.email);
 
+    try {
+      const decoded = JSON.parse(atob(token.split('.')[1]));
+      if (decoded.commerce_id) {
+        localStorage.setItem('commerce_id', decoded.commerce_id);
+      }
+      if (decoded.slug) {
+        localStorage.setItem('commerce_slug', decoded.slug);
+      }
+    } catch {
+      // JWT decode failed — skip
+    }
+
     return {
       success: true,
       token,
