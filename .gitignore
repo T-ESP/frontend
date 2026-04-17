@@ -32,4 +32,4 @@ build_errors.txt
 
 .claude
 
-environnements/environnement.prod.ts
+environnement.prod.ts
