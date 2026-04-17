@@ -64,6 +64,28 @@ function bootstrapSubdomainToken(): void {
 
 bootstrapSubdomainToken();
 
+// Exécuté synchronement après le bootstrap.
+// Sur un sous-domaine sans token → redirect immédiat vers stock-s.fr,
+// avant que React ne rende quoi que ce soit.
+function guardSubdomain(): void {
+  const slug = getSubdomainSlug();
+  if (!slug) return;
+
+  const baseDomain = import.meta.env.VITE_BASE_DOMAIN;
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  if (!baseDomain || isLocalhost) return;
+
+  const token = localStorage.getItem('auth_token');
+  console.log('[Auth] guardSubdomain — url:', window.location.href, '| token présent:', !!token);
+
+  if (!token) {
+    console.log('[Auth] Pas de token sur sous-domaine, redirect vers', `https://${baseDomain}`);
+    window.location.href = `https://${baseDomain}`;
+  }
+}
+
+guardSubdomain();
+
 export default function App() {
   const routing = useRoutes(routes);
 
