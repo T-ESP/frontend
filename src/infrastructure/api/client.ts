@@ -43,9 +43,10 @@ class ApiClient {
       Object.assign(headers, options.headers);
     }
 
+    const commerceId = localStorage.getItem('commerce_id');
+    const prefix = commerceId ? `/api/${commerceId}` : '';
+
     try {
-      const commerceId = localStorage.getItem('commerce_id');
-      const prefix = commerceId ? `/api/${commerceId}` : '';
       const response = await fetch(`${this.baseURL}${prefix}${endpoint}`, {
         ...options,
         headers,
@@ -60,6 +61,8 @@ class ApiClient {
           localStorage.removeItem('auth_firstname');
           localStorage.removeItem('auth_lastname');
           localStorage.removeItem('auth_email');
+          localStorage.removeItem('commerce_id');
+          localStorage.removeItem('commerce_slug');
           window.location.href = '/login';
           throw new Error('Session expirée. Veuillez vous reconnecter.');
         }
