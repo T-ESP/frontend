@@ -51,11 +51,25 @@ export class HttpLoginUserGateway implements LoginUserGateway {
     localStorage.setItem('auth_lastname', lastname);
     localStorage.setItem('auth_email', payload.email);
 
+    let slug: string | undefined;
+    try {
+      const decoded: any = JSON.parse(atob(token.split('.')[1]));
+      if (decoded.commerce_id) {
+        localStorage.setItem('commerce_id', String(decoded.commerce_id));
+      }
+      if (decoded.slug) {
+        slug = decoded.slug;
+      }
+    } catch {
+      // token malformé, on ignore
+    }
+
     return {
       success: true,
       token,
       firstname,
       lastname,
+      slug,
       message: body.message ?? "Login successful",
     };
   }

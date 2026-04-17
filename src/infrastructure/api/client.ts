@@ -44,7 +44,9 @@ class ApiClient {
     }
 
     try {
-      const response = await fetch(`${this.baseURL}${endpoint}`, {
+      const commerceId = localStorage.getItem('commerce_id');
+      const prefix = commerceId ? `/api/${commerceId}` : '';
+      const response = await fetch(`${this.baseURL}${prefix}${endpoint}`, {
         ...options,
         headers,
         signal: controller.signal,

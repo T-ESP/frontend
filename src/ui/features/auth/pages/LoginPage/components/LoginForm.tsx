@@ -61,18 +61,21 @@ export function LoginForm() {
       setStatus("success");
       setFeedback(result.message ?? "Login successful.");
 
-      if (!formValues.remember) {
-        // Si on ne veut pas se souvenir, on pourra plus tard stocker ailleurs (state, memory, etc.)
-        // Pour l'instant on laisse le gateway gérer localStorage de base.
-      }
-
       addToast(
         "Login successful",
         "You are now logged in. You can now access the dashboard.",
         "success"
       );
 
-      navigate("/dashboard", { replace: true });
+      // En prod, si on a un slug, rediriger vers slug.stock-s.fr/dashboard?token=xxx
+      const baseDomain = import.meta.env.VITE_BASE_DOMAIN;
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+      if (result.slug && baseDomain && !isLocalhost) {
+        window.location.href = `https://${result.slug}.${baseDomain}/dashboard?token=${result.token}`;
+      } else {
+        navigate("/dashboard", { replace: true });
+      }
     } catch (error) {
       setStatus("error");
       const message = error instanceof Error ? error.message : "An error occurred.";

@@ -8,6 +8,7 @@ export type LoginResponse = {
   token: string;
   firstname: string;
   lastname: string;
+  slug?: string;
   message?: string;
 };
 

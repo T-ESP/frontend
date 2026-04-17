@@ -8,18 +8,26 @@ export default function LogoutPage() {
   const { addToast } = useToast();
 
   useEffect(() => {
-    // Clear auth token
     localStorage.removeItem('auth_token');
-    
-    // Show success message
+    localStorage.removeItem('auth_firstname');
+    localStorage.removeItem('auth_lastname');
+    localStorage.removeItem('auth_email');
+    localStorage.removeItem('commerce_id');
+
     addToast(
       "Déconnexion réussie",
       "Vous avez été déconnecté avec succès.",
       "success"
     );
-    
-    // Redirect to login
-    navigate("/login", { replace: true });
+
+    const baseDomain = import.meta.env.VITE_BASE_DOMAIN;
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+    if (baseDomain && !isLocalhost) {
+      window.location.href = `https://${baseDomain}`;
+    } else {
+      navigate("/login", { replace: true });
+    }
   }, [navigate, addToast]);
 
   return (
