@@ -31,3 +31,5 @@ build_errors.txt
 *.sw?
 
 .claude
+
+environnements/environnement.prod.ts
