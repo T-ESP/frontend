@@ -35,5 +35,11 @@ services:
       - "traefik.http.routers.front-www.entrypoints=websecure"
       - "traefik.http.routers.front-www.tls.certresolver=myresolver"
 
+      # Router wildcard -> *.stock-s.fr (sous-domaines tenants)
+      - "traefik.http.routers.front-tenants.rule=HostRegexp(`{subdomain:[a-z0-9-]+}.stock-s.fr`)"
+      - "traefik.http.routers.front-tenants.entrypoints=websecure"
+      - "traefik.http.routers.front-tenants.tls.certresolver=myresolver"
+      - "traefik.http.routers.front-tenants.priority=10"
+
       # Service backend interne
       - "traefik.http.services.front.loadbalancer.server.port=80"

@@ -71,9 +71,22 @@ export function LoginForm() {
       const baseDomain = import.meta.env.VITE_BASE_DOMAIN;
       const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
+      console.log('[LoginForm] Login réussi — url:', window.location.href, '| slug:', result.slug, '| baseDomain:', baseDomain, '| isLocalhost:', isLocalhost);
+
       if (result.slug && baseDomain && !isLocalhost) {
-        window.location.href = `https://${result.slug}.${baseDomain}/dashboard?token=${result.token}`;
+        const targetUrl = `https://${result.slug}.${baseDomain}/dashboard?token=${result.token}`;
+        console.log('[LoginForm] Nettoyage localStorage de stock-s.fr...');
+        // Ne pas garder le token sur stock-s.fr — l'app vit sur le sous-domaine
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('auth_firstname');
+        localStorage.removeItem('auth_lastname');
+        localStorage.removeItem('auth_email');
+        localStorage.removeItem('commerce_id');
+        localStorage.removeItem('commerce_slug');
+        console.log('[LoginForm] Redirect vers:', targetUrl);
+        window.location.href = targetUrl;
       } else {
+        console.log('[LoginForm] Pas de redirect sous-domaine, navigate vers /dashboard');
         navigate("/dashboard", { replace: true });
       }
     } catch (error) {

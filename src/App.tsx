@@ -1,5 +1,5 @@
-import { Suspense, useEffect } from 'react';
-import { useNavigate, useRoutes } from 'react-router-dom';
+import { Suspense } from 'react';
+import { useRoutes } from 'react-router-dom';
 import { ToastProvider } from './ui/components/common/Toast';
 import { routes } from './ui/routing/routeConfig';
 
@@ -14,46 +14,63 @@ function getSubdomainSlug(): string | null {
   return subdomain;
 }
 
-// Lit le token depuis ?token=xxx, le stocke et nettoie l'URL
-function useIncomingToken() {
-  const navigate = useNavigate();
+// Exécuté une seule fois, de façon synchrone, avant que React monte.
+// Si on arrive sur slug.stock-s.fr/dashboard?token=xxx, on stocke le token
+// immédiatement dans localStorage et on nettoie l'URL.
+function bootstrapSubdomainToken(): void {
+  const currentUrl = window.location.href;
+  const slug = getSubdomainSlug();
 
-  useEffect(() => {
-    const slug = getSubdomainSlug();
-    if (!slug) return;
+  console.log('[Auth] bootstrapSubdomainToken — url:', currentUrl, '| slug détecté:', slug);
 
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('token');
-    if (!token) return;
+  if (!slug) {
+    console.log('[Auth] Pas de sous-domaine tenant, skip bootstrap.');
+    return;
+  }
 
-    try {
-      const decoded: any = JSON.parse(atob(token.split('.')[1]));
-      localStorage.setItem('auth_token', token);
-      localStorage.setItem('auth_email', decoded.email ?? '');
-      localStorage.setItem('auth_firstname', '');
-      localStorage.setItem('auth_lastname', '');
-      if (decoded.commerce_id) {
-        localStorage.setItem('commerce_id', String(decoded.commerce_id));
-      }
-    } catch {
-      // token malformé
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('token');
+
+  if (!token) {
+    console.log('[Auth] Sous-domaine détecté mais pas de ?token dans l\'URL.');
+    return;
+  }
+
+  console.log('[Auth] Token trouvé dans l\'URL, stockage en localStorage...');
+
+  try {
+    const decoded: any = JSON.parse(atob(token.split('.')[1]));
+    localStorage.setItem('auth_token', token);
+    localStorage.setItem('auth_email', decoded.email ?? '');
+    localStorage.setItem('auth_firstname', '');
+    localStorage.setItem('auth_lastname', '');
+    if (decoded.commerce_id) {
+      localStorage.setItem('commerce_id', String(decoded.commerce_id));
     }
+    if (decoded.slug) {
+      localStorage.setItem('commerce_slug', decoded.slug);
+    }
+    console.log('[Auth] Token stocké — email:', decoded.email, '| commerce_id:', decoded.commerce_id, '| slug:', decoded.slug);
+  } catch {
+    console.error('[Auth] Erreur lors du décodage du token JWT.');
+  }
 
-    // Nettoyer le token de l'URL puis aller sur /dashboard
-    navigate('/dashboard', { replace: true });
-  }, [navigate]);
+  // Retirer ?token de l'URL sans recharger la page
+  const url = new URL(window.location.href);
+  url.searchParams.delete('token');
+  window.history.replaceState({}, '', url.toString());
+  console.log('[Auth] URL nettoyée:', url.toString());
 }
 
-function AppContent() {
-  useIncomingToken();
-  return useRoutes(routes);
-}
+bootstrapSubdomainToken();
 
 export default function App() {
+  const routing = useRoutes(routes);
+
   return (
     <Suspense>
       <ToastProvider>
-        <AppContent />
+        {routing}
       </ToastProvider>
     </Suspense>
   );
