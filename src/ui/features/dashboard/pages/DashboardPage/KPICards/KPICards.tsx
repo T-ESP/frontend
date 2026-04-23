@@ -91,7 +91,7 @@ export function KPICards({ orders, products, users, totalRevenue, evolution, dat
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
       {kpiData.map((kpi, index) => (
         <KPICard key={index} kpi={kpi} />
       ))}

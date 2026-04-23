@@ -1,19 +1,21 @@
 import { useMemo, useState, useEffect, useRef } from "react";
-import { FiFilter } from "react-icons/fi";
+import { ChevronDown } from "lucide-react";
 import type { Product } from "@/domain/models/Product";
-import type { TopProduct } from "../../../types/dashboard.types";
-import { ProductItem } from "./ProductItem";
+import { Progress } from "@/ui/components/ui/progress";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/ui/components/ui/card";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 interface TopProductsProps {
   products: Product[];
 }
 
-type SortOption = 'stock' | 'price' | 'name';
+type SortOption = "stock" | "price" | "name";
 
 export function TopProducts({ products }: TopProductsProps) {
   const { t } = useTranslation();
-  const [sortBy, setSortBy] = useState<SortOption>('stock');
+  const navigate = useNavigate();
+  const [sortBy, setSortBy] = useState<SortOption>("stock");
   const [showFilter, setShowFilter] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
 
@@ -23,112 +25,124 @@ export function TopProducts({ products }: TopProductsProps) {
         setShowFilter(false);
       }
     };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Convert real products to TopProduct format with different sort options
-  const topProducts = useMemo<TopProduct[]>(() => {
-    let sorted = [...products];
-
+  const topProducts = useMemo(() => {
+    const sorted = [...products];
     switch (sortBy) {
-      case 'stock':
+      case "stock":
         sorted.sort((a, b) => b.stock_quantity - a.stock_quantity);
         break;
-      case 'price':
-        sorted.sort((a, b) => (b.buying_price * b.stock_quantity) - (a.buying_price * a.stock_quantity));
+      case "price":
+        sorted.sort(
+          (a, b) => b.buying_price * b.stock_quantity - a.buying_price * a.stock_quantity
+        );
         break;
-      case 'name':
+      case "name":
         sorted.sort((a, b) => a.name.localeCompare(b.name));
         break;
     }
+    return sorted.slice(0, 5);
+  }, [products, sortBy]);
 
-    return sorted
-      .slice(0, 5)
-      .map((product, index) => {
-        console.log("🚀 ~ TopProducts ~ product:", product)
-        const totalValue = product.buying_price * product.stock_quantity;
-        return {
-          id: product.id,
-          name: product.name,
-          image: `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name)}&background=random&size=80`,
-          sales: product.stock_quantity,
-          revenue: new Intl.NumberFormat('fr-FR', {
-            style: 'currency',
-            currency: 'EUR',
-          }).format(totalValue),
-          trend: product.stock_quantity > 50 ? "up" : "down" as "up" | "down",
-          change: `${product.stock_quantity} ${t('common.units')}`,
-          rating: 4.5 + (index * 0.1),
-        };
-      });
-  }, [products, sortBy, t]);
+  const maxValue = useMemo(() => {
+    if (topProducts.length === 0) return 1;
+    return Math.max(...topProducts.map((p) =>
+      sortBy === "price" ? p.buying_price * p.stock_quantity : p.stock_quantity
+    ));
+  }, [topProducts, sortBy]);
+
+  const getValue = (p: Product) =>
+    sortBy === "price" ? p.buying_price * p.stock_quantity : p.stock_quantity;
+
+  const formatValue = (p: Product) =>
+    sortBy === "price"
+      ? new Intl.NumberFormat("fr-FR", {
+          style: "currency",
+          currency: "EUR",
+          maximumFractionDigits: 0,
+        }).format(p.buying_price * p.stock_quantity)
+      : `${p.stock_quantity} ${t("common.units")}`;
 
   const getSortLabel = (sort: SortOption) => {
     switch (sort) {
-      case 'stock': return t('dashboard.top_products.stock');
-      case 'price': return t('dashboard.top_products.value');
-      case 'name': return t('dashboard.top_products.name');
+      case "stock": return t("dashboard.top_products.stock");
+      case "price": return t("dashboard.top_products.value");
+      case "name": return t("dashboard.top_products.name");
     }
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
-      <div className="flex justify-between items-center p-6 border-b border-gray-100">
+    <Card className="flex flex-col">
+      <CardHeader className="flex flex-row items-start justify-between space-y-0">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">{t('dashboard.top_products.title')}</h3>
-          <p className="mt-1 text-sm text-gray-500">{t('dashboard.top_products.subtitle')}</p>
+          <CardTitle>{t("dashboard.top_products.title")}</CardTitle>
+          <CardDescription className="mt-1">{t("dashboard.top_products.subtitle")}</CardDescription>
         </div>
-        <div className="flex gap-3 items-center">
-          <div className="relative" ref={filterRef}>
-            <button
-              onClick={() => setShowFilter(!showFilter)}
-              className="flex gap-2 items-center px-3 py-2 text-sm font-medium text-gray-700 bg-gray-50 rounded-lg transition-colors hover:bg-gray-100"
-            >
-              <FiFilter size={14} />
-              {t('dashboard.top_products.sort_by')}: {getSortLabel(sortBy)}
-            </button>
-            {showFilter && (
-              <div className="absolute right-0 z-10 py-1 mt-2 w-40 bg-white rounded-lg border border-gray-200 shadow-lg">
+        <div className="relative shrink-0" ref={filterRef}>
+          <button
+            onClick={() => setShowFilter(!showFilter)}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            {getSortLabel(sortBy)}
+            <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showFilter ? "rotate-180" : ""}`} />
+          </button>
+          {showFilter && (
+            <div className="absolute right-0 z-10 mt-1 w-36 py-1 bg-white rounded-lg border border-gray-200 shadow-lg">
+              {(["stock", "price", "name"] as SortOption[]).map((opt) => (
                 <button
-                  onClick={() => { setSortBy('stock'); setShowFilter(false); }}
-                  className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === 'stock' ? 'text-purple-600 font-medium' : 'text-gray-700'
-                    }`}
+                  key={opt}
+                  onClick={() => { setSortBy(opt); setShowFilter(false); }}
+                  className={`w-full text-left px-3 py-2 text-xs transition-colors hover:bg-gray-50 ${
+                    sortBy === opt ? "text-purple-600 font-semibold" : "text-gray-700"
+                  }`}
                 >
-                  {t('dashboard.top_products.stock')}
+                  {getSortLabel(opt)}
                 </button>
-                <button
-                  onClick={() => { setSortBy('price'); setShowFilter(false); }}
-                  className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === 'price' ? 'text-purple-600 font-medium' : 'text-gray-700'
-                    }`}
-                >
-                  {t('dashboard.top_products.value')}
-                </button>
-                <button
-                  onClick={() => { setSortBy('name'); setShowFilter(false); }}
-                  className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === 'name' ? 'text-purple-600 font-medium' : 'text-gray-700'
-                    }`}
-                >
-                  {t('dashboard.top_products.name')}
-                </button>
-              </div>
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
-      </div>
-      <div className="divide-y divide-gray-100">
+      </CardHeader>
+      <CardContent className="flex-1 space-y-4">
         {topProducts.length === 0 ? (
-          <div className="p-12 text-center text-gray-500">
-            {t('dashboard.top_products.no_products')}
+          <div className="flex items-center justify-center h-32 text-sm text-gray-400">
+            {t("dashboard.top_products.no_products")}
           </div>
         ) : (
-          topProducts.map((product) => (
-            <ProductItem key={product.id} product={product} />
+          topProducts.map((product, index) => (
+            <div
+              key={product.id}
+              onClick={() =>
+                navigate(
+                  `/inventory?search=${encodeURIComponent(product.name)}&productId=${product.id}`
+                )
+              }
+              className="cursor-pointer group"
+            >
+              <div className="flex items-center justify-between mb-1.5">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="text-xs font-bold text-gray-300 w-4 shrink-0">
+                    {index + 1}
+                  </span>
+                  <span className="text-sm font-medium text-gray-900 truncate group-hover:text-purple-600 transition-colors">
+                    {product.name}
+                  </span>
+                </div>
+                <span className="text-sm font-semibold text-gray-900 shrink-0 ml-2">
+                  {formatValue(product)}
+                </span>
+              </div>
+              <Progress
+                value={maxValue > 0 ? (getValue(product) / maxValue) * 100 : 0}
+                className="ml-6"
+              />
+            </div>
           ))
         )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
-

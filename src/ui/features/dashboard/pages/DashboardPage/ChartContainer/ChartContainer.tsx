@@ -70,12 +70,7 @@ export function ChartContainer({ dateRange }: ChartContainerProps) {
     });
   }, [revenueDataFromApi, i18n.language, dateRange]);
 
-  return (
-    <div className="mb-8">
-      <RevenueChart data={revenueData} />
-      {/* <CustomerDistributionChart data={customerData} /> */}
-    </div>
-  );
+  return <RevenueChart data={revenueData} />;
 }
 
 

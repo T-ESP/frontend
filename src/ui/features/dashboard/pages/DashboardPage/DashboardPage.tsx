@@ -4,6 +4,7 @@ import { KPICards } from "./KPICards";
 import { ChartContainer } from "./ChartContainer";
 import { TopProducts } from "./TopProducts";
 import { FlopProducts } from "./TopProducts/FlopProducts";
+import { RecentOrders } from "./RecentOrders/RecentOrders";
 import { PageActions } from "./PageActions/PageActions";
 import { orderService } from "@/infrastructure/api/services/orderService";
 import { productService } from "@/infrastructure/api/services/productService";
@@ -45,14 +46,12 @@ export default function DashboardPage() {
         startDate.setDate(startDate.getDate() - dateRange);
       }
 
-      const formatDate = (date: Date) => date.toISOString().split('T')[0];
-
+      const formatDate = (date: Date) => date.toISOString().split("T")[0];
       const period = {
         start_date: formatDate(startDate),
         end_date: formatDate(endDate),
       };
 
-      // Fetch all data in parallel
       const [ordersData, productsData, usersData, revenueData, evolutionData] = await Promise.all([
         orderService.getAll(),
         productService.getAll(),
@@ -64,11 +63,10 @@ export default function DashboardPage() {
       setOrders(ordersData);
       setProducts(productsData);
       setUsers(usersData);
-      console.log("🚀 ~ loadDashboardData ~ revenueData:", revenueData)
       setTotalRevenue(revenueData.total_revenue);
       setEvolution(evolutionData.evolution_percentage);
     } catch (error) {
-      console.error('Error loading dashboard data:', error);
+      console.error("Error loading dashboard data:", error);
     } finally {
       setLoading(false);
     }
@@ -82,7 +80,7 @@ export default function DashboardPage() {
       } else {
         startDate.setDate(startDate.getDate() - dateRange);
       }
-      const formatDate = (d: Date) => d.toISOString().split('T')[0];
+      const formatDate = (d: Date) => d.toISOString().split("T")[0];
       const topFlop = await globalKpisService.getTopFlop({
         start_date: formatDate(startDate),
         end_date: formatDate(endDate),
@@ -90,58 +88,38 @@ export default function DashboardPage() {
       setFlopBySales(topFlop.flop_10_by_sales);
       setFlopByProfit(topFlop.flop_10_by_profit);
     } catch (error) {
-      console.error('Error loading flop data:', error);
+      console.error("Error loading flop data:", error);
     } finally {
       setFlopLoading(false);
     }
   };
 
-  const handleExport = () => {
-    // const csvData = [
-    //   [t('dashboard.export.title'), new Date().toISOString()],
-    //   [],
-    //   [t('dashboard.export.metric'), t('dashboard.export.value')],
-    //   [t('dashboard.kpi.total_revenue'), `€${totalRevenue.toFixed(2)}`],
-    //   [t('dashboard.kpi.revenue_evolution'), `${evolution.toFixed(1)}%`],
-    //   [t('dashboard.kpi.total_orders'), orders.length.toString()],
-    //   [t('dashboard.kpi.total_products'), products.length.toString()],
-    //   [t('dashboard.kpi.total_users'), users.length.toString()],
-    //   [t('dashboard.kpi.low_stock'), products.filter(p => p.stock_quantity < 10).length.toString()],
-    // ];
-
-    //   const csv = csvData.map(row => row.join(',')).join('\n');
-    //   const blob = new Blob([csv], { type: 'text/csv' });
-    //   const url = window.URL.createObjectURL(blob);
-    //   const link = document.createElement('a');
-    //   link.href = url;
-    //   link.download = `dashboard-${new Date().toISOString().split('T')[0]}.csv`;
-    //   link.click();
-  }
-
   return (
     <PageLayout
-      title={t('dashboard.title')}
-      subtitle={t('dashboard.subtitle')}
+      title={t("dashboard.title")}
+      subtitle={t("dashboard.subtitle")}
       actions={
         <PageActions
           onDateRangeChange={setDateRange}
           currentRange={dateRange}
-          onExport={handleExport}
         />
       }
     >
       {loading ? (
-        <div className="space-y-8">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-32 bg-white border border-gray-100 rounded-2xl animate-pulse" />
+              <div key={i} className="h-28 bg-white border border-gray-200 rounded-xl animate-pulse" />
             ))}
           </div>
-          <div className="bg-white border border-gray-100 h-96 rounded-2xl animate-pulse" />
+          <div className="bg-white border border-gray-200 h-80 rounded-xl animate-pulse" />
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+            <div className="bg-white border border-gray-200 h-64 rounded-xl animate-pulse lg:col-span-7" />
+            <div className="bg-white border border-gray-200 h-64 rounded-xl animate-pulse lg:col-span-5" />
+          </div>
         </div>
       ) : (
-        <>
-          {/* KPI Cards */}
+        <div className="space-y-6">
           <KPICards
             orders={orders}
             products={products}
@@ -153,11 +131,21 @@ export default function DashboardPage() {
 
           <ChartContainer orders={orders} dateRange={dateRange} />
 
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            <TopProducts products={products} />
-            <FlopProducts flopBySales={flopBySales} flopByProfit={flopByProfit} loading={flopLoading} />
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+            <div className="lg:col-span-7">
+              <RecentOrders orders={orders} />
+            </div>
+            <div className="lg:col-span-5">
+              <TopProducts products={products} />
+            </div>
           </div>
-        </>
+
+          <FlopProducts
+            flopBySales={flopBySales}
+            flopByProfit={flopByProfit}
+            loading={flopLoading}
+          />
+        </div>
       )}
     </PageLayout>
   );
