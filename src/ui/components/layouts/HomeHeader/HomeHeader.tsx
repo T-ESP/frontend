@@ -14,7 +14,20 @@ export function HomeHeader(): JSX.Element {
     const { firstname, lastname, email } = useAuth();
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
     const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const container = document.getElementById("main-scroll-container");
+        if (!container) return;
+
+        const handleScroll = () => {
+            setIsScrolled(container.scrollTop > 10);
+        };
+
+        container.addEventListener("scroll", handleScroll);
+        return () => container.removeEventListener("scroll", handleScroll);
+    }, []);
 
     const handleLanguageChange = (lang: string) => {
         i18n.changeLanguage(lang);
@@ -54,7 +67,11 @@ export function HomeHeader(): JSX.Element {
     };
 
     return (
-        <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-3 bg-white border-b border-gray-200 md:px-5">
+        <header className={`sticky top-4 z-40 flex items-center justify-between h-16 px-4 mx-4 md:mx-8 mb-2 rounded-2xl border transition-all duration-300 ${
+            isScrolled 
+                ? "bg-white/60 backdrop-blur-md border-gray-200/50 shadow-sm" 
+                : "bg-white border-gray-200"
+        }`}>
             {/* Menu + Recherche */}
             <div className="flex items-center min-w-0 gap-3 md:gap-4">
                 {/* Burger menu moved to Sidebar */}

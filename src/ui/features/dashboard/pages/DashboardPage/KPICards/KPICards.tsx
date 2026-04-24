@@ -173,11 +173,10 @@ export function KPICards({
                 <button
                   key={key}
                   onClick={() => toggleKPI(key)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
-                    isSelected
+                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${isSelected
                       ? "bg-purple-50 text-purple-700 border-purple-300"
                       : "bg-gray-50 text-gray-500 border-gray-200 opacity-60"
-                  }`}
+                    }`}
                 >
                   {isSelected ? (
                     <FiCheck className="w-3 h-3" />

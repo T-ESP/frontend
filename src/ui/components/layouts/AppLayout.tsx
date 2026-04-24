@@ -27,8 +27,8 @@ export function AppLayout({ children }: AppLayoutProps) {
         className="flex-1 flex flex-col overflow-hidden transition-[margin-left] duration-300"
         style={{ marginLeft: isSidebarOpen ? '256px' : '80px' }}
       >
-        <HomeHeader />
-        <div className="flex-1 overflow-y-auto bg-[#f5f4f9]">
+        <div id="main-scroll-container" className="flex-1 overflow-y-auto bg-[#f5f4f9]">
+          <HomeHeader />
           {/* C'est ICI que tu dois rendre children */}
           {children ?? <Outlet />}
         </div>

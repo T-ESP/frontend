@@ -135,7 +135,7 @@ export default function DashboardPage() {
             editMode={editMode}
           />
 
-          <ChartContainer orders={orders} dateRange={dateRange} />
+          <ChartContainer orders={orders} users={users} dateRange={dateRange} />
 
           <TopProducts products={products} />
         </>

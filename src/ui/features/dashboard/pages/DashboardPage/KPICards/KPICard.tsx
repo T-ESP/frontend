@@ -1,59 +1,78 @@
 import type { KPI } from "@/ui/features/dashboard/types";
-import { TrendingUp } from "lucide-react";
+import { ResponsiveContainer, BarChart, Bar, LineChart, Line, LabelList } from "recharts";
+
+const DUMMY_BAR_DATA = [
+  { value: 240 },
+  { value: 300 },
+  { value: 200 },
+  { value: 278 },
+  { value: 189 },
+  { value: 239 },
+  { value: 278 },
+  { value: 189 }
+];
+
+const DUMMY_LINE_DATA = [
+  { value: 120 },
+  { value: 180 },
+  { value: 140 },
+  { value: 210 },
+  { value: 130 }
+];
 
 export function KPICard({ kpi }: { kpi: KPI }) {
-  return (
-    <div className={`p-6 transition-all duration-300 bg-white shadow-sm hover:shadow-md group flex flex-col justify-between
-      ${kpi.isPrimary
-        ? "rounded-[1.4rem] border"
-        : "rounded-2xl border border-gray-100"}`}
-      style={kpi.isPrimary ? {
-        background: "linear-gradient(135deg,rgba(123,95,162,0.07),rgba(157,123,221,0.06))",
-        borderColor: "rgba(123,95,162,0.09)"
-      } : {}}
-    >
-      <div className="flex justify-between items-center">
-        <div className={`flex gap-4 items-center`}>
-          <div className={`flex justify-center items-center w-11 h-11 rounded-xl`}
-            style={kpi.isPrimary ? {
-              background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)",
-              boxShadow: "0 6px 18px rgba(123,95,162,0.28)"
-            } : {
-              background: "rgba(123,95,162,0.08)",
-            }}
-          >
-            {kpi.isPrimary ? <TrendingUp size={18} className="text-white" /> : <kpi.icon className="w-6 h-6 text-[#7b5fa2]" />}
-          </div>
-          <div>
-            <h3 className="text-[10px] font-bold uppercase tracking-widest"
-              style={{ color: kpi.isPrimary ? "var(--color-primary-dark)" : "#6b7280" }}>
-              {kpi.title}
-            </h3>
-            <p className="mt-0.5 text-[1.6rem] font-black tabular-nums leading-none text-gray-900">{kpi.value}</p>
-          </div>
-        </div>
+  // Use Line chart for Revenue/Stock, Bar chart for Orders/Users
+  const isLine = kpi.title.toLowerCase().includes("revenu") || kpi.color === "emerald" || kpi.title.toLowerCase().includes("stock");
 
-        {kpi.isPrimary && (
-          <div className="flex flex-col items-end gap-1.5 self-start">
-            {/* <div className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-full font-bold text-[10px] border border-emerald-100">
-              <ArrowUpRight size={10} /> {kpi.change}
-            </div> */}
-            <p className="mt-1 text-xs font-medium text-[#7b5fa2]/70">{kpi.description}</p>
-          </div>
-        )}
+  return (
+    <div className="p-6 transition-all duration-300 bg-white border border-gray-200 rounded-2xl flex flex-col justify-between h-[280px]">
+      <div>
+        <h3 className="font-semibold text-[15px] text-gray-900">{kpi.title}</h3>
+        <p className="mt-5 text-2xl font-bold tracking-tight text-gray-900 tabular-nums">
+          {kpi.value}
+        </p>
+        <div className="flex items-center gap-1.5 mt-2 text-[13px]">
+          {/* Trend color matcher based on standard UI */}
+          <span className={`font-semibold tracking-wide ${kpi.trend === "down" ? "text-rose-500" : "text-emerald-500"}`}>
+            {kpi.change}
+          </span>
+          <span className="text-gray-500">{kpi.description}</span>
+        </div>
       </div>
 
-      {!kpi.isPrimary && (
-        <div className="flex justify-between items-center mt-4">
-          <p className="text-xs font-medium text-gray-500">{kpi.description}</p>
-          {/* <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${kpi.trend === "up" ? "bg-emerald-50 text-emerald-600 border-emerald-100" :
-            kpi.trend === "down" && kpi.color === "amber" ? "bg-amber-50 text-amber-600 border-amber-100" :
-              kpi.trend === "down" ? "bg-rose-50 text-rose-600 border-rose-100" : "bg-gray-50 text-gray-600 border-gray-100"
-            }`}>
-            {kpi.change}
-          </span> */}
-        </div>
-      )}
+      {/* Mini Graphs Section */}
+      <div className="mt-8 h-24 w-full">
+        {isLine ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={DUMMY_LINE_DATA} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
+              <Line
+                type="linear"
+                dataKey="value"
+                stroke="#0f172a"
+                strokeWidth={2}
+                dot={{ stroke: "#0f172a", strokeWidth: 2, fill: "white", r: 4.5 }}
+                activeDot={{ stroke: "#0f172a", strokeWidth: 2, fill: "white", r: 6 }}
+                isAnimationActive={true}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        ) : (
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={DUMMY_BAR_DATA} margin={{ top: 20, right: 0, left: 0, bottom: 0 }} barGap={2} barCategoryGap={6}>
+              <Bar dataKey="value" fill="#0f172a" radius={[3, 3, 0, 0]}>
+                <LabelList
+                  dataKey="value"
+                  position="top"
+                  fill="#374151"
+                  fontSize={11}
+                  fontWeight={500}
+                  offset={8}
+                />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        )}
+      </div>
     </div>
   );
 }

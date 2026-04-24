@@ -1,13 +1,15 @@
 import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { CustomerDistributionChart } from "./CustomerDistributionChart";
 import { RevenueChart } from "./RevenueChart";
+import { LatestPayments } from "./LatestPayments";
 import { salesService } from "@/infrastructure/api/services/salesService";
 import type { Order } from "@/domain/models/Order";
+import type { User } from "@/domain/models/User";
 import type { EvolutionDataPoint } from "@/domain/models/Sales";
 
 interface ChartContainerProps {
   orders: Order[];
+  users: User[];
   dateRange: number; // days selected globally (7, 30, 90, 365)
 }
 
@@ -36,7 +38,7 @@ function formatLabel(
   return d.toLocaleDateString(locale, { day: "2-digit", month: "short" });
 }
 
-export function ChartContainer({ orders, dateRange }: ChartContainerProps) {
+export function ChartContainer({ orders, users, dateRange }: ChartContainerProps) {
   const { t, i18n } = useTranslation();
   const [revenueDataFromApi, setRevenueDataFromApi] = useState<EvolutionDataPoint[]>([]);
   const [loading, setLoading] = useState(false);
@@ -81,50 +83,6 @@ export function ChartContainer({ orders, dateRange }: ChartContainerProps) {
     }));
   }, [revenueDataFromApi, dateRange, i18n.language]);
 
-  // Filter the orders fetched by the parent to the same window
-  // (parent already fetches with dateRange; this just gives the chart the right slice)
-  const windowStart = useMemo(() => {
-    const d = new Date();
-    d.setDate(d.getDate() - dateRange);
-    return d;
-  }, [dateRange]);
-
-  const filteredOrders = useMemo(
-    () => orders.filter((o) => new Date(o.order_date) >= windowStart),
-    [orders, windowStart]
-  );
-
-  // Customer distribution from filtered orders
-  const customerData = useMemo(() => {
-    const userOrderCounts = new Map<number, number>();
-    filteredOrders.forEach((order) => {
-      userOrderCounts.set(order.user_id, (userOrderCounts.get(order.user_id) ?? 0) + 1);
-    });
-
-    let newCustomers = 0;
-    let returningCustomers = 0;
-    userOrderCounts.forEach((count) => {
-      if (count === 1) newCustomers++;
-      else returningCustomers++;
-    });
-
-    const total = newCustomers + returningCustomers || 1;
-    return [
-      {
-        name: t("dashboard.charts.new_customers"),
-        value: parseFloat(((newCustomers / total) * 100).toFixed(1)),
-        count: newCustomers,
-        color: "#7b5fa2",
-      },
-      {
-        name: t("dashboard.charts.returning_customers"),
-        value: parseFloat(((returningCustomers / total) * 100).toFixed(1)),
-        count: returningCustomers,
-        color: "#a480d1",
-      },
-    ];
-  }, [filteredOrders, t]);
-
   // Label shown in the chart header
   const rangeLabel = (() => {
     if (dateRange === 7) return t("common.date_range.last_7_days");
@@ -134,9 +92,13 @@ export function ChartContainer({ orders, dateRange }: ChartContainerProps) {
   })();
 
   return (
-    <div className="grid grid-cols-1 gap-8 mb-8 lg:grid-cols-3">
-      <RevenueChart data={revenueData} rangeLabel={rangeLabel} loading={loading} />
-      <CustomerDistributionChart data={customerData} rangeLabel={rangeLabel} />
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 w-full">
+      <div className="lg:col-span-2 flex flex-col">
+        <RevenueChart data={revenueData} rangeLabel={rangeLabel} loading={loading} />
+      </div>
+      <div className="lg:col-span-1 flex flex-col min-w-0">
+        <LatestPayments orders={orders} users={users} />
+      </div>
     </div>
   );
 }
