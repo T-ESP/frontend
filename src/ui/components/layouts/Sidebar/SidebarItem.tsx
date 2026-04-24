@@ -3,7 +3,8 @@ import { NavLink } from "react-router-dom";
 import type { SidebarItemProps } from "./Sidebar.types";
 import { useTranslation } from "react-i18next";
 
-const BRAND = "#7b5fa2";
+
+import { ChevronRight } from "lucide-react";
 
 export function SidebarItem({ label, to, icon: Icon, isOpen }: SidebarItemProps) {
   const { t } = useTranslation();
@@ -11,34 +12,30 @@ export function SidebarItem({ label, to, icon: Icon, isOpen }: SidebarItemProps)
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `group relative flex items-center transition-all duration-200 mx-3 px-3 py-3 rounded-xl
-         ${isActive ? "bg-[#f4f0f9]" : "hover:bg-gray-50"} ${isOpen ? "gap-4" : "justify-center"}`
+        `group relative flex items-center justify-between transition-colors px-3 py-2 rounded-md
+         ${isActive ? "bg-[#e4e4e7]" : "hover:bg-black/5"} ${isOpen ? "mx-3 gap-0" : "mx-auto justify-center w-10 h-10"}`
       }
     >
       {({ isActive }) => (
         <>
-          {/* Active indicator bar */}
-          {isActive && (
-            <div
-              className="absolute top-1/2 -left-3 -translate-y-1/2 w-1 h-8 rounded-r-md"
-              style={{ backgroundColor: BRAND }}
-            />
-          )}
-
-          <Icon
-            className={`h-5 w-5 shrink-0 transition-colors ${isActive ? "" : "text-gray-400 group-hover:text-gray-600"
+          <div className="flex items-center gap-3">
+            <Icon
+              className={`h-[18px] w-[18px] shrink-0 stroke-[1.5] transition-colors ${
+                isActive ? "text-gray-900" : "text-gray-500 group-hover:text-gray-900"
               }`}
-            style={isActive ? { color: BRAND } : {}}
-          />
-
-          {isOpen && (
-            <span
-              className={`truncate font-medium text-sm transition-colors ${isActive ? "" : "text-gray-600 group-hover:text-gray-900"
+            />
+            {isOpen && (
+              <span
+                className={`truncate text-sm transition-colors ${
+                  isActive ? "text-gray-900 font-medium" : "text-gray-600 font-medium group-hover:text-gray-900"
                 }`}
-              style={isActive ? { color: BRAND } : {}}
-            >
-              {t(label)}
-            </span>
+              >
+                {t(label)}
+              </span>
+            )}
+          </div>
+          {isOpen && !isActive && (
+            <ChevronRight className="w-4 h-4 text-gray-400 opacity-50 flex-shrink-0" />
           )}
         </>
       )}
