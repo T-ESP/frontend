@@ -1,120 +1,136 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
+/* ============================================================
+ * 🎨 BRAND COLOR — modifier ces valeurs pour re-themer l'app
+ * H = Teinte (0-360), S = Saturation (%), L = Luminosité (%)
+ * Violet actuel : hsl(270, 27%, 50%) = #7b5fa2
+ * ============================================================ */
+:root {
+  --brand-h: 270;
+  --brand-s: 27%;
+  --brand-l: 50%;
+
+  /* ── Couleurs dérivées automatiquement ─────────────────── */
+  --color-primary:      hsl(var(--brand-h) var(--brand-s) var(--brand-l));
+  --color-primary-plus: hsl(var(--brand-h) 35% calc(var(--brand-l) + 12%));
+  --color-primary-dark: hsl(var(--brand-h) var(--brand-s) calc(var(--brand-l) - 8%));
+  --color-primary-deep: hsl(var(--brand-h) var(--brand-s) calc(var(--brand-l) - 18%));
+  --color-primary-night:hsl(var(--brand-h) var(--brand-s) calc(var(--brand-l) - 37%));
+  --color-primary-bg:   hsl(var(--brand-h) 60% 97%);
+
+  /* ── Shadcn semantic tokens ─────────────────────────────── */
+  --background:         0 0% 98%;
+  --foreground:         222 47% 11%;
+  --card:               0 0% 100%;
+  --card-foreground:    222 47% 11%;
+  --popover:            0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --primary:            var(--brand-h) var(--brand-s) var(--brand-l);
+  --primary-foreground: 0 0% 100%;
+  --secondary:          210 40% 96%;
+  --secondary-foreground:222 47% 11%;
+  --muted:              210 40% 96%;
+  --muted-foreground:   215 16% 47%;
+  --accent:             var(--brand-h) 60% 97%;
+  --accent-foreground:  var(--brand-h) var(--brand-s) calc(var(--brand-l) - 8%);
+  --destructive:        0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border:             214 32% 91%;
+  --input:              214 32% 91%;
+  --ring:               var(--brand-h) var(--brand-s) var(--brand-l);
+  --radius:             0.5rem;
+
+  /* ── Neutres ────────────────────────────────────────────── */
+  --color-bg:           #f8f9fb;
+  --color-surface:      #ffffff;
+  --color-neutral-900:  #1f2937;
+  --color-neutral-700:  #6b7280;
+  --color-border:       #e5e7eb;
+
+  /* ── Feedback ───────────────────────────────────────────── */
+  --color-success:      #22c55e;
+  --color-success-bg:   #e7fbe9;
+  --color-warning:      #facc15;
+  --color-warning-bg:   #fef9c3;
+  --color-error:        #ef4444;
+  --color-error-bg:     #ffe7e7;
+  --color-info:         var(--color-primary-plus);
+  --color-info-bg:      var(--color-primary-bg);
+}
+
+/* ── @theme pour Tailwind utilities ────────────────────────── */
+@theme {
+  --color-primary:       hsl(var(--brand-h) var(--brand-s) var(--brand-l));
+  --color-primary-plus:  hsl(var(--brand-h) 35% calc(var(--brand-l) + 12%));
+  --color-primary-dark:  hsl(var(--brand-h) var(--brand-s) calc(var(--brand-l) - 8%));
+  --color-primary-deep:  hsl(var(--brand-h) var(--brand-s) calc(var(--brand-l) - 18%));
+  --color-primary-night: hsl(var(--brand-h) var(--brand-s) calc(var(--brand-l) - 37%));
+  --color-primary-bg:    hsl(var(--brand-h) 60% 97%);
+
+  --color-purple-50:  hsl(var(--brand-h) 60% 97%);
+  --color-purple-100: hsl(var(--brand-h) 55% 92%);
+  --color-purple-200: hsl(var(--brand-h) 48% 84%);
+  --color-purple-300: hsl(var(--brand-h) 40% 74%);
+  --color-purple-400: hsl(var(--brand-h) 35% 63%);
+  --color-purple-500: hsl(var(--brand-h) 30% 56%);
+  --color-purple-600: hsl(var(--brand-h) var(--brand-s) var(--brand-l));
+  --color-purple-700: hsl(var(--brand-h) var(--brand-s) calc(var(--brand-l) - 8%));
+  --color-purple-800: hsl(var(--brand-h) var(--brand-s) calc(var(--brand-l) - 18%));
+  --color-purple-900: hsl(var(--brand-h) var(--brand-s) calc(var(--brand-l) - 28%));
+  --color-purple-950: hsl(var(--brand-h) var(--brand-s) calc(var(--brand-l) - 37%));
+
+  --color-bg:           #f8f9fb;
+  --color-surface:      #ffffff;
+  --color-neutral-900:  #1f2937;
+  --color-neutral-700:  #6b7280;
+  --color-border:       #e5e7eb;
+  --color-success:      #22c55e;
+  --color-success-bg:   #e7fbe9;
+  --color-warning:      #facc15;
+  --color-warning-bg:   #fef9c3;
+  --color-error:        #ef4444;
+  --color-error-bg:     #ffe7e7;
+  --color-grey-light:   #f1f5f9;
+  --color-blue-dark:    #1e40af;
+  --color-blue-light:   #93c5fd;
+}
+
 html, body, #root {
-  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+    'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #f3f4f6;
+  background-color: var(--color-bg);
+  color: var(--color-neutral-900);
 }
 
-@theme {
-  /* ---- Branding / Violet (#7b5fa2 Unified) ---- */
-  --color-primary: #7b5fa2;
-  --color-primary-plus: #a480d1;
-  --color-primary-dark: #644d85;
-  --color-primary-deep: #4d3c67;
-  --color-primary-night: #1d162a;
-  --color-primary-bg: #f5f0fc;
-
-  /* Force all Tailwind Purples/Indigos to use our unified #7b5fa2 scale */
-  --color-purple-50: #f5f0fc;
-  --color-purple-100: #ebdcf9;
-  --color-purple-200: #d7bff2;
-  --color-purple-300: #c0a2e5;
-  --color-purple-400: #a480d1;
-  --color-purple-500: #8b65bc;
-  --color-purple-600: #7b5fa2;
-  --color-purple-700: #644d85;
-  --color-purple-800: #4d3c67;
-  --color-purple-900: #362a49;
-  --color-purple-950: #1d162a;
-
-  --color-indigo-50: #f5f0fc;
-  --color-indigo-100: #ebdcf9;
-  --color-indigo-200: #d7bff2;
-  --color-indigo-300: #c0a2e5;
-  --color-indigo-400: #a480d1;
-  --color-indigo-500: #8b65bc;
-  --color-indigo-600: #7b5fa2;
-  --color-indigo-700: #644d85;
-  --color-indigo-800: #4d3c67;
-  --color-indigo-900: #362a49;
-  --color-indigo-950: #1d162a;
-
-  /* ---- Neutres (Modernized) ---- */
-  --color-bg: #f3f4f6;                 /* Fond global (light gray) */
-  --color-surface: #ffffff;            /* Fond surface (cards, panels - now pure white) */
-  --color-neutral-900: #1f2937;        /* Texte principal (dark gray, softer than black) */
-  --color-neutral-700: #6b7280;        /* Texte secondaire, border, icons (medium gray) */
-  --color-border: #e5e7eb;             /* Bordures discrètes */
-  --color-black: #1f2937;              /* Use dark gray instead of pure black */
-
-  /* ---- Feedback / Alerts ---- */
-  --color-success: #22c55e;            /* Succès/valide */
-  --color-success-bg: #e7fbe9;         /* Fond de succès */
-  --color-warning: #facc15;            /* Avertissement */
-  --color-warning-bg: #fef9c3;
-  --color-error: #ef4444;              /* Erreur */
-  --color-error-bg: #ffe7e7;
-  --color-info: #a480d1;               /* Info = violet secondaire */
-  --color-info-bg: #f5f0fc;            /* Fond info, violet très clair */
-
-  /* ---- Autres ---- */
-  --color-blue-dark: #1e40af;          /* Ancienne palette bleu, gardée pour compat éventuelle */
-  --color-blue-light: #93c5fd;
-  --color-grey-light: #f1f5f9;         /* Gris très clair pour backgrounds */
-}
-
-
+/* ── Animations ──────────────────────────────────────────── */
 @keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.25s ease-out;
-}
+.animate-fade-in-up { animation: fade-in-up 0.25s ease-out; }
 
 @keyframes toast-in {
   from { opacity: 0; transform: translateY(10px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 @keyframes toast-out {
   from { opacity: 1; transform: translateY(0) scale(1); }
-  to { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to   { opacity: 0; transform: translateY(10px) scale(0.98); }
 }
-.animate-toast-in { animation: toast-in 0.2s ease-out forwards; }
-.animate-toast-out { animation: toast-out 0.2s ease-in forwards; }
+.animate-toast-in  { animation: toast-in  0.2s ease-out forwards; }
+.animate-toast-out { animation: toast-out 0.2s ease-in  forwards; }
 
 @keyframes fadeIn {
   from { opacity: 0; }
-  to { opacity: 1; }
+  to   { opacity: 1; }
 }
-
 @keyframes slideUp {
-  from { 
-    opacity: 0; 
-    transform: translateY(20px) scale(0.95); 
-  }
-  to { 
-    opacity: 1; 
-    transform: translateY(0) scale(1); 
-  }
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
 }
-
-.animate-fadeIn {
-  animation: fadeIn 0.3s ease-out;
-}
-
-.animate-slideUp {
-  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
+.animate-fadeIn  { animation: fadeIn  0.3s ease-out; }
+.animate-slideUp { animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }

@@ -1,13 +1,13 @@
-import { useMemo, useState, type ChangeEvent, type FormEvent, type KeyboardEvent } from "react";
+import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { createLoginUserUsecase } from "@/application/usecases/LoginUser/LoginUser";
 import type { LoginRequest } from "@/application/usecases/LoginUser/LoginUser.types";
 import { HttpLoginUserGateway } from "@/infrastructure/http/loginUserGateway";
 import { useToast } from "@/ui/components/common/Toast";
-import { Button } from "@/ui/components/common/Button/Button";
-import { Checkbox } from "@/ui/components/common/Checkbox/Checkbox";
-import { FormField } from "@/ui/components/common/FormField/FormField";
-import { Input } from "@/ui/components/common/Input/Input";
+import { Button } from "@/ui/components/ui/button";
+import { Input } from "@/ui/components/ui/input";
+import { Label } from "@/ui/components/ui/label";
+import { Checkbox } from "@/ui/components/ui/checkbox";
 import { PasswordInput } from "@/ui/components/common/PasswordInput/PasswordInput";
 
 const INITIAL_VALUES = {
@@ -33,22 +33,9 @@ export function LoginForm() {
     setFormValues((prev) => ({ ...prev, [name]: value }) as FormValues);
   };
 
-  const handleRememberChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { checked } = event.target;
-    setFormValues((prev) => ({ ...prev, remember: checked }) as FormValues);
-  };
-
-  const handleRememberKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      setFormValues((prev) => ({ ...prev, remember: !prev.remember }) as FormValues);
-    }
-  };
-
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFeedback(null);
-
     setStatus("loading");
 
     const payload: LoginRequest = {
@@ -67,26 +54,21 @@ export function LoginForm() {
         "success"
       );
 
-      // En prod, si on a un slug, rediriger vers slug.stock-s.fr/dashboard?token=xxx
       const baseDomain = import.meta.env.VITE_BASE_DOMAIN;
-      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-
-      console.log('[LoginForm] Login réussi — url:', window.location.href, '| slug:', result.slug, '| baseDomain:', baseDomain, '| isLocalhost:', isLocalhost);
+      const isLocalhost =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1";
 
       if (result.slug && baseDomain && !isLocalhost) {
         const targetUrl = `https://${result.slug}.${baseDomain}/dashboard?token=${result.token}`;
-        console.log('[LoginForm] Nettoyage localStorage de stock-s.fr...');
-        // Ne pas garder le token sur stock-s.fr — l'app vit sur le sous-domaine
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('auth_firstname');
-        localStorage.removeItem('auth_lastname');
-        localStorage.removeItem('auth_email');
-        localStorage.removeItem('commerce_id');
-        localStorage.removeItem('commerce_slug');
-        console.log('[LoginForm] Redirect vers:', targetUrl);
+        localStorage.removeItem("auth_token");
+        localStorage.removeItem("auth_firstname");
+        localStorage.removeItem("auth_lastname");
+        localStorage.removeItem("auth_email");
+        localStorage.removeItem("commerce_id");
+        localStorage.removeItem("commerce_slug");
         window.location.href = targetUrl;
       } else {
-        console.log('[LoginForm] Pas de redirect sous-domaine, navigate vers /dashboard');
         navigate("/dashboard", { replace: true });
       }
     } catch (error) {
@@ -98,20 +80,34 @@ export function LoginForm() {
   };
 
   return (
-    <form className="space-y-4 sm:space-y-5" onSubmit={handleSubmit}>
-      <Input
-        id="email"
-        name="email"
-        type="email"
-        label="Email adress"
-        autoComplete="email"
-        placeholder="you@example.com"
-        value={formValues.email}
-        onChange={handleInputChange}
-        required
-      />
+    <form className="space-y-4" onSubmit={handleSubmit}>
 
-      <FormField label="Password">
+      {/* Email */}
+      <div className="space-y-1.5">
+        <Label htmlFor="email">Adresse e-mail</Label>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          autoComplete="email"
+          placeholder="vous@exemple.com"
+          value={formValues.email}
+          onChange={handleInputChange}
+          required
+        />
+      </div>
+
+      {/* Password */}
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between">
+          <Label htmlFor="password">Mot de passe</Label>
+          <a
+            href="#"
+            className="text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--primary))] transition-colors"
+          >
+            Mot de passe oublié ?
+          </a>
+        </div>
         <PasswordInput
           id="password"
           name="password"
@@ -121,32 +117,46 @@ export function LoginForm() {
           onChange={handleInputChange}
           required
         />
-      </FormField>
+      </div>
 
-      <Checkbox
-        id="remember"
-        name="remember"
-        label="Remember me"
-        className="pt-2"
-        checked={formValues.remember}
-        onChange={handleRememberChange}
-        onKeyDown={handleRememberKeyDown}
-      />
+      {/* Remember me */}
+      <div className="flex items-center gap-2">
+        <Checkbox
+          id="remember"
+          checked={formValues.remember}
+          onCheckedChange={(checked) =>
+            setFormValues((prev) => ({ ...prev, remember: !!checked }))
+          }
+        />
+        <Label
+          htmlFor="remember"
+          className="text-sm font-normal text-[hsl(var(--muted-foreground))] cursor-pointer"
+        >
+          Se souvenir de moi
+        </Label>
+      </div>
 
+      {/* Feedback */}
       {feedback && (
         <p
-          className={`text-sm ${status === "error" ? "text-red-600" : "text-emerald-600"
-            }`}
+          className={`text-sm ${
+            status === "error"
+              ? "text-[hsl(var(--destructive))]"
+              : "text-[hsl(142,71%,45%)]"
+          }`}
         >
           {feedback}
         </p>
       )}
 
-      <Button type="submit" fullWidth className="mt-2 sm:mt-3" disabled={status === "loading"}>
-        {status === "loading" ? "Processing..." : "Log in"}
+      {/* Submit */}
+      <Button
+        type="submit"
+        className="w-full"
+        disabled={status === "loading"}
+      >
+        {status === "loading" ? "Connexion en cours…" : "Se connecter"}
       </Button>
     </form>
   );
 }
-
-
