@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import {
   FiSearch, FiRefreshCw, FiPlus, FiMail, FiPhone, FiTrash2, FiEdit2,
-  FiUser, FiCalendar, FiFilter, FiX, FiCheck, FiAlertTriangle,
+  FiUser, FiCalendar, FiX, FiCheck, FiAlertTriangle,
 } from "react-icons/fi";
 import { userService } from "@/infrastructure/api/services/userService";
 import { orderService } from "@/infrastructure/api/services/orderService";

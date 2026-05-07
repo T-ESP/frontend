@@ -66,14 +66,6 @@ export function TopProducts({ products }: TopProductsProps) {
       });
   }, [products, sortBy, filterText, t]);
 
-  const getSortLabel = (sort: SortOption) => {
-    switch (sort) {
-      case 'stock': return t('dashboard.top_products.stock');
-      case 'price': return t('dashboard.top_products.value');
-      case 'name': return t('dashboard.top_products.name');
-    }
-  };
-
   const handleClick = (name: string, id: string | number) => {
     navigate(`/inventory?search=${encodeURIComponent(name)}&productId=${id}`);
   };

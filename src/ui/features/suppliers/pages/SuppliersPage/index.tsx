@@ -176,8 +176,8 @@ export default function SuppliersPage() {
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
   const [profileSupplier, setProfileSupplier] = useState<Supplier | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortField, setSortField] = useState<'name_sup' | 'email_sup' | 'phone_sup'>('name_sup');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const sortField: 'name_sup' | 'email_sup' | 'phone_sup' = 'name_sup';
+  const sortDirection: 'asc' | 'desc' = 'asc';
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
@@ -204,11 +204,6 @@ export default function SuppliersPage() {
   const handleDelete = (supplier: Supplier) => {
     setSelectedSupplier(supplier);
     setShowDeleteModal(true);
-  };
-
-  const handleSort = (field: 'name_sup' | 'email_sup' | 'phone_sup') => {
-    if (sortField === field) setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-    else { setSortField(field); setSortDirection('asc'); }
   };
 
   const filteredAndSortedSuppliers = useMemo(() => {

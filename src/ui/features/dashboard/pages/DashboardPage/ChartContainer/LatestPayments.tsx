@@ -1,11 +1,9 @@
 import { useState } from "react";
 import type { Order } from "@/domain/models/Order";
 import type { User } from "@/domain/models/User";
-import { MoreHorizontal, ChevronLeft, ChevronRight } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export function LatestPayments({ orders, users }: { orders: Order[], users: User[] }) {
-  const { t } = useTranslation();
   const [filter, setFilter] = useState("");
 
   const recentOrders = [...orders]
@@ -60,7 +58,7 @@ export function LatestPayments({ orders, users }: { orders: Order[], users: User
               const defaultNames = ["Kenneth Thompson", "Abraham Lincoln", "Monserrat Rodriguez", "Silas Johnson", "Carmella DeVito"];
               const defaultEmails = ["ken99@yahoo.com", "abe45@gmail.com", "monserrat44@gmail.com", "silas22@gmail.com", "carmella@hotmail.com"];
 
-              const name = user?.name || defaultNames[idx % defaultNames.length];
+              const name = user ? `${user.firstname} ${user.lastname}` : defaultNames[idx % defaultNames.length];
               const email = user?.email || defaultEmails[idx % defaultEmails.length];
               const status = getMockStatus(idx);
 
