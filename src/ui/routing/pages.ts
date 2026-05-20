@@ -22,6 +22,7 @@ export const PAGES = {
   Team: lazy(() => import("@/ui/features/team/pages/TeamPage")),
   Settings: lazy(() => import("@/ui/features/settings/pages/SettingsPage")),
   Profile: lazy(() => import("@/ui/features/profile/pages/ProfilePage")),
+  Loyalty: lazy(() => import("@/ui/features/loyalty/pages/LoyaltyPage")),
   Logout: lazy(() => import("@/ui/features/auth/pages/LogoutPage")),
   Demo: lazy(() => import("@/ui/features/home/pages/Demo")),
 };

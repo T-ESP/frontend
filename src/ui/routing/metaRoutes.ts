@@ -121,6 +121,15 @@ export const ROUTES: Record<string, RouteMeta> = {
     roles: ['admin', 'manager'],
     title: 'StockS - Team',
   },
+  LOYALTY: {
+    path: '/loyalty',
+    label: 'Loyalty',
+    page: 'Loyalty',
+    layout: 'app',
+    restricted: true,
+    roles: ['admin', 'manager'],
+    title: 'StockS - Loyalty Program',
+  },
   SETTINGS: {
     path: '/settings',
     label: 'Settings',
