@@ -103,15 +103,6 @@ export const ROUTES: Record<string, RouteMeta> = {
     roles: ['admin', 'manager'],
     title: 'StockS - Orders',
   },
-  AI_ASSISTANT: {
-    path: '/ai-assistant',
-    label: 'AI Assistant',
-    page: 'AIAssistant',
-    layout: 'app',
-    restricted: true,
-    roles: ['admin', 'manager'],
-    title: 'StockS - AI Assistant',
-  },
   TEAM: {
     path: '/team',
     label: 'Team',
