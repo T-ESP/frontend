@@ -2,6 +2,7 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import { FiFilter } from "react-icons/fi";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 import type { Product } from "@/domain/models/Product";
+import { productKpisService } from "@/infrastructure/api/services/productKpisService";
 import type { TopProduct } from "../../../types/dashboard.types";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +20,10 @@ export function TopProducts({ products }: TopProductsProps) {
   const [showFilter, setShowFilter] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
   const [filterText, setFilterText] = useState("");
+  // Real product ratings derived from the backend global_score (0-100 -> 0-5).
+  // Cached by product id so re-sorting/filtering doesn't refetch known scores.
+  const [scores, setScores] = useState<Map<number, number>>(new Map());
+  const scoreCacheRef = useRef<Map<number, number>>(new Map());
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -31,8 +36,8 @@ export function TopProducts({ products }: TopProductsProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const topProducts = useMemo<TopProduct[]>(() => {
-    let sorted = [...products].filter(p => p.name.toLowerCase().includes(filterText.toLowerCase()));
+  const visibleProducts = useMemo<Product[]>(() => {
+    const sorted = [...products].filter(p => p.name.toLowerCase().includes(filterText.toLowerCase()));
 
     switch (sortBy) {
       case 'stock':
@@ -46,25 +51,55 @@ export function TopProducts({ products }: TopProductsProps) {
         break;
     }
 
-    return sorted
-      .slice(0, 10)
-      .map((product, index) => {
-        const totalValue = product.buying_price * product.stock_quantity;
-        return {
-          id: product.id,
-          name: product.name,
-          image: `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name)}&background=random&size=80`,
-          sales: product.stock_quantity,
-          revenue: new Intl.NumberFormat('fr-FR', {
-            style: 'currency',
-            currency: 'EUR',
-          }).format(totalValue),
-          trend: product.stock_quantity > 50 ? "up" : "down" as "up" | "down",
-          change: `${product.stock_quantity} ${t('common.units')}`,
-          rating: 4.5 + (index * 0.1),
-        };
+    return sorted.slice(0, 10);
+  }, [products, sortBy, filterText]);
+
+  // Fetch the global_score for the products currently displayed (only the ones
+  // not already cached) and expose them as the rating source.
+  useEffect(() => {
+    let cancelled = false;
+    const ids = visibleProducts.map(p => p.id);
+    const missing = ids.filter(id => !scoreCacheRef.current.has(id));
+
+    if (missing.length === 0) {
+      setScores(new Map(scoreCacheRef.current));
+      return;
+    }
+
+    Promise.allSettled(missing.map(id => productKpisService.getScoringClassification(id)))
+      .then(results => {
+        if (cancelled) return;
+        results.forEach((result, i) => {
+          if (result.status === 'fulfilled') {
+            scoreCacheRef.current.set(missing[i], result.value.global_score);
+          }
+        });
+        setScores(new Map(scoreCacheRef.current));
       });
-  }, [products, sortBy, filterText, t]);
+
+    return () => { cancelled = true; };
+  }, [visibleProducts]);
+
+  const topProducts = useMemo<TopProduct[]>(() => {
+    return visibleProducts.map((product) => {
+      const totalValue = product.buying_price * product.stock_quantity;
+      const score = scores.get(product.id);
+      return {
+        id: product.id,
+        name: product.name,
+        image: `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name)}&background=random&size=80`,
+        sales: product.stock_quantity,
+        revenue: new Intl.NumberFormat('fr-FR', {
+          style: 'currency',
+          currency: 'EUR',
+        }).format(totalValue),
+        trend: product.stock_quantity > 50 ? "up" : "down" as "up" | "down",
+        change: `${product.stock_quantity} ${t('common.units')}`,
+        // global_score is bounded 0-100 server-side; /20 keeps the rating within 0-5.
+        rating: score != null ? Math.min(5, score / 20) : 0,
+      };
+    });
+  }, [visibleProducts, scores, t]);
 
   const handleClick = (name: string, id: string | number) => {
     navigate(`/inventory?search=${encodeURIComponent(name)}&productId=${id}`);
@@ -137,7 +172,7 @@ export function TopProducts({ products }: TopProductsProps) {
                  <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}><input type="checkbox" className="rounded border-gray-300 w-4 h-4 cursor-pointer" /></td>
                  <td className="px-6 py-4 font-medium text-gray-900">{product.name}</td>
                  <td className="px-6 py-4 text-gray-500">{product.sales.toLocaleString()}</td>
-                 <td className="px-6 py-4 font-medium text-gray-900">{product.rating.toFixed(1)} / 5</td>
+                 <td className="px-6 py-4 font-medium text-gray-900">{scores.has(product.id) ? `${product.rating.toFixed(1)} / 5` : '—'}</td>
                  <td className="px-6 py-4 font-medium text-gray-900">{product.revenue}</td>
                  <td className="px-6 py-4">
                    <span className={`px-3 py-0.5 text-[12px] font-medium rounded-full border ${getBadgeClass(product.trend)}`}>
