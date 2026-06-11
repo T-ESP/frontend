@@ -58,4 +58,10 @@ export const API_ENDPOINTS = {
   kpis: {
     topFlop: '/kpis/top-flop',
   },
+  loyalty: {
+    getConfig: '/loyalty/config',
+    updateConfig: '/loyalty/config',
+    getUserStats: (userId: number) => `/loyalty/users/${userId}`,
+    adjustPoints: (userId: number) => `/loyalty/users/${userId}/points`,
+  },
 } as const;

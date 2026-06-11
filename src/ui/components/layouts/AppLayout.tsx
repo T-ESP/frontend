@@ -6,6 +6,7 @@ import { HomeHeader } from '@/ui/components/layouts/HomeHeader';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { usePageTitle } from '@/ui/hooks/usePageTitle';
+import { FloatingChat } from '@/ui/components/FloatingChat/FloatingChat';
 
 type AppLayoutProps = {
   children?: ReactNode;
@@ -27,6 +28,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             {children ?? <Outlet />}
           </div>
         </SidebarInset>
+        <FloatingChat />
       </SidebarProvider>
     </TooltipProvider>
   );

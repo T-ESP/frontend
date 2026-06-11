@@ -39,6 +39,7 @@
         "pricing_news": "Prix & Actualités",
         "suppliers": "Fournisseurs",
         "ai_assistant": "Assistant IA",
+        "loyalty": "Fidélité",
         "team": "Équipe",
         "settings": "Paramètres",
         "logout": "Déconnexion",
@@ -55,7 +56,7 @@
         "kpi": {
             "total_revenue": "Revenu Total",
             "revenue_evolution": "Évolution du Revenu",
-            "total_orders": "Commandes Totales",
+            "total_orders": "Commandes totales",
             "total_products": "Produits Totaux",
             "total_users": "Utilisateurs Totaux",
             "low_stock": "Produits en stock faible",
@@ -628,7 +629,7 @@
         },
         "stats": {
             "total_revenue": "Revenu Total",
-            "total_orders": "Commandes Totales",
+            "total_orders": "Commandes totales",
             "avg_basket": "Panier Moyen",
             "revenue_growth": "Croissance Revenu",
             "last_30_days": "30 derniers jours",

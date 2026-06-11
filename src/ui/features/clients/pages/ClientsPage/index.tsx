@@ -1,7 +1,9 @@
-import { useState } from "react";
-import { FiMessageSquare, FiUserPlus, FiSearch, FiMail, FiPhone, FiDownload, FiRefreshCw, FiMoreVertical } from "react-icons/fi";
+import { useState, useEffect } from "react";
+import { FiMessageSquare, FiUserPlus, FiSearch, FiMail, FiPhone, FiDownload, FiRefreshCw, FiMoreVertical, FiGift, FiPlus, FiMinus } from "react-icons/fi";
 import { KpiStatCard, topNDistribution } from "@/ui/components/common/KpiStatCard/KpiStatCard";
 import { Input } from "@/components/ui/input";
+import { loyaltyService } from "@/infrastructure/api/services/loyaltyService";
+import type { LoyaltyUserStats } from "@/domain/models/Loyalty";
 
 const mockClients = [
   {
@@ -66,14 +68,41 @@ const mockClients = [
   },
 ];
 
+interface AdjustModalState {
+  clientId: number;
+  clientName: string;
+  currentPoints: number;
+}
+
 export default function ClientsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
+  const [loyaltyStats, setLoyaltyStats] = useState<Record<number, LoyaltyUserStats>>({});
+  const [adjustModal, setAdjustModal] = useState<AdjustModalState | null>(null);
+  const [adjustAmount, setAdjustAmount] = useState("");
+  const [adjustReason, setAdjustReason] = useState("");
+  const [adjusting, setAdjusting] = useState(false);
+  const [adjustError, setAdjustError] = useState<string | null>(null);
 
-  const filteredClients = mockClients.filter(client => {
-    const matchesSearch = client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  useEffect(() => {
+    mockClients.forEach((client) => {
+      loyaltyService
+        .getUserStats(client.id)
+        .then((stats) =>
+          setLoyaltyStats((prev) => ({ ...prev, [client.id]: stats }))
+        )
+        .catch(() => {
+          // silently ignore if loyalty stats unavailable for a client
+        });
+    });
+  }, []);
+
+  const filteredClients = mockClients.filter((client) => {
+    const matchesSearch =
+      client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       client.email.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = selectedStatus === "All Status" || client.status === selectedStatus;
+    const matchesStatus =
+      selectedStatus === "All Status" || client.status === selectedStatus;
     return matchesSearch && matchesStatus;
   });
 
@@ -83,6 +112,40 @@ export default function ClientsPage() {
   const totalSpent = mockClients.reduce((s, c) => s + c.totalSpent, 0);
   const formatCurrency = (v: number) =>
     new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(v);
+
+  const openAdjustModal = (client: typeof mockClients[0]) => {
+    setAdjustModal({
+      clientId: client.id,
+      clientName: client.name,
+      currentPoints: loyaltyStats[client.id]?.points ?? 0,
+    });
+    setAdjustAmount("");
+    setAdjustReason("");
+    setAdjustError(null);
+  };
+
+  const handleAdjustPoints = async () => {
+    if (!adjustModal) return;
+    const pts = parseInt(adjustAmount, 10);
+    if (isNaN(pts) || pts === 0) {
+      setAdjustError("Enter a non-zero integer (positive to add, negative to deduct).");
+      return;
+    }
+    setAdjusting(true);
+    setAdjustError(null);
+    try {
+      const updated = await loyaltyService.adjustPoints(adjustModal.clientId, {
+        points: pts,
+        reason: adjustReason || undefined,
+      });
+      setLoyaltyStats((prev) => ({ ...prev, [adjustModal.clientId]: updated }));
+      setAdjustModal(null);
+    } catch {
+      setAdjustError("Failed to adjust points. Please try again.");
+    } finally {
+      setAdjusting(false);
+    }
+  };
 
   return (
     <div className="p-4 md:p-8 space-y-6">
@@ -178,65 +241,190 @@ export default function ClientsPage() {
 
       {/* Clients List */}
       <div className="space-y-3">
-        {filteredClients.map((client) => (
-          <div
-            key={client.id}
-            className="transition-all duration-300 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md hover:border-l-4 hover:border-l-purple-500 group"
-          >
-            <div className="flex items-center gap-4 p-4">
-              <img
-                src={client.avatar}
-                alt={client.name}
-                className="w-12 h-12 border-2 border-gray-200 rounded-full"
-              />
+        {filteredClients.map((client) => {
+          const loyalty = loyaltyStats[client.id];
+          return (
+            <div
+              key={client.id}
+              className="transition-all duration-300 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md hover:border-l-4 hover:border-l-purple-500 group"
+            >
+              <div className="flex items-center gap-4 p-4">
+                <img
+                  src={client.avatar}
+                  alt={client.name}
+                  className="w-12 h-12 border-2 border-gray-200 rounded-full"
+                />
 
-              <div className="flex-1 min-w-0">
-                <h3 className="text-base font-bold leading-tight text-gray-900 transition-colors group-hover:text-purple-600">
-                  {client.name}
-                </h3>
-                <div className="flex items-center gap-3 mt-1">
-                  <div className="flex items-center gap-1.5 text-gray-600">
-                    <FiMail className="w-3.5 h-3.5 text-gray-400" />
-                    <span className="text-sm">{client.email}</span>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base font-bold leading-tight text-gray-900 transition-colors group-hover:text-purple-600">
+                    {client.name}
+                  </h3>
+                  <div className="flex items-center gap-3 mt-1">
+                    <div className="flex items-center gap-1.5 text-gray-600">
+                      <FiMail className="w-3.5 h-3.5 text-gray-400" />
+                      <span className="text-sm">{client.email}</span>
+                    </div>
+                    <span className="text-gray-300">•</span>
+                    <div className="flex items-center gap-1.5 text-gray-600">
+                      <FiPhone className="w-3.5 h-3.5 text-gray-400" />
+                      <span className="text-sm">{client.phone}</span>
+                    </div>
                   </div>
-                  <span className="text-gray-300">•</span>
-                  <div className="flex items-center gap-1.5 text-gray-600">
-                    <FiPhone className="w-3.5 h-3.5 text-gray-400" />
-                    <span className="text-sm">{client.phone}</span>
-                  </div>
+                  {loyalty && (
+                    <div className="flex items-center gap-2 mt-1.5">
+                      <span className="text-xs text-purple-600 font-mono bg-purple-50 px-2 py-0.5 rounded">
+                        {loyalty.fidelity_code}
+                      </span>
+                    </div>
+                  )}
                 </div>
-              </div>
 
-              <div className="flex items-center gap-6">
-                <div className="text-center min-w-20">
-                  <p className="text-lg font-bold text-gray-900">{client.orders}</p>
-                  <p className="text-xs text-gray-500">Orders</p>
+                <div className="flex items-center gap-6">
+                  <div className="text-center min-w-20">
+                    <p className="text-lg font-bold text-gray-900">{client.orders}</p>
+                    <p className="text-xs text-gray-500">Orders</p>
+                  </div>
+                  <div className="text-center min-w-25">
+                    <p className="text-lg font-bold text-gray-900">{client.totalSpent.toLocaleString()} €</p>
+                    <p className="text-xs text-gray-500">Total Spent</p>
+                  </div>
+
+                  {/* Loyalty points */}
+                  <div className="text-center min-w-20">
+                    <div className="flex items-center justify-center gap-1">
+                      <FiGift className="w-3.5 h-3.5 text-purple-400" />
+                      <p className="text-lg font-bold text-purple-700">
+                        {loyalty !== undefined ? loyalty.points.toLocaleString() : "—"}
+                      </p>
+                    </div>
+                    <p className="text-xs text-gray-500">Points</p>
+                  </div>
+
+                  <span
+                    className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${
+                      client.status === "VIP"
+                        ? "bg-amber-50 text-amber-700 border border-amber-200"
+                        : client.status === "Active"
+                        ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                        : "bg-gray-50 text-gray-700 border border-gray-200"
+                    }`}
+                  >
+                    {client.status === "VIP" && "⭐ "}
+                    {client.status}
+                  </span>
+                  <button
+                    onClick={() => openAdjustModal(client)}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-purple-600 transition-colors rounded-lg bg-purple-50 hover:bg-purple-100"
+                    title="Adjust loyalty points"
+                  >
+                    <FiGift className="w-4 h-4" />
+                    Points
+                  </button>
+                  <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-purple-600 transition-colors rounded-lg bg-purple-50 hover:bg-purple-100">
+                    <FiMessageSquare className="w-4 h-4" />
+                    Message
+                  </button>
+                  <button className="p-2 text-gray-600 transition-colors rounded-lg hover:bg-gray-100">
+                    <FiMoreVertical className="w-5 h-5" />
+                  </button>
                 </div>
-                <div className="text-center min-w-25">
-                  <p className="text-lg font-bold text-gray-900">{client.totalSpent.toLocaleString()} €</p>
-                  <p className="text-xs text-gray-500">Total Spent</p>
-                </div>
-                <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${client.status === 'VIP'
-                  ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                  : client.status === 'Active'
-                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                    : 'bg-gray-50 text-gray-700 border border-gray-200'
-                  }`}>
-                  {client.status === 'VIP' && '⭐ '}
-                  {client.status}
-                </span>
-                <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-purple-600 transition-colors rounded-lg bg-purple-50 hover:bg-purple-100">
-                  <FiMessageSquare className="w-4 h-4" />
-                  Message
-                </button>
-                <button className="p-2 text-gray-600 transition-colors rounded-lg hover:bg-gray-100">
-                  <FiMoreVertical className="w-5 h-5" />
-                </button>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
+
+      {/* Adjust Points Modal */}
+      {adjustModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-6">
+            <h4 className="text-lg font-bold text-gray-900 mb-1">Adjust Loyalty Points</h4>
+            <p className="text-sm text-gray-500 mb-5">
+              {adjustModal.clientName} — current balance:{" "}
+              <strong className="text-purple-700">{adjustModal.currentPoints} pts</strong>
+            </p>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Points adjustment
+                </label>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setAdjustAmount((prev) => {
+                        const n = parseInt(prev || "0", 10);
+                        return String(Math.abs(n) > 0 ? -Math.abs(n) : n);
+                      })
+                    }
+                    className="flex items-center justify-center w-10 h-10 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition-colors shrink-0"
+                    title="Deduct points"
+                  >
+                    <FiMinus className="w-4 h-4" />
+                  </button>
+                  <input
+                    type="number"
+                    value={adjustAmount}
+                    onChange={(e) => setAdjustAmount(e.target.value)}
+                    placeholder="e.g. 50 to add, -20 to deduct"
+                    className="flex-1 px-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setAdjustAmount((prev) => {
+                        const n = parseInt(prev || "0", 10);
+                        return String(Math.abs(n));
+                      })
+                    }
+                    className="flex items-center justify-center w-10 h-10 border border-emerald-200 text-emerald-600 rounded-lg hover:bg-emerald-50 transition-colors shrink-0"
+                    title="Add points"
+                  >
+                    <FiPlus className="w-4 h-4" />
+                  </button>
+                </div>
+                <p className="text-xs text-gray-400 mt-1">Positive number adds points, negative deducts.</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Reason <span className="text-gray-400 font-normal">(optional)</span>
+                </label>
+                <input
+                  type="text"
+                  value={adjustReason}
+                  onChange={(e) => setAdjustReason(e.target.value)}
+                  placeholder="e.g. Birthday bonus, correction..."
+                  className="w-full px-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all"
+                />
+              </div>
+
+              {adjustError && (
+                <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                  {adjustError}
+                </p>
+              )}
+            </div>
+
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => setAdjustModal(null)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAdjustPoints}
+                disabled={adjusting}
+                className="px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {adjusting ? "Saving..." : "Confirm"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

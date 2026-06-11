@@ -8,7 +8,7 @@ import {
   useEffect,
 } from "react";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-import { X } from "lucide-react";
+import { X, CheckCircle, AlertCircle, Info } from "lucide-react";
 
 type ToastType = "success" | "error" | "info";
 
@@ -29,11 +29,13 @@ type ToastContextType = {
   ) => void;
 };
 
+const MAX_TOASTS = 3;
+
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
-  const refMap = useRef(new Map<string, HTMLDivElement | null>()); // Map de refs DOM
+  const refMap = useRef(new Map<string, HTMLDivElement | null>());
 
   const removeToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -45,10 +47,14 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       title: string,
       description?: string,
       type: ToastType = "info",
-      duration = 10000
+      duration = 5000
     ) => {
       const id = Math.random().toString(36).slice(2, 9);
-      setToasts((prev) => [...prev, { id, title, description, type, duration }]);
+      setToasts((prev) => {
+        const next = [...prev, { id, title, description, type, duration }];
+        // Keep only the last MAX_TOASTS, drop the oldest
+        return next.slice(-MAX_TOASTS);
+      });
     },
     []
   );
@@ -56,23 +62,18 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={{ addToast }}>
       {children}
-
-      <div className="fixed top-4 right-4 z-50 flex flex-col gap-3">
+      <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2 items-end">
         <TransitionGroup>
           {toasts.map((t) => (
             <CSSTransition
               key={t.id}
-              nodeRef={{
-                current: refMap.current.get(t.id) ?? null,
-              }}
-              timeout={200}
+              nodeRef={{ current: refMap.current.get(t.id) ?? null }}
+              timeout={180}
               classNames="toast"
               unmountOnExit
             >
               <div
-                ref={(el) => {
-                  refMap.current.set(t.id, el);
-                }}
+                ref={(el) => { refMap.current.set(t.id, el); }}
                 className="toast-wrapper"
               >
                 <ToastItem toast={t} onRemove={() => removeToast(t.id)} />
@@ -85,15 +86,32 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   );
 }
 
+const CONFIG: Record<ToastType, { icon: typeof CheckCircle; accent: string; iconClass: string }> = {
+  success: {
+    icon: CheckCircle,
+    accent: "bg-emerald-500",
+    iconClass: "text-emerald-500",
+  },
+  error: {
+    icon: AlertCircle,
+    accent: "bg-red-500",
+    iconClass: "text-red-500",
+  },
+  info: {
+    icon: Info,
+    accent: "bg-gray-900",
+    iconClass: "text-gray-500",
+  },
+};
+
 function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: () => void }) {
   const { title, description, type, duration } = toast;
   const [progress, setProgress] = useState(100);
+  const { icon: Icon, accent, iconClass } = CONFIG[type];
 
-  // Timer indépendant par toast
   useEffect(() => {
     const start = Date.now();
     let raf: number;
-
     const tick = () => {
       const elapsed = Date.now() - start;
       const pct = Math.max(100 - (elapsed / duration) * 100, 0);
@@ -104,33 +122,37 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: () => void }) 
         raf = requestAnimationFrame(tick);
       }
     };
-
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [duration, onRemove]);
 
-  const color =
-    type === "success" ? "bg-green-500" : type === "error" ? "bg-red-500" : "bg-blue-500";
-
   return (
-    <div className="relative w-80 rounded-md shadow-md bg-white border border-neutral-200 overflow-hidden">
-      <div
-        className={`h-1 ${color}`}
-        style={{ width: `${progress}%`, transition: "width 100ms linear" }}
-      />
-      <div className="p-4 flex justify-between">
-        <div>
-          <h3 className="text-sm font-semibold">{title}</h3>
+    <div className="relative w-72 bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden">
+      {/* Left accent bar */}
+      <div className={`absolute left-0 top-0 bottom-0 w-[3px] ${accent}`} />
+
+      <div className="flex items-start gap-3 px-4 py-3 pl-5">
+        <Icon className={`w-4 h-4 mt-0.5 shrink-0 ${iconClass}`} />
+        <div className="flex-1 min-w-0">
+          <p className="text-[13px] font-semibold text-gray-900 leading-snug">{title}</p>
           {description && (
-            <p className="mt-1 text-sm text-neutral-600">{description}</p>
+            <p className="mt-0.5 text-[12px] text-gray-500 leading-snug">{description}</p>
           )}
         </div>
         <button
           onClick={onRemove}
-          className="ml-2 text-neutral-500 hover:text-neutral-800 transition-colors"
+          className="shrink-0 text-gray-400 hover:text-gray-700 transition-colors mt-0.5"
         >
-          <X size={16} />
+          <X size={14} />
         </button>
+      </div>
+
+      {/* Progress bar at bottom */}
+      <div className="h-[2px] bg-gray-100">
+        <div
+          className={`h-full ${accent} transition-none`}
+          style={{ width: `${progress}%` }}
+        />
       </div>
     </div>
   );
