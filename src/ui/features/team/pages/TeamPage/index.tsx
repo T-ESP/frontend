@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { userService } from '@/infrastructure/api/services/userService';
 import type { User } from '@/domain/models/User';
 import { Edit, Trash2, Plus, User as UserIcon, RefreshCw, Search, X, Download, Users as UsersIcon, Phone, UserCheck, UserX } from 'lucide-react';
@@ -49,6 +50,7 @@ function SortableHead({
 }
 
 export default function TeamPage() {
+  const { t } = useTranslation();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -158,9 +160,9 @@ export default function TeamPage() {
 
   if (loading) {
     return (
-      <PageLayout title="Team Management" icon={<UsersIcon size={28} />}>
+      <PageLayout title={t('team.members.title')} icon={<UsersIcon size={28} />}>
         <div className="flex items-center justify-center min-h-100">
-          <div className="text-xl">Loading team...</div>
+          <div className="text-xl">{t('team.members.loading')}</div>
         </div>
       </PageLayout>
     );
@@ -168,16 +170,16 @@ export default function TeamPage() {
 
   if (error) {
     return (
-      <PageLayout title="Team Management" icon={<UsersIcon size={28} />}>
+      <PageLayout title={t('team.members.title')} icon={<UsersIcon size={28} />}>
         <div className="flex items-center justify-center min-h-100">
           <div className="text-red-600">
-            <h2 className="text-2xl font-bold mb-2">Error</h2>
+            <h2 className="text-2xl font-bold mb-2">{t('team.members.error_title')}</h2>
             <p>{error}</p>
             <button
               onClick={loadUsers}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              className="mt-4 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
             >
-              Retry
+              {t('team.members.retry')}
             </button>
           </div>
         </div>
@@ -186,13 +188,13 @@ export default function TeamPage() {
   }
 
   return (
-    <PageLayout title="Team Management" icon={<UsersIcon size={28} />}>
+    <PageLayout title={t('team.members.title')} icon={<UsersIcon size={28} />}>
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-white rounded-xl border border-slate-100 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-600">Total Members</p>
+              <p className="text-sm font-medium text-slate-600">{t('team.members.total')}</p>
               <p className="text-2xl font-bold text-slate-900 mt-2">{stats.total}</p>
             </div>
             <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center">
@@ -204,7 +206,7 @@ export default function TeamPage() {
         <div className="bg-white rounded-xl border border-slate-100 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-600">Active</p>
+              <p className="text-sm font-medium text-slate-600">{t('team.members.active_label')}</p>
               <p className="text-2xl font-bold text-green-600 mt-2">{stats.active}</p>
             </div>
             <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center">
@@ -216,7 +218,7 @@ export default function TeamPage() {
         <div className="bg-white rounded-xl border border-slate-100 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-600">Inactive</p>
+              <p className="text-sm font-medium text-slate-600">{t('team.members.inactive_label')}</p>
               <p className="text-2xl font-bold text-slate-500 mt-2">{stats.inactive}</p>
             </div>
             <div className="w-12 h-12 bg-slate-50 rounded-lg flex items-center justify-center">
@@ -228,7 +230,7 @@ export default function TeamPage() {
         <div className="bg-white rounded-xl border border-slate-100 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-600">With Phone</p>
+              <p className="text-sm font-medium text-slate-600">{t('team.members.with_phone')}</p>
               <p className="text-2xl font-bold text-slate-900 mt-2">{stats.withPhone}</p>
             </div>
             <div className="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center">
@@ -251,7 +253,7 @@ export default function TeamPage() {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                placeholder="Search by name, email, phone..."
+                placeholder={t('team.members.search_placeholder')}
                 className="h-10 pl-10 pr-10"
               />
               {searchQuery && (
@@ -274,21 +276,21 @@ export default function TeamPage() {
               className="flex items-center gap-2 px-4 py-2.5 text-slate-700 bg-slate-50 border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors disabled:opacity-50"
             >
               <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
-              Refresh
+              {t('team.members.refresh')}
             </button>
             <button
               onClick={handleExport}
               className="flex items-center gap-2 px-4 py-2.5 text-slate-700 bg-slate-50 border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors"
             >
               <Download size={16} />
-              Export
+              {t('team.members.export')}
             </button>
             <button
               onClick={() => setShowAddModal(true)}
-              className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
             >
               <Plus size={16} />
-              Add Member
+              {t('team.members.add')}
             </button>
           </div>
         </div>
@@ -298,14 +300,14 @@ export default function TeamPage() {
       <div className="bg-white rounded-xl border border-slate-100 overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <RefreshCw className="animate-spin text-blue-600" size={32} />
+            <RefreshCw className="animate-spin text-gray-400" size={32} />
           </div>
         ) : filteredAndSortedUsers.length === 0 ? (
           <div className="text-center py-12">
             <UserIcon className="mx-auto text-slate-400 mb-4" size={48} />
-            <p className="text-slate-600 text-lg">No members found</p>
+            <p className="text-slate-600 text-lg">{t('team.members.no_members')}</p>
             <p className="text-slate-500 text-sm mt-2">
-              {searchQuery ? 'Try adjusting your search' : 'Add a member to get started'}
+              {searchQuery ? t('team.members.try_adjusting') : t('team.members.get_started')}
             </p>
           </div>
         ) : (
@@ -313,12 +315,12 @@ export default function TeamPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <SortableHead label="ID" field="id" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} />
-                  <SortableHead label="Name" field="firstname" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} />
-                  <SortableHead label="Email" field="email" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} />
-                  <TableHead className="px-6">Phone</TableHead>
-                  <SortableHead label="Status" field="status" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} />
-                  <TableHead className="px-6">Actions</TableHead>
+                  <SortableHead label={t('team.members.table.id')} field="id" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} />
+                  <SortableHead label={t('team.members.table.name')} field="firstname" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} />
+                  <SortableHead label={t('team.members.table.email')} field="email" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} />
+                  <TableHead className="px-6">{t('team.members.table.phone')}</TableHead>
+                  <SortableHead label={t('team.members.table.status')} field="status" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} />
+                  <TableHead className="px-6">{t('team.members.table.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -341,7 +343,7 @@ export default function TeamPage() {
                             user.status === 'active' ? 'bg-emerald-500' : 'bg-muted-foreground'
                           }`}
                         />
-                        {user.status || 'active'}
+                        {user.status === 'active' ? t('team.status.active') : t('team.status.inactive')}
                       </span>
                     </TableCell>
                     <TableCell className="px-6 py-4">
@@ -350,7 +352,6 @@ export default function TeamPage() {
                           variant="ghost"
                           size="icon-sm"
                           onClick={() => handleEdit(user)}
-                          title="Edit"
                         >
                           <Edit />
                         </Button>
@@ -358,7 +359,6 @@ export default function TeamPage() {
                           variant="ghost"
                           size="icon-sm"
                           onClick={() => handleDelete(user)}
-                          title="Delete"
                           className="text-muted-foreground hover:text-destructive"
                         >
                           <Trash2 />
@@ -373,20 +373,20 @@ export default function TeamPage() {
             {/* Pagination */}
             <div className="flex items-center justify-between px-6 py-4 bg-white border-t border-slate-100 rounded-b-xl">
               <div className="flex items-center gap-2 text-sm text-slate-600">
-                <span>Show</span>
+                <span>{t('team.members.pagination.show')}</span>
                 <select
                   value={itemsPerPage}
                   onChange={(e) => setItemsPerPage(Number(e.target.value))}
-                  className="px-3 py-1.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="px-3 py-1.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>
                   <option value={50}>50</option>
                   <option value={100}>100</option>
                 </select>
-                <span>per page</span>
+                <span>{t('team.members.pagination.per_page')}</span>
                 <span className="ml-4 font-medium text-slate-900">
-                  {((currentPage - 1) * itemsPerPage) + 1} - {Math.min(currentPage * itemsPerPage, filteredAndSortedUsers.length)} of {filteredAndSortedUsers.length}
+                  {((currentPage - 1) * itemsPerPage) + 1} - {Math.min(currentPage * itemsPerPage, filteredAndSortedUsers.length)} {t('team.members.pagination.of')} {filteredAndSortedUsers.length}
                 </span>
               </div>
               <div className="flex gap-2">
@@ -395,31 +395,31 @@ export default function TeamPage() {
                   disabled={currentPage === 1}
                   className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  First
+                  {t('team.members.pagination.first')}
                 </button>
                 <button
                   onClick={() => setCurrentPage(currentPage - 1)}
                   disabled={currentPage === 1}
                   className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  Previous
+                  {t('team.members.pagination.previous')}
                 </button>
                 <span className="flex items-center px-4 py-1.5 text-sm font-medium text-slate-700">
-                  Page {currentPage} of {totalPages || 1}
+                  {t('team.members.pagination.page')} {currentPage} {t('team.members.pagination.of')} {totalPages || 1}
                 </span>
                 <button
                   onClick={() => setCurrentPage(currentPage + 1)}
                   disabled={currentPage >= totalPages}
                   className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  Next
+                  {t('team.members.pagination.next')}
                 </button>
                 <button
                   onClick={() => setCurrentPage(totalPages)}
                   disabled={currentPage >= totalPages}
                   className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  Last
+                  {t('team.members.pagination.last')}
                 </button>
               </div>
             </div>
@@ -450,5 +450,3 @@ export default function TeamPage() {
     </PageLayout>
   );
 }
-
-

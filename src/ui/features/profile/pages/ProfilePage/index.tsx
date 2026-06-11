@@ -1,12 +1,53 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff, User, LogOut, KeyRound, Mail } from "lucide-react";
 import { useToast } from "@/ui/components/common/Toast";
 import { useAuth, clearAuthToken, getAuthToken } from "@/ui/features/auth/hooks/useAuth";
-import { Button } from "@/ui/components/common/Button/Button";
-import { FormField } from "@/ui/components/common/FormField/FormField";
-import { Input } from "@/ui/components/common/Input/Input";
-import { PasswordInput } from "@/ui/components/common/PasswordInput/PasswordInput";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import PageLayout from "@/ui/components/layouts/PageLayout";
 import { useTranslation } from "react-i18next";
+
+function PasswordField({
+  id,
+  name,
+  placeholder,
+  value,
+  onChange,
+  required,
+}: {
+  id: string;
+  name: string;
+  placeholder?: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
+}) {
+  const [visible, setVisible] = useState(false);
+  return (
+    <div className="relative">
+      <Input
+        id={id}
+        name={name}
+        type={visible ? "text" : "password"}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        required={required}
+        className="pr-10"
+      />
+      <button
+        type="button"
+        onClick={() => setVisible((v) => !v)}
+        className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+        tabIndex={-1}
+      >
+        {visible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+      </button>
+    </div>
+  );
+}
 
 export default function ProfilePage() {
   const { t } = useTranslation();
@@ -14,14 +55,9 @@ export default function ProfilePage() {
   const { addToast } = useToast();
   const { isAuthenticated, firstname, lastname } = useAuth();
 
-  // État pour le changement d'email
-  const [emailForm, setEmailForm] = useState({
-    email: "",
-    confirmEmail: "",
-  });
+  const [emailForm, setEmailForm] = useState({ email: "", confirmEmail: "" });
   const [emailStatus, setEmailStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
-  // État pour le changement de mot de passe
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: "",
     newPassword: "",
@@ -29,56 +65,51 @@ export default function ProfilePage() {
   });
   const [passwordStatus, setPasswordStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setEmailForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setPasswordForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleEmailSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleEmailSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setEmailStatus("loading");
-
     if (emailForm.email !== emailForm.confirmEmail) {
       setEmailStatus("error");
       addToast(t("profile.toasts.error_title", "Erreur"), t("profile.toasts.email_mismatch", "Les adresses email ne correspondent pas."), "error");
       return;
     }
-
-    // TODO: Appeler l'API pour changer l'email
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
+    await new Promise((r) => setTimeout(r, 1000));
     setEmailStatus("success");
     addToast(t("profile.toasts.email_success_title", "Email mis à jour"), t("profile.toasts.email_success_msg", "Votre adresse email a été modifiée avec succès."), "success");
     setEmailForm({ email: "", confirmEmail: "" });
+    setEmailStatus("idle");
   };
 
-  const handlePasswordSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handlePasswordSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setPasswordStatus("loading");
-
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
       setPasswordStatus("error");
       addToast(t("profile.toasts.error_title", "Erreur"), t("profile.toasts.password_mismatch", "Les mots de passe ne correspondent pas."), "error");
+      setPasswordStatus("idle");
       return;
     }
-
     if (passwordForm.newPassword.length < 8) {
       setPasswordStatus("error");
       addToast(t("profile.toasts.error_title", "Erreur"), t("profile.toasts.password_length", "Le mot de passe doit contenir au moins 8 caractères."), "error");
+      setPasswordStatus("idle");
       return;
     }
-
-    // TODO: Appeler l'API pour changer le mot de passe
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
+    await new Promise((r) => setTimeout(r, 1000));
     setPasswordStatus("success");
     addToast(t("profile.toasts.password_success_title", "Mot de passe mis à jour"), t("profile.toasts.password_success_msg", "Votre mot de passe a été modifié avec succès."), "success");
     setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    setPasswordStatus("idle");
   };
 
   const handleLogout = () => {
@@ -87,140 +118,156 @@ export default function ProfilePage() {
     navigate("/login", { replace: true });
   };
 
-  if (!isAuthenticated) {
-    return null;
-  }
+  if (!isAuthenticated) return null;
+
+  const initials = `${firstname?.charAt(0) ?? ""}${lastname?.charAt(0) ?? ""}`.toUpperCase();
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-neutral-900">{t("profile.title", "Mon Profil")}</h1>
-        <p className="mt-2 text-sm text-neutral-600">{t("profile.subtitle", "Gérez vos informations personnelles et vos paramètres de compte.")}</p>
+    <PageLayout
+      title={t("profile.title", "Mon Profil")}
+      subtitle={t("profile.subtitle", "Gérez vos informations personnelles et vos paramètres de compte.")}
+    >
+      {/* Avatar card */}
+      <div className="bg-white border border-gray-100 rounded-xl shadow-sm p-6 flex items-center gap-5">
+        <div className="w-16 h-16 rounded-full bg-gray-900 flex items-center justify-center text-white text-xl font-bold shrink-0">
+          {initials || <User className="w-7 h-7" />}
+        </div>
+        <div>
+          <p className="text-lg font-bold text-gray-900">{firstname} {lastname}</p>
+          <p className="text-sm text-gray-500 mt-0.5">{getAuthToken() ? t("profile.security.session_active", "Session active") : t("profile.security.no", "Non connecté")}</p>
+        </div>
       </div>
 
-      {/* Informations personnelles */}
-      <section className="p-6 bg-white rounded-lg border border-neutral-200 shadow-sm">
-        <h2 className="text-xl font-semibold text-neutral-900 mb-4">{t("profile.personal_info.title", "Informations personnelles")}</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Input
-            label={t("profile.personal_info.firstname", "Prénom")}
-            value={firstname}
-            disabled
-            className="bg-neutral-50"
-          />
-          <Input
-            label={t("profile.personal_info.lastname", "Nom")}
-            value={lastname}
-            disabled
-            className="bg-neutral-50"
-          />
+      {/* Personal info */}
+      <div className="bg-white border border-gray-100 rounded-xl shadow-sm">
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100">
+          <User className="w-4 h-4 text-gray-400" />
+          <h2 className="text-base font-semibold text-gray-900">{t("profile.personal_info.title", "Informations personnelles")}</h2>
         </div>
-      </section>
+        <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <Label>{t("profile.personal_info.firstname", "Prénom")}</Label>
+            <Input value={firstname ?? ""} disabled className="bg-gray-50 text-gray-500" />
+          </div>
+          <div className="space-y-1.5">
+            <Label>{t("profile.personal_info.lastname", "Nom")}</Label>
+            <Input value={lastname ?? ""} disabled className="bg-gray-50 text-gray-500" />
+          </div>
+        </div>
+      </div>
 
-      {/* Changement d'email */}
-      <section className="p-6 bg-white rounded-lg border border-neutral-200 shadow-sm">
-        <h2 className="text-xl font-semibold text-neutral-900 mb-4">{t("profile.email.title", "Changer l'adresse email")}</h2>
-        <form onSubmit={handleEmailSubmit} className="space-y-4">
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            label={t("profile.email.new_email_label", "Nouvelle adresse email")}
-            placeholder={t("profile.email.new_email_placeholder", "nouveau@example.com")}
-            value={emailForm.email}
-            onChange={handleEmailChange}
-            required
-          />
-          <Input
-            id="confirmEmail"
-            name="confirmEmail"
-            type="email"
-            label={t("profile.email.confirm_email_label", "Confirmer l'adresse email")}
-            placeholder={t("profile.email.confirm_email_placeholder", "nouveau@example.com")}
-            value={emailForm.confirmEmail}
-            onChange={handleEmailChange}
-            required
-          />
+      {/* Change email */}
+      <div className="bg-white border border-gray-100 rounded-xl shadow-sm">
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100">
+          <Mail className="w-4 h-4 text-gray-400" />
+          <h2 className="text-base font-semibold text-gray-900">{t("profile.email.title", "Changer l'adresse email")}</h2>
+        </div>
+        <form onSubmit={handleEmailSubmit} className="p-6 space-y-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="email">{t("profile.email.new_email_label", "Nouvelle adresse email")}</Label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder={t("profile.email.new_email_placeholder", "nouveau@example.com")}
+              value={emailForm.email}
+              onChange={handleEmailChange}
+              required
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="confirmEmail">{t("profile.email.confirm_email_label", "Confirmer l'adresse email")}</Label>
+            <Input
+              id="confirmEmail"
+              name="confirmEmail"
+              type="email"
+              placeholder={t("profile.email.confirm_email_placeholder", "nouveau@example.com")}
+              value={emailForm.confirmEmail}
+              onChange={handleEmailChange}
+              required
+            />
+          </div>
           <Button
             type="submit"
             disabled={emailStatus === "loading"}
-            className="w-full sm:w-auto"
+            className="bg-gray-900 hover:bg-gray-800 text-white"
           >
             {emailStatus === "loading" ? t("profile.email.updating", "Mise à jour...") : t("profile.email.update_btn", "Mettre à jour l'email")}
           </Button>
         </form>
-      </section>
+      </div>
 
-      {/* Changement de mot de passe */}
-      <section className="p-6 bg-white rounded-lg border border-neutral-200 shadow-sm">
-        <h2 className="text-xl font-semibold text-neutral-900 mb-4">{t("profile.password.title", "Changer le mot de passe")}</h2>
-        <form onSubmit={handlePasswordSubmit} className="space-y-4">
-          <FormField label={t("profile.password.current_label", "Mot de passe actuel")}>
-            <PasswordInput
+      {/* Change password */}
+      <div className="bg-white border border-gray-100 rounded-xl shadow-sm">
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100">
+          <KeyRound className="w-4 h-4 text-gray-400" />
+          <h2 className="text-base font-semibold text-gray-900">{t("profile.password.title", "Changer le mot de passe")}</h2>
+        </div>
+        <form onSubmit={handlePasswordSubmit} className="p-6 space-y-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="currentPassword">{t("profile.password.current_label", "Mot de passe actuel")}</Label>
+            <PasswordField
               id="currentPassword"
               name="currentPassword"
-              placeholder={t("profile.password.current_placeholder", "••••••••")}
+              placeholder="••••••••"
               value={passwordForm.currentPassword}
               onChange={handlePasswordChange}
               required
             />
-          </FormField>
-          <FormField label={t("profile.password.new_label", "Nouveau mot de passe")}>
-            <PasswordInput
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="newPassword">{t("profile.password.new_label", "Nouveau mot de passe")}</Label>
+            <PasswordField
               id="newPassword"
               name="newPassword"
-              placeholder={t("profile.password.new_placeholder", "••••••••")}
+              placeholder="••••••••"
               value={passwordForm.newPassword}
               onChange={handlePasswordChange}
               required
             />
-          </FormField>
-          <FormField label={t("profile.password.confirm_label", "Confirmer le nouveau mot de passe")}>
-            <PasswordInput
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="confirmPassword">{t("profile.password.confirm_label", "Confirmer le nouveau mot de passe")}</Label>
+            <PasswordField
               id="confirmPassword"
               name="confirmPassword"
-              placeholder={t("profile.password.confirm_placeholder", "••••••••")}
+              placeholder="••••••••"
               value={passwordForm.confirmPassword}
               onChange={handlePasswordChange}
               required
             />
-          </FormField>
+          </div>
           <Button
             type="submit"
             disabled={passwordStatus === "loading"}
-            className="w-full sm:w-auto"
+            className="bg-gray-900 hover:bg-gray-800 text-white"
           >
             {passwordStatus === "loading" ? t("profile.password.updating", "Mise à jour...") : t("profile.password.update_btn", "Mettre à jour le mot de passe")}
           </Button>
         </form>
-      </section>
+      </div>
 
-      {/* Sécurité et session */}
-      <section className="p-6 bg-white rounded-lg border border-neutral-200 shadow-sm">
-        <h2 className="text-xl font-semibold text-neutral-900 mb-4">{t("profile.security.title", "Sécurité et session")}</h2>
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="text-sm font-medium text-neutral-700">{t("profile.security.session_token", "Token en session")}</p>
-              <p className="text-xs text-neutral-500 mt-1">
-                {getAuthToken() ? t("profile.security.yes", "Oui") : t("profile.security.no", "Non")}
-              </p>
-            </div>
-          </div>
-          <div className="pt-4 border-t border-neutral-200">
-            <Button
-              type="button"
-              onClick={handleLogout}
-              className="w-full sm:w-auto bg-red-600 hover:bg-red-700"
-            >
-              {t("profile.security.logout_btn", "Se déconnecter")}
-            </Button>
-          </div>
+      {/* Logout */}
+      <div className="bg-white border border-gray-100 rounded-xl shadow-sm">
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100">
+          <LogOut className="w-4 h-4 text-gray-400" />
+          <h2 className="text-base font-semibold text-gray-900">{t("profile.security.title", "Session")}</h2>
         </div>
-      </section>
-    </div>
+        <div className="p-6 flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-gray-700">{t("profile.security.logout_desc", "Se déconnecter de votre compte")}</p>
+            <p className="text-xs text-gray-400 mt-0.5">{t("profile.security.logout_hint", "Vous serez redirigé vers la page de connexion.")}</p>
+          </div>
+          <Button
+            type="button"
+            onClick={handleLogout}
+            className="bg-rose-600 hover:bg-rose-700 text-white shrink-0"
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            {t("profile.security.logout_btn", "Se déconnecter")}
+          </Button>
+        </div>
+      </div>
+    </PageLayout>
   );
 }
-
-
-

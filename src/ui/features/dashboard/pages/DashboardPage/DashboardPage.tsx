@@ -3,6 +3,7 @@ import PageLayout from "@/ui/components/layouts/PageLayout";
 import { KPICards } from "./KPICards";
 import { ChartContainer } from "./ChartContainer";
 import { TopProducts } from "./TopProducts";
+import { AlertsWidget } from "./AlertsWidget/AlertsWidget";
 import { PageActions } from "./PageActions/PageActions";
 import { orderService } from "@/infrastructure/api/services/orderService";
 import { productService } from "@/infrastructure/api/services/productService";
@@ -137,6 +138,8 @@ export default function DashboardPage() {
           />
 
           <ChartContainer orders={orders} users={users} dateRange={dateRange} />
+
+          <AlertsWidget />
 
           <TopProducts products={products} />
         </>

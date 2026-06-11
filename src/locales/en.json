@@ -40,6 +40,7 @@
         "suppliers": "Suppliers",
         "ai_assistant": "AI Assistant",
         "loyalty": "Loyalty",
+        "alerts": "Alerts",
         "team": "Team",
         "settings": "Settings",
         "logout": "Logout",
@@ -82,7 +83,15 @@
             "stock_label": "Stock",
             "value_label": "Value",
             "name_label": "Name",
-            "stock_value": "Stock value"
+            "stock_value": "Stock value",
+            "product": "Product",
+            "units_sold": "Stock",
+            "rating": "Rating",
+            "total_value": "Total Value",
+            "status_col": "Status",
+            "high_demand": "High Demand",
+            "low_stock_status": "Low Stock",
+            "rows": "{{count}} row(s)"
         },
         "charts": {
             "revenue_title": "Revenue Analytics",
@@ -97,7 +106,13 @@
             "new_customers": "New Customers",
             "returning_customers": "Returning",
             "revenue": "Revenue",
-            "profit": "Profit"
+            "profit": "Profit",
+            "latest_payments": "Latest Payments",
+            "email": "Email",
+            "amount": "Amount",
+            "status": "Status",
+            "no_payments": "No payments found.",
+            "rows_selected": "0 of {{count}} row(s) selected."
         }
     },
     "insights": {
@@ -668,6 +683,41 @@
         "status": {
             "active": "Active",
             "inactive": "Inactive"
+        },
+        "members": {
+            "title": "Team Management",
+            "total": "Total Members",
+            "active_label": "Active",
+            "inactive_label": "Inactive",
+            "with_phone": "With Phone",
+            "search_placeholder": "Search by name, email, phone...",
+            "add": "Add Member",
+            "loading": "Loading team...",
+            "error_title": "Error",
+            "retry": "Retry",
+            "no_members": "No members found",
+            "try_adjusting": "Try adjusting your search",
+            "get_started": "Add a member to get started",
+            "refresh": "Refresh",
+            "export": "Export",
+            "table": {
+                "id": "ID",
+                "name": "Name",
+                "email": "Email",
+                "phone": "Phone",
+                "status": "Status",
+                "actions": "Actions"
+            },
+            "pagination": {
+                "show": "Show",
+                "per_page": "per page",
+                "of": "of",
+                "first": "First",
+                "previous": "Previous",
+                "next": "Next",
+                "last": "Last",
+                "page": "Page"
+            }
         }
     },
     "profile": {

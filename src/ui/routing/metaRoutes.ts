@@ -112,6 +112,15 @@ export const ROUTES: Record<string, RouteMeta> = {
     roles: ['admin', 'manager'],
     title: 'StockS - Team',
   },
+  ALERTS: {
+    path: '/alerts',
+    label: 'Alerts',
+    page: 'Alerts',
+    layout: 'app',
+    restricted: true,
+    roles: ['admin', 'manager'],
+    title: 'StockS - Alertes & Prévisions IA',
+  },
   LOYALTY: {
     path: '/loyalty',
     label: 'Loyalty',

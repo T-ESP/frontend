@@ -80,11 +80,13 @@ export function LoginForm() {
   };
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
+    <form className="space-y-5" onSubmit={handleSubmit}>
 
       {/* Email */}
       <div className="space-y-1.5">
-        <Label htmlFor="email">Adresse e-mail</Label>
+        <Label htmlFor="email" className="text-sm font-semibold text-gray-700">
+          Adresse e-mail
+        </Label>
         <Input
           id="email"
           name="email"
@@ -93,6 +95,7 @@ export function LoginForm() {
           placeholder="vous@exemple.com"
           value={formValues.email}
           onChange={handleInputChange}
+          className="h-10 text-gray-900 placeholder:text-gray-400 border-gray-300 focus-visible:ring-[#7b5fa2]/40"
           required
         />
       </div>
@@ -100,10 +103,12 @@ export function LoginForm() {
       {/* Password */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
-          <Label htmlFor="password">Mot de passe</Label>
+          <Label htmlFor="password" className="text-sm font-semibold text-gray-700">
+            Mot de passe
+          </Label>
           <a
             href="#"
-            className="text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--primary))] transition-colors"
+            className="text-xs text-gray-400 hover:text-[#7b5fa2] transition-colors font-medium"
           >
             Mot de passe oublié ?
           </a>
@@ -115,12 +120,13 @@ export function LoginForm() {
           placeholder="••••••••"
           value={formValues.password}
           onChange={handleInputChange}
+          className="h-10 text-gray-900 placeholder:text-gray-400 border-gray-300 focus-visible:ring-[#7b5fa2]/40"
           required
         />
       </div>
 
       {/* Remember me */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2.5">
         <Checkbox
           id="remember"
           checked={formValues.remember}
@@ -130,7 +136,7 @@ export function LoginForm() {
         />
         <Label
           htmlFor="remember"
-          className="text-sm font-normal text-[hsl(var(--muted-foreground))] cursor-pointer"
+          className="text-sm font-normal text-gray-600 cursor-pointer"
         >
           Se souvenir de moi
         </Label>
@@ -139,10 +145,8 @@ export function LoginForm() {
       {/* Feedback */}
       {feedback && (
         <p
-          className={`text-sm ${
-            status === "error"
-              ? "text-[hsl(var(--destructive))]"
-              : "text-[hsl(142,71%,45%)]"
+          className={`text-sm font-medium ${
+            status === "error" ? "text-red-600" : "text-emerald-600"
           }`}
         >
           {feedback}
@@ -152,7 +156,8 @@ export function LoginForm() {
       {/* Submit */}
       <Button
         type="submit"
-        className="w-full"
+        className="w-full h-10 font-semibold mt-1"
+        style={{ backgroundColor: "#7b5fa2" }}
         disabled={status === "loading"}
       >
         {status === "loading" ? "Connexion en cours…" : "Se connecter"}

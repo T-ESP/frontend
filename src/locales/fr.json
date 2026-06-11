@@ -40,6 +40,7 @@
         "suppliers": "Fournisseurs",
         "ai_assistant": "Assistant IA",
         "loyalty": "Fidélité",
+        "alerts": "Alertes",
         "team": "Équipe",
         "settings": "Paramètres",
         "logout": "Déconnexion",
@@ -82,7 +83,15 @@
             "stock_label": "Stock",
             "value_label": "Valeur",
             "name_label": "Nom",
-            "stock_value": "Valeur stock"
+            "stock_value": "Valeur stock",
+            "product": "Produit",
+            "units_sold": "Stock",
+            "rating": "Note",
+            "total_value": "Valeur totale",
+            "status_col": "Statut",
+            "high_demand": "Forte demande",
+            "low_stock_status": "Stock faible",
+            "rows": "{{count}} ligne(s)"
         },
         "charts": {
             "revenue_title": "Analyse des Revenus",
@@ -97,7 +106,13 @@
             "new_customers": "Nouveaux Clients",
             "returning_customers": "Récurrents",
             "revenue": "Revenu",
-            "profit": "Profit"
+            "profit": "Profit",
+            "latest_payments": "Derniers paiements",
+            "email": "Email",
+            "amount": "Montant",
+            "status": "Statut",
+            "no_payments": "Aucun paiement trouvé.",
+            "rows_selected": "0 sur {{count}} ligne(s) sélectionnée(s)."
         }
     },
     "insights": {
@@ -479,6 +494,41 @@
         "status": {
             "active": "Actif",
             "inactive": "Inactif"
+        },
+        "members": {
+            "title": "Gestion de l'équipe",
+            "total": "Membres au total",
+            "active_label": "Actifs",
+            "inactive_label": "Inactifs",
+            "with_phone": "Avec téléphone",
+            "search_placeholder": "Rechercher par nom, email, téléphone...",
+            "add": "Ajouter un membre",
+            "loading": "Chargement de l'équipe...",
+            "error_title": "Erreur",
+            "retry": "Réessayer",
+            "no_members": "Aucun membre trouvé",
+            "try_adjusting": "Essayez d'ajuster votre recherche",
+            "get_started": "Ajoutez un membre pour commencer",
+            "refresh": "Actualiser",
+            "export": "Exporter",
+            "table": {
+                "id": "ID",
+                "name": "Nom",
+                "email": "Email",
+                "phone": "Téléphone",
+                "status": "Statut",
+                "actions": "Actions"
+            },
+            "pagination": {
+                "show": "Afficher",
+                "per_page": "par page",
+                "of": "sur",
+                "first": "Premier",
+                "previous": "Précédent",
+                "next": "Suivant",
+                "last": "Dernier",
+                "page": "Page"
+            }
         }
     },
     "orders": {

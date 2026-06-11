@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import {
   Table,
   TableBody,
@@ -24,6 +25,7 @@ function statusDot(status: string) {
 }
 
 export function LatestPayments({ orders, users }: { orders: Order[]; users: User[] }) {
+  const { t } = useTranslation();
   const recentOrders = [...orders]
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 6);
@@ -36,15 +38,15 @@ export function LatestPayments({ orders, users }: { orders: Order[]; users: User
   return (
     <div className="h-full w-full overflow-hidden rounded-xl border bg-card text-card-foreground">
       <div className="border-b p-6">
-        <h3 className="text-lg font-semibold">Latest Payments</h3>
+        <h3 className="text-lg font-semibold">{t("dashboard.charts.latest_payments")}</h3>
       </div>
 
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="px-3">Email</TableHead>
-            <TableHead className="px-3">Amount</TableHead>
-            <TableHead className="px-3">Status</TableHead>
+            <TableHead className="px-3">{t("dashboard.charts.email")}</TableHead>
+            <TableHead className="px-3">{t("dashboard.charts.amount")}</TableHead>
+            <TableHead className="px-3">{t("dashboard.charts.status")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -82,7 +84,7 @@ export function LatestPayments({ orders, users }: { orders: Order[]; users: User
                 colSpan={3}
                 className="h-24 px-3 text-center text-muted-foreground"
               >
-                No payments found.
+                {t("dashboard.charts.no_payments")}
               </TableCell>
             </TableRow>
           )}
@@ -90,7 +92,7 @@ export function LatestPayments({ orders, users }: { orders: Order[]; users: User
       </Table>
 
       <div className="border-t px-6 py-4 text-sm text-muted-foreground">
-        0 of {recentOrders.length} row(s) selected.
+        {t("dashboard.charts.rows_selected", { count: recentOrders.length })}
       </div>
     </div>
   );

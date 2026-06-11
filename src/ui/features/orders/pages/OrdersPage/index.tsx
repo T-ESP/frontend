@@ -201,7 +201,7 @@ export default function OrdersPage() {
       </button>
       <button
         onClick={() => setShowAddModal(true)}
-        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-purple-600 border border-purple-600 rounded-lg hover:bg-purple-700 transition-colors"
+        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-gray-900 border border-gray-900 rounded-lg hover:bg-gray-800 transition-colors"
       >
         <Plus className="w-4 h-4" />
         {t('orders.new_order')}
@@ -233,7 +233,7 @@ export default function OrdersPage() {
             <p className="text-sm text-gray-500">{error}</p>
             <button
               onClick={loadOrders}
-              className="flex items-center gap-2 px-4 py-2 mx-auto mt-4 text-sm font-medium text-white transition-colors bg-purple-600 rounded-lg hover:bg-purple-700"
+              className="flex items-center gap-2 px-4 py-2 mx-auto mt-4 text-sm font-medium text-white transition-colors bg-gray-900 rounded-lg hover:bg-gray-800"
             >
               <RefreshCw size={14} />
               {t('orders.retry')}
@@ -539,7 +539,7 @@ export default function OrdersPage() {
                       onClick={() => setCurrentPage(pageNum)}
                       className={`min-w-[32px] h-8 px-2 text-xs font-medium rounded-md transition-colors ${
                         currentPage === pageNum
-                          ? 'text-white bg-purple-600 border border-purple-600'
+                          ? 'text-white bg-gray-900 border border-gray-900'
                           : 'text-gray-700 bg-white border border-gray-200 hover:bg-gray-50'
                       }`}
                     >

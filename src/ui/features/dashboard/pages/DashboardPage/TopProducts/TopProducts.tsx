@@ -62,11 +62,11 @@ export function TopProducts({ products }: TopProductsProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="px-6">Product</TableHead>
-            <TableHead className="px-6">Units Sold</TableHead>
-            <TableHead className="px-6">Rating</TableHead>
-            <TableHead className="px-6">Total Value</TableHead>
-            <TableHead className="px-6">Status</TableHead>
+            <TableHead className="px-6">{t("dashboard.top_products.product")}</TableHead>
+            <TableHead className="px-6">{t("dashboard.top_products.units_sold")}</TableHead>
+            <TableHead className="px-6">{t("dashboard.top_products.rating")}</TableHead>
+            <TableHead className="px-6">{t("dashboard.top_products.total_value")}</TableHead>
+            <TableHead className="px-6">{t("dashboard.top_products.status_col")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -93,7 +93,7 @@ export function TopProducts({ products }: TopProductsProps) {
                       product.trend === "up" ? "bg-emerald-500" : "bg-rose-500"
                     }`}
                   />
-                  {product.trend === "up" ? "High Demand" : "Low Stock"}
+                  {product.trend === "up" ? t("dashboard.top_products.high_demand") : t("dashboard.top_products.low_stock_status")}
                 </span>
               </TableCell>
             </TableRow>
@@ -112,7 +112,7 @@ export function TopProducts({ products }: TopProductsProps) {
       </Table>
 
       <div className="border-t px-6 py-4 text-sm text-muted-foreground">
-        {topProducts.length} row(s).
+        {t("dashboard.top_products.rows", { count: topProducts.length })}
       </div>
     </div>
   );

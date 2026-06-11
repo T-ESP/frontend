@@ -1,33 +1,163 @@
-import { LoginHeader } from "./components/LoginHeader";
 import { LoginForm } from "./components/LoginForm";
-import { LoginFooter } from "./components/LoginFooter";
 import { Link } from "react-router-dom";
+import { Package, TrendingUp, Users, ShieldCheck } from "lucide-react";
+
+const features = [
+  { icon: Package, label: "Gestion des stocks en temps réel" },
+  { icon: TrendingUp, label: "Tableaux de bord & analyses" },
+  { icon: Users, label: "Gestion clients & fournisseurs" },
+  { icon: ShieldCheck, label: "Accès sécurisé & sauvegardé" },
+];
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-[#FAFAFA] font-sans flex flex-col items-center justify-center px-4 relative overflow-hidden">
+    <div style={{ minHeight: "100vh", display: "flex" }}>
 
-      {/* Subtle ambient glow */}
+      {/* ── Panneau gauche — violet sombre ─────────────────── */}
       <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] opacity-30 pointer-events-none"
-        style={{ backgroundColor: "#7b5fa2" }}
-      />
+        style={{
+          width: "50%",
+          background: "linear-gradient(150deg, #1e1230 0%, #2d1f48 45%, #3d2a5c 100%)",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          padding: "3rem 3.5rem",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        {/* Glow décoratif */}
+        <div style={{
+          position: "absolute", top: "-8rem", left: "-8rem",
+          width: "400px", height: "400px", borderRadius: "50%",
+          background: "#7b5fa2", filter: "blur(130px)", opacity: 0.3,
+          pointerEvents: "none",
+        }} />
+        <div style={{
+          position: "absolute", bottom: 0, right: 0,
+          width: "280px", height: "280px", borderRadius: "50%",
+          background: "#a480d1", filter: "blur(100px)", opacity: 0.2,
+          pointerEvents: "none",
+        }} />
 
-
-
-      {/* Card */}
-      <div className="z-10 w-full max-w-sm bg-white rounded-2xl border border-gray-200 shadow-sm px-8 py-10">
-        <LoginHeader />
-        <div className="mt-6">
-          <LoginForm />
+        {/* Logo */}
+        <div style={{ position: "relative", zIndex: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            <div style={{
+              width: "2.25rem", height: "2.25rem", borderRadius: "0.75rem",
+              background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}>
+              <Package size={18} color="white" />
+            </div>
+            <span style={{ color: "white", fontWeight: 700, fontSize: "1.1rem", letterSpacing: "-0.02em" }}>
+              StockFlow
+            </span>
+          </div>
         </div>
-        <LoginFooter />
+
+        {/* Contenu central */}
+        <div style={{ position: "relative", zIndex: 10, flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", padding: "3rem 0" }}>
+          <p style={{ color: "#c0a2e5", fontSize: "0.75rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "1rem" }}>
+            Plateforme de gestion
+          </p>
+          <h1 style={{ color: "white", fontWeight: 800, fontSize: "2.4rem", lineHeight: 1.2, marginBottom: "1.25rem" }}>
+            Pilotez votre commerce<br />
+            <span style={{ color: "#c0a2e5" }}>sans effort.</span>
+          </h1>
+          <p style={{ color: "rgba(196,181,220,0.75)", fontSize: "0.95rem", lineHeight: 1.7, maxWidth: "340px", marginBottom: "2.5rem" }}>
+            Stocks, ventes, clients — tout centralisé dans un seul tableau de bord conçu pour les commerçants.
+          </p>
+
+          {/* Features */}
+          <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "1rem" }}>
+            {features.map(({ icon: Icon, label }) => (
+              <li key={label} style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                <div style={{
+                  width: "2rem", height: "2rem", borderRadius: "0.5rem", flexShrink: 0,
+                  background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}>
+                  <Icon size={14} color="#d4bbf0" />
+                </div>
+                <span style={{ color: "rgba(220,205,240,0.9)", fontSize: "0.875rem", fontWeight: 500 }}>
+                  {label}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Footer gauche */}
+        <div style={{ position: "relative", zIndex: 10 }}>
+          <p style={{ color: "rgba(192,162,229,0.4)", fontSize: "0.7rem" }}>
+            © 2025 StockFlow. Tous droits réservés.
+          </p>
+        </div>
       </div>
 
-      {/* Back link */}
-      <Link to="/" className="mt-6 text-xs text-gray-400 hover:text-gray-500 transition-colors z-10">
-        ← Retour à l'accueil
-      </Link>
+      {/* ── Panneau droit — violet clair ───────────────────── */}
+      <div
+        style={{
+          width: "50%",
+          background: "linear-gradient(160deg, #f5f0fc 0%, #ede5f8 50%, #e4d8f4 100%)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "3rem 2rem",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        {/* Glow haut-droite */}
+        <div style={{
+          position: "absolute", top: "-6rem", right: "-6rem",
+          width: "320px", height: "320px", borderRadius: "50%",
+          background: "#c0a2e5", filter: "blur(110px)", opacity: 0.45,
+          pointerEvents: "none",
+        }} />
+        {/* Glow bas-gauche */}
+        <div style={{
+          position: "absolute", bottom: "-4rem", left: "-4rem",
+          width: "240px", height: "240px", borderRadius: "50%",
+          background: "#a480d1", filter: "blur(90px)", opacity: 0.3,
+          pointerEvents: "none",
+        }} />
+
+        <div style={{ width: "100%", maxWidth: "400px", position: "relative", zIndex: 10 }}>
+          {/* En-tête */}
+          <div style={{ marginBottom: "2rem" }}>
+            <h2 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#1f2937", marginBottom: "0.4rem" }}>
+              Bon retour 👋
+            </h2>
+            <p style={{ fontSize: "0.875rem", color: "#6b7280" }}>
+              Connectez-vous pour accéder à votre espace
+            </p>
+          </div>
+
+          {/* Card formulaire */}
+          <div style={{
+            background: "white",
+            borderRadius: "1.25rem",
+            border: "1px solid #e9d8fb",
+            boxShadow: "0 8px 30px rgba(123,95,162,0.12)",
+            padding: "2rem 1.75rem",
+          }}>
+            <LoginForm />
+          </div>
+
+          {/* Lien retour */}
+          <div style={{ marginTop: "1.5rem", textAlign: "center" }}>
+            <Link
+              to="/"
+              style={{ fontSize: "0.75rem", color: "#9ca3af", textDecoration: "none" }}
+            >
+              ← Retour à l'accueil
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

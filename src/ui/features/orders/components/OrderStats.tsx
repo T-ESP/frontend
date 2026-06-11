@@ -1,5 +1,6 @@
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import type { Order } from '@/domain/models/Order';
+import { orderService } from '@/infrastructure/api/services/orderService';
 import { useTranslation } from 'react-i18next';
 import { KpiStatCard } from '@/ui/components/common/KpiStatCard/KpiStatCard';
 
@@ -37,11 +38,20 @@ const buildDailySeries = (
 
 export function OrderStats({ orders }: OrderStatsProps) {
   const { t } = useTranslation();
+  const [apiStats, setApiStats] = useState<{
+    total_orders: number;
+    total_amount: number;
+    avg_order_value: number;
+    delivered_orders: number;
+  } | null>(null);
 
-  const stats = useMemo(() => {
+  useEffect(() => {
+    orderService.getStats().then(setApiStats).catch(() => null);
+  }, []);
+
+  const localStats = useMemo(() => {
     const total = orders.length;
     const totalRevenue = orders.reduce((sum, o) => sum + (o.amount || 0), 0);
-    const pending = orders.filter((o) => o.status.toLowerCase() === 'pending').length;
     const delivered = orders.filter((o) => o.status.toLowerCase() === 'delivered').length;
     const avgValue = total > 0 ? totalRevenue / total : 0;
 
@@ -61,29 +71,30 @@ export function OrderStats({ orders }: OrderStatsProps) {
 
     const revenue30 = last30.reduce((s, o) => s + (o.amount || 0), 0);
     const revenuePrev30 = prev30.reduce((s, o) => s + (o.amount || 0), 0);
-    const revenueChange = evolution(revenue30, revenuePrev30);
-
-    const orderCountChange = evolution(last30.length, prev30.length);
-    const deliveredCurr = last30.filter((o) => o.status.toLowerCase() === 'delivered').length;
-    const deliveredPrev = prev30.filter((o) => o.status.toLowerCase() === 'delivered').length;
-    const deliveredChange = evolution(deliveredCurr, deliveredPrev);
-
-    const avgValueCurr = last30.length > 0 ? revenue30 / last30.length : 0;
-    const avgValuePrev = prev30.length > 0 ? revenuePrev30 / prev30.length : 0;
-    const avgValueChange = evolution(avgValueCurr, avgValuePrev);
 
     return {
       total,
       totalRevenue,
-      pending,
       delivered,
       avgValue,
-      revenueChange,
-      orderCountChange,
-      deliveredChange,
-      avgValueChange,
+      revenueChange: evolution(revenue30, revenuePrev30),
+      orderCountChange: evolution(last30.length, prev30.length),
+      deliveredChange: evolution(
+        last30.filter((o) => o.status.toLowerCase() === 'delivered').length,
+        prev30.filter((o) => o.status.toLowerCase() === 'delivered').length,
+      ),
+      avgValueChange: evolution(
+        last30.length > 0 ? revenue30 / last30.length : 0,
+        prev30.length > 0 ? revenuePrev30 / prev30.length : 0,
+      ),
     };
   }, [orders]);
+
+  // Use API stats for values when available (accurate), fall back to local computation
+  const totalRevenue = apiStats?.total_amount ?? localStats.totalRevenue;
+  const totalOrders = apiStats?.total_orders ?? localStats.total;
+  const deliveredCount = apiStats?.delivered_orders ?? localStats.delivered;
+  const avgValue = apiStats?.avg_order_value ?? localStats.avgValue;
 
   const formatCurrency = (v: number) =>
     new Intl.NumberFormat('fr-FR', {
@@ -128,37 +139,37 @@ export function OrderStats({ orders }: OrderStatsProps) {
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
       <KpiStatCard
-        title={t('orders.kpi.total_revenue', 'Chiffre d\'affaires')}
-        value={formatCurrency(stats.totalRevenue)}
-        change={formatPct(stats.revenueChange)}
-        trend={stats.revenueChange >= 0 ? 'up' : 'down'}
+        title={t('orders.kpi.total_revenue', "Chiffre d'affaires")}
+        value={formatCurrency(totalRevenue)}
+        change={formatPct(localStats.revenueChange)}
+        trend={localStats.revenueChange >= 0 ? 'up' : 'down'}
         description={t('common.date_range.last_30_days', '30 derniers jours')}
         chartData={revenueSeries}
         chartType="line"
       />
       <KpiStatCard
         title={t('orders.kpi.total_orders', 'Total commandes')}
-        value={stats.total.toString()}
-        change={formatPct(stats.orderCountChange)}
-        trend={stats.orderCountChange >= 0 ? 'up' : 'down'}
+        value={totalOrders.toString()}
+        change={formatPct(localStats.orderCountChange)}
+        trend={localStats.orderCountChange >= 0 ? 'up' : 'down'}
         description={t('common.date_range.last_30_days', '30 derniers jours')}
         chartData={orderCountSeries}
         chartType="bar"
       />
       <KpiStatCard
         title={t('orders.kpi.delivered', 'Livrées')}
-        value={stats.delivered.toString()}
-        change={formatPct(stats.deliveredChange)}
-        trend={stats.deliveredChange >= 0 ? 'up' : 'down'}
+        value={deliveredCount.toString()}
+        change={formatPct(localStats.deliveredChange)}
+        trend={localStats.deliveredChange >= 0 ? 'up' : 'down'}
         description={t('common.date_range.last_30_days', '30 derniers jours')}
         chartData={deliveredSeries}
         chartType="bar"
       />
       <KpiStatCard
         title={t('orders.kpi.avg_order_value', 'Panier moyen')}
-        value={formatCurrency(stats.avgValue)}
-        change={formatPct(stats.avgValueChange)}
-        trend={stats.avgValueChange >= 0 ? 'up' : 'down'}
+        value={formatCurrency(avgValue)}
+        change={formatPct(localStats.avgValueChange)}
+        trend={localStats.avgValueChange >= 0 ? 'up' : 'down'}
         description={t('common.date_range.last_30_days', '30 derniers jours')}
         chartData={avgValueSeries}
         chartType="line"

@@ -1,0 +1,163 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AlertTriangle, ArrowRight, PackageX, TrendingDown } from 'lucide-react';
+import { alertService } from '@/infrastructure/api/services/alertService';
+import { aiPredictionsService } from '@/infrastructure/api/services/aiPredictionsService';
+import type { Alert, AlertSummary } from '@/domain/models/Alert';
+import type { UrgentRestock } from '@/domain/models/AiPredictions';
+
+const SEVERITY_DOT: Record<string, string> = {
+  critical: 'bg-rose-500',
+  high: 'bg-orange-500',
+  medium: 'bg-amber-500',
+  low: 'bg-blue-400',
+};
+
+const SEVERITY_BADGE: Record<string, string> = {
+  critical: 'bg-rose-50 text-rose-700 border-rose-200',
+  high: 'bg-orange-50 text-orange-700 border-orange-200',
+  medium: 'bg-amber-50 text-amber-700 border-amber-200',
+  low: 'bg-blue-50 text-blue-700 border-blue-200',
+};
+
+const URGENCY_COLOR: Record<string, string> = {
+  URGENT: 'text-rose-600',
+  HIGH: 'text-orange-600',
+  MEDIUM: 'text-amber-600',
+  LOW: 'text-blue-500',
+};
+
+export function AlertsWidget() {
+  const navigate = useNavigate();
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [summary, setSummary] = useState<AlertSummary | null>(null);
+  const [restocks, setRestocks] = useState<UrgentRestock[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.allSettled([
+      alertService.getAll({ severity: 'critical', status: 'new', limit: 4 }),
+      alertService.getSummary(),
+      aiPredictionsService.getUrgentRestocks(),
+    ]).then(([alertsRes, summaryRes, restocksRes]) => {
+      if (alertsRes.status === 'fulfilled') setAlerts(alertsRes.value);
+      if (summaryRes.status === 'fulfilled') setSummary(summaryRes.value);
+      if (restocksRes.status === 'fulfilled') setRestocks(restocksRes.value.slice(0, 3));
+      setLoading(false);
+    });
+  }, []);
+
+  const criticalCount = summary?.by_severity?.critical ?? 0;
+  const highCount = summary?.by_severity?.high ?? 0;
+  const newCount = summary?.by_status?.new ?? 0;
+
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        {[1, 2].map((i) => (
+          <div key={i} className="h-48 bg-white border border-gray-100 rounded-xl animate-pulse" />
+        ))}
+      </div>
+    );
+  }
+
+  if (criticalCount === 0 && highCount === 0 && restocks.length === 0) return null;
+
+  return (
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      {/* Alertes critiques */}
+      <div className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+          <div className="flex items-center gap-2.5">
+            <AlertTriangle className="w-4 h-4 text-rose-500" />
+            <span className="text-sm font-semibold text-gray-900">Alertes actives</span>
+            {newCount > 0 && (
+              <span className="px-2 py-0.5 text-xs font-semibold bg-rose-50 text-rose-600 rounded-full border border-rose-200">
+                {newCount} non traitées
+              </span>
+            )}
+          </div>
+          <button
+            onClick={() => navigate('/alerts')}
+            className="flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-gray-900 transition-colors"
+          >
+            Tout voir <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        <div className="px-5 py-3 space-y-2.5">
+          {/* Summary badges */}
+          <div className="flex items-center gap-2 pb-1">
+            {criticalCount > 0 && (
+              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full border ${SEVERITY_BADGE.critical}`}>
+                <span className="size-1.5 rounded-full bg-rose-500" />
+                {criticalCount} critique{criticalCount > 1 ? 's' : ''}
+              </span>
+            )}
+            {highCount > 0 && (
+              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full border ${SEVERITY_BADGE.high}`}>
+                <span className="size-1.5 rounded-full bg-orange-500" />
+                {highCount} haute{highCount > 1 ? 's' : ''}
+              </span>
+            )}
+          </div>
+
+          {alerts.length === 0 ? (
+            <p className="py-4 text-sm text-center text-muted-foreground">Aucune alerte critique en cours</p>
+          ) : (
+            alerts.map((alert) => (
+              <div key={alert.id} className="flex items-start gap-3 p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                <span className={`mt-1.5 size-2 rounded-full shrink-0 ${SEVERITY_DOT[alert.severity] ?? 'bg-gray-400'}`} />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 truncate">{alert.product_name ?? '—'}</p>
+                  <p className="text-xs text-gray-500 truncate mt-0.5">{alert.message}</p>
+                </div>
+                <span className={`shrink-0 text-xs font-medium px-2 py-0.5 rounded-full border ${SEVERITY_BADGE[alert.severity]}`}>
+                  {alert.severity}
+                </span>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Réapprovisionnements urgents */}
+      <div className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+          <div className="flex items-center gap-2.5">
+            <PackageX className="w-4 h-4 text-orange-500" />
+            <span className="text-sm font-semibold text-gray-900">Réapprovisionnements urgents</span>
+          </div>
+          <button
+            onClick={() => navigate('/alerts?tab=predictions')}
+            className="flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-gray-900 transition-colors"
+          >
+            Tout voir <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        <div className="px-5 py-3 space-y-2.5">
+          {restocks.length === 0 ? (
+            <p className="py-4 text-sm text-center text-muted-foreground">Aucun réapprovisionnement urgent</p>
+          ) : (
+            restocks.map((r) => (
+              <div key={r.product_id} className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                <TrendingDown className={`w-4 h-4 shrink-0 ${URGENCY_COLOR[r.urgency] ?? 'text-gray-400'}`} />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 truncate">{r.product_name}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Stock : <strong>{r.current_stock}</strong> — J-{r.days_until_stockout} avant rupture
+                  </p>
+                </div>
+                <div className="text-right shrink-0">
+                  <p className={`text-xs font-semibold ${URGENCY_COLOR[r.urgency] ?? 'text-gray-500'}`}>{r.urgency}</p>
+                  <p className="text-xs text-gray-400">+{r.reorder_quantity} à commander</p>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
