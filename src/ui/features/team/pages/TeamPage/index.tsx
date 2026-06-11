@@ -6,6 +6,47 @@ import { AddUserModal } from '@/ui/features/users/components/AddUserModal';
 import { EditUserModal } from '@/ui/features/users/components/EditUserModal';
 import { DeleteUserModal } from '@/ui/features/users/components/DeleteUserModal';
 import PageLayout from '../../../../components/layouts/PageLayout';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+
+function SortableHead({
+  label,
+  field,
+  sortField,
+  sortDirection,
+  onSort,
+}: {
+  label: string;
+  field: keyof User;
+  sortField: keyof User;
+  sortDirection: 'asc' | 'desc';
+  onSort: (field: keyof User) => void;
+}) {
+  const isActive = sortField === field;
+  return (
+    <TableHead
+      className="cursor-pointer select-none px-6 hover:bg-muted/40"
+      onClick={() => onSort(field)}
+    >
+      <span className="inline-flex items-center gap-2">
+        {label}
+        {isActive && (
+          <span className="text-xs text-muted-foreground">
+            {sortDirection === 'asc' ? '↑' : '↓'}
+          </span>
+        )}
+      </span>
+    </TableHead>
+  );
+}
 
 export default function TeamPage() {
   const [users, setUsers] = useState<User[]>([]);
@@ -203,7 +244,7 @@ export default function TeamPage() {
           <div className="flex-1 max-w-md">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-              <input
+              <Input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => {
@@ -211,7 +252,7 @@ export default function TeamPage() {
                   setCurrentPage(1);
                 }}
                 placeholder="Search by name, email, phone..."
-                className="w-full pl-10 pr-10 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="h-10 pl-10 pr-10"
               />
               {searchQuery && (
                 <button
@@ -269,108 +310,65 @@ export default function TeamPage() {
           </div>
         ) : (
           <>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-slate-100">
-                <thead className="bg-slate-50">
-                  <tr>
-                    <th
-                      onClick={() => handleSort('id')}
-                      className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100"
-                    >
-                      <div className="flex items-center gap-2">
-                        ID
-                        {sortField === 'id' && (
-                          <span className="text-blue-600">{sortDirection === 'asc' ? '↑' : '↓'}</span>
-                        )}
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <SortableHead label="ID" field="id" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} />
+                  <SortableHead label="Name" field="firstname" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} />
+                  <SortableHead label="Email" field="email" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} />
+                  <TableHead className="px-6">Phone</TableHead>
+                  <SortableHead label="Status" field="status" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} />
+                  <TableHead className="px-6">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {paginatedUsers.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell className="px-6 py-4 text-sm">{user.id}</TableCell>
+                    <TableCell className="px-6 py-4 text-sm font-medium">
+                      {user.firstname} {user.lastname}
+                    </TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-muted-foreground">
+                      {user.email}
+                    </TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-muted-foreground">
+                      {user.phone || '-'}
+                    </TableCell>
+                    <TableCell className="px-6 py-4">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
+                        <span
+                          className={`size-1.5 rounded-full ${
+                            user.status === 'active' ? 'bg-emerald-500' : 'bg-muted-foreground'
+                          }`}
+                        />
+                        {user.status || 'active'}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-6 py-4">
+                      <div className="flex gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          onClick={() => handleEdit(user)}
+                          title="Edit"
+                        >
+                          <Edit />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          onClick={() => handleDelete(user)}
+                          title="Delete"
+                          className="text-muted-foreground hover:text-destructive"
+                        >
+                          <Trash2 />
+                        </Button>
                       </div>
-                    </th>
-                    <th
-                      onClick={() => handleSort('firstname')}
-                      className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100"
-                    >
-                      <div className="flex items-center gap-2">
-                        Name
-                        {sortField === 'firstname' && (
-                          <span className="text-blue-600">{sortDirection === 'asc' ? '↑' : '↓'}</span>
-                        )}
-                      </div>
-                    </th>
-                    <th
-                      onClick={() => handleSort('email')}
-                      className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100"
-                    >
-                      <div className="flex items-center gap-2">
-                        Email
-                        {sortField === 'email' && (
-                          <span className="text-blue-600">{sortDirection === 'asc' ? '↑' : '↓'}</span>
-                        )}
-                      </div>
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                      Phone
-                    </th>
-                    <th
-                      onClick={() => handleSort('status')}
-                      className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100"
-                    >
-                      <div className="flex items-center gap-2">
-                        Status
-                        {sortField === 'status' && (
-                          <span className="text-blue-600">{sortDirection === 'asc' ? '↑' : '↓'}</span>
-                        )}
-                      </div>
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-slate-100">
-                  {paginatedUsers.map((user) => (
-                    <tr key={user.id} className="hover:bg-slate-50/50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-                        {user.id}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
-                        {user.firstname} {user.lastname}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
-                        {user.email}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
-                        {user.phone || '-'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${user.status === 'active'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-slate-100 text-slate-800'
-                          }`}>
-                          {user.status || 'active'}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleEdit(user)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                            title="Edit"
-                          >
-                            <Edit size={16} />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(user)}
-                            className="p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
-                            title="Delete"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
 
             {/* Pagination */}
             <div className="flex items-center justify-between px-6 py-4 bg-white border-t border-slate-100 rounded-b-xl">

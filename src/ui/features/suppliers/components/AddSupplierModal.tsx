@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { X, Truck, Mail, Phone, MapPin, Loader2, AlertTriangle } from "lucide-react"; // Consistent Icon Set
+import { X, Truck, Mail, Phone, MapPin, Loader2, AlertTriangle } from "lucide-react";
 import { supplierService } from "@/infrastructure/api/services/supplierService";
 import type { CreateSupplierDto } from "@/domain/models/Supplier";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 interface AddSupplierModalProps {
   isOpen: boolean;
@@ -80,14 +82,13 @@ export function AddSupplierModal({ isOpen, onClose, onSupplierAdded }: AddSuppli
               <Truck className="w-4 h-4 text-slate-400" />
               Supplier Name *
             </label>
-            <input
+            <Input
               id="name_sup"
               name="name_sup"
               type="text"
               required
               value={formData.name_sup}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 text-slate-900 placeholder:text-slate-400"
               placeholder="Ex: Acme Corp"
             />
           </div>
@@ -99,14 +100,13 @@ export function AddSupplierModal({ isOpen, onClose, onSupplierAdded }: AddSuppli
                 <Mail className="w-4 h-4 text-slate-400" />
                 Email *
               </label>
-              <input
+              <Input
                 id="email_sup"
                 name="email_sup"
                 type="email"
                 required
                 value={formData.email_sup}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 text-slate-900 placeholder:text-slate-400"
                 placeholder="contact@acme.com"
               />
             </div>
@@ -117,14 +117,13 @@ export function AddSupplierModal({ isOpen, onClose, onSupplierAdded }: AddSuppli
                 <Phone className="w-4 h-4 text-slate-400" />
                 Phone *
               </label>
-              <input
+              <Input
                 id="phone_sup"
                 name="phone_sup"
                 type="tel"
                 required
                 value={formData.phone_sup}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 text-slate-900 placeholder:text-slate-400"
                 placeholder="+33 1 23 45 67 89"
               />
             </div>
@@ -136,13 +135,12 @@ export function AddSupplierModal({ isOpen, onClose, onSupplierAdded }: AddSuppli
               <MapPin className="w-4 h-4 text-slate-400" />
               Address *
             </label>
-            <textarea
+            <Textarea
               id="address_sup"
               name="address_sup"
               required
               value={formData.address_sup}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 text-slate-900 placeholder:text-slate-400 resize-none"
               placeholder="123 Rue Example, 75001 Paris"
               rows={3}
             />

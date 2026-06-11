@@ -1,4 +1,4 @@
-import { FiAlertTriangle, FiX } from "react-icons/fi";
+import { AlertTriangle, X, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { productService } from "@/infrastructure/api/services/productService";
 import { useToast } from "@/ui/components/common/Toast";
@@ -47,48 +47,53 @@ export function DeleteConfirmModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full">
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
+    <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-foreground/40 backdrop-blur-sm animate-in fade-in duration-150">
+      <div className="w-full max-w-md bg-white border shadow-xl rounded-xl border-border animate-in zoom-in-95 duration-150">
+        <div className="flex items-start justify-between px-6 py-4 border-b border-border">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-red-100 rounded-lg">
-              <FiAlertTriangle className="text-red-600" size={20} />
+            <div className="flex items-center justify-center rounded-lg w-9 h-9 bg-destructive/10 text-destructive">
+              <AlertTriangle className="w-4 h-4" />
             </div>
-            <h2 className="text-xl font-semibold text-gray-900">{t('inventory.delete_modal.title')}</h2>
+            <div>
+              <h2 className="text-base font-semibold text-foreground">{t('inventory.delete_modal.title')}</h2>
+              <p className="text-xs text-muted-foreground">{t('inventory.delete_modal.subtitle', 'This action is permanent')}</p>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+            className="p-1.5 transition-colors rounded-md text-muted-foreground hover:text-foreground hover:bg-muted"
           >
-            <FiX size={20} />
+            <X size={18} />
           </button>
         </div>
 
         <div className="p-6 space-y-4">
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-              {error}
+            <div className="flex items-start gap-2 p-3 text-sm border rounded-lg bg-destructive/5 border-destructive/20 text-destructive">
+              <AlertTriangle size={16} className="mt-0.5 shrink-0" />
+              <span>{error}</span>
             </div>
           )}
 
-          <p className="text-gray-600">
+          <p className="text-sm text-muted-foreground">
             {t('inventory.delete_modal.message', { name: productName })}
           </p>
 
-          <div className="flex gap-3 pt-4">
+          <div className="flex justify-end gap-2 pt-2">
             <button
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50"
+              className="inline-flex items-center justify-center h-10 px-4 text-sm font-medium transition-colors bg-white border rounded-lg border-border text-foreground hover:bg-muted disabled:opacity-50"
             >
               {t('common.cancel')}
             </button>
             <button
               onClick={handleDelete}
               disabled={loading}
-              className="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center justify-center h-10 gap-2 px-4 text-sm font-medium text-white transition-colors rounded-lg bg-destructive hover:bg-destructive/90 disabled:opacity-60 disabled:cursor-not-allowed"
             >
+              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               {loading ? t('common.deleting') : t('inventory.form.delete_submit')}
             </button>
           </div>

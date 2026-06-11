@@ -1,3 +1,4 @@
+import { Table } from "@/components/ui/table";
 import { SalesTableBody } from "./SalesTableBody";
 import { SalesTableHead } from "./SalesTableHead";
 
@@ -11,17 +12,15 @@ interface SalesTableProps {
 
 export default function SalesTable({ data }: SalesTableProps) {
   return (
-    <div className="overflow-hidden bg-white rounded-2xl border border-gray-100 shadow-sm">
-      <div className="px-6 py-4 border-b border-gray-100">
-        <h3 className="text-lg font-bold text-gray-900">Daily Performance</h3>
-        <p className="text-sm text-gray-500">Breakdown of sales by day</p>
+    <div className="overflow-hidden rounded-2xl border bg-card text-card-foreground">
+      <div className="border-b px-6 py-4">
+        <h3 className="text-lg font-semibold">Daily Performance</h3>
+        <p className="text-sm text-muted-foreground">Breakdown of sales by day</p>
       </div>
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <SalesTableHead />
-          <SalesTableBody data={data} />
-        </table>
-      </div>
+      <Table>
+        <SalesTableHead />
+        <SalesTableBody data={data} />
+      </Table>
     </div>
   );
 }

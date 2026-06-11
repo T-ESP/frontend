@@ -128,7 +128,7 @@ export function FloatingChat() {
               <X className="w-4 h-4" />
             </button>
           </div>
-          <MessageList messages={activeMessages} bubbleMaxWidth="75%" />
+          <MessageList messages={activeMessages} />
           <Composer value={composer} onChange={setComposer} onSend={handleSend} />
         </div>
       )}

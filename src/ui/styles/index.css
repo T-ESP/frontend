@@ -1,5 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
+@custom-variant dark (&:is(.dark *));
 
 /* ============================================================
  * 🎨 BRAND COLOR — modifier ces valeurs pour re-themer l'app
@@ -97,8 +102,7 @@
 }
 
 html, body, #root {
-  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
-    'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  font-family: 'Montserrat', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -106,12 +110,65 @@ html, body, #root {
   color: var(--color-neutral-900);
 }
 
-/* ── Animations ──────────────────────────────────────────── */
+@theme {
+  /* ---- Branding / Violet (#7b5fa2 Unified) ---- */
+  --color-primary-deep: #4d3c67;
+  --color-primary-night: #1d162a;
+  --color-primary-bg: #f5f0fc;
+
+  /* Force all Tailwind Purples/Indigos to use our unified #7b5fa2 scale */
+  --color-purple-50: #f5f0fc;
+  --color-purple-100: #ebdcf9;
+  --color-purple-200: #d7bff2;
+  --color-purple-300: #c0a2e5;
+  --color-purple-400: #a480d1;
+  --color-purple-500: #8b65bc;
+  --color-purple-600: #7b5fa2;
+  --color-purple-700: #644d85;
+  --color-purple-800: #4d3c67;
+  --color-purple-900: #362a49;
+  --color-purple-950: #1d162a;
+
+  --color-indigo-50: #f5f0fc;
+  --color-indigo-100: #ebdcf9;
+  --color-indigo-200: #d7bff2;
+  --color-indigo-300: #c0a2e5;
+  --color-indigo-400: #a480d1;
+  --color-indigo-500: #8b65bc;
+  --color-indigo-600: #7b5fa2;
+  --color-indigo-700: #644d85;
+  --color-indigo-800: #4d3c67;
+  --color-indigo-900: #362a49;
+  --color-indigo-950: #1d162a;
+
+  /* ---- Neutres (Modernized) ---- */
+  --color-bg: #f3f4f6;                 /* Fond global (light gray) */
+  --color-surface: #ffffff;            /* Fond surface (cards, panels - now pure white) */
+  --color-neutral-900: #1f2937;        /* Texte principal (dark gray, softer than black) */
+  --color-neutral-700: #6b7280;        /* Texte secondaire, border, icons (medium gray) */
+  --color-border: #e5e7eb;             /* Bordures discrètes */
+  --color-black: #1f2937;              /* Use dark gray instead of pure black */
+
+  /* ---- Feedback / Alerts ---- */
+  --color-success: #22c55e;            /* Succès/valide */
+  --color-success-bg: #e7fbe9;         /* Fond de succès */
+  --color-warning: #facc15;            /* Avertissement */
+  --color-warning-bg: #fef9c3;
+  --color-error: #ef4444;              /* Erreur */
+  --color-error-bg: #ffe7e7;
+  --color-info: #a480d1;               /* Info = violet secondaire */
+  --color-info-bg: #f5f0fc;            /* Fond info, violet très clair */
+
+  /* ---- Autres ---- */
+  --color-blue-dark: #1e40af;          /* Ancienne palette bleu, gardée pour compat éventuelle */
+  --color-blue-light: #93c5fd;
+  --color-grey-light: #f1f5f9;         /* Gris très clair pour backgrounds */
+}
+
 @keyframes fade-in-up {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.animate-fade-in-up { animation: fade-in-up 0.25s ease-out; }
 
 @keyframes toast-in {
   from { opacity: 0; transform: translateY(10px) scale(0.98); }
@@ -132,5 +189,131 @@ html, body, #root {
   from { opacity: 0; transform: translateY(20px) scale(0.95); }
   to   { opacity: 1; transform: translateY(0)    scale(1); }
 }
-.animate-fadeIn  { animation: fadeIn  0.3s ease-out; }
-.animate-slideUp { animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: 'Montserrat', sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}

@@ -1,4 +1,5 @@
 import type { InventoryItem } from "@/ui/features/inventory/types";
+import { TableBody } from "@/components/ui/table";
 import { InventoryTableRow } from "./InventoryTableRow";
 
 interface InventoryTableBodyProps {
@@ -9,13 +10,19 @@ interface InventoryTableBodyProps {
   onViewKPIs: (id: number, name: string) => void;
 }
 
-export function InventoryTableBody({ data, onEdit, onDelete, onStockUpdate, onViewKPIs }: InventoryTableBodyProps) {
+export function InventoryTableBody({
+  data,
+  onEdit,
+  onDelete,
+  onStockUpdate,
+  onViewKPIs,
+}: InventoryTableBodyProps) {
   return (
-    <tbody className="divide-y divide-gray-100">
+    <TableBody>
       {data.map((item, index) => (
-        <InventoryTableRow 
-          key={item.id} 
-          item={item} 
+        <InventoryTableRow
+          key={item.id}
+          item={item}
           index={index}
           onEdit={onEdit}
           onDelete={onDelete}
@@ -23,7 +30,6 @@ export function InventoryTableBody({ data, onEdit, onDelete, onStockUpdate, onVi
           onViewKPIs={onViewKPIs}
         />
       ))}
-    </tbody>
+    </TableBody>
   );
 }
-

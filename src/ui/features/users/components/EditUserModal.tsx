@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FiX } from "react-icons/fi";
 import { userService } from "@/infrastructure/api/services/userService";
 import type { User, UpdateUserDto } from "@/domain/models/User";
+import { Input } from "@/components/ui/input";
 
 interface EditUserModalProps {
   isOpen: boolean;
@@ -69,11 +70,10 @@ export function EditUserModal({ isOpen, onClose, onUserUpdated, user }: EditUser
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email (non modifiable)
             </label>
-            <input
+            <Input
               type="email"
               value={user.email}
               disabled
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed"
             />
           </div>
 
@@ -81,11 +81,10 @@ export function EditUserModal({ isOpen, onClose, onUserUpdated, user }: EditUser
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Prénom
             </label>
-            <input
+            <Input
               type="text"
               value={formData.firstname || ""}
               onChange={(e) => setFormData({ ...formData, firstname: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
 
@@ -93,11 +92,10 @@ export function EditUserModal({ isOpen, onClose, onUserUpdated, user }: EditUser
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Nom
             </label>
-            <input
+            <Input
               type="text"
               value={formData.lastname || ""}
               onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
 
@@ -105,11 +103,10 @@ export function EditUserModal({ isOpen, onClose, onUserUpdated, user }: EditUser
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Téléphone
             </label>
-            <input
+            <Input
               type="tel"
               value={formData.phone || ""}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="+33 1 23 45 67 89"
             />
           </div>

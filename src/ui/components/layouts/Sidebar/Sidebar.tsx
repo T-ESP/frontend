@@ -1,55 +1,114 @@
+import { NavLink, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { ChevronsUpDown, MoreVertical } from "lucide-react";
+
 import { Logo } from "@/ui/components/common/Logo";
 import { items } from "@/ui/constants/sidebar/sidebarItem";
-import { SidebarSection } from "./SidebarSection";
-import type { SidebarProps } from "./Sidebar.types";
-import { Menu } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import {
+  Sidebar as SidebarRoot,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import type { SidebarItemType } from "./Sidebar.types";
 
-export function Sidebar({ isOpen, onToggle }: SidebarProps) {
+function isItemActive(pathname: string, to: string) {
+  return pathname === to || pathname.startsWith(`${to}/`);
+}
+
+function NavItem({ item }: { item: SidebarItemType }) {
   const { t } = useTranslation();
-  const topSections = items.slice(0, 2);
-  const bottomSection = items[2] ?? [];
+  const { pathname } = useLocation();
+  const active = isItemActive(pathname, item.to);
+  const Icon = item.icon;
 
   return (
-    <aside
-      className={`fixed left-0 top-0 h-screen bg-white border-r border-gray-100 z-40 flex flex-col
-        transition-all duration-300
-        ${isOpen
-          ? "translate-x-0 w-64"
-          : "-translate-x-full md:translate-x-0 w-64 md:w-20"
-        }`}
-    >
-      {/* Header */}
-      <div className={`flex items-center h-16 ${isOpen ? "px-5 border-b border-gray-100" : "justify-center"}`}>
-        <button
-          onClick={onToggle}
-          className="inline-flex items-center justify-center w-10 h-10 text-gray-700 rounded-xl hover:bg-gray-100 transition-colors shrink-0"
-          aria-label={isOpen ? t('common.collapse_sidebar', 'Collapse sidebar') : t('common.expand_sidebar', 'Expand sidebar')}
-        >
-          <Menu className="w-5 h-5" />
-        </button>
+    <SidebarMenuItem>
+      <SidebarMenuButton asChild isActive={active} tooltip={t(item.label)}>
+        <NavLink to={item.to}>
+          <Icon />
+          <span>{t(item.label)}</span>
+        </NavLink>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  );
+}
 
-        {isOpen && (
-          <div className="flex items-center gap-2 ml-2 overflow-hidden transition-opacity duration-300">
-            <Logo className="w-7 h-7 shrink-0" />
-            <span className="text-xl font-extrabold tracking-tight text-gray-900 truncate">
-              Stocks
-            </span>
-          </div>
-        )}
-      </div>
+export function Sidebar() {
+  const { toggleSidebar } = useSidebar();
+  const [primarySection = [], secondarySection = [], footerSection = []] = items;
+  const groupSections = [primarySection, secondarySection].filter(
+    (section) => section.length > 0
+  );
 
-      {/* Top sections */}
-      <div className="overflow-y-auto flex-1 py-2 space-y-6">
-        {topSections.map((section, index) => (
-          <SidebarSection key={index} items={section} isOpen={isOpen} />
+  return (
+    <SidebarRoot collapsible="icon">
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" onClick={toggleSidebar} tooltip="StockS">
+              <div className="flex aspect-square size-8 items-center justify-center rounded-md">
+                <Logo className="w-5 h-5" />
+              </div>
+              <span className="font-semibold tracking-tight">StockS</span>
+              <ChevronsUpDown className="ml-auto size-4 text-sidebar-foreground/50" />
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+
+      <SidebarContent>
+        {groupSections.map((section, index) => (
+          <SidebarGroup key={index}>
+            {index === 0 && <SidebarGroupLabel>Dashboards</SidebarGroupLabel>}
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {section.map((item) => (
+                  <NavItem key={item.to} item={item} />
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
         ))}
-      </div>
+      </SidebarContent>
 
-      {/* Bottom section */}
-      <div className="py-4 border-t border-gray-100 space-y-4">
-        <SidebarSection items={bottomSection} isOpen={isOpen} />
-      </div>
-    </aside>
+      <SidebarFooter>
+        {footerSection.length > 0 && (
+          <SidebarMenu>
+            {footerSection.map((item) => (
+              <NavItem key={item.to} item={item} />
+            ))}
+          </SidebarMenu>
+        )}
+
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" tooltip="Toby Belhome">
+              <div className="size-8 shrink-0 overflow-hidden rounded-full border border-sidebar-border bg-blue-50">
+                <img
+                  src="https://api.dicebear.com/7.x/notionists/svg?seed=Toby&backgroundColor=e2e8f0"
+                  alt="User"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className="flex min-w-0 flex-col items-start leading-tight">
+                <span className="text-sm font-medium">Toby Belhome</span>
+                <span className="max-w-[140px] truncate text-[12px] text-sidebar-foreground/60">
+                  hello@tobybelhome.com
+                </span>
+              </div>
+              <MoreVertical className="ml-auto size-4 shrink-0 text-sidebar-foreground/50" />
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </SidebarRoot>
   );
 }

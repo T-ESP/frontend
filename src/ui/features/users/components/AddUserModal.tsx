@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FiX } from "react-icons/fi";
 import { userService } from "@/infrastructure/api/services/userService";
 import type { CreateUserDto } from "@/domain/models/User";
+import { Input } from "@/components/ui/input";
 
 interface AddUserModalProps {
   isOpen: boolean;
@@ -68,12 +69,11 @@ export function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Prénom *
             </label>
-            <input
+            <Input
               type="text"
               required
               value={formData.firstname}
               onChange={(e) => setFormData({ ...formData, firstname: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Ex: Jean"
             />
           </div>
@@ -82,12 +82,11 @@ export function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Nom *
             </label>
-            <input
+            <Input
               type="text"
               required
               value={formData.lastname}
               onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Ex: Dupont"
             />
           </div>
@@ -96,12 +95,11 @@ export function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email *
             </label>
-            <input
+            <Input
               type="email"
               required
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="jean.dupont@example.com"
             />
           </div>
@@ -110,12 +108,11 @@ export function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Mot de passe *
             </label>
-            <input
+            <Input
               type="password"
               required
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="••••••••"
               minLength={6}
             />

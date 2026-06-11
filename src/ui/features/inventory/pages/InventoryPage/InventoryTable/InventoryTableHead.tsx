@@ -1,30 +1,19 @@
 import { useTranslation } from "react-i18next";
 
+import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
 export function InventoryTableHead() {
   const { t } = useTranslation();
   return (
-    <thead className="bg-gray-100/70">
-      <tr>
-        <th className="px-6 py-3 text-xs font-semibold tracking-wider text-left uppercase text-slate-600">
-          {t('inventory.table.product')}
-        </th>
-        <th className="px-6 py-3 text-xs font-semibold tracking-wider text-left uppercase text-slate-600">
-          {t('inventory.table.category')}
-        </th>
-        <th className="px-6 py-3 text-xs font-semibold tracking-wider text-left uppercase text-slate-600">
-          {t('inventory.table.price')}
-        </th>
-        <th className="px-6 py-3 text-xs font-semibold tracking-wider text-left uppercase text-slate-600">
-          {t('inventory.table.stock')}
-        </th>
-        <th className="px-6 py-3 text-xs font-semibold tracking-wider text-left uppercase text-slate-600">
-          {t('inventory.table.status')}
-        </th>
-        <th className="px-6 py-3 text-xs font-semibold tracking-wider text-center uppercase text-slate-600">
-          {t('common.actions')}
-        </th>
-      </tr>
-    </thead>
+    <TableHeader>
+      <TableRow>
+        <TableHead className="px-6">{t("inventory.table.product")}</TableHead>
+        <TableHead className="px-6">{t("inventory.table.category")}</TableHead>
+        <TableHead className="px-6">{t("inventory.table.price")}</TableHead>
+        <TableHead className="px-6">{t("inventory.table.stock")}</TableHead>
+        <TableHead className="px-6">{t("inventory.table.status")}</TableHead>
+        <TableHead className="px-6 text-right">{t("common.actions")}</TableHead>
+      </TableRow>
+    </TableHeader>
   );
 }
-

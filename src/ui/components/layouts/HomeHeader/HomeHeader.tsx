@@ -1,24 +1,22 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronDown, User, LogOut, Menu } from "lucide-react";
+import { ChevronDown, User, LogOut } from "lucide-react";
 import type { JSX } from "react";
 import { clearAuthToken, useAuth } from "@/ui/features/auth/hooks/useAuth";
 import { useToast } from "@/ui/components/common/Toast";
 import { useTranslation } from "react-i18next";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
 
-
-type HomeHeaderProps = {
-    onMenuToggle?: () => void;
-};
-
-export function HomeHeader({ onMenuToggle }: HomeHeaderProps): JSX.Element {
+export function HomeHeader(): JSX.Element {
     const navigate = useNavigate();
     const { addToast } = useToast();
     const { t, i18n } = useTranslation();
     const { firstname, lastname, email } = useAuth();
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
     const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
-    const menuRef = useRef<HTMLDivElement>(null);
+    const profileRef = useRef<HTMLDivElement>(null);
+    const langRef = useRef<HTMLDivElement>(null);
 
     const handleLanguageChange = (lang: string) => {
         i18n.changeLanguage(lang);
@@ -27,19 +25,16 @@ export function HomeHeader({ onMenuToggle }: HomeHeaderProps): JSX.Element {
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+            if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
                 setIsProfileMenuOpen(false);
             }
+            if (langRef.current && !langRef.current.contains(event.target as Node)) {
+                setIsLangMenuOpen(false);
+            }
         };
-
-        if (isProfileMenuOpen) {
-            document.addEventListener("mousedown", handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [isProfileMenuOpen]);
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     const handleProfileClick = () => {
         navigate("/profile");
@@ -49,94 +44,108 @@ export function HomeHeader({ onMenuToggle }: HomeHeaderProps): JSX.Element {
     const handleLogout = () => {
         clearAuthToken();
         addToast(
-            t('profile.toasts.logout_title', 'Logout'),
-            t('profile.toasts.logout_msg', 'You have been logged out successfully.'),
-            "info"
+            t("profile.toasts.logout_title", "Logout"),
+            t("profile.toasts.logout_msg", "You have been logged out successfully."),
+            "info",
         );
         navigate("/login", { replace: true });
         setIsProfileMenuOpen(false);
     };
 
+    const initial = email
+        ? email.charAt(0).toUpperCase()
+        : firstname
+        ? firstname.charAt(0).toUpperCase()
+        : "U";
+
     return (
-        <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-3 bg-white border-b border-gray-200 md:px-5">
-            {/* Burger mobile */}
-            <div className="flex items-center min-w-0 gap-3 md:gap-4">
-                <button
-                    onClick={onMenuToggle}
-                    className="inline-flex items-center justify-center w-10 h-10 text-gray-700 rounded-xl hover:bg-gray-100 transition-colors md:hidden"
-                    aria-label="Ouvrir le menu"
-                >
-                    <Menu className="w-5 h-5" />
-                </button>
+        <header className="sticky top-0 z-40 flex h-14 shrink-0 items-center gap-2 border-b border-border bg-background px-4">
+            <div className="flex items-center gap-2">
+                <SidebarTrigger className="-ml-1" />
+                <Separator orientation="vertical" className="mx-1 h-4" />
             </div>
 
-            {/* Actions droites */}
-            <div className="flex items-center gap-2 md:gap-4">
-                {/* Langue */}
-                <div className="relative hidden sm:flex">
+            <div className="ml-auto flex items-center gap-1">
+                {/* Language */}
+                <div className="relative hidden sm:flex" ref={langRef}>
                     <button
-                        onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-                        className="flex gap-2 items-center px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                        onClick={() => setIsLangMenuOpen((v) => !v)}
+                        aria-expanded={isLangMenuOpen}
+                        className="inline-flex items-center gap-2 h-8 px-2.5 text-sm font-medium transition-colors rounded-md text-foreground hover:bg-muted"
                     >
-                        <span className="text-xl" aria-hidden>{i18n.language === 'fr' ? '🇫🇷' : '🇬🇧'}</span>
-                        <span className="text-sm font-medium text-gray-700">
-                            {i18n.language === 'fr' ? 'Français' : 'English'}
+                        <span className="text-base leading-none" aria-hidden>
+                            {i18n.language === "fr" ? "🇫🇷" : "🇬🇧"}
                         </span>
-                        <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isLangMenuOpen ? 'rotate-180' : ''}`} />
+                        <span>{i18n.language === "fr" ? "Français" : "English"}</span>
+                        <ChevronDown
+                            className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${
+                                isLangMenuOpen ? "rotate-180" : ""
+                            }`}
+                        />
                     </button>
 
                     {isLangMenuOpen && (
-                        <div className="absolute right-0 z-20 w-40 py-1 mt-2 overflow-hidden duration-200 bg-white border border-gray-100 shadow-lg top-full rounded-xl animate-in fade-in slide-in-from-top-2">
+                        <div className="absolute right-0 top-full z-50 mt-1 w-40 overflow-hidden rounded-md border border-border bg-popover py-1 shadow-md animate-in fade-in slide-in-from-top-1">
                             <button
-                                onClick={() => handleLanguageChange('en')}
-                                className={`flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors ${i18n.language !== 'fr' ? 'bg-purple-50 text-purple-700 font-medium' : 'text-gray-700 hover:bg-gray-50'
-                                    }`}
+                                onClick={() => handleLanguageChange("en")}
+                                className={`flex w-full items-center gap-2 px-3 py-1.5 text-sm transition-colors ${
+                                    i18n.language !== "fr"
+                                        ? "bg-accent text-primary"
+                                        : "text-foreground hover:bg-muted"
+                                }`}
                             >
-                                <span className="text-lg">🇬🇧</span> English
+                                <span className="text-base">🇬🇧</span> English
                             </button>
                             <button
-                                onClick={() => handleLanguageChange('fr')}
-                                className={`flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors ${i18n.language === 'fr' ? 'bg-purple-50 text-purple-700 font-medium' : 'text-gray-700 hover:bg-gray-50'
-                                    }`}
+                                onClick={() => handleLanguageChange("fr")}
+                                className={`flex w-full items-center gap-2 px-3 py-1.5 text-sm transition-colors ${
+                                    i18n.language === "fr"
+                                        ? "bg-accent text-primary"
+                                        : "text-foreground hover:bg-muted"
+                                }`}
                             >
-                                <span className="text-lg">🇫🇷</span> Français
+                                <span className="text-base">🇫🇷</span> Français
                             </button>
                         </div>
                     )}
                 </div>
 
-                {/* Profil utilisateur */}
-                <div className="relative" ref={menuRef}>
+                {/* Profile */}
+                <div className="relative" ref={profileRef}>
                     <button
-                        onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-                        className="flex gap-2 items-center px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                        onClick={() => setIsProfileMenuOpen((v) => !v)}
+                        aria-expanded={isProfileMenuOpen}
+                        className="inline-flex items-center gap-2 h-8 px-1.5 text-sm font-medium transition-colors rounded-md text-foreground hover:bg-muted"
                     >
-                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 text-purple-700 font-bold text-sm shrink-0">
-                            {email ? email.charAt(0).toUpperCase() : (firstname ? firstname.charAt(0).toUpperCase() : "U")}
-                        </div>
-                        <div className="flex-col items-start hidden leading-tight md:flex">
-                            <span className="text-sm font-medium text-gray-900">{firstname} {lastname}</span>
-                        </div>
-                        <ChevronDown className={`w-4 h-4 text-gray-600 transition-transform ${isProfileMenuOpen ? "rotate-180" : ""}`} />
+                        <span className="flex items-center justify-center w-6 h-6 text-xs font-semibold rounded-full bg-accent text-primary">
+                            {initial}
+                        </span>
+                        <span className="hidden md:inline">
+                            {firstname} {lastname}
+                        </span>
+                        <ChevronDown
+                            className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${
+                                isProfileMenuOpen ? "rotate-180" : ""
+                            }`}
+                        />
                     </button>
 
-                    {/* Menu déroulant */}
                     {isProfileMenuOpen && (
-                        <div className="absolute right-0 z-50 w-48 py-1 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg">
+                        <div className="absolute right-0 top-full z-50 mt-1 w-48 overflow-hidden rounded-md border border-border bg-popover py-1 shadow-md animate-in fade-in slide-in-from-top-1">
                             <button
                                 onClick={handleProfileClick}
-                                className="flex items-center w-full gap-3 px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-100"
+                                className="flex w-full items-center gap-2 px-3 py-1.5 text-sm transition-colors text-foreground hover:bg-muted"
                             >
                                 <User className="w-4 h-4" />
-                                <span>{t('sidebar.profile', 'Profil')}</span>
+                                <span>{t("sidebar.profile", "Profil")}</span>
                             </button>
-                            <div className="my-1 border-t border-gray-200" />
+                            <Separator className="my-1" />
                             <button
                                 onClick={handleLogout}
-                                className="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-600 transition-colors hover:bg-red-50"
+                                className="flex w-full items-center gap-2 px-3 py-1.5 text-sm transition-colors text-destructive hover:bg-destructive/10"
                             >
                                 <LogOut className="w-4 h-4" />
-                                <span>{t('sidebar.logout', 'Se déconnecter')}</span>
+                                <span>{t("sidebar.logout", "Se déconnecter")}</span>
                             </button>
                         </div>
                     )}

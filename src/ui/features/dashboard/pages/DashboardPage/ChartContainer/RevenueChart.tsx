@@ -1,75 +1,102 @@
-import { Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { CustomTooltip } from "../CustomTooltip/CustomTooltip";
-import type { RevenueChartProps } from "@/ui/features/dashboard/types";
+import { Line, LineChart } from "recharts";
 import { useTranslation } from "react-i18next";
+import { FiLoader } from "react-icons/fi";
+import type { RevenueChartProps } from "@/ui/features/dashboard/types";
 
-export function RevenueChart({ data }: RevenueChartProps) {
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import type { ChartConfig } from "@/components/ui/chart";
+
+interface Props extends RevenueChartProps {
+  rangeLabel?: string;
+  loading?: boolean;
+}
+
+const chartConfig = {
+  revenue: {
+    label: "Revenus",
+    color: "#0f172a", // Dark gray/black for primary data
+  },
+  profit: {
+    label: "Profit",
+    color: "#9ca3af", // Light gray for secondary data
+  },
+} satisfies ChartConfig;
+
+export function RevenueChart({ data, rangeLabel, loading }: Props) {
   const { t } = useTranslation();
 
   return (
-    <div className="overflow-hidden bg-white rounded-2xl border border-gray-100 shadow-sm lg:col-span-2">
-      <div className="flex justify-between items-center p-6 border-b border-gray-100">
+    <Card className="overflow-hidden bg-white border border-gray-100 rounded-2xl lg:col-span-2">
+      <CardHeader className="flex flex-row items-center justify-between p-6 border-b border-gray-100 space-y-0">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">{t('dashboard.charts.revenue_title')}</h3>
-          <p className="mt-1 text-sm text-gray-500">{t('dashboard.charts.revenue_subtitle')}</p>
+          <CardTitle className="text-lg font-semibold text-gray-900">
+            {t("dashboard.charts.revenue_title")}
+          </CardTitle>
+          <CardDescription className="mt-1 text-sm text-gray-500">
+            {t("dashboard.charts.revenue_subtitle")}
+          </CardDescription>
         </div>
-      </div>
-      <div className="p-6">
-        <ResponsiveContainer width="100%" height={350}>
-          <AreaChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-            <defs>
-              <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#7b5fa2" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#7b5fa2" stopOpacity={0} />
-              </linearGradient>
-              <linearGradient id="colorProfit" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#a480d1" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#a480d1" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-            <XAxis
-              dataKey="month"
-              axisLine={false}
-              tickLine={false}
-              tick={{ fontSize: 12, fill: '#64748b' }}
-            />
-            <YAxis
-              axisLine={false}
-              tickLine={false}
-              tick={{ fontSize: 12, fill: '#64748b' }}
-              tickFormatter={(value) => `€${(value / 1000).toFixed(0)}k`}
-            />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend
-              wrapperStyle={{ paddingTop: '20px' }}
-              iconType="circle"
-            />
-            <Area
-              type="monotone"
-              dataKey="revenue"
-              stroke="#7b5fa2"
-              strokeWidth={3}
-              fillOpacity={1}
-              fill="url(#colorRevenue)"
-              name={t('dashboard.charts.revenue')}
-              connectNulls={true}
-              animationDuration={1000} // Smooth animation when data changes
-            />
-            <Area
-              type="monotone"
-              dataKey="profit"
-              stroke="#a480d1"
-              strokeWidth={3}
-              fillOpacity={1}
-              fill="url(#colorProfit)"
-              name={t('dashboard.charts.profit')}
-              connectNulls={true}
-              animationDuration={1000}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
-      </div>
-    </div>
+        {/* Make the rangePicker look like the 'Export' button from the design */}
+        {rangeLabel && (
+          <button className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 focus:outline-none">
+            {rangeLabel}
+          </button>
+        )}
+      </CardHeader>
+
+      <CardContent className="p-6">
+        {loading ? (
+          <div className="flex items-center justify-center h-[350px] text-gray-400">
+            <FiLoader className="w-6 h-6 animate-spin mr-2" />
+            <span className="text-sm">Chargement des données...</span>
+          </div>
+        ) : data.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-[350px] text-gray-400">
+            <p className="text-sm font-medium">Aucune donnée sur la période sélectionnée</p>
+            <p className="text-xs mt-1 text-gray-300">Essayez une plage de dates plus large</p>
+          </div>
+        ) : (
+          <ChartContainer config={chartConfig} className="h-[350px] w-full">
+            <LineChart data={data} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
+              <ChartTooltip
+                cursor={{ stroke: '#f1f5f9', strokeWidth: 1 }}
+                content={<ChartTooltipContent />}
+              />
+              <Line
+                type="natural"
+                dataKey="revenue"
+                stroke="var(--color-revenue)"
+                strokeWidth={2}
+                dot={{ stroke: "var(--color-revenue)", strokeWidth: 2, fill: "white", r: 4 }}
+                activeDot={{ stroke: "var(--color-revenue)", strokeWidth: 2, fill: "white", r: 6 }}
+                connectNulls
+                animationDuration={600}
+              />
+              <Line
+                type="natural"
+                dataKey="profit"
+                stroke="var(--color-profit)"
+                strokeWidth={2}
+                dot={{ stroke: "var(--color-profit)", strokeWidth: 2, fill: "white", r: 4 }}
+                activeDot={{ stroke: "var(--color-profit)", strokeWidth: 2, fill: "white", r: 6 }}
+                connectNulls
+                animationDuration={600}
+              />
+            </LineChart>
+          </ChartContainer>
+        )}
+      </CardContent>
+    </Card>
   );
 }

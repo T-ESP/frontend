@@ -3,18 +3,16 @@ import PageLayout from "@/ui/components/layouts/PageLayout";
 import { KPICards } from "./KPICards";
 import { ChartContainer } from "./ChartContainer";
 import { TopProducts } from "./TopProducts";
-import { FlopProducts } from "./TopProducts/FlopProducts";
 import { PageActions } from "./PageActions/PageActions";
 import { orderService } from "@/infrastructure/api/services/orderService";
 import { productService } from "@/infrastructure/api/services/productService";
 import { userService } from "@/infrastructure/api/services/userService";
 import { salesService } from "@/infrastructure/api/services/salesService";
-import { globalKpisService } from "@/infrastructure/api/services/globalKpisService";
-import type { TopFlopProduct } from "@/infrastructure/api/services/globalKpisService";
 import type { Order } from "@/domain/models/Order";
 import type { Product } from "@/domain/models/Product";
 import type { User } from "@/domain/models/User";
 import { useTranslation } from "react-i18next";
+import { FiSettings, FiCheck } from "react-icons/fi";
 
 export default function DashboardPage() {
   const { t } = useTranslation();
@@ -23,11 +21,10 @@ export default function DashboardPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [evolution, setEvolution] = useState(0);
+  const [totalOrderCount, setTotalOrderCount] = useState<number | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState(30);
-  const [flopBySales, setFlopBySales] = useState<TopFlopProduct[]>([]);
-  const [flopByProfit, setFlopByProfit] = useState<TopFlopProduct[]>([]);
-  const [flopLoading, setFlopLoading] = useState(true);
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
@@ -39,95 +36,80 @@ export default function DashboardPage() {
 
       const endDate = new Date();
       const startDate = new Date();
-      if (dateRange === 0) {
-        startDate.setFullYear(2000, 0, 1);
-      } else {
-        startDate.setDate(startDate.getDate() - dateRange);
-      }
+      startDate.setDate(startDate.getDate() - dateRange);
 
-      const formatDate = (date: Date) => date.toISOString().split('T')[0];
+      const formatDate = (date: Date) => date.toISOString().split("T")[0];
 
       const period = {
         start_date: formatDate(startDate),
         end_date: formatDate(endDate),
       };
 
-      // Fetch all data in parallel
-      const [ordersData, productsData, usersData, revenueData, evolutionData] = await Promise.all([
-        orderService.getAll(),
-        productService.getAll(),
-        userService.getAll(),
-        salesService.getTotalRevenue(period),
-        salesService.getEvolution(period),
-      ]);
+      // Fetch all data in parallel, including order stats for accurate count
+      const [ordersData, productsData, usersData, revenueData, evolutionData, statsData] =
+        await Promise.allSettled([
+          orderService.getAll(),
+          productService.getAll(),
+          userService.getAll(),
+          salesService.getTotalRevenue(period),
+          salesService.getEvolution(period),
+          orderService.getStats(),
+        ]);
 
-      setOrders(ordersData);
-      setProducts(productsData);
-      setUsers(usersData);
-      console.log("🚀 ~ loadDashboardData ~ revenueData:", revenueData)
-      setTotalRevenue(revenueData.total_revenue);
-      setEvolution(evolutionData.evolution_percentage);
+      if (ordersData.status === "fulfilled") setOrders(ordersData.value);
+      if (productsData.status === "fulfilled") setProducts(productsData.value);
+      if (usersData.status === "fulfilled") setUsers(usersData.value);
+      if (revenueData.status === "fulfilled")
+        setTotalRevenue(revenueData.value.total_revenue);
+      if (evolutionData.status === "fulfilled")
+        setEvolution(evolutionData.value.evolution_percentage);
+      // Use stats total_orders for accurate count (avoids pagination discrepancy)
+      if (statsData.status === "fulfilled")
+        setTotalOrderCount(statsData.value.total_orders);
     } catch (error) {
-      console.error('Error loading dashboard data:', error);
+      console.error("Error loading dashboard data:", error);
     } finally {
       setLoading(false);
-    }
-
-    try {
-      setFlopLoading(true);
-      const endDate = new Date();
-      const startDate = new Date();
-      if (dateRange === 0) {
-        startDate.setFullYear(2000, 0, 1);
-      } else {
-        startDate.setDate(startDate.getDate() - dateRange);
-      }
-      const formatDate = (d: Date) => d.toISOString().split('T')[0];
-      const topFlop = await globalKpisService.getTopFlop({
-        start_date: formatDate(startDate),
-        end_date: formatDate(endDate),
-      });
-      setFlopBySales(topFlop.flop_10_by_sales);
-      setFlopByProfit(topFlop.flop_10_by_profit);
-    } catch (error) {
-      console.error('Error loading flop data:', error);
-    } finally {
-      setFlopLoading(false);
     }
   };
 
   const handleExport = () => {
-    // const csvData = [
-    //   [t('dashboard.export.title'), new Date().toISOString()],
-    //   [],
-    //   [t('dashboard.export.metric'), t('dashboard.export.value')],
-    //   [t('dashboard.kpi.total_revenue'), `€${totalRevenue.toFixed(2)}`],
-    //   [t('dashboard.kpi.revenue_evolution'), `${evolution.toFixed(1)}%`],
-    //   [t('dashboard.kpi.total_orders'), orders.length.toString()],
-    //   [t('dashboard.kpi.total_products'), products.length.toString()],
-    //   [t('dashboard.kpi.total_users'), users.length.toString()],
-    //   [t('dashboard.kpi.low_stock'), products.filter(p => p.stock_quantity < 10).length.toString()],
-    // ];
-
-    //   const csv = csvData.map(row => row.join(',')).join('\n');
-    //   const blob = new Blob([csv], { type: 'text/csv' });
-    //   const url = window.URL.createObjectURL(blob);
-    //   const link = document.createElement('a');
-    //   link.href = url;
-    //   link.download = `dashboard-${new Date().toISOString().split('T')[0]}.csv`;
-    //   link.click();
-  }
+    // Export logic placeholder
+  };
 
   return (
     <PageLayout
-      title={t('dashboard.title')}
-      subtitle={t('dashboard.subtitle')}
+      title={t("dashboard.title")}
+      subtitle={t("dashboard.subtitle")}
       actions={
-        <PageActions
-          onDateRangeChange={setDateRange}
-          currentRange={dateRange}
-          onExport={handleExport}
-        />
+        <div className="flex items-center gap-2">
+          {/* Edit Mode toggle */}
+          <button
+            onClick={() => setEditMode((v) => !v)}
+            className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-xl border transition-all ${
+              editMode
+                ? "bg-purple-600 text-white border-purple-600 shadow-sm"
+                : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+            }`}
+          >
+            {editMode ? (
+              <>
+                <FiCheck className="w-4 h-4" />
+                Terminer
+              </>
+            ) : (
+              <>
+                <FiSettings className="w-4 h-4" />
+                Éditer
+              </>
+            )}
+          </button>
+          <PageActions
+            onDateRangeChange={setDateRange}
+            currentRange={dateRange}
+            onExport={handleExport}
+          />
+        </div>
       }
     >
       {loading ? (
@@ -141,22 +123,22 @@ export default function DashboardPage() {
         </div>
       ) : (
         <>
-          {/* KPI Cards */}
+          {/* KPI Cards with edit modal */}
           <KPICards
             orders={orders}
             products={products}
             users={users}
             totalRevenue={totalRevenue}
             evolution={evolution}
+            totalOrderCount={totalOrderCount}
             dateRange={dateRange}
+            editMode={editMode}
+            onCloseEdit={() => setEditMode(false)}
           />
 
-          <ChartContainer orders={orders} dateRange={dateRange} />
+          <ChartContainer orders={orders} users={users} dateRange={dateRange} />
 
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            <TopProducts products={products} />
-            <FlopProducts flopBySales={flopBySales} flopByProfit={flopByProfit} loading={flopLoading} />
-          </div>
+          <TopProducts products={products} />
         </>
       )}
     </PageLayout>

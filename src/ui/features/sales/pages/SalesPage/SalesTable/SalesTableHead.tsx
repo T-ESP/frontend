@@ -1,21 +1,14 @@
+import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
 export function SalesTableHead() {
   return (
-    <thead>
-      <tr className="border-b border-gray-100 bg-gray-50/50">
-        <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
-          Date
-        </th>
-        <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
-          Orders Count
-        </th>
-        <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
-          Revenue
-        </th>
-        <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
-          Average Basket
-        </th>
-      </tr>
-    </thead>
+    <TableHeader>
+      <TableRow>
+        <TableHead className="px-6">Date</TableHead>
+        <TableHead className="px-6">Orders Count</TableHead>
+        <TableHead className="px-6">Revenue</TableHead>
+        <TableHead className="px-6">Average Basket</TableHead>
+      </TableRow>
+    </TableHeader>
   );
 }
-

@@ -10,6 +10,7 @@ import { InventoryTableBody } from "./InventoryTableBody";
 import { InventoryTableSkeleton } from "./InventoryTableSkeleton";
 import { useToast } from "@/ui/components/common/Toast";
 import { useTranslation } from "react-i18next";
+import { Table } from "@/components/ui/table";
 
 interface InventoryTableProps {
   onEdit: (item: InventoryItem) => void;
@@ -255,145 +256,140 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs, o
   }
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm">
-        <InventoryTableHeader
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-          categories={categories}
-          selectedStatus={selectedStatus}
-          onStatusChange={setSelectedStatus}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          sortBy={sortBy}
-          onSortChange={setSortBy}
-          sortOrder={sortOrder}
-          onSortOrderChange={setSortOrder}
-          priceRange={priceRange}
-          onPriceRangeChange={setPriceRange}
-          stockRange={stockRange}
-          onStockRangeChange={setStockRange}
-          onRefresh={loadProducts}
-          onExport={handleExport}
-          totalProducts={products.length}
-          filteredProducts={filteredAndSortedProducts.length}
-        />
-      </div>
+    <div className="overflow-hidden bg-white border rounded-xl border-border">
+      <InventoryTableHeader
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
+        categories={categories}
+        selectedStatus={selectedStatus}
+        onStatusChange={setSelectedStatus}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        sortBy={sortBy}
+        onSortChange={setSortBy}
+        sortOrder={sortOrder}
+        onSortOrderChange={setSortOrder}
+        priceRange={priceRange}
+        onPriceRangeChange={setPriceRange}
+        stockRange={stockRange}
+        onStockRangeChange={setStockRange}
+        onRefresh={loadProducts}
+        onExport={handleExport}
+        totalProducts={products.length}
+        filteredProducts={filteredAndSortedProducts.length}
+      />
 
       {filteredAndSortedProducts.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-12 text-center">
-          <div className="flex flex-col items-center space-y-3">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
-              <FiSearch className="w-8 h-8 text-gray-400" />
+        <div className="px-6 py-16 text-center border-t border-border">
+          <div className="flex flex-col items-center gap-3">
+            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-muted">
+              <FiSearch className="w-5 h-5 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900">{t('inventory.table.no_products_title')}</h3>
-            <p className="text-sm text-gray-500 max-w-md">
+            <h3 className="text-base font-medium text-foreground">{t('inventory.table.no_products_title')}</h3>
+            <p className="max-w-md text-sm text-muted-foreground">
               {t('inventory.table.no_products_desc')}
             </p>
           </div>
         </div>
       ) : (
         <>
-          <div className="overflow-hidden bg-white border shadow-xl rounded-2xl border-gray-200">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <InventoryTableHead />
-                <InventoryTableBody
-                  data={paginatedProducts}
-                  onEdit={onEdit}
-                  onDelete={onDelete}
-                  onStockUpdate={handleStockUpdate}
-                  onViewKPIs={onViewKPIs}
-                />
-              </table>
-            </div>
+          <div className="border-t border-border">
+            <Table>
+              <InventoryTableHead />
+              <InventoryTableBody
+                data={paginatedProducts}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                onStockUpdate={handleStockUpdate}
+                onViewKPIs={onViewKPIs}
+              />
+            </Table>
           </div>
 
           {/* Pagination */}
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-gray-600">
-                  {t('inventory.table.showing_range', {
-                    start: ((currentPage - 1) * itemsPerPage) + 1,
-                    end: Math.min(currentPage * itemsPerPage, filteredAndSortedProducts.length),
-                    total: filteredAndSortedProducts.length
-                  })}
-                </span>
-                <select
-                  value={itemsPerPage}
-                  onChange={(e) => {
-                    setItemsPerPage(Number(e.target.value));
-                    setCurrentPage(1);
-                  }}
-                  className="px-3 py-1.5 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                >
-                  <option value={10}>10 {t('inventory.table.per_page')}</option>
-                  <option value={25}>25 {t('inventory.table.per_page')}</option>
-                  <option value={50}>50 {t('inventory.table.per_page')}</option>
-                  <option value={100}>100 {t('inventory.table.per_page')}</option>
-                </select>
+          <div className="flex flex-col items-start justify-between gap-3 px-6 py-3 border-t md:flex-row md:items-center border-border bg-muted/20">
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-muted-foreground">
+                {t('inventory.table.showing_range', {
+                  start: ((currentPage - 1) * itemsPerPage) + 1,
+                  end: Math.min(currentPage * itemsPerPage, filteredAndSortedProducts.length),
+                  total: filteredAndSortedProducts.length
+                })}
+              </span>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => {
+                  setItemsPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="h-8 px-2 text-sm bg-white border rounded-md border-border focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                <option value={10}>10 {t('inventory.table.per_page')}</option>
+                <option value={25}>25 {t('inventory.table.per_page')}</option>
+                <option value={50}>50 {t('inventory.table.per_page')}</option>
+                <option value={100}>100 {t('inventory.table.per_page')}</option>
+              </select>
+            </div>
+
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setCurrentPage(1)}
+                disabled={currentPage === 1}
+                className="h-8 px-2.5 text-sm font-medium transition-colors bg-white border rounded-md border-border text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {t('inventory.table.first')}
+              </button>
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                className="h-8 px-2.5 text-sm font-medium transition-colors bg-white border rounded-md border-border text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {t('inventory.table.previous')}
+              </button>
+
+              <div className="flex items-center gap-1 px-1">
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`h-8 min-w-[2rem] px-2 text-sm font-medium rounded-md transition-colors ${
+                        currentPage === pageNum
+                          ? 'text-primary-foreground bg-primary'
+                          : 'text-foreground bg-white border border-border hover:bg-muted'
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
               </div>
 
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setCurrentPage(1)}
-                  disabled={currentPage === 1}
-                  className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {t('inventory.table.first')}
-                </button>
-                <button
-                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                  disabled={currentPage === 1}
-                  className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {t('inventory.table.previous')}
-                </button>
-
-                <div className="flex items-center gap-1">
-                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                    let pageNum;
-                    if (totalPages <= 5) {
-                      pageNum = i + 1;
-                    } else if (currentPage <= 3) {
-                      pageNum = i + 1;
-                    } else if (currentPage >= totalPages - 2) {
-                      pageNum = totalPages - 4 + i;
-                    } else {
-                      pageNum = currentPage - 2 + i;
-                    }
-
-                    return (
-                      <button
-                        key={pageNum}
-                        onClick={() => setCurrentPage(pageNum)}
-                        className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${currentPage === pageNum
-                          ? 'text-white bg-purple-600'
-                          : 'text-gray-700 bg-white border border-gray-200 hover:bg-gray-50'
-                          }`}
-                      >
-                        {pageNum}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <button
-                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                  disabled={currentPage === totalPages}
-                  className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {t('inventory.table.next')}
-                </button>
-                <button
-                  onClick={() => setCurrentPage(totalPages)}
-                  disabled={currentPage === totalPages}
-                  className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {t('inventory.table.last')}
-                </button>
-              </div>
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                className="h-8 px-2.5 text-sm font-medium transition-colors bg-white border rounded-md border-border text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {t('inventory.table.next')}
+              </button>
+              <button
+                onClick={() => setCurrentPage(totalPages)}
+                disabled={currentPage === totalPages}
+                className="h-8 px-2.5 text-sm font-medium transition-colors bg-white border rounded-md border-border text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {t('inventory.table.last')}
+              </button>
             </div>
           </div>
         </>

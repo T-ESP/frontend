@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { FiMessageSquare, FiUserPlus, FiSearch, FiMail, FiPhone, FiDownload, FiRefreshCw, FiMoreVertical } from "react-icons/fi";
+import { KpiStatCard, topNDistribution } from "@/ui/components/common/KpiStatCard/KpiStatCard";
+import { Input } from "@/components/ui/input";
 
 const mockClients = [
   {
@@ -75,8 +77,55 @@ export default function ClientsPage() {
     return matchesSearch && matchesStatus;
   });
 
+  const totalClients = mockClients.length;
+  const vipCount = mockClients.filter((c) => c.status === "VIP").length;
+  const activeCount = mockClients.filter((c) => c.status === "Active").length;
+  const totalSpent = mockClients.reduce((s, c) => s + c.totalSpent, 0);
+  const formatCurrency = (v: number) =>
+    new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(v);
+
   return (
-    <div className="space-y-6">
+    <div className="p-4 md:p-8 space-y-6">
+      {/* KPI cards */}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <KpiStatCard
+          title="Total clients"
+          value={totalClients.toString()}
+          description="dans la base"
+          chartData={topNDistribution(mockClients, (c) => c.orders, 7)}
+          chartType="bar"
+        />
+        <KpiStatCard
+          title="Clients VIP"
+          value={vipCount.toString()}
+          description="clients premium"
+          chartData={topNDistribution(
+            mockClients.filter((c) => c.status === "VIP"),
+            (c) => c.totalSpent,
+            7,
+          )}
+          chartType="line"
+        />
+        <KpiStatCard
+          title="Clients actifs"
+          value={activeCount.toString()}
+          description="actifs ce mois"
+          chartData={topNDistribution(
+            mockClients.filter((c) => c.status === "Active"),
+            (c) => c.orders,
+            7,
+          )}
+          chartType="bar"
+        />
+        <KpiStatCard
+          title="Total dépensé"
+          value={formatCurrency(totalSpent)}
+          description="cumul tous clients"
+          chartData={topNDistribution(mockClients, (c) => c.totalSpent, 7)}
+          chartType="line"
+        />
+      </div>
+
       {/* Header Section */}
       <div className="bg-white border border-gray-100 shadow-sm rounded-xl">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
@@ -105,12 +154,12 @@ export default function ClientsPage() {
           <div className="flex gap-3">
             <div className="relative flex-1">
               <FiSearch className="absolute w-5 h-5 text-gray-400 -translate-y-1/2 left-3 top-1/2" />
-              <input
+              <Input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by client name or email..."
-                className="w-full pl-10 pr-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent focus:bg-white transition-all"
+                className="h-10 pl-10"
               />
             </div>
             <select
