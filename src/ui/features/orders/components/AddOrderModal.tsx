@@ -28,6 +28,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { SearchableSelect } from '@/ui/components/common/SearchableSelect';
+
 
 interface AddOrderModalProps {
   onClose: () => void;
@@ -172,24 +174,19 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
             </div>
           ) : (
             <div className="flex flex-col gap-4">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="grid gap-1.5">
                   <Label htmlFor="user_id">{t('orders.add_modal.user_label')}</Label>
-                  <Select
+                  <SearchableSelect
+                    options={users.map((u) => ({
+                      value: String(u.id),
+                      label: `${u.firstname} ${u.lastname}`,
+                    }))}
                     value={formData.user_id ? String(formData.user_id) : undefined}
-                    onValueChange={(v) => setFormData({ ...formData, user_id: parseInt(v) })}
-                  >
-                    <SelectTrigger id="user_id">
-                      <SelectValue placeholder={t('orders.add_modal.select_user')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {users.map((user) => (
-                        <SelectItem key={user.id} value={String(user.id)}>
-                          {user.firstname} {user.lastname}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    placeholder={t('orders.add_modal.select_user')}
+                    searchPlaceholder="Rechercher un utilisateur..."
+                    onChange={(v) => setFormData({ ...formData, user_id: parseInt(v) })}
+                  />
                 </div>
 
                 <div className="grid gap-1.5">
@@ -201,7 +198,7 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
                     <SelectTrigger id="status">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent position="popper">
                       <SelectItem value="pending">{t('orders.status.pending')}</SelectItem>
                       <SelectItem value="confirmed">{t('orders.status.confirmed')}</SelectItem>
                       <SelectItem value="shipped">{t('orders.status.shipped')}</SelectItem>
@@ -235,23 +232,17 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
                       className="flex items-center gap-2 rounded-lg border bg-muted/30 p-2"
                     >
                       <div className="flex-1 min-w-0">
-                        <Select
+                        <SearchableSelect
+                          options={products.map((p) => ({
+                            value: String(p.id),
+                            label: `${p.name} — ${p.buying_price}€`,
+                          }))}
                           value={item.product_id ? String(item.product_id) : undefined}
-                          onValueChange={(v) =>
-                            updateLineItem(index, 'product_id', parseInt(v))
-                          }
-                        >
-                          <SelectTrigger className="bg-background">
-                            <SelectValue placeholder={t('orders.add_modal.select_product')} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {products.map((product) => (
-                              <SelectItem key={product.id} value={String(product.id)}>
-                                {product.name} — {product.buying_price}€
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                          placeholder={t('orders.add_modal.select_product')}
+                          searchPlaceholder="Rechercher un produit..."
+                          onChange={(v) => updateLineItem(index, 'product_id', parseInt(v))}
+                          className="bg-background"
+                        />
                       </div>
                       <Input
                         type="number"

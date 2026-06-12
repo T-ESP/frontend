@@ -56,7 +56,7 @@ export function InventoryCard({ item, index, onEdit, onDelete, onStockUpdate, on
       className="mb-3 transition-all duration-300 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md group"
       style={{ animationDelay: `${index * 30}ms` }}
     >
-      <div className="flex items-center gap-4 p-4">
+      <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
         {/* Left: Product Image Thumbnail */}
         {/* <div className="shrink-0">
           <img
@@ -85,7 +85,7 @@ export function InventoryCard({ item, index, onEdit, onDelete, onStockUpdate, on
         </div>
 
         {/* Right: Stock Badge, Price, Stock Controls, Actions */}
-        <div className="flex items-center gap-6">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-6">
           {/* Status Badge */}
           <div className="shrink-0">
             <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full ${statusStyle?.bg} ${statusStyle?.text} ${statusStyle?.border} border`}>

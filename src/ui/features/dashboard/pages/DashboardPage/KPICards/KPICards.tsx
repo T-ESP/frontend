@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { FiDollarSign, FiShoppingCart, FiPackage, FiUsers } from "react-icons/fi";
 import { Settings, Check, X } from "lucide-react";
 import { KPICard } from "./KPICard";
@@ -8,6 +8,55 @@ import type { Product } from "@/domain/models/Product";
 import type { User } from "@/domain/models/User";
 import { useTranslation } from "react-i18next";
 import { Checkbox } from "@/components/ui/checkbox";
+import { salesService } from "@/infrastructure/api/services/salesService";
+
+function grainForRange(days: number): "day" | "week" | "month" {
+  if (days <= 30) return "day";
+  if (days <= 90) return "week";
+  return "month";
+}
+
+function buildOrdersSparkline(orders: Order[]): { value: number }[] {
+  if (orders.length === 0) return [];
+  const buckets = new Map<string, number>();
+  orders.forEach((order) => {
+    const date = new Date(order.order_date || order.created_at);
+    if (isNaN(date.getTime())) return;
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+    buckets.set(key, (buckets.get(key) ?? 0) + 1);
+  });
+  const sorted = Array.from(buckets.entries()).sort(([a], [b]) => a.localeCompare(b));
+  return sorted.slice(-8).map(([, v]) => ({ value: v }));
+}
+
+function buildUsersSparkline(users: User[]): { value: number }[] {
+  if (users.length === 0) return [];
+  const usersWithDate = users.filter((u) => u.created_at);
+  if (usersWithDate.length < 2) {
+    // Pas assez de données temporelles : distribuer uniformément sur 6 buckets fictifs
+    const perBucket = Math.floor(users.length / 6);
+    const remainder = users.length % 6;
+    return Array.from({ length: 6 }, (_, i) => ({
+      value: perBucket + (i === 5 ? remainder : 0),
+    }));
+  }
+  const buckets = new Map<string, number>();
+  usersWithDate.forEach((user) => {
+    const d = new Date(user.created_at!);
+    if (isNaN(d.getTime())) return;
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    buckets.set(key, (buckets.get(key) ?? 0) + 1);
+  });
+  const sorted = Array.from(buckets.entries()).sort(([a], [b]) => a.localeCompare(b));
+  return sorted.slice(-8).map(([, v]) => ({ value: v }));
+}
+
+function buildStockSparkline(products: Product[]): { value: number }[] {
+  return [...products]
+    .sort((a, b) => a.stock_quantity - b.stock_quantity)
+    .slice(0, 8)
+    .map((p) => ({ value: p.stock_quantity }));
+}
 
 interface KPICardsProps {
   orders: Order[];
@@ -61,6 +110,27 @@ export function KPICards({
 
   const [visibleKPIs, setVisibleKPIs] = useState<KPIKey[]>(() => readPreferences());
   const [pendingVisible, setPendingVisible] = useState<KPIKey[]>(visibleKPIs);
+  const [revenueSparkline, setRevenueSparkline] = useState<{ value: number }[]>([]);
+
+  useEffect(() => {
+    const fetchSparkline = async () => {
+      try {
+        const endDate = new Date();
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - dateRange);
+        const fmt = (d: Date) => d.toISOString().split("T")[0];
+        const res = await salesService.getEvolutionByGrain({
+          start_date: fmt(startDate),
+          end_date: fmt(endDate),
+          grain: grainForRange(dateRange),
+        });
+        setRevenueSparkline(res.data.map((p) => ({ value: Math.round(p.revenue) })));
+      } catch {
+        setRevenueSparkline([]);
+      }
+    };
+    fetchSparkline();
+  }, [dateRange]);
 
   // Sync pending each time the modal opens
   useEffect(() => {
@@ -110,6 +180,10 @@ export function KPICards({
 
   const lowStockProducts = products.filter((p) => p.stock_quantity < 10).length;
 
+  const ordersSparkline = useMemo(() => buildOrdersSparkline(orders), [orders]);
+  const usersSparkline = useMemo(() => buildUsersSparkline(users), [users]);
+  const stockSparkline = useMemo(() => buildStockSparkline(products), [products]);
+
   const getDateRangeLabel = () => {
     if (dateRange === 7) return t("common.date_range.last_7_days");
     if (dateRange === 90) return t("common.date_range.last_90_days");
@@ -129,6 +203,8 @@ export function KPICards({
       color: "emerald",
       description: getDateRangeLabel(),
       isPrimary: false,
+      sparkline: revenueSparkline,
+      chartType: "line",
     },
     orders: {
       title: t("dashboard.kpi.total_orders"),
@@ -138,6 +214,8 @@ export function KPICards({
       icon: FiShoppingCart,
       color: "blue",
       description: t("common.all_time"),
+      sparkline: ordersSparkline,
+      chartType: "bar",
     },
     stock: {
       title: t("dashboard.kpi.low_stock_alert"),
@@ -148,6 +226,8 @@ export function KPICards({
       icon: FiPackage,
       color: lowStockProducts > 5 ? "amber" : "purple",
       description: t("dashboard.kpi.products_low_units"),
+      sparkline: stockSparkline,
+      chartType: "line",
     },
     users: {
       title: t("dashboard.kpi.total_users"),
@@ -157,6 +237,8 @@ export function KPICards({
       icon: FiUsers,
       color: "purple",
       description: t("common.all_time"),
+      sparkline: usersSparkline,
+      chartType: "bar",
     },
   };
 

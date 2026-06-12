@@ -150,6 +150,13 @@ export default function AlertsPage() {
     setSelectedIds(new Set());
   };
 
+  const handleBulkAcknowledge = async () => {
+    if (selectedIds.size === 0) return;
+    await alertService.bulkUpdateStatus({ ids: [...selectedIds], status: 'acknowledged' });
+    setAlerts((prev) => prev.map((a) => (selectedIds.has(a.id) ? { ...a, status: 'acknowledged' } : a)));
+    setSelectedIds(new Set());
+  };
+
   const filtered = useMemo(() => {
     return alerts.filter((a) => {
       const matchSearch = !search ||
@@ -193,7 +200,7 @@ export default function AlertsPage() {
     >
       {/* Summary KPIs */}
       {summary && (
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:grid-cols-4">
           {([
             { label: 'Critiques', count: summary.by_severity?.critical ?? 0, cardCls: 'bg-rose-50 border-rose-100', textCls: 'text-rose-700', iconCls: 'bg-rose-100 text-rose-500', Icon: ShieldAlert },
             { label: 'Hautes', count: summary.by_severity?.high ?? 0, cardCls: 'bg-orange-50 border-orange-100', textCls: 'text-orange-700', iconCls: 'bg-orange-100 text-orange-500', Icon: AlertTriangle },
@@ -273,13 +280,22 @@ export default function AlertsPage() {
               <option value="dismissed">Ignoré</option>
             </select>
             {selectedIds.size > 0 && (
-              <button
-                onClick={handleBulkResolve}
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors"
-              >
-                <CheckCheck className="w-4 h-4" />
-                Résoudre ({selectedIds.size})
-              </button>
+              <>
+                <button
+                  onClick={handleBulkAcknowledge}
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <CheckCheck className="w-4 h-4" />
+                  Marquer comme lu ({selectedIds.size})
+                </button>
+                <button
+                  onClick={handleBulkResolve}
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors"
+                >
+                  <CheckCheck className="w-4 h-4" />
+                  Résoudre ({selectedIds.size})
+                </button>
+              </>
             )}
           </div>
 

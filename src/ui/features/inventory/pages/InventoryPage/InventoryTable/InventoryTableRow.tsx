@@ -50,7 +50,7 @@ export function InventoryTableRow({
           <span className="mt-0.5 text-xs text-muted-foreground">SKU: {item.sku}</span>
         </div>
       </TableCell>
-      <TableCell className="px-6 py-3.5 text-sm text-muted-foreground">
+      <TableCell className="hidden px-6 py-3.5 text-sm text-muted-foreground md:table-cell">
         <span className="inline-flex items-center gap-1.5">
           <FiPackage className="h-3.5 w-3.5" />
           {item.category}
@@ -84,7 +84,7 @@ export function InventoryTableRow({
           </Button>
         </div>
       </TableCell>
-      <TableCell className="px-6 py-3.5">
+      <TableCell className="hidden px-6 py-3.5 md:table-cell">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
           <span className={`size-1.5 rounded-full ${status.dot}`} />
           {t(`inventory.status.${status.label}`)}

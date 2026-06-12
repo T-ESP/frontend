@@ -5,10 +5,18 @@ export interface LoyaltyConfig {
   discount_percent: number;
 }
 
+export interface LoyaltyTransaction {
+  id: number;
+  order_id: number | null;
+  points: number;
+  reason: string | null;
+  created_at: string;
+}
+
 export interface LoyaltyUserStats {
   user_id: number;
-  points: number;
-  fidelity_code: string;
+  total_points: number;
+  transactions: LoyaltyTransaction[];
 }
 
 export interface AdjustPointsDto {

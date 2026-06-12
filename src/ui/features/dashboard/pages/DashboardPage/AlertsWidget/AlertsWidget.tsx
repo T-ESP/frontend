@@ -36,7 +36,7 @@ export function AlertsWidget() {
 
   useEffect(() => {
     Promise.allSettled([
-      alertService.getAll({ severity: 'critical', status: 'new', limit: 4 }),
+      alertService.getAll({ status: 'new', limit: 4 }),
       alertService.getSummary(),
       aiPredictionsService.getUrgentRestocks(),
     ]).then(([alertsRes, summaryRes, restocksRes]) => {
@@ -47,8 +47,8 @@ export function AlertsWidget() {
     });
   }, []);
 
-  const criticalCount = summary?.by_severity?.critical ?? 0;
-  const highCount = summary?.by_severity?.high ?? 0;
+  const criticalCount = alerts.filter((a) => a.severity === 'critical').length;
+  const highCount = alerts.filter((a) => a.severity === 'high').length;
   const newCount = summary?.by_status?.new ?? 0;
 
   if (loading) {
@@ -61,7 +61,7 @@ export function AlertsWidget() {
     );
   }
 
-  if (criticalCount === 0 && highCount === 0 && restocks.length === 0) return null;
+  if (newCount === 0 && restocks.length === 0) return null;
 
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">

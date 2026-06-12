@@ -1,16 +1,15 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useRef } from "react";
 import { MessageCircle, X, Maximize2, Minimize2 } from "lucide-react";
 import { initialMessages, initialThreads } from "@/ui/features/ai-assistant/constants";
 import type { ChatMessage } from "@/ui/features/ai-assistant/types";
 import { ChatHeader } from "@/ui/features/ai-assistant/pages/AIAssistantPage/ChatHeader";
 import { Composer } from "@/ui/features/ai-assistant/pages/AIAssistantPage/Composer";
 import { MessageList } from "@/ui/features/ai-assistant/pages/AIAssistantPage/MessageList";
-import { aiInsightsService } from "@/infrastructure/api/services/aiInsightsService";
-import { agentService } from "@/infrastructure/api/services/agentService";
+import { chatBackendService } from "@/infrastructure/api/services/chatBackendService";
 import { useTranslation } from "react-i18next";
 
 export function FloatingChat() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -20,94 +19,69 @@ export function FloatingChat() {
   const activeThreadId = threadsData[0]?.id ?? "";
   const [messagesByThread, setMessagesByThread] = useState<Record<string, ChatMessage[]>>(messagesData);
   const [composer, setComposer] = useState("");
-  const [insightsContext, setInsightsContext] = useState("");
-
-  useEffect(() => {
-    const loadInsights = async () => {
-      try {
-        const data = await aiInsightsService.getLast30Days();
-        const formatted = aiInsightsService.formatForAI(data);
-        setInsightsContext(formatted);
-      } catch {
-        // silently fail
-      }
-    };
-    loadInsights();
-  }, []);
+  const [isSending, setIsSending] = useState(false);
+  const sessionIdRef = useRef(crypto.randomUUID());
 
   const activeMessages: ChatMessage[] = messagesByThread[activeThreadId] ?? [];
 
   const handleSend = async () => {
     const text = composer.trim();
-    if (!text || !activeThreadId) return;
+    if (!text || !activeThreadId || isSending) return;
 
-    const newMsg: ChatMessage = {
+    setIsSending(true);
+
+    const history = messagesByThread[activeThreadId] ?? [];
+
+    const userMsg: ChatMessage = {
       id: `m-${Date.now()}`,
       role: "user",
       content: text,
       createdAt: Date.now(),
     };
-
     setMessagesByThread((prev) => ({
       ...prev,
-      [activeThreadId]: [...(prev[activeThreadId] ?? []), newMsg],
+      [activeThreadId]: [...(prev[activeThreadId] ?? []), userMsg],
     }));
     setComposer("");
 
     const loadingId = `loading-${Date.now()}`;
-    const loadingMsg: ChatMessage = {
-      id: loadingId,
-      role: "bot",
-      content: t("ai_assistant.analyzing", "Analyse en cours..."),
-      createdAt: Date.now() + 10,
-    };
     setMessagesByThread((prev) => ({
       ...prev,
-      [activeThreadId]: [...(prev[activeThreadId] ?? []), loadingMsg],
+      [activeThreadId]: [
+        ...(prev[activeThreadId] ?? []),
+        {
+          id: loadingId,
+          role: "bot",
+          content: t("ai_assistant.analyzing", "Analyse en cours..."),
+          createdAt: Date.now() + 1,
+        } satisfies ChatMessage,
+      ],
     }));
 
-    try {
-      const currentHistory = messagesByThread[activeThreadId] || [];
-      const historyForAgent = currentHistory.map((m) => ({
-        role: m.role === "user" ? "user" : "assistant",
-        content: m.content,
+    const updateLoading = (content: string) => {
+      setMessagesByThread((prev) => ({
+        ...prev,
+        [activeThreadId]: (prev[activeThreadId] ?? []).map((m) =>
+          m.id === loadingId ? { ...m, content } : m
+        ),
       }));
+    };
 
-      const agentResponse = await agentService.handleUserMessage(
+    try {
+      await chatBackendService.streamTurn(
         text,
-        historyForAgent,
-        insightsContext,
-        i18n.language.split("-")[0]
+        history.map((m) => ({ role: m.role, content: m.content })),
+        sessionIdRef.current,
+        {
+          onStatus: updateLoading,
+          onDelta: updateLoading,
+          onError: (msg) => updateLoading(msg),
+        }
       );
-
-      const botMsg: ChatMessage = {
-        id: `m-${Date.now()}-bot`,
-        role: "bot",
-        content: agentResponse.message,
-        createdAt: Date.now(),
-      };
-
-      setMessagesByThread((prev) => {
-        const threadMsgs = prev[activeThreadId] ?? [];
-        return {
-          ...prev,
-          [activeThreadId]: threadMsgs.map((m) => (m.id === loadingId ? botMsg : m)),
-        };
-      });
     } catch {
-      setMessagesByThread((prev) => {
-        const threadMsgs = prev[activeThreadId] ?? [];
-        const errorMsg: ChatMessage = {
-          id: `err-${Date.now()}`,
-          role: "bot",
-          content: t("ai_assistant.error_msg", "Désolé, je rencontre des difficultés pour accéder aux services."),
-          createdAt: Date.now(),
-        };
-        return {
-          ...prev,
-          [activeThreadId]: threadMsgs.map((m) => (m.id === loadingId ? errorMsg : m)),
-        };
-      });
+      updateLoading(t("ai_assistant.error_msg", "Désolé, je rencontre des difficultés pour accéder aux services."));
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -151,7 +125,7 @@ export function FloatingChat() {
             </div>
           </div>
           <MessageList messages={activeMessages} />
-          <Composer value={composer} onChange={setComposer} onSend={handleSend} />
+          <Composer value={composer} onChange={setComposer} onSend={handleSend} disabled={isSending} />
         </div>
 
       {/* Toggle button */}

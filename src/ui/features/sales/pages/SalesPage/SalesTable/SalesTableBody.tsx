@@ -40,13 +40,13 @@ export function SalesTableBody({ data }: SalesTableBodyProps) {
       {data.map((row) => (
         <TableRow key={row.date}>
           <TableCell className="px-6 py-4 font-medium">{formatDate(row.date)}</TableCell>
-          <TableCell className="px-6 py-4 text-muted-foreground tabular-nums">
+          <TableCell className="hidden px-6 py-4 text-muted-foreground tabular-nums md:table-cell">
             {row.orders}
           </TableCell>
           <TableCell className="px-6 py-4 font-semibold tabular-nums">
             {formatCurrency(row.revenue)}
           </TableCell>
-          <TableCell className="px-6 py-4 text-muted-foreground tabular-nums">
+          <TableCell className="hidden px-6 py-4 text-muted-foreground tabular-nums md:table-cell">
             {row.orders > 0 ? formatCurrency(row.revenue / row.orders) : "-"}
           </TableCell>
         </TableRow>

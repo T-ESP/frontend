@@ -117,7 +117,7 @@ export default function ClientsPage() {
     setAdjustModal({
       clientId: client.id,
       clientName: client.name,
-      currentPoints: loyaltyStats[client.id]?.points ?? 0,
+      currentPoints: loyaltyStats[client.id]?.total_points ?? 0,
     });
     setAdjustAmount("");
     setAdjustReason("");
@@ -273,7 +273,7 @@ export default function ClientsPage() {
                   {loyalty && (
                     <div className="flex items-center gap-2 mt-1.5">
                       <span className="text-xs text-purple-600 font-mono bg-purple-50 px-2 py-0.5 rounded">
-                        {loyalty.fidelity_code}
+                        {loyalty.total_points} pts
                       </span>
                     </div>
                   )}
@@ -294,7 +294,7 @@ export default function ClientsPage() {
                     <div className="flex items-center justify-center gap-1">
                       <FiGift className="w-3.5 h-3.5 text-purple-400" />
                       <p className="text-lg font-bold text-purple-700">
-                        {loyalty !== undefined ? loyalty.points.toLocaleString() : "—"}
+                        {loyalty !== undefined ? loyalty.total_points.toLocaleString() : "—"}
                       </p>
                     </div>
                     <p className="text-xs text-gray-500">Points</p>

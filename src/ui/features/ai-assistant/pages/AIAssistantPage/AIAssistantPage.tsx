@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import PageLayout from "@/ui/components/layouts/PageLayout";
@@ -10,8 +10,7 @@ import type {
   ChatMessage,
   ChatThread,
 } from "@/ui/features/ai-assistant/types";
-import { agentService } from "@/infrastructure/api/services/agentService";
-import { aiInsightsService } from "@/infrastructure/api/services/aiInsightsService";
+import { chatBackendService } from "@/infrastructure/api/services/chatBackendService";
 
 import { ChatHeader } from "./ChatHeader";
 import { Composer } from "./Composer";
@@ -27,7 +26,7 @@ function makeId(prefix: string) {
 }
 
 export default function AIAssistantPage() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const initialThreadsData = useMemo(() => initialThreads, []);
   const initialMessagesData = useMemo(() => initialMessages, []);
@@ -40,27 +39,11 @@ export default function AIAssistantPage() {
     Record<string, ChatMessage[]>
   >(initialMessagesData);
   const [composer, setComposer] = useState("");
-  const [insightsContext, setInsightsContext] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const sessionIdRef = useRef(crypto.randomUUID());
 
   const [renameTargetId, setRenameTargetId] = useState<string | null>(null);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    aiInsightsService
-      .getLast30Days()
-      .then((data) => {
-        if (cancelled) return;
-        setInsightsContext(aiInsightsService.formatForAI(data));
-      })
-      .catch((error) => {
-        console.error("Erreur lors du chargement des insights:", error);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   const activeThread = threads.find((thread) => thread.id === activeThreadId);
   const activeMessages = messagesByThread[activeThreadId] ?? [];
@@ -118,13 +101,14 @@ export default function AIAssistantPage() {
 
     setIsSending(true);
 
+    const history = messagesByThread[activeThreadId] ?? [];
+
     const userMsg: ChatMessage = {
       id: makeId("m"),
       role: "user",
       content: text,
       createdAt: Date.now(),
     };
-
     setMessagesByThread((prev) => ({
       ...prev,
       [activeThreadId]: [...(prev[activeThreadId] ?? []), userMsg],
@@ -139,69 +123,56 @@ export default function AIAssistantPage() {
     setComposer("");
 
     const loadingId = makeId("loading");
-    const loadingMsg: ChatMessage = {
-      id: loadingId,
-      role: "bot",
-      content: t("ai_assistant.analyzing", "Analyse en cours..."),
-      createdAt: Date.now() + 1,
-    };
     setMessagesByThread((prev) => ({
       ...prev,
-      [activeThreadId]: [...(prev[activeThreadId] ?? []), loadingMsg],
+      [activeThreadId]: [
+        ...(prev[activeThreadId] ?? []),
+        {
+          id: loadingId,
+          role: "bot",
+          content: t("ai_assistant.analyzing", "Analyse en cours..."),
+          createdAt: Date.now() + 1,
+        } satisfies ChatMessage,
+      ],
     }));
 
-    try {
-      const history = (messagesByThread[activeThreadId] ?? []).map((m) => ({
-        role: m.role === "user" ? "user" : "assistant",
-        content: m.content,
+    const updateLoading = (content: string) => {
+      setMessagesByThread((prev) => ({
+        ...prev,
+        [activeThreadId]: (prev[activeThreadId] ?? []).map((m) =>
+          m.id === loadingId ? { ...m, content } : m
+        ),
       }));
+    };
 
-      const agentResponse = await agentService.handleUserMessage(
+    try {
+      await chatBackendService.streamTurn(
         text,
-        history,
-        insightsContext,
-        i18n.language.split("-")[0]
-      );
-
-      const botMsg: ChatMessage = {
-        id: makeId("m"),
-        role: "bot",
-        content: agentResponse.message,
-        createdAt: Date.now(),
-      };
-
-      setMessagesByThread((prev) => {
-        const list = prev[activeThreadId] ?? [];
-        return {
-          ...prev,
-          [activeThreadId]: list.map((m) => (m.id === loadingId ? botMsg : m)),
-        };
-      });
-      setThreads((prev) =>
-        prev.map((thread) =>
-          thread.id === activeThreadId
-            ? { ...thread, lastMessagePreview: agentResponse.message }
-            : thread
-        )
+        history.map((m) => ({ role: m.role, content: m.content })),
+        sessionIdRef.current,
+        {
+          onStatus: updateLoading,
+          onDelta: (content) => {
+            updateLoading(content);
+            setThreads((prev) =>
+              prev.map((thread) =>
+                thread.id === activeThreadId
+                  ? { ...thread, lastMessagePreview: content }
+                  : thread
+              )
+            );
+          },
+          onError: (msg) => updateLoading(msg),
+        }
       );
     } catch (error) {
       console.error("Erreur chat:", error);
-      const errorMsg: ChatMessage = {
-        id: makeId("err"),
-        role: "bot",
-        content: t(
+      updateLoading(
+        t(
           "ai_assistant.error_msg",
           "Désolé, je rencontre des difficultés pour accéder aux services."
-        ),
-        createdAt: Date.now(),
-      };
-      setMessagesByThread((prev) => {
-        const list = prev[activeThreadId] ?? [];
-        return {
-          ...prev,
-          [activeThreadId]: list.map((m) => (m.id === loadingId ? errorMsg : m)),
-        };
-      });
+        )
+      );
     } finally {
       setIsSending(false);
     }

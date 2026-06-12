@@ -50,7 +50,7 @@ function SupplierProfile({
       <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
         <div className={`h-28 bg-gradient-to-r ${gradient}`} />
         <div className="px-8 pb-8 -mt-12">
-          <div className="flex items-end justify-between">
+          <div className="flex flex-wrap items-end gap-4">
             <div
               className={`w-24 h-24 rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center text-white text-4xl font-black shadow-lg border-4 border-white`}
             >

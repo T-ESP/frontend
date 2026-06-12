@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
-import { MoreHorizontal } from "lucide-react";
+
 
 import PageLayout from "@/ui/components/layouts/PageLayout";
 import SalesChart from "@/ui/features/sales/pages/SalesPage/SalesChart";
@@ -10,7 +10,7 @@ import { orderService } from "@/infrastructure/api/services/orderService";
 import { productService } from "@/infrastructure/api/services/productService";
 import type { Order } from "@/domain/models/Order";
 import type { Product } from "@/domain/models/Product";
-import { Button } from "@/components/ui/button";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import {
@@ -395,7 +395,7 @@ export default function SalesPage() {
                   <TableHead className="px-6 text-right">{t("sales.table.units")}</TableHead>
                   <TableHead className="px-6 text-right">{t("sales.table.revenue")}</TableHead>
                   <TableHead className="px-6">{t("sales.table.performance")}</TableHead>
-                  <TableHead className="px-6" />
+
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -429,11 +429,7 @@ export default function SalesPage() {
                         />
                       </div>
                     </TableCell>
-                    <TableCell className="px-6 py-4 text-right">
-                      <Button variant="ghost" size="icon-sm">
-                        <MoreHorizontal />
-                      </Button>
-                    </TableCell>
+
                   </TableRow>
                 ))}
                 {filteredTopProducts.length === 0 && (

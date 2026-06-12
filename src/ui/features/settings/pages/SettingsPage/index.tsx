@@ -60,12 +60,12 @@ export default function SettingsPage() {
             </div>
             <div className="p-6 space-y-4">
               {section.items.map((item) => (
-                <div key={item.label} className="flex items-center justify-between p-4 transition-all border border-gray-200 rounded-lg bg-gray-50 hover:border-purple-300 hover:shadow-sm">
+                <div key={item.label} className="flex flex-col gap-3 p-4 transition-all border border-gray-200 rounded-lg bg-gray-50 hover:border-purple-300 hover:shadow-sm sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex-1">
                     <h4 className="font-semibold text-gray-900">{item.label}</h4>
                     <p className="mt-1 text-sm text-gray-500">{item.description}</p>
                   </div>
-                  <button className="px-4 py-2 text-sm font-medium text-purple-600 transition-colors bg-white border border-purple-200 rounded-lg hover:bg-purple-50">
+                  <button className="shrink-0 px-4 py-2 text-sm font-medium text-purple-600 transition-colors bg-white border border-purple-200 rounded-lg hover:bg-purple-50">
                     Configure
                   </button>
                 </div>

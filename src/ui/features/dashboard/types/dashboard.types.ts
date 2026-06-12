@@ -9,6 +9,8 @@ export type KPI = {
   color: string;
   description: string;
   isPrimary?: boolean;
+  sparkline?: { value: number }[];
+  chartType?: "line" | "bar";
 };
 
 export type TopProduct = {

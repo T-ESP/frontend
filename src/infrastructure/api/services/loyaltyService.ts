@@ -8,6 +8,13 @@ import type {
   AdjustPointsDto,
 } from '../../../domain/models/Loyalty';
 
+interface AdjustPointsBackendResponse {
+  user_id: number;
+  adjustment: number;
+  reason: string | null;
+  new_total_points: number;
+}
+
 export const loyaltyService = {
   async getConfig(): Promise<LoyaltyConfig> {
     const response = await apiClient.get<ApiResponse<LoyaltyConfig>>(
@@ -32,10 +39,11 @@ export const loyaltyService = {
   },
 
   async adjustPoints(userId: number, data: AdjustPointsDto): Promise<LoyaltyUserStats> {
-    const response = await apiClient.post<ApiResponse<LoyaltyUserStats>>(
+    const response = await apiClient.post<ApiResponse<AdjustPointsBackendResponse>>(
       API_ENDPOINTS.loyalty.adjustPoints(userId),
       data
     );
-    return response.data;
+    // Re-fetch stats to get the full updated object
+    return this.getUserStats(userId);
   },
 };
