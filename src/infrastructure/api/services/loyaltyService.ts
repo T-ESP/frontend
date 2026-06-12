@@ -39,11 +39,10 @@ export const loyaltyService = {
   },
 
   async adjustPoints(userId: number, data: AdjustPointsDto): Promise<LoyaltyUserStats> {
-    const _response = await apiClient.post<ApiResponse<AdjustPointsBackendResponse>>(
+    await apiClient.post<ApiResponse<AdjustPointsBackendResponse>>(
       API_ENDPOINTS.loyalty.adjustPoints(userId),
       data
     );
-    // Re-fetch stats to get the full updated object
     return this.getUserStats(userId);
   },
 };
