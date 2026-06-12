@@ -39,7 +39,7 @@ export const loyaltyService = {
   },
 
   async adjustPoints(userId: number, data: AdjustPointsDto): Promise<LoyaltyUserStats> {
-    const response = await apiClient.post<ApiResponse<AdjustPointsBackendResponse>>(
+    const _response = await apiClient.post<ApiResponse<AdjustPointsBackendResponse>>(
       API_ENDPOINTS.loyalty.adjustPoints(userId),
       data
     );
