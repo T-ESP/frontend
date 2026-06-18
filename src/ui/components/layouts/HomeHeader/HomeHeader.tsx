@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { ChevronDown, User, LogOut } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { ChevronDown, User, LogOut, HelpCircle, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/ui/theme/theme";
+import { requestReplay, TOUR_START_EVENT } from "@/ui/features/onboarding/onboardingTour";
 import type { JSX } from "react";
 import { clearAuthToken, useAuth } from "@/ui/features/auth/hooks/useAuth";
 import { useToast } from "@/ui/components/common/Toast";
@@ -10,9 +12,11 @@ import { Separator } from "@/components/ui/separator";
 
 export function HomeHeader(): JSX.Element {
     const navigate = useNavigate();
+    const { pathname } = useLocation();
     const { addToast } = useToast();
     const { t, i18n } = useTranslation();
     const { firstname, lastname, email } = useAuth();
+    const { theme, toggle: toggleTheme } = useTheme();
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
     const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
     const profileRef = useRef<HTMLDivElement>(null);
@@ -41,6 +45,17 @@ export function HomeHeader(): JSX.Element {
         setIsProfileMenuOpen(false);
     };
 
+    const handleReplayTour = () => {
+        // Le tour cible des zones du tableau de bord : on s'y rend si besoin,
+        // sinon on le déclenche directement.
+        if (pathname.startsWith("/dashboard")) {
+            window.dispatchEvent(new Event(TOUR_START_EVENT));
+        } else {
+            requestReplay();
+            navigate("/dashboard");
+        }
+    };
+
     const handleLogout = () => {
         clearAuthToken();
         addToast(
@@ -66,6 +81,26 @@ export function HomeHeader(): JSX.Element {
             </div>
 
             <div className="ml-auto flex items-center gap-1">
+                {/* Tour / aide */}
+                <button
+                    onClick={handleReplayTour}
+                    title={t("onboarding.replay", "Revoir le guide")}
+                    aria-label={t("onboarding.replay", "Revoir le guide")}
+                    className="inline-flex items-center justify-center h-8 w-8 transition-colors rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+                >
+                    <HelpCircle className="h-[18px] w-[18px]" />
+                </button>
+
+                {/* Thème clair / sombre */}
+                <button
+                    onClick={toggleTheme}
+                    title={theme === "dark" ? "Passer en mode clair" : "Passer en mode sombre"}
+                    aria-label={theme === "dark" ? "Passer en mode clair" : "Passer en mode sombre"}
+                    className="inline-flex items-center justify-center h-8 w-8 transition-colors rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+                >
+                    {theme === "dark" ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
+                </button>
+
                 {/* Language */}
                 <div className="relative hidden sm:flex" ref={langRef}>
                     <button

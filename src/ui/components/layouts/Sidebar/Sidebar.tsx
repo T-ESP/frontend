@@ -1,9 +1,10 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ChevronsUpDown, MoreVertical } from "lucide-react";
+import { ChevronsUpDown, MoreVertical, User, LogOut } from "lucide-react";
 
 import { Logo } from "@/ui/components/common/Logo";
-import { items } from "@/ui/constants/sidebar/sidebarItem";
+import { sections, footerItems } from "@/ui/constants/sidebar/sidebarItem";
+import { useAuth } from "@/ui/features/auth/hooks/useAuth";
 import {
   Sidebar as SidebarRoot,
   SidebarContent,
@@ -17,6 +18,14 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import type { SidebarItemType } from "./Sidebar.types";
 
 function isItemActive(pathname: string, to: string) {
@@ -41,12 +50,77 @@ function NavItem({ item }: { item: SidebarItemType }) {
   );
 }
 
-export function Sidebar() {
-  const { toggleSidebar } = useSidebar();
-  const [primarySection = [], secondarySection = [], footerSection = []] = items;
-  const groupSections = [primarySection, secondarySection].filter(
-    (section) => section.length > 0
+function getInitials(firstname: string, lastname: string, email: string) {
+  const f = firstname.trim();
+  const l = lastname.trim();
+  if (f || l) return `${f.charAt(0)}${l.charAt(0)}`.toUpperCase();
+  return email.charAt(0).toUpperCase() || "?";
+}
+
+function UserMenu() {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { firstname, lastname, email } = useAuth();
+
+  const fullName = `${firstname} ${lastname}`.trim() || email || t("sidebar.profile");
+  const initials = getInitials(firstname, lastname, email);
+
+  return (
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton size="lg" tooltip={fullName}>
+              <div className="flex aspect-square size-8 shrink-0 items-center justify-center rounded-full bg-sidebar-accent text-sidebar-accent-foreground text-xs font-semibold">
+                {initials}
+              </div>
+              <div className="flex min-w-0 flex-col items-start leading-tight">
+                <span className="truncate text-sm font-medium">{fullName}</span>
+                {email && (
+                  <span className="max-w-[140px] truncate text-[12px] text-sidebar-foreground/60">
+                    {email}
+                  </span>
+                )}
+              </div>
+              <MoreVertical className="ml-auto size-4 shrink-0 text-sidebar-foreground/50" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            side="right"
+            align="end"
+            sideOffset={8}
+            className="min-w-56"
+          >
+            <DropdownMenuLabel className="flex flex-col">
+              <span className="truncate text-sm font-medium">{fullName}</span>
+              {email && (
+                <span className="truncate text-xs font-normal text-muted-foreground">
+                  {email}
+                </span>
+              )}
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => navigate("/profile")}>
+              <User className="size-4" />
+              {t("sidebar.profile")}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate("/logout")}
+              className="text-rose-600 dark:text-rose-400 focus:text-rose-600 dark:text-rose-400"
+            >
+              <LogOut className="size-4" />
+              {t("sidebar.logout")}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
   );
+}
+
+export function Sidebar() {
+  const { t } = useTranslation();
+  const { toggleSidebar } = useSidebar();
 
   return (
     <SidebarRoot collapsible="icon">
@@ -64,13 +138,15 @@ export function Sidebar() {
         </SidebarMenu>
       </SidebarHeader>
 
-      <SidebarContent>
-        {groupSections.map((section, index) => (
-          <SidebarGroup key={index}>
-            {index === 0 && <SidebarGroupLabel>Dashboards</SidebarGroupLabel>}
+      <SidebarContent data-tour="nav">
+        {sections.map((section, index) => (
+          <SidebarGroup key={section.label ?? index}>
+            {section.label && (
+              <SidebarGroupLabel>{t(section.label)}</SidebarGroupLabel>
+            )}
             <SidebarGroupContent>
               <SidebarMenu>
-                {section.map((item) => (
+                {section.items.map((item) => (
                   <NavItem key={item.to} item={item} />
                 ))}
               </SidebarMenu>
@@ -80,34 +156,15 @@ export function Sidebar() {
       </SidebarContent>
 
       <SidebarFooter>
-        {footerSection.length > 0 && (
+        {footerItems.length > 0 && (
           <SidebarMenu>
-            {footerSection.map((item) => (
+            {footerItems.map((item) => (
               <NavItem key={item.to} item={item} />
             ))}
           </SidebarMenu>
         )}
 
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" tooltip="Toby Belhome">
-              <div className="size-8 shrink-0 overflow-hidden rounded-full border border-sidebar-border bg-blue-50">
-                <img
-                  src="https://api.dicebear.com/7.x/notionists/svg?seed=Toby&backgroundColor=e2e8f0"
-                  alt="User"
-                  className="h-full w-full object-cover"
-                />
-              </div>
-              <div className="flex min-w-0 flex-col items-start leading-tight">
-                <span className="text-sm font-medium">Toby Belhome</span>
-                <span className="max-w-[140px] truncate text-[12px] text-sidebar-foreground/60">
-                  hello@tobybelhome.com
-                </span>
-              </div>
-              <MoreVertical className="ml-auto size-4 shrink-0 text-sidebar-foreground/50" />
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <UserMenu />
       </SidebarFooter>
     </SidebarRoot>
   );

@@ -93,7 +93,7 @@ export function InventoryTableHeader({
         <div className="flex items-center gap-2">
           <button
             onClick={onRefresh}
-            className="inline-flex items-center gap-2 px-3 h-9 text-sm font-medium transition-colors bg-white border rounded-lg border-border text-foreground hover:bg-muted"
+            className="inline-flex items-center gap-2 px-3 h-9 text-sm font-medium transition-colors bg-card border rounded-lg border-border text-foreground hover:bg-muted"
             title={t('inventory.header.refresh')}
           >
             <FiRefreshCw className="w-4 h-4" />
@@ -190,7 +190,7 @@ export function InventoryTableHeader({
               </label>
               <button
                 onClick={() => onSortOrderChange(sortOrder === 'asc' ? 'desc' : 'asc')}
-                className="inline-flex items-center justify-center w-full gap-2 px-3 h-9 text-sm font-medium transition-colors bg-white border rounded-lg border-border text-foreground hover:bg-muted"
+                className="inline-flex items-center justify-center w-full gap-2 px-3 h-9 text-sm font-medium transition-colors bg-card border rounded-lg border-border text-foreground hover:bg-muted"
               >
                 {sortOrder === 'asc' ? `↑ ${t('inventory.sort.a_z')}` : `↓ ${t('inventory.sort.z_a')}`}
               </button>
@@ -205,7 +205,7 @@ export function InventoryTableHeader({
                 className={`inline-flex items-center justify-center gap-1.5 px-3 h-9 text-sm font-medium border rounded-lg transition-colors ${
                   showAdvancedFilters
                     ? 'text-primary bg-accent border-primary/20'
-                    : 'text-foreground bg-white border-border hover:bg-muted'
+                    : 'text-foreground bg-card border-border hover:bg-muted'
                 }`}
               >
                 <FiFilter className="w-4 h-4" />
@@ -225,7 +225,7 @@ export function InventoryTableHeader({
                   onPriceRangeChange({ min: 0, max: 10000 });
                   onStockRangeChange({ min: 0, max: 10000 });
                 }}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium transition-colors bg-white border rounded-md text-muted-foreground border-border hover:bg-accent hover:text-primary"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium transition-colors bg-card border rounded-md text-muted-foreground border-border hover:bg-accent hover:text-primary"
               >
                 <FiX className="w-3 h-3" />
                 {t('inventory.filters.reset')}

@@ -58,12 +58,12 @@ export function EditSupplierModal({ isOpen, onClose, onSupplierUpdated, supplier
 
   return (
     <div className="fixed inset-0 z-60 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-300">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-hidden border border-slate-200 animate-in zoom-in-95 duration-300">
+      <div className="bg-card rounded-lg shadow-2xl max-w-lg w-full max-h-[90vh] overflow-hidden border border-slate-200 animate-in zoom-in-95 duration-300">
 
         {/* Header - Consistent with EditProductModal */}
         <div className="flex items-center justify-between p-6 border-b border-slate-100 bg-slate-50 rounded-t-2xl">
           <div className="flex items-center gap-3">
-            <Edit3 className="w-6 h-6 text-blue-600" />
+            <Edit3 className="w-6 h-6 text-blue-600 dark:text-blue-400" />
             <div>
               <h2 className="text-xl font-bold text-slate-900">Editing Supplier</h2>
               <p className="text-sm text-slate-500">{supplier.name_sup}</p>
@@ -79,7 +79,7 @@ export function EditSupplierModal({ isOpen, onClose, onSupplierUpdated, supplier
 
         <form onSubmit={handleSubmit} className="p-6 space-y-5 overflow-y-auto max-h-[calc(90vh-120px)]">
           {error && (
-            <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 text-sm font-medium flex items-center gap-2">
+            <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-lg text-rose-700 dark:text-rose-300 text-sm font-medium flex items-center gap-2">
               <AlertTriangle size={18} />
               {error}
             </div>
@@ -156,7 +156,7 @@ export function EditSupplierModal({ isOpen, onClose, onSupplierUpdated, supplier
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 text-sm font-semibold text-slate-700 bg-white rounded-xl border border-slate-300 hover:bg-slate-50 transition duration-150"
+              className="flex-1 px-4 py-2.5 text-sm font-semibold text-slate-700 bg-card rounded-xl border border-slate-300 hover:bg-slate-50 transition duration-150"
             >
               Cancel
             </button>

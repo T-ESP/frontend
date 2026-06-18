@@ -90,7 +90,7 @@ export function FloatingChat() {
       {/* Chat panel — toujours monté pour permettre une transition d'ouverture/fermeture fluide */}
       <div
         aria-hidden={!isOpen}
-        className={`absolute bottom-16 right-0 bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden origin-bottom-right transition-all duration-300 ease-out ${
+        className={`absolute bottom-16 right-0 bg-card rounded-lg shadow-2xl border border-border flex flex-col overflow-hidden origin-bottom-right transition-all duration-300 ease-out ${
           // Taille étendue ou normale, toujours plafonnée au viewport (jamais plein écran)
           isExpanded
             ? "w-[calc(100vw-2rem)] sm:w-[640px] h-[680px] max-h-[calc(100vh-6rem)]"
@@ -101,14 +101,14 @@ export function FloatingChat() {
             : "opacity-0 scale-95 translate-y-2 pointer-events-none"
         }`}
       >
-          <div className="flex justify-between items-center pr-2 border-b border-gray-200">
+          <div className="flex justify-between items-center pr-2 border-b border-border">
             <div className="flex-1">
               <ChatHeader />
             </div>
             <div className="flex items-center gap-0.5">
               <button
                 onClick={() => setIsExpanded((prev) => !prev)}
-                className="p-1.5 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+                className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted"
                 title={isExpanded ? t("ai_assistant.shrink", "Réduire") : t("ai_assistant.expand", "Agrandir")}
                 aria-label={isExpanded ? t("ai_assistant.shrink", "Réduire") : t("ai_assistant.expand", "Agrandir")}
               >
@@ -116,7 +116,7 @@ export function FloatingChat() {
               </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+                className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted"
                 title={t("ai_assistant.close", "Fermer")}
                 aria-label={t("ai_assistant.close", "Fermer")}
               >
@@ -130,8 +130,9 @@ export function FloatingChat() {
 
       {/* Toggle button */}
       <button
+        data-tour="assistant"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex justify-center items-center w-14 h-14 text-white rounded-full shadow-lg transition-transform duration-200 ease-out bg-primary hover:scale-105 active:scale-95"
+        className="flex justify-center items-center w-14 h-14 text-primary-foreground rounded-full shadow-lg transition-transform duration-200 ease-out bg-primary hover:scale-105 active:scale-95"
       >
         {isOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
       </button>

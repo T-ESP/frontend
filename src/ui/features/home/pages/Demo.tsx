@@ -13,7 +13,7 @@ import { useAuth } from "@/ui/features/auth/hooks/useAuth";
 import demoVideo from "@/assets/stocks-demo.mp4";
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
-const BRAND = "#7b5fa2";
+const BRAND = "#6366f1";
 const BRAND_L = "#9d7bdd";
 
 // ─── Navbar (identique LP) ────────────────────────────────────────────────────
@@ -33,7 +33,7 @@ function DemoNavbar() {
         const unsub2 = smy.on("change", v => py.set(`${(v * 100).toFixed(1)}%`));
         return () => { unsub1(); unsub2(); };
     }, [smx, smy, px, py]);
-    const bg = useMotionTemplate`radial-gradient(ellipse 70% 55% at ${px} ${py}, rgba(123,95,162,0.18) 0%, transparent 60%)`;
+    const bg = useMotionTemplate`radial-gradient(ellipse 70% 55% at ${px} ${py}, rgba(99, 102, 241,0.18) 0%, transparent 60%)`;
 
     const attachRef = useCallback((node: HTMLElement | null) => {
         if (!node) return;
@@ -67,7 +67,7 @@ function DemoNavbar() {
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     transition={{ type: "spring", stiffness: 400 }}
                     className="p-1.5 rounded-xl"
-                    style={{ background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)", boxShadow: "0 4px 14px rgba(123,95,162,0.42)" }}
+                    style={{ background: "linear-gradient(135deg,#6366f1,#9d7bdd)", boxShadow: "0 4px 14px rgba(99, 102, 241,0.42)" }}
                 >
                     <Logo className="w-5 h-5 brightness-0 invert" />
                 </motion.div>
@@ -86,7 +86,7 @@ function DemoNavbar() {
                     <Link
                         to="/profile"
                         className="flex justify-center items-center w-10 h-10 font-bold text-white rounded-full transition-transform hover:scale-105"
-                        style={{ background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)", boxShadow: "0 4px 14px rgba(123,95,162,0.38)" }}
+                        style={{ background: "linear-gradient(135deg,#6366f1,#9d7bdd)", boxShadow: "0 4px 14px rgba(99, 102, 241,0.38)" }}
                         title="Mon profil"
                     >
                         {email ? email.charAt(0).toUpperCase() : (firstname ? firstname.charAt(0).toUpperCase() : "U")}
@@ -108,7 +108,7 @@ function DemoNavbar() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.97 }}
                         transition={{ duration: 0.2 }}
-                        className="flex absolute right-4 left-4 top-full z-50 flex-col gap-5 p-6 mt-2 rounded-2xl md:hidden"
+                        className="flex absolute right-4 left-4 top-full z-50 flex-col gap-5 p-6 mt-2 rounded-lg md:hidden"
                         style={{
                             background: "rgba(12,7,30,0.94)",
                             border: "1px solid rgba(255,255,255,0.08)",
@@ -163,21 +163,21 @@ function VideoSlot() {
                     style={{
                         aspectRatio: "16 / 9",
                         background: "rgba(255,255,255,0.03)",
-                        border: "1px solid rgba(123,95,162,0.22)",
-                        boxShadow: "0 32px 80px -16px rgba(123,95,162,0.28), 0 0 0 1px rgba(123,95,162,0.1)",
+                        border: "1px solid rgba(99, 102, 241,0.22)",
+                        boxShadow: "0 32px 80px -16px rgba(99, 102, 241,0.28), 0 0 0 1px rgba(99, 102, 241,0.1)",
                     }}>
 
                     {/* Dot grid interne */}
                     <div className="absolute inset-0"
                         style={{
-                            backgroundImage: "radial-gradient(rgba(123,95,162,0.18) 1px, transparent 1px)",
+                            backgroundImage: "radial-gradient(rgba(99, 102, 241,0.18) 1px, transparent 1px)",
                             backgroundSize: "24px 24px",
                         }} />
 
                     {/* Glow central */}
                     <div className="absolute inset-0 pointer-events-none"
                         style={{
-                            background: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(123,95,162,0.14) 0%, transparent 70%)",
+                            background: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(99, 102, 241,0.14) 0%, transparent 70%)",
                         }} />
 
                     {/* Contenu centré */}
@@ -200,7 +200,7 @@ function VideoSlot() {
                                 className="flex relative justify-center items-center w-16 h-16 rounded-full"
                                 style={{
                                     background: `linear-gradient(135deg, ${BRAND}, ${BRAND_L})`,
-                                    boxShadow: `0 8px 32px rgba(123,95,162,0.55)`,
+                                    boxShadow: `0 8px 32px rgba(99, 102, 241,0.55)`,
                                 }}>
                                 <Play size={22} className="ml-1 text-white" fill="white" />
                             </div>
@@ -208,7 +208,7 @@ function VideoSlot() {
 
                         <div className="text-center">
                             <p className="mb-1 text-base font-bold text-white">Vidéo de présentation</p>
-                            <p className="text-[12px]" style={{ color: "rgba(176,142,224,0.5)" }}>
+                            <p className="text-[12px]" style={{ color: "rgba(34, 211, 238,0.5)" }}>
                                 Disponible prochainement
                             </p>
                         </div>
@@ -219,7 +219,7 @@ function VideoSlot() {
                         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest"
                             style={{
                                 background: "rgba(12,7,30,0.7)",
-                                border: "1px solid rgba(123,95,162,0.25)",
+                                border: "1px solid rgba(99, 102, 241,0.25)",
                                 backdropFilter: "blur(12px)",
                                 color: BRAND_L,
                             }}>
@@ -243,7 +243,7 @@ function VideoSlot() {
             <div className="overflow-hidden relative rounded-4xl"
                 style={{
                     aspectRatio: "16 / 9",
-                    boxShadow: "0 32px 80px -16px rgba(123,95,162,0.32), 0 0 0 1px rgba(123,95,162,0.15)",
+                    boxShadow: "0 32px 80px -16px rgba(99, 102, 241,0.32), 0 0 0 1px rgba(99, 102, 241,0.15)",
                 }}>
                 <video
                     ref={videoRef}
@@ -267,7 +267,7 @@ function VideoSlot() {
                             className="flex justify-center items-center w-16 h-16 rounded-full transition-transform hover:scale-110"
                             style={{
                                 background: `linear-gradient(135deg, ${BRAND}, ${BRAND_L})`,
-                                boxShadow: `0 8px 32px rgba(123,95,162,0.55)`,
+                                boxShadow: `0 8px 32px rgba(99, 102, 241,0.55)`,
                             }}>
                             <Play size={22} className="ml-1 text-white" fill="white" />
                         </div>
@@ -347,17 +347,17 @@ function PanelDashboard({ active }: { active: boolean }) {
             {/* Primary KPI */}
             <div className="rounded-[1.4rem] px-5 py-4"
                 style={{
-                    background: "linear-gradient(135deg,rgba(123,95,162,0.18),rgba(157,123,221,0.12))",
-                    border: "1px solid rgba(123,95,162,0.25)"
+                    background: "linear-gradient(135deg,rgba(99, 102, 241,0.18),rgba(157,123,221,0.12))",
+                    border: "1px solid rgba(99, 102, 241,0.25)"
                 }}>
                 <div className="flex justify-between items-center">
                     <div className="flex gap-3 items-center">
                         <div className="flex justify-center items-center w-11 h-11 rounded-xl"
-                            style={{ background: "linear-gradient(135deg,#7b5fa2,#9d7bdd)", boxShadow: "0 6px 18px rgba(123,95,162,0.38)" }}>
+                            style={{ background: "linear-gradient(135deg,#6366f1,#9d7bdd)", boxShadow: "0 6px 18px rgba(99, 102, 241,0.38)" }}>
                             <TrendingUp size={18} className="text-white" />
                         </div>
                         <div>
-                            <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: "rgba(176,142,224,0.5)" }}>CA Total</p>
+                            <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: "rgba(34, 211, 238,0.5)" }}>CA Total</p>
                             <p className="text-[1.5rem] font-black tabular-nums leading-none" style={{ color: "#fff" }}>
                                 €<Counter value={12480} active={active} />
                             </p>
@@ -377,28 +377,28 @@ function PanelDashboard({ active }: { active: boolean }) {
                     { label: "Stock faible", value: 3, icon: FiPkg, sub: "références" },
                     { label: "Utilisateurs", value: 5, icon: FiUsers, sub: "actifs" },
                 ].map(({ label, value, icon: Icon, sub }) => (
-                    <div key={label} className="px-3 py-3 rounded-2xl"
+                    <div key={label} className="px-3 py-3 rounded-lg"
                         style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
                         <div className="flex justify-between items-center mb-2">
                             <div className="flex justify-center items-center w-8 h-8 rounded-xl"
-                                style={{ background: "rgba(123,95,162,0.18)" }}>
+                                style={{ background: "rgba(99, 102, 241,0.18)" }}>
                                 <Icon className="w-4 h-4" style={{ color: BRAND_L }} />
                             </div>
                         </div>
-                        <p className="text-[8px] font-bold uppercase tracking-widest mb-0.5" style={{ color: "rgba(176,142,224,0.45)" }}>{label}</p>
+                        <p className="text-[8px] font-bold uppercase tracking-widest mb-0.5" style={{ color: "rgba(34, 211, 238,0.45)" }}>{label}</p>
                         <p className="text-[1.1rem] font-black tabular-nums leading-none mb-1" style={{ color: "#fff" }}>
                             <Counter value={value} active={active} />
                         </p>
-                        <p className="text-[9px] font-medium" style={{ color: "rgba(176,142,224,0.4)" }}>{sub}</p>
+                        <p className="text-[9px] font-medium" style={{ color: "rgba(34, 211, 238,0.4)" }}>{sub}</p>
                     </div>
                 ))}
             </div>
 
             {/* Bar chart */}
-            <div className="rounded-2xl p-3.5 flex-1"
+            <div className="rounded-lg p-3.5 flex-1"
                 style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
                 <div className="flex justify-between items-center mb-2">
-                    <p className="text-[8px] font-bold uppercase tracking-widest" style={{ color: "rgba(176,142,224,0.45)" }}>Activité — 13 semaines</p>
+                    <p className="text-[8px] font-bold uppercase tracking-widest" style={{ color: "rgba(34, 211, 238,0.45)" }}>Activité — 13 semaines</p>
                     <span className="text-[9px] font-bold" style={{ color: BRAND_L }}>démo</span>
                 </div>
                 <div className="h-12"><MiniBar values={BARS} active={active} /></div>
@@ -438,7 +438,7 @@ function PanelInventory({ active }: { active: boolean }) {
                     { label: "En stock", value: inStock, color: "text-emerald-400", bg: "rgba(16,185,129,0.12)", border: "rgba(16,185,129,0.2)" },
                     { label: "Faible", value: lowStock, color: "text-amber-400", bg: "rgba(245,158,11,0.12)", border: "rgba(245,158,11,0.2)" },
                     { label: "Rupture", value: outStock, color: "text-rose-400", bg: "rgba(239,68,68,0.12)", border: "rgba(239,68,68,0.2)" },
-                    { label: "Total", value: items.length, color: "text-purple-400", bg: "rgba(123,95,162,0.15)", border: "rgba(123,95,162,0.25)" },
+                    { label: "Total", value: items.length, color: "text-purple-400", bg: "rgba(99, 102, 241,0.15)", border: "rgba(99, 102, 241,0.25)" },
                 ].map(({ label, value, color, bg, border }) => (
                     <div key={label} className={`px-2 py-2 text-center rounded-xl ${color}`}
                         style={{ background: bg, border: `1px solid ${border}` }}>
@@ -455,17 +455,17 @@ function PanelInventory({ active }: { active: boolean }) {
                         initial={{ opacity: 0, x: 14 }}
                         animate={{ opacity: active ? 1 : 0, x: active ? 0 : 14 }}
                         transition={{ duration: 0.4, delay: active ? i * 0.07 : 0, ease: [0.16, 1, 0.3, 1] }}
-                        className="flex items-center justify-between rounded-2xl px-3.5 py-2.5 transition-colors"
+                        className="flex items-center justify-between rounded-lg px-3.5 py-2.5 transition-colors"
                         style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
                     >
                         <div className="flex items-center gap-2.5">
                             <div className="flex justify-center items-center w-8 h-8 rounded-full shrink-0"
                                 style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                                <FiPkg className="w-4 h-4" style={{ color: "rgba(176,142,224,0.4)" }} />
+                                <FiPkg className="w-4 h-4" style={{ color: "rgba(34, 211, 238,0.4)" }} />
                             </div>
                             <div>
                                 <p className="text-[11px] font-medium" style={{ color: "#fff" }}>{item.name}</p>
-                                <p className="text-[9px] font-mono" style={{ color: "rgba(176,142,224,0.45)" }}>SKU: {item.sku}</p>
+                                <p className="text-[9px] font-mono" style={{ color: "rgba(34, 211, 238,0.45)" }}>SKU: {item.sku}</p>
                             </div>
                         </div>
                         <div className="flex gap-3 items-center">
@@ -486,21 +486,21 @@ function PanelInventory({ active }: { active: boolean }) {
 function PanelSales({ active }: { active: boolean }) {
     const statusColor: Record<string, { bg: string; text: string; ring: string }> = {
         "Livré": { bg: "rgba(16,185,129,0.12)", text: "text-emerald-400", ring: "rgba(16,185,129,0.25)" },
-        "En transit": { bg: "rgba(123,95,162,0.15)", text: "text-purple-400", ring: "rgba(123,95,162,0.3)" },
+        "En transit": { bg: "rgba(99, 102, 241,0.15)", text: "text-purple-400", ring: "rgba(99, 102, 241,0.3)" },
         "Confirmé": { bg: "rgba(59,130,246,0.12)", text: "text-blue-400", ring: "rgba(59,130,246,0.25)" },
         "En attente": { bg: "rgba(245,158,11,0.12)", text: "text-amber-400", ring: "rgba(245,158,11,0.25)" },
     };
 
     const orders = [
-        { id: "CMD-0012", fournisseur: "Fournisseur A", montant: "€840", status: "Livré" },
-        { id: "CMD-0011", fournisseur: "Fournisseur B", montant: "€320", status: "En transit" },
-        { id: "CMD-0010", fournisseur: "Fournisseur C", montant: "€1 200", status: "Confirmé" },
-        { id: "CMD-0009", fournisseur: "Fournisseur A", montant: "€560", status: "Livré" },
-        { id: "CMD-0008", fournisseur: "Fournisseur D", montant: "€190", status: "En attente" },
+        { id: "CMD-0012", fournisseur: "Fournisseur A", montant: "840€", status: "Livré" },
+        { id: "CMD-0011", fournisseur: "Fournisseur B", montant: "320€", status: "En transit" },
+        { id: "CMD-0010", fournisseur: "Fournisseur C", montant: "1 200€", status: "Confirmé" },
+        { id: "CMD-0009", fournisseur: "Fournisseur A", montant: "560€", status: "Livré" },
+        { id: "CMD-0008", fournisseur: "Fournisseur D", montant: "190€", status: "En attente" },
     ];
 
     const stats = [
-        { label: "Total", value: orders.length, bg: "rgba(123,95,162,0.15)", text: "text-purple-400", border: "rgba(123,95,162,0.25)" },
+        { label: "Total", value: orders.length, bg: "rgba(99, 102, 241,0.15)", text: "text-purple-400", border: "rgba(99, 102, 241,0.25)" },
         { label: "Livrées", value: 2, bg: "rgba(16,185,129,0.12)", text: "text-emerald-400", border: "rgba(16,185,129,0.2)" },
         { label: "En cours", value: 2, bg: "rgba(59,130,246,0.12)", text: "text-blue-400", border: "rgba(59,130,246,0.2)" },
         { label: "En attente", value: 1, bg: "rgba(245,158,11,0.12)", text: "text-amber-400", border: "rgba(245,158,11,0.2)" },
@@ -518,7 +518,7 @@ function PanelSales({ active }: { active: boolean }) {
                 ))}
             </div>
 
-            <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5" style={{ color: "rgba(176,142,224,0.45)" }}>Commandes récentes</p>
+            <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5" style={{ color: "rgba(34, 211, 238,0.45)" }}>Commandes récentes</p>
 
             {orders.map((o, i) => {
                 const sc = statusColor[o.status];
@@ -528,11 +528,11 @@ function PanelSales({ active }: { active: boolean }) {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: active ? 1 : 0, y: active ? 0 : 10 }}
                         transition={{ duration: 0.38, delay: active ? i * 0.065 : 0, ease: [0.16, 1, 0.3, 1] }}
-                        className="rounded-2xl px-3.5 py-2.5 flex items-center justify-between transition-colors"
+                        className="rounded-lg px-3.5 py-2.5 flex items-center justify-between transition-colors"
                         style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
                     >
                         <div>
-                            <p className="text-[10px] font-mono font-bold" style={{ color: "rgba(176,142,224,0.45)" }}>#{o.id}</p>
+                            <p className="text-[10px] font-mono font-bold" style={{ color: "rgba(34, 211, 238,0.45)" }}>#{o.id}</p>
                             <p className="text-[12px] font-bold" style={{ color: "#fff" }}>{o.fournisseur}</p>
                         </div>
                         <div className="flex gap-3 items-center">
@@ -561,9 +561,9 @@ function PanelVentes({ active }: { active: boolean }) {
     return (
         <div className="flex flex-col gap-2 w-full h-full">
             <div className="flex justify-between items-center mb-1">
-                <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: "rgba(176,142,224,0.45)" }}>Top Produits</p>
+                <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: "rgba(34, 211, 238,0.45)" }}>Top Produits</p>
                 <span className="text-[9px] font-bold px-2 py-0.5 rounded-full"
-                    style={{ background: "rgba(123,95,162,0.15)", border: "1px solid rgba(123,95,162,0.25)", color: BRAND_L }}>
+                    style={{ background: "rgba(99, 102, 241,0.15)", border: "1px solid rgba(99, 102, 241,0.25)", color: BRAND_L }}>
                     Démo
                 </span>
             </div>
@@ -575,20 +575,20 @@ function PanelVentes({ active }: { active: boolean }) {
                         initial={{ opacity: 0, x: -12 }}
                         animate={{ opacity: active ? 1 : 0, x: active ? 0 : -12 }}
                         transition={{ duration: 0.4, delay: active ? i * 0.08 : 0, ease: [0.16, 1, 0.3, 1] }}
-                        className="rounded-2xl px-3.5 py-3 transition-colors"
+                        className="rounded-lg px-3.5 py-3 transition-colors"
                         style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
                     >
                         <div className="flex gap-3 items-center">
                             <div className="w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold shrink-0"
-                                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(176,142,224,0.6)" }}>
+                                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(34, 211, 238,0.6)" }}>
                                 #{i + 1}
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="text-[12px] font-bold truncate" style={{ color: "#fff" }}>{p.name}</p>
-                                <p className="text-[9px]" style={{ color: "rgba(176,142,224,0.45)" }}>{p.quantity} unités</p>
+                                <p className="text-[9px]" style={{ color: "rgba(34, 211, 238,0.45)" }}>{p.quantity} unités</p>
                             </div>
                             <div className="flex flex-col items-end gap-1.5">
-                                <p className="text-[12px] font-black tabular-nums" style={{ color: "#fff" }}>€{p.revenue.toLocaleString()}</p>
+                                <p className="text-[12px] font-black tabular-nums" style={{ color: "#fff" }}>{p.revenue.toLocaleString()}€</p>
                                 <div className="w-16 rounded-full h-1.5 overflow-hidden" style={{ background: "rgba(255,255,255,0.1)" }}>
                                     <div className="h-1.5 rounded-full" style={{ width: `${(p.revenue / p.maxRev) * 100}%`, background: "#f59e0b" }} />
                                 </div>
@@ -598,7 +598,7 @@ function PanelVentes({ active }: { active: boolean }) {
                 ))}
             </div>
 
-            <p className="text-[10px] text-center mt-1 italic" style={{ color: "rgba(176,142,224,0.35)" }}>
+            <p className="text-[10px] text-center mt-1 italic" style={{ color: "rgba(34, 211, 238,0.35)" }}>
                 Performance produit · Suivi du C.A. · Indicateurs clés
             </p>
         </div>
@@ -621,7 +621,7 @@ function PanelAI({ active }: { active: boolean }) {
                     style={{ background: `linear-gradient(135deg,${BRAND},${BRAND_L})` }}>
                     <Sparkles size={11} className="text-white" />
                 </div>
-                <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: "rgba(176,142,224,0.5)" }}>Assistant Stocks IA</p>
+                <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: "rgba(34, 211, 238,0.5)" }}>Assistant Stocks IA</p>
                 <span className="flex gap-1 items-center ml-auto">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     <span className="text-[8px] font-bold uppercase tracking-widest text-emerald-400">En ligne</span>
@@ -663,7 +663,7 @@ function PanelAI({ active }: { active: boolean }) {
 
             <div className="flex gap-2 items-center px-3 py-2 mt-1 rounded-xl"
                 style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                <span className="flex-1 text-[11px]" style={{ color: "rgba(176,142,224,0.4)" }}>Posez votre question...</span>
+                <span className="flex-1 text-[11px]" style={{ color: "rgba(34, 211, 238,0.4)" }}>Posez votre question...</span>
                 <div className="flex justify-center items-center w-6 h-6 rounded-lg"
                     style={{ background: `linear-gradient(135deg,${BRAND},${BRAND_L})` }}>
                     <ChevronRight size={11} className="text-white" />
@@ -688,7 +688,7 @@ function PanelAlerts({ active }: { active: boolean }) {
     return (
         <div className="flex flex-col gap-2 w-full h-full">
             <div className="flex justify-between items-center mb-1">
-                <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: "rgba(176,142,224,0.45)" }}>Alertes actives</p>
+                <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: "rgba(34, 211, 238,0.45)" }}>Alertes actives</p>
                 <span className="text-[9px] font-bold px-2 py-0.5 rounded-full text-rose-400"
                     style={{ background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.2)" }}>
                     {critiques} critiques
@@ -701,7 +701,7 @@ function PanelAlerts({ active }: { active: boolean }) {
                     initial={{ opacity: 0, x: 14 }}
                     animate={{ opacity: active ? 1 : 0, x: active ? 0 : 14 }}
                     transition={{ duration: 0.38, delay: active ? i * 0.07 : 0, ease: [0.16, 1, 0.3, 1] }}
-                    className="rounded-2xl px-3.5 py-2.5 flex items-start gap-3"
+                    className="rounded-lg px-3.5 py-2.5 flex items-start gap-3"
                     style={{ background: a.bg, border: `1px solid ${a.color}25` }}
                 >
                     <div className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
@@ -812,7 +812,7 @@ function ActSection({ act, index }: { act: typeof ACTS[0]; index: number }) {
                             background: "rgba(12,7,30,0.6)",
                             backdropFilter: "blur(24px) saturate(180%)",
                             WebkitBackdropFilter: "blur(24px) saturate(180%)",
-                            border: "1px solid rgba(123,95,162,0.2)",
+                            border: "1px solid rgba(99, 102, 241,0.2)",
                             boxShadow: `0 12px 48px ${act.color}18`,
                         }}>
                         <div className="flex items-center gap-2.5 mb-5">
@@ -827,7 +827,7 @@ function ActSection({ act, index }: { act: typeof ACTS[0]; index: number }) {
                                 <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: act.color }}>
                                     Étape {act.step}
                                 </p>
-                                <p className="text-[11px] font-bold" style={{ color: "rgba(176,142,224,0.5)" }}>{act.badge}</p>
+                                <p className="text-[11px] font-bold" style={{ color: "rgba(34, 211, 238,0.5)" }}>{act.badge}</p>
                             </div>
                         </div>
 
@@ -835,7 +835,7 @@ function ActSection({ act, index }: { act: typeof ACTS[0]; index: number }) {
                             {act.title}
                         </h2>
 
-                        <p className="mb-4 text-sm font-light leading-relaxed" style={{ color: "rgba(176,142,224,0.65)" }}>
+                        <p className="mb-4 text-sm font-light leading-relaxed" style={{ color: "rgba(34, 211, 238,0.65)" }}>
                             {act.body}
                         </p>
 
@@ -855,8 +855,8 @@ function ActSection({ act, index }: { act: typeof ACTS[0]; index: number }) {
                     <div className="relative rounded-[2.2rem] p-6 overflow-hidden"
                         style={{
                             background: "rgba(255,255,255,0.04)",
-                            border: "1px solid rgba(123,95,162,0.18)",
-                            boxShadow: `0 24px 64px -12px rgba(123,95,162,0.22), 0 0 0 1px rgba(123,95,162,0.08)`,
+                            border: "1px solid rgba(99, 102, 241,0.18)",
+                            boxShadow: `0 24px 64px -12px rgba(99, 102, 241,0.22), 0 0 0 1px rgba(99, 102, 241,0.08)`,
                         }}>
                         {/* Ambient glow */}
                         <div className="absolute -inset-10 pointer-events-none -z-10">
@@ -871,7 +871,7 @@ function ActSection({ act, index }: { act: typeof ACTS[0]; index: number }) {
                         <div className="flex justify-between items-center mb-5">
                             <div>
                                 <p className="text-[9px] font-bold uppercase tracking-[0.18em] mb-0.5"
-                                    style={{ color: "rgba(176,142,224,0.45)" }}>Stocks</p>
+                                    style={{ color: "rgba(34, 211, 238,0.45)" }}>Stocks</p>
                                 <div className="flex gap-2 items-center">
                                     <h3 className="text-[1rem] font-black tracking-tight text-white">{act.badge}</h3>
                                     <span className="inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-full text-emerald-400"
@@ -905,23 +905,23 @@ export default function DemoPage() {
             <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
         :root {
-          --brand: #7b5fa2; --brand-light: #9d7bdd;
+          --brand: #6366f1; --brand-light: #9d7bdd;
           font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
         }
         *, *::before, *::after { box-sizing: border-box; }
-        body { margin: 0; background: #0c071e; }
+        body { margin: 0; background: #070b14; }
         .demo-dot-grid {
-          background-image: radial-gradient(rgba(123,95,162,0.14) 1px, transparent 1px);
+          background-image: radial-gradient(rgba(99, 102, 241,0.14) 1px, transparent 1px);
           background-size: 28px 28px;
         }
       `}</style>
 
             {/* Fixed dark background */}
             <div className="fixed inset-0 z-0"
-                style={{ background: "linear-gradient(155deg, #0c071e 0%, #110a2a 45%, #0e0820 100%)" }} />
+                style={{ background: "linear-gradient(155deg, #070b14 0%, #110a2a 45%, #0e0820 100%)" }} />
             <div className="fixed inset-0 z-0 demo-dot-grid" style={{ opacity: 0.55 }} aria-hidden />
             <div className="fixed inset-0 z-0 pointer-events-none" style={{
-                background: "radial-gradient(ellipse 70% 60% at 20% 15%, rgba(123,95,162,0.12) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 80% 80%, rgba(176,142,224,0.07) 0%, transparent 55%)",
+                background: "radial-gradient(ellipse 70% 60% at 20% 15%, rgba(99, 102, 241,0.12) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 80% 80%, rgba(34, 211, 238,0.07) 0%, transparent 55%)",
             }} aria-hidden />
 
             {/* Content */}
@@ -938,7 +938,7 @@ export default function DemoPage() {
                     transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 >
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5 text-[11px] font-bold uppercase tracking-[0.16em]"
-                        style={{ background: "rgba(123,95,162,0.1)", border: "1px solid rgba(123,95,162,0.22)", color: BRAND_L }}>
+                        style={{ background: "rgba(99, 102, 241,0.1)", border: "1px solid rgba(99, 102, 241,0.22)", color: BRAND_L }}>
                         <Sparkles size={11} /> Visite guidée
                     </div>
 
@@ -946,7 +946,7 @@ export default function DemoPage() {
                         Découvrez Stocks<br />
                         <span style={{ color: BRAND_L }}>en 6 étapes.</span>
                     </h1>
-                    <p className="text-[1.05rem] font-light leading-relaxed max-w-lg" style={{ color: "rgba(176,142,224,0.6)" }}>
+                    <p className="text-[1.05rem] font-light leading-relaxed max-w-lg" style={{ color: "rgba(34, 211, 238,0.6)" }}>
                         Faites défiler pour explorer chaque fonctionnalité — interface réelle, données de démonstration.
                     </p>
                 </motion.div>
@@ -968,7 +968,7 @@ export default function DemoPage() {
                     transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
                 >
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 text-[11px] font-bold uppercase tracking-[0.16em]"
-                        style={{ background: "rgba(123,95,162,0.1)", border: "1px solid rgba(123,95,162,0.22)", color: BRAND_L }}>
+                        style={{ background: "rgba(99, 102, 241,0.1)", border: "1px solid rgba(99, 102, 241,0.22)", color: BRAND_L }}>
                         <Check size={11} /> Visite terminée
                     </div>
                     <h2 className="text-[clamp(2rem,4.5vw,3.2rem)] font-black leading-[1.05] tracking-[-0.035em] mb-4 text-white">
@@ -976,15 +976,15 @@ export default function DemoPage() {
                         <span style={{ color: BRAND_L }}>avec précision ?</span>
                     </h2>
                     <p className="text-[1.05rem] font-light leading-relaxed max-w-md mb-10"
-                        style={{ color: "rgba(176,142,224,0.6)" }}>
+                        style={{ color: "rgba(34, 211, 238,0.6)" }}>
                         Créez votre compte et commencez à piloter vos stocks depuis le tableau de bord.
                     </p>
                     <div className="flex flex-col gap-4 items-center sm:flex-row">
                         <Link to="/login"
-                            className="inline-flex items-center gap-2 px-9 py-4 rounded-2xl text-[0.95rem] font-bold text-white transition-all duration-200"
+                            className="inline-flex items-center gap-2 px-9 py-4 rounded-lg text-[0.95rem] font-bold text-white transition-all duration-200"
                             style={{
                                 background: `linear-gradient(135deg, ${BRAND}, ${BRAND_L})`,
-                                boxShadow: `0 8px 32px rgba(123,95,162,0.40), inset 0 1px 0 rgba(255,255,255,0.18)`,
+                                boxShadow: `0 8px 32px rgba(99, 102, 241,0.40), inset 0 1px 0 rgba(255,255,255,0.18)`,
                             }}
                             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
                             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
@@ -993,9 +993,9 @@ export default function DemoPage() {
                         </Link>
                         <Link to="/"
                             className="inline-flex items-center gap-1.5 text-sm font-semibold transition-colors"
-                            style={{ color: "rgba(176,142,224,0.5)" }}
+                            style={{ color: "rgba(34, 211, 238,0.5)" }}
                             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = BRAND_L; }}
-                            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "rgba(176,142,224,0.5)"; }}
+                            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "rgba(34, 211, 238,0.5)"; }}
                         >
                             <ArrowLeft size={13} /> Retour à l'accueil
                         </Link>

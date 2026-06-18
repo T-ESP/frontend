@@ -28,7 +28,7 @@ export function LatestPayments({ orders, users }: { orders: Order[]; users: User
   const { t } = useTranslation();
   const recentOrders = [...orders]
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-    .slice(0, 6);
+    .slice(0, 10);
 
   const getMockStatus = (idx: number) => {
     const statuses = ["Success", "Processing", "Success", "Failed", "Success"];
@@ -36,13 +36,14 @@ export function LatestPayments({ orders, users }: { orders: Order[]; users: User
   };
 
   return (
-    <div className="h-full w-full overflow-hidden rounded-xl border bg-card text-card-foreground">
+    <div className="flex h-full w-full flex-col overflow-hidden rounded-xl border bg-card text-card-foreground">
       <div className="border-b p-6">
         <h3 className="text-lg font-semibold">{t("dashboard.charts.latest_payments")}</h3>
       </div>
 
+      <div className="min-h-0 flex-1 overflow-y-auto">
       <Table>
-        <TableHeader>
+        <TableHeader className="sticky top-0 z-10 bg-card">
           <TableRow>
             <TableHead className="px-3">{t("dashboard.charts.email")}</TableHead>
             <TableHead className="px-3">{t("dashboard.charts.amount")}</TableHead>
@@ -67,7 +68,7 @@ export function LatestPayments({ orders, users }: { orders: Order[]; users: User
               <TableRow key={order.id}>
                 <TableCell className="px-3 text-muted-foreground">{email}</TableCell>
                 <TableCell className="px-3 font-medium tabular-nums">
-                  ${Number(order.amount || 242.0).toFixed(2)}
+                  {Number(order.amount || 242.0).toFixed(2)}€
                 </TableCell>
                 <TableCell className="px-3">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
@@ -90,9 +91,6 @@ export function LatestPayments({ orders, users }: { orders: Order[]; users: User
           )}
         </TableBody>
       </Table>
-
-      <div className="border-t px-6 py-4 text-sm text-muted-foreground">
-        {t("dashboard.charts.rows_selected", { count: recentOrders.length })}
       </div>
     </div>
   );

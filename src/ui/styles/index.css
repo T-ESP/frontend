@@ -9,12 +9,13 @@
 /* ============================================================
  * 🎨 BRAND COLOR — modifier ces valeurs pour re-themer l'app
  * H = Teinte (0-360), S = Saturation (%), L = Luminosité (%)
- * Violet actuel : hsl(270, 27%, 50%) = #7b5fa2
+ * THEME "TERMINAL" : accent emerald hsl(160, 84%, 45%) = ~#10c07f
+ * (ancien violet : hsl(270, 27%, 50%) = #7b5fa2)
  * ============================================================ */
 :root {
-  --brand-h: 270;
-  --brand-s: 27%;
-  --brand-l: 50%;
+  --brand-h: 239;
+  --brand-s: 84%;
+  --brand-l: 58%;
 
   /* ── Couleurs dérivées automatiquement ─────────────────── */
   --color-primary:      hsl(var(--brand-h) var(--brand-s) var(--brand-l));
@@ -71,7 +72,7 @@
   --color-primary-dark:  hsl(var(--brand-h) var(--brand-s) calc(var(--brand-l) - 8%));
   --color-primary-deep:  hsl(var(--brand-h) var(--brand-s) calc(var(--brand-l) - 18%));
   --color-primary-night: hsl(var(--brand-h) var(--brand-s) calc(var(--brand-l) - 37%));
-  --color-primary-bg:    hsl(var(--brand-h) 60% 97%);
+  --color-primary-bg:    #1e1b4b;
 
   --color-purple-50:  hsl(var(--brand-h) 60% 97%);
   --color-purple-100: hsl(var(--brand-h) 55% 92%);
@@ -85,18 +86,18 @@
   --color-purple-900: hsl(var(--brand-h) var(--brand-s) calc(var(--brand-l) - 28%));
   --color-purple-950: hsl(var(--brand-h) var(--brand-s) calc(var(--brand-l) - 37%));
 
-  --color-bg:           #f8f9fb;
-  --color-surface:      #ffffff;
-  --color-neutral-900:  #1f2937;
-  --color-neutral-700:  #6b7280;
-  --color-border:       #e5e7eb;
-  --color-success:      #22c55e;
-  --color-success-bg:   #e7fbe9;
-  --color-warning:      #facc15;
-  --color-warning-bg:   #fef9c3;
-  --color-error:        #ef4444;
-  --color-error-bg:     #ffe7e7;
-  --color-grey-light:   #f1f5f9;
+  --color-bg:           #070b14;
+  --color-surface:      #0d1424;
+  --color-neutral-900:  #f1f5f9;
+  --color-neutral-700:  #94a3b8;
+  --color-border:       #1b2640;
+  --color-success:      #34d399;
+  --color-success-bg:   #0c2a1c;
+  --color-warning:      #fbbf24;
+  --color-warning-bg:   #2a230c;
+  --color-error:        #fb7185;
+  --color-error-bg:     #2a0c12;
+  --color-grey-light:   #111a2e;
   --color-blue-dark:    #1e40af;
   --color-blue-light:   #93c5fd;
 }
@@ -106,63 +107,63 @@ html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: var(--color-bg);
-  color: var(--color-neutral-900);
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 @theme {
-  /* ---- Branding / Violet (#7b5fa2 Unified) ---- */
-  --color-primary-deep: #4d3c67;
-  --color-primary-night: #1d162a;
-  --color-primary-bg: #f5f0fc;
+  /* ---- Branding / Indigo (#818cf8 Terminal) ---- */
+  --color-primary-deep: #4338ca;
+  --color-primary-night: #1e1b4b;
+  --color-primary-bg: #1e1b4b;
 
-  /* Force all Tailwind Purples/Indigos to use our unified #7b5fa2 scale */
-  --color-purple-50: #f5f0fc;
-  --color-purple-100: #ebdcf9;
-  --color-purple-200: #d7bff2;
-  --color-purple-300: #c0a2e5;
-  --color-purple-400: #a480d1;
-  --color-purple-500: #8b65bc;
-  --color-purple-600: #7b5fa2;
-  --color-purple-700: #644d85;
-  --color-purple-800: #4d3c67;
-  --color-purple-900: #362a49;
-  --color-purple-950: #1d162a;
+  /* Force all Tailwind Purples/Indigos to use our unified indigo scale */
+  --color-purple-50: #eef2ff;
+  --color-purple-100: #e0e7ff;
+  --color-purple-200: #c7d2fe;
+  --color-purple-300: #a5b4fc;
+  --color-purple-400: #818cf8;
+  --color-purple-500: #6366f1;
+  --color-purple-600: #4f46e5;
+  --color-purple-700: #4338ca;
+  --color-purple-800: #3730a3;
+  --color-purple-900: #312e81;
+  --color-purple-950: #1e1b4b;
 
-  --color-indigo-50: #f5f0fc;
-  --color-indigo-100: #ebdcf9;
-  --color-indigo-200: #d7bff2;
-  --color-indigo-300: #c0a2e5;
-  --color-indigo-400: #a480d1;
-  --color-indigo-500: #8b65bc;
-  --color-indigo-600: #7b5fa2;
-  --color-indigo-700: #644d85;
-  --color-indigo-800: #4d3c67;
-  --color-indigo-900: #362a49;
-  --color-indigo-950: #1d162a;
+  --color-indigo-50: #eef2ff;
+  --color-indigo-100: #e0e7ff;
+  --color-indigo-200: #c7d2fe;
+  --color-indigo-300: #a5b4fc;
+  --color-indigo-400: #818cf8;
+  --color-indigo-500: #6366f1;
+  --color-indigo-600: #4f46e5;
+  --color-indigo-700: #4338ca;
+  --color-indigo-800: #3730a3;
+  --color-indigo-900: #312e81;
+  --color-indigo-950: #1e1b4b;
 
-  /* ---- Neutres (Modernized) ---- */
-  --color-bg: #f3f4f6;                 /* Fond global (light gray) */
-  --color-surface: #ffffff;            /* Fond surface (cards, panels - now pure white) */
-  --color-neutral-900: #1f2937;        /* Texte principal (dark gray, softer than black) */
-  --color-neutral-700: #6b7280;        /* Texte secondaire, border, icons (medium gray) */
-  --color-border: #e5e7eb;             /* Bordures discrètes */
-  --color-black: #1f2937;              /* Use dark gray instead of pure black */
+  /* ---- Neutres (Terminal navy) ---- */
+  --color-bg: #070b14;                 /* Fond global (navy quasi-noir) */
+  --color-surface: #0d1424;            /* Fond surface (cards, panels) */
+  --color-neutral-900: #f1f5f9;        /* Texte principal (slate-100 sur fond sombre) */
+  --color-neutral-700: #94a3b8;        /* Texte secondaire (slate-400) */
+  --color-border: #1b2640;             /* Bordures discrètes (navy) */
+  --color-black: #f1f5f9;              /* "black" → texte clair sur fond sombre */
 
-  /* ---- Feedback / Alerts ---- */
-  --color-success: #22c55e;            /* Succès/valide */
-  --color-success-bg: #e7fbe9;         /* Fond de succès */
-  --color-warning: #facc15;            /* Avertissement */
-  --color-warning-bg: #fef9c3;
-  --color-error: #ef4444;              /* Erreur */
-  --color-error-bg: #ffe7e7;
-  --color-info: #a480d1;               /* Info = violet secondaire */
-  --color-info-bg: #f5f0fc;            /* Fond info, violet très clair */
+  /* ---- Feedback / Alerts (adaptés au sombre) ---- */
+  --color-success: #34d399;            /* Succès/valide (emerald-400) */
+  --color-success-bg: #0c2a1c;         /* Fond de succès sombre */
+  --color-warning: #fbbf24;            /* Avertissement (amber-400) */
+  --color-warning-bg: #2a230c;
+  --color-error: #fb7185;              /* Erreur (rose-400) */
+  --color-error-bg: #2a0c12;
+  --color-info: #22d3ee;               /* Info = cyan */
+  --color-info-bg: #0a2330;            /* Fond info sombre */
 
   /* ---- Autres ---- */
   --color-blue-dark: #1e40af;          /* Ancienne palette bleu, gardée pour compat éventuelle */
   --color-blue-light: #93c5fd;
-  --color-grey-light: #f1f5f9;         /* Gris très clair pour backgrounds */
+  --color-grey-light: #111a2e;         /* Surface alt sombre pour backgrounds */
 }
 
 @keyframes fade-in-up {
@@ -237,73 +238,97 @@ html, body, #root {
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* ============================================================
+ * THEME — accent emerald, déclinable clair (:root) / sombre (.dark).
+ * Le toggle ajoute/retire la classe `.dark` sur <html>.
+ * ============================================================ */
+
+/* ── Mode CLAIR (par défaut sur :root) ─────────────────────── */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --background: #f6f8fb;            /* gris très clair */
+  --foreground: #0f172a;            /* slate-900 */
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #6366f1;               /* indigo-500 (contraste sur clair) */
+  --primary-foreground: #ffffff;
+  --secondary: #eef2f6;
+  --secondary-foreground: #0f172a;
+  --muted: #eef2f6;
+  --muted-foreground: #5b6b7e;      /* slate lisible sur clair */
+  --accent: #eef2ff;                /* indigo-50 (hover/actif/badges) */
+  --accent-foreground: #4338ca;     /* indigo-700 */
+  --destructive: #e11d48;           /* rose-600 */
+  --destructive-foreground: #ffffff;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #6366f1;
+  --chart-1: #6366f1;
+  --chart-2: #0891b2;
+  --chart-3: #64748b;
+  --chart-4: #94a3b8;
+  --chart-5: #d97706;
+  --radius: 0.375rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #334155;
+  --sidebar-primary: #6366f1;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eef2ff;
+  --sidebar-accent-foreground: #4338ca;
+  --sidebar-border: #e8edf2;
+  --sidebar-ring: #6366f1;
+  /* Override des tokens custom (neutres/surface) pour qu'ils suivent le thème */
+  --color-bg: #f6f8fb;
+  --color-surface: #ffffff;
+  --color-neutral-900: #0f172a;
+  --color-neutral-700: #5b6b7e;
+  --color-border: #e2e8f0;
+  --color-black: #0f172a;
 }
 
+/* ── Mode SOMBRE "Terminal" (navy + emerald) ───────────────── */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #070b14;            /* navy quasi-noir */
+  --foreground: #f1f5f9;            /* slate-100 */
+  --card: #0d1424;                  /* surface */
+  --card-foreground: #f1f5f9;
+  --popover: #0d1424;
+  --popover-foreground: #f1f5f9;
+  --primary: #818cf8;               /* indigo-400 (accent) */
+  --primary-foreground: #1e1b4b;    /* texte sombre sur indigo */
+  --secondary: #111a2e;             /* surface alt */
+  --secondary-foreground: #e2e8f0;
+  --muted: #111a2e;
+  --muted-foreground: #aab6cb;      /* slate clair — bon contraste sur sombre */
+  --accent: #1e1b4b;                /* surface indigo-teintée (hover/actif/badges) */
+  --accent-foreground: #818cf8;     /* indigo */
+  --destructive: #fb7185;           /* rose-400 */
+  --destructive-foreground: #1a0608;
+  --border: #1b2640;                /* bordure navy discrète */
+  --input: #1b2640;
+  --ring: #818cf8;
+  --chart-1: #818cf8;               /* indigo */
+  --chart-2: #22d3ee;               /* cyan */
+  --chart-3: #94a3b8;               /* slate-400 */
+  --chart-4: #475569;               /* slate-600 */
+  --chart-5: #fbbf24;               /* amber */
+  --radius: 0.375rem;               /* coins nets (terminal) */
+  --sidebar: #0a0f1c;
+  --sidebar-foreground: #cbd5e1;
+  --sidebar-primary: #818cf8;
+  --sidebar-primary-foreground: #1e1b4b;
+  --sidebar-accent: #1e1b4b;        /* item actif/hover (indigo-teinté) */
+  --sidebar-accent-foreground: #e0e7ff;
+  --sidebar-border: #16223c;
+  --sidebar-ring: #818cf8;
+  /* Override des tokens custom (neutres/surface) pour qu'ils suivent le thème */
+  --color-bg: #070b14;
+  --color-surface: #0d1424;
+  --color-neutral-900: #f1f5f9;
+  --color-neutral-700: #aab6cb;
+  --color-border: #1b2640;
+  --color-black: #f1f5f9;
 }
 
 @layer base {
@@ -318,4 +343,46 @@ html, body, #root {
   }
 }
 
-/* test */
+/* ============================================================
+ * Utilitaires "Terminal"
+ * ============================================================ */
+
+/* Chiffres en monospace tabulaire (KPIs, montants, scores) */
+.num {
+  font-family: ui-monospace, "SF Mono", "Cascadia Code", "Source Code Pro",
+    Menlo, Consolas, "Liberation Mono", monospace;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Label de section / KPI : majuscules espacées, discret */
+.term-label {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.6875rem; /* 11px */
+  font-weight: 600;
+  color: var(--muted-foreground);
+}
+
+/* Fond grille de points (panneaux, hero terminal) */
+.term-grid {
+  background-image: radial-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* Pastille "live" verte qui pulse */
+.live-dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: #34d399;
+  box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5);
+  animation: live-pulse 1.8s ease-out infinite;
+}
+
+@keyframes live-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5); }
+  70% { box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+}

@@ -10,27 +10,27 @@ interface OrderStatCardProps {
 const colorClasses = {
   emerald: {
     gradient: "from-emerald-50 to-emerald-100",
-    border: "border-emerald-200",
-    text: "text-emerald-600",
-    textBold: "text-emerald-700"
+    border: "border-emerald-500/30",
+    text: "text-emerald-600 dark:text-emerald-400",
+    textBold: "text-emerald-700 dark:text-emerald-300"
   },
   amber: {
     gradient: "from-amber-50 to-amber-100",
-    border: "border-amber-200",
-    text: "text-amber-600",
-    textBold: "text-amber-700"
+    border: "border-amber-500/30",
+    text: "text-amber-600 dark:text-amber-400",
+    textBold: "text-amber-700 dark:text-amber-300"
   },
   rose: {
     gradient: "from-rose-50 to-rose-100",
-    border: "border-rose-200",
-    text: "text-rose-600",
-    textBold: "text-rose-700"
+    border: "border-rose-500/30",
+    text: "text-rose-600 dark:text-rose-400",
+    textBold: "text-rose-700 dark:text-rose-300"
   },
   blue: {
     gradient: "from-blue-50 to-blue-100",
-    border: "border-blue-200",
-    text: "text-blue-600",
-    textBold: "text-blue-700"
+    border: "border-blue-500/30",
+    text: "text-blue-600 dark:text-blue-400",
+    textBold: "text-blue-700 dark:text-blue-300"
   },
   purple: {
     gradient: "from-purple-50 to-purple-100",

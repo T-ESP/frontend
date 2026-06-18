@@ -10,15 +10,15 @@ export function CustomerDistributionChart({ data, rangeLabel }: Props) {
   const { t } = useTranslation();
 
   return (
-    <div className="bg-white border border-gray-100 shadow-sm rounded-2xl">
-      <div className="p-6 border-b border-gray-100">
+    <div className="border shadow-sm bg-card border-border rounded-lg">
+      <div className="p-6 border-b border-border">
         <div className="flex items-start justify-between">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">{t("dashboard.charts.customer_title")}</h3>
-            <p className="mt-1 text-sm text-gray-500">{t("dashboard.charts.customer_subtitle")}</p>
+            <h3 className="text-lg font-semibold text-foreground">{t("dashboard.charts.customer_title")}</h3>
+            <p className="mt-1 text-sm text-muted-foreground">{t("dashboard.charts.customer_subtitle")}</p>
           </div>
           {rangeLabel && (
-            <span className="ml-2 mt-0.5 px-2.5 py-1 text-xs font-semibold text-purple-700 bg-purple-50 border border-purple-200 rounded-lg whitespace-nowrap">
+            <span className="ml-2 mt-0.5 px-2.5 py-1 text-xs font-semibold text-primary bg-accent border border-primary/30 rounded-lg whitespace-nowrap">
               {rangeLabel}
             </span>
           )}
@@ -45,7 +45,9 @@ export function CustomerDistributionChart({ data, rangeLabel }: Props) {
             <Tooltip
               // @ts-ignore
               formatter={(value: number) => [`${value}%`, t("common.percentage")]}
-              labelStyle={{ color: "#1f2937" }}
+              contentStyle={{ borderRadius: 6, border: "1px solid #1b2640", background: "#0d1424", fontSize: 12 }}
+              labelStyle={{ color: "#f1f5f9" }}
+              itemStyle={{ color: "#cbd5e1" }}
             />
           </PieChart>
         </ResponsiveContainer>
@@ -55,11 +57,11 @@ export function CustomerDistributionChart({ data, rangeLabel }: Props) {
             <div key={index} className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
-                <span className="text-sm font-medium text-gray-700">{item.name}</span>
+                <span className="text-sm font-medium text-muted-foreground">{item.name}</span>
               </div>
               <div className="text-right">
-                <div className="text-sm font-bold text-gray-900">{item.count.toLocaleString()}</div>
-                <div className="text-xs text-gray-500">{item.value}%</div>
+                <div className="text-sm font-bold num text-foreground">{item.count.toLocaleString()}</div>
+                <div className="text-xs num text-muted-foreground">{item.value}%</div>
               </div>
             </div>
           ))}

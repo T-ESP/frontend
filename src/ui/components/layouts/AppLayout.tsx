@@ -19,7 +19,7 @@ export function AppLayout({ children }: AppLayoutProps) {
     <TooltipProvider delayDuration={0}>
       <SidebarProvider>
         <Sidebar />
-        <SidebarInset className="bg-[#f5f4f9]">
+        <SidebarInset className="bg-background">
           <div
             id="main-scroll-container"
             className="flex flex-1 flex-col overflow-y-auto"

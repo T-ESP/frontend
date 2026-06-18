@@ -29,7 +29,15 @@
         "collapse_sidebar": "Collapse sidebar",
         "expand_sidebar": "Expand sidebar"
     },
+    "onboarding": {
+        "replay": "Replay the guide"
+    },
     "sidebar": {
+        "sections": {
+            "overview": "Overview",
+            "operations": "Operations",
+            "engagement": "Engagement"
+        },
         "dashboard": "Dashboard",
         "inventory": "Inventory",
         "orders": "Orders",
@@ -57,14 +65,38 @@
         "kpi": {
             "total_revenue": "Total Revenue",
             "revenue_evolution": "Revenue Evolution",
+            "revenue_growth": "Revenue Growth",
+            "avg_order_value": "Average Order Value",
             "total_orders": "Total Orders",
+            "delivered_orders": "Delivered Orders",
             "total_products": "Total Products",
             "total_users": "Total Users",
             "low_stock": "Low Stock Products",
             "low_stock_alert": "Low Stock Alert",
             "high": "High",
             "normal": "Normal",
-            "products_low_units": "Products < 10 units"
+            "products_low_units": "Products < 10 units",
+            "in_catalog": "in catalog",
+            "inventory_value": "Inventory Value",
+            "total_value": "total value",
+            "out_of_stock": "Out of Stock",
+            "products_out": "unavailable products",
+            "suppliers_total": "Suppliers",
+            "registered": "registered",
+            "suppliers_with_phone": "Reachable Suppliers",
+            "with_phone": "with phone"
+        },
+        "kpi_edit": {
+            "title": "Customize KPIs",
+            "subtitle": "Choose which indicators to display",
+            "empty_hint": "At least one KPI must remain visible.",
+            "categories": {
+                "sales": "Sales & revenue",
+                "orders": "Orders",
+                "inventory": "Stock & inventory",
+                "suppliers": "Suppliers",
+                "team": "Team"
+            }
         },
         "flop_products": {
             "title": "Least performing products",
@@ -292,6 +324,53 @@
                 "classification_desc": "ABC analysis and performance ranking",
                 "comparative": "Competitive Analysis",
                 "comparative_desc": "Market positioning and competitor pricing"
+            },
+            "info": {
+                "aria_label": "More information",
+                "best_practice": "Best practice",
+                "overview": {
+                    "what": "A snapshot of the product's overall health: global score, margin, stock and turnover grouped together to spot at a glance what's healthy or needs action.",
+                    "tip": "Always start with this overview. A global score below 50 or a stockout alert flags the product to prioritize."
+                },
+                "pricing": {
+                    "what": "Tracks selling price, buying price and margin rate, along with how they have evolved over time.",
+                    "tip": "Aim for a stable, positive margin. If the buying price rises without adjusting the selling price, update your pricing to protect the margin."
+                },
+                "stock": {
+                    "what": "Current stock level, recommended safety stock and stockout history to assess product availability.",
+                    "tip": "Keep stock above the safety threshold. A high stockout rate means lost sales: trigger a restock before reaching that level."
+                },
+                "sales": {
+                    "what": "Measures how fast the product sells: turnover rate, daily sales velocity and demand trend.",
+                    "tip": "High and rising turnover is healthy. Low turnover signals overstocking: reduce orders or launch a promotion."
+                },
+                "profitability": {
+                    "what": "The product's financial performance: ROI, total profit, average profit per sale and contribution to overall revenue.",
+                    "tip": "Focus on products with high ROI and high contribution. Low profit despite good volume may justify revisiting the price or supplier."
+                },
+                "restock": {
+                    "what": "Supply-chain analysis: restock frequency and cost, delivery lead times and reception rate.",
+                    "tip": "Watch delivery lead times to calibrate safety stock. Long or irregular lead times require a larger stock buffer."
+                },
+                "predictions": {
+                    "what": "AI-generated forecasts: alert status, estimated stockout date, days of coverage and the optimal quantity to reorder.",
+                    "tip": "Place an order when stock reaches the suggested reorder point, using the optimal quantity to avoid both stockouts and overstock."
+                },
+                "predictions_metrics": {
+                    "alert_status": "Urgency level derived from current stock and sales pace: \"OK\" (comfortable stock), \"Low stock\" (below the reorder point) or \"Stockout\" (depleted or imminent).",
+                    "days_coverage": "Number of days the current stock covers demand at the average sales pace. Formula: current stock ÷ average daily sales.",
+                    "stockout_date": "Estimated date the stock runs out if the current sales pace holds. It equals today plus the days of coverage.",
+                    "optimal_qty": "Recommended quantity to order to rebuild an optimal stock (cover demand until the next delivery) without overstocking.",
+                    "reorder_point": "Trigger threshold: place an order as soon as stock drops to this level, so you are restocked before running out given the supplier lead time."
+                },
+                "classification": {
+                    "what": "The product's ranking: ABC class (importance) and popularity, profitability and reliability scores out of 100.",
+                    "tip": "Prioritize class A products: they weigh the most in your business and deserve the closest monitoring."
+                },
+                "comparative": {
+                    "what": "How the product positions against its category and supplier: relative performance, rank and market share.",
+                    "tip": "A product well below its category average should be investigated: price, visibility or quality may be the cause."
+                }
             },
             "metrics": {
                 "abc_class": "ABC Class",

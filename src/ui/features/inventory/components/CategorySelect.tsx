@@ -42,7 +42,7 @@ export function CategorySelect({ value, onChange, required = false, disabled = f
         onChange={(e) => onChange(e.target.value)}
         required={required}
         disabled={disabled || loading}
-        className="w-full h-10 px-3 text-sm transition-colors bg-white border rounded-lg border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed"
+        className="w-full h-10 px-3 text-sm transition-colors bg-card border rounded-lg border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed"
       >
         <option value="">{loading ? t('common.loading', 'Loading...') : t('inventory.form.select_category', 'Select a category...')}</option>
         {categories.map((cat) => (

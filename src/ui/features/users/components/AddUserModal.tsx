@@ -47,12 +47,12 @@ export function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <h2 className="text-xl font-semibold text-gray-900">Add Member</h2>
+      <div className="bg-card rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between p-6 border-b border-border">
+          <h2 className="text-xl font-semibold text-foreground">Add Member</h2>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+            className="p-2 text-muted-foreground/70 hover:text-muted-foreground rounded-lg hover:bg-muted"
           >
             <FiX size={20} />
           </button>
@@ -60,13 +60,13 @@ export function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+            <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-700 dark:text-red-300 text-sm">
               {error}
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-muted-foreground mb-1">
               Prénom *
             </label>
             <Input
@@ -79,7 +79,7 @@ export function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-muted-foreground mb-1">
               Nom *
             </label>
             <Input
@@ -92,7 +92,7 @@ export function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-muted-foreground mb-1">
               Email *
             </label>
             <Input
@@ -105,7 +105,7 @@ export function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-muted-foreground mb-1">
               Mot de passe *
             </label>
             <Input
@@ -122,7 +122,7 @@ export function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-300 hover:bg-gray-50"
+              className="flex-1 px-4 py-2 text-sm font-medium text-muted-foreground bg-card rounded-lg border border-border hover:bg-muted"
             >
               Annuler
             </button>

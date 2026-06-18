@@ -17,6 +17,7 @@ import type { ChartConfig } from "@/components/ui/chart";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
+import { ProductKpiLink } from "@/ui/components/common/ProductKpiLink";
 
 const BRAND_PRIMARY = "hsl(var(--brand-h) var(--brand-s) var(--brand-l))";
 const BRAND_DARK = "hsl(var(--brand-h) var(--brand-s) calc(var(--brand-l) - 18%))";
@@ -45,7 +46,7 @@ function InfoTip({ text }: { text: string }) {
         onMouseLeave={() => setShow(false)}
         onFocus={() => setShow(true)}
         onBlur={() => setShow(false)}
-        className="text-gray-400 hover:text-gray-600 transition-colors focus:outline-none"
+        className="text-muted-foreground/70 hover:text-muted-foreground transition-colors focus:outline-none"
         aria-label="Information"
       >
         <FiInfo className="w-3.5 h-3.5" />
@@ -140,20 +141,20 @@ export default function InsightsPage() {
 
   return (
     <div className="min-h-screen pb-8">
-      <header className="sticky top-[5rem] z-30 mx-4 md:mx-8 mb-6 md:mb-8 rounded-2xl border border-gray-200 bg-white/85 backdrop-blur-md shadow-sm">
+      <header className="sticky top-[5rem] z-30 mx-4 md:mx-8 mb-6 md:mb-8 rounded-lg border border-border bg-white/85 backdrop-blur-md shadow-sm">
         <div className="flex flex-wrap items-start justify-between gap-4 px-5 md:px-6 py-4">
           <div>
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900">
+            <h1 className="text-xl md:text-2xl font-bold text-foreground">
               {t("insights.title")}
             </h1>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-muted-foreground">
               {t("insights.subtitle")}
             </p>
           </div>
           <button
             onClick={loadInsights}
             disabled={loading}
-            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-xl hover:bg-muted transition-colors disabled:opacity-50"
           >
             <FiRefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
             Actualiser
@@ -164,7 +165,7 @@ export default function InsightsPage() {
       <div className="px-4 md:px-8 space-y-6">
 
         {loading && (
-          <div className="flex items-center justify-center h-64 text-gray-400">
+          <div className="flex items-center justify-center h-64 text-muted-foreground/70">
             <FiRefreshCw className="w-5 h-5 animate-spin mr-2" />
             <span className="text-sm">Chargement des analyses...</span>
           </div>
@@ -176,13 +177,13 @@ export default function InsightsPage() {
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
               {/* Santé des stocks */}
-              <Card className="overflow-hidden bg-white border border-gray-200 rounded-2xl py-0 ring-0">
+              <Card className="overflow-hidden bg-card border border-border rounded-lg py-0 ring-0">
                 <CardContent className="p-6">
-                  <h3 className="text-base font-semibold text-gray-900 mb-1 flex items-center">
+                  <h3 className="text-base font-semibold text-foreground mb-1 flex items-center">
                     Santé des stocks
                     <InfoTip text="Classifie chaque produit selon son niveau de stock : rupture (0 unité), faible (<10), sain (10-100), surstock (>100)." />
                   </h3>
-                  <p className="text-sm text-gray-500 mb-4">{products.length} produits analysés</p>
+                  <p className="text-sm text-muted-foreground mb-4">{products.length} produits analysés</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                     <ChartContainer config={stockHealthChartConfig} className="h-72 w-full">
                       <PieChart>
@@ -194,8 +195,8 @@ export default function InsightsPage() {
                               formatter={(value, _name, item) => (
                                 <div className="flex items-center gap-2">
                                   <span className="inline-block w-2.5 h-2.5 rounded-full" style={{ background: `var(--color-${item.payload?.key})` }} />
-                                  <span className="text-gray-600">{item.payload?.name}</span>
-                                  <span className="ml-auto font-semibold text-gray-900 tabular-nums">{value} produits</span>
+                                  <span className="text-muted-foreground">{item.payload?.name}</span>
+                                  <span className="ml-auto font-semibold text-foreground tabular-nums">{value} produits</span>
                                 </div>
                               )}
                               hideLabel
@@ -217,14 +218,14 @@ export default function InsightsPage() {
                     </ChartContainer>
 
                     <div className="flex flex-col justify-center">
-                      <h4 className="text-sm font-semibold text-gray-700 mb-4">Détail par catégorie</h4>
+                      <h4 className="text-sm font-semibold text-muted-foreground mb-4">Détail par catégorie</h4>
                       <div className="space-y-2">
                         {stockHealth.map((item) => (
-                          <div key={item.key} className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 bg-white hover:bg-gray-50 transition-colors">
+                          <div key={item.key} className="flex items-center gap-3 p-3 rounded-xl border border-border bg-card hover:bg-muted transition-colors">
                             <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: `var(--color-${item.key}, ${stockHealthChartConfig[item.key].color})` }} />
-                            <span className="flex-1 text-sm font-medium text-gray-700">{item.name}</span>
-                            <span className="text-sm font-semibold text-gray-900 tabular-nums">{item.value}</span>
-                            <span className="text-xs text-gray-400 tabular-nums w-12 text-right">
+                            <span className="flex-1 text-sm font-medium text-muted-foreground">{item.name}</span>
+                            <span className="text-sm font-semibold text-foreground tabular-nums">{item.value}</span>
+                            <span className="text-xs text-muted-foreground/70 tabular-nums w-12 text-right">
                               {products.length > 0 ? Math.round((item.value / products.length) * 100) : 0}%
                             </span>
                           </div>
@@ -236,13 +237,13 @@ export default function InsightsPage() {
               </Card>
 
               {/* Analyse ABC */}
-              <Card className="overflow-hidden bg-white border border-gray-200 rounded-2xl py-0 ring-0">
+              <Card className="overflow-hidden bg-card border border-border rounded-lg py-0 ring-0">
                 <CardContent className="p-6">
-                  <h3 className="text-base font-semibold text-gray-900 mb-1 flex items-center">
+                  <h3 className="text-base font-semibold text-foreground mb-1 flex items-center">
                     Analyse ABC
                     <InfoTip text="Méthode Pareto : Classe A = 20% des produits générant ~80% de la valeur. Classe B = 30% intermédiaires. Classe C = 50% restants à faible valeur." />
                   </h3>
-                  <p className="text-sm text-gray-500 mb-4">Basée sur la valeur (prix d'achat × stock)</p>
+                  <p className="text-sm text-muted-foreground mb-4">Basée sur la valeur (prix d'achat × stock)</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                     <ChartContainer config={abcChartConfig} className="h-72 w-full">
                       <BarChart data={abcStats} layout="vertical" margin={{ left: 10, right: 20, top: 10, bottom: 10 }}>
@@ -262,8 +263,8 @@ export default function InsightsPage() {
                               formatter={(value, _name, item) => (
                                 <div className="flex items-center gap-2">
                                   <span className="inline-block w-2.5 h-2.5 rounded-full" style={{ background: `var(--color-${item.payload?.key})` }} />
-                                  <span className="text-gray-600">{item.payload?.name}</span>
-                                  <span className="ml-auto font-semibold text-gray-900 tabular-nums">{value} produits ({item.payload?.valuePct}%)</span>
+                                  <span className="text-muted-foreground">{item.payload?.name}</span>
+                                  <span className="ml-auto font-semibold text-foreground tabular-nums">{value} produits ({item.payload?.valuePct}%)</span>
                                 </div>
                               )}
                               hideLabel
@@ -279,22 +280,22 @@ export default function InsightsPage() {
                     </ChartContainer>
 
                     <div className="flex flex-col justify-center">
-                      <h4 className="text-sm font-semibold text-gray-700 mb-4">Détail par classe</h4>
+                      <h4 className="text-sm font-semibold text-muted-foreground mb-4">Détail par classe</h4>
                       <div className="space-y-2">
                         {abcStats.map((item) => (
-                          <div key={item.key} className="p-4 rounded-xl border border-gray-100">
+                          <div key={item.key} className="p-4 rounded-xl border border-border">
                             <div className="flex items-center gap-3 mb-2">
                               <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: `var(--color-${item.key}, ${abcChartConfig[item.key].color})` }} />
-                              <span className="text-sm font-semibold text-gray-800">{item.name}</span>
+                              <span className="text-sm font-semibold text-foreground">{item.name}</span>
                             </div>
-                            <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 tabular-nums">
-                              <span><strong className="text-gray-900">{item.count}</strong> produits</span>
-                              <span><strong className="text-gray-900">{item.valuePct}%</strong> de la valeur</span>
+                            <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground tabular-nums">
+                              <span><strong className="text-foreground">{item.count}</strong> produits</span>
+                              <span><strong className="text-foreground">{item.valuePct}%</strong> de la valeur</span>
                             </div>
                           </div>
                         ))}
                       </div>
-                      <p className="text-xs text-gray-500 mt-4 px-1">
+                      <p className="text-xs text-muted-foreground mt-4 px-1">
                         Concentrez vos efforts sur la Classe A pour maximiser l'impact sur la trésorerie.
                       </p>
                     </div>
@@ -304,18 +305,18 @@ export default function InsightsPage() {
             </div>
 
             {/* Alertes critiques */}
-            <Card className="overflow-hidden bg-white border border-gray-200 rounded-2xl py-0 ring-0">
+            <Card className="overflow-hidden bg-card border border-border rounded-lg py-0 ring-0">
               <CardContent className="p-6">
-                <h3 className="text-base font-semibold text-gray-900 mb-1 flex items-center">
+                <h3 className="text-base font-semibold text-foreground mb-1 flex items-center">
                   Alertes critiques
                   <InfoTip text="Produits dont le stock est inférieur à 15 unités, triés par prix décroissant. Ce sont les produits dont la rupture aurait le plus grand impact financier." />
                   {riskProducts.length > 0 && (
-                    <span className="ml-2 inline-flex items-center justify-center min-w-5 h-5 px-1.5 text-[10px] font-semibold bg-rose-50 text-rose-600 border border-rose-200 rounded-full">
+                    <span className="ml-2 inline-flex items-center justify-center min-w-5 h-5 px-1.5 text-[10px] font-semibold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30 rounded-full">
                       {riskProducts.length}
                     </span>
                   )}
                 </h3>
-                <p className="text-sm text-gray-500 mb-6">
+                <p className="text-sm text-muted-foreground mb-6">
                   Articles de haute valeur presque épuisés — commandez dès maintenant
                 </p>
 
@@ -344,24 +345,24 @@ export default function InsightsPage() {
                           return (
                             <TableRow key={p.id}>
                               <TableCell className="px-4 py-3">
-                                <p className="text-sm font-medium">{p.name}</p>
+                                <ProductKpiLink productId={p.id} name={p.name} className="text-sm" />
                                 <p className="text-xs text-muted-foreground">ID: {p.id}</p>
                               </TableCell>
                               <TableCell className="px-4 py-3 text-sm text-muted-foreground">{p.category || "—"}</TableCell>
-                              <TableCell className="px-4 py-3 text-right text-sm font-medium tabular-nums">{formatCurrency(p.buying_price)}</TableCell>
+                              <TableCell className="px-4 py-3 text-right text-sm font-medium tabular-nums text-foreground num">{formatCurrency(p.buying_price)}</TableCell>
                               <TableCell className="px-4 py-3 text-right">
                                 <div className="inline-flex items-center gap-2">
                                   <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
                                     <span className={`size-1.5 rounded-full ${urgencyDot}`} />
                                     {urgency}
                                   </span>
-                                  <span className="inline-flex items-center gap-1 text-rose-600 tabular-nums">
+                                  <span className="inline-flex items-center gap-1 text-rose-600 dark:text-rose-400 tabular-nums">
                                     <FiAlertTriangle className="h-3.5 w-3.5" />
                                     <span className="text-sm font-semibold">{p.stock_quantity}</span>
                                   </span>
                                 </div>
                               </TableCell>
-                              <TableCell className="px-4 py-3 text-right text-sm font-medium tabular-nums">{formatCurrency(p.buying_price * p.stock_quantity)}</TableCell>
+                              <TableCell className="px-4 py-3 text-right text-sm font-medium tabular-nums text-foreground num">{formatCurrency(p.buying_price * p.stock_quantity)}</TableCell>
                             </TableRow>
                           );
                         })}

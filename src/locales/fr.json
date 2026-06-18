@@ -29,7 +29,15 @@
         "collapse_sidebar": "Réduire la barre latérale",
         "expand_sidebar": "Développer la barre latérale"
     },
+    "onboarding": {
+        "replay": "Revoir le guide"
+    },
     "sidebar": {
+        "sections": {
+            "overview": "Pilotage",
+            "operations": "Activité",
+            "engagement": "Engagement"
+        },
         "dashboard": "Tableau de bord",
         "inventory": "Inventaire",
         "orders": "Commandes",
@@ -57,14 +65,38 @@
         "kpi": {
             "total_revenue": "Revenu Total",
             "revenue_evolution": "Évolution du Revenu",
+            "revenue_growth": "Croissance du CA",
+            "avg_order_value": "Panier moyen",
             "total_orders": "Commandes totales",
+            "delivered_orders": "Commandes livrées",
             "total_products": "Produits Totaux",
             "total_users": "Utilisateurs Totaux",
             "low_stock": "Produits en stock faible",
             "low_stock_alert": "Alerte Stock Faible",
             "high": "Élevé",
             "normal": "Normal",
-            "products_low_units": "Produits < 10 unités"
+            "products_low_units": "Produits < 10 unités",
+            "in_catalog": "au catalogue",
+            "inventory_value": "Valeur du stock",
+            "total_value": "valeur totale",
+            "out_of_stock": "Ruptures",
+            "products_out": "produits indisponibles",
+            "suppliers_total": "Fournisseurs",
+            "registered": "référencés",
+            "suppliers_with_phone": "Fournisseurs joignables",
+            "with_phone": "avec téléphone"
+        },
+        "kpi_edit": {
+            "title": "Personnaliser les KPIs",
+            "subtitle": "Choisis les indicateurs à afficher",
+            "empty_hint": "Au moins un KPI doit rester affiché.",
+            "categories": {
+                "sales": "Ventes & revenus",
+                "orders": "Commandes",
+                "inventory": "Stock & inventaire",
+                "suppliers": "Fournisseurs",
+                "team": "Équipe"
+            }
         },
         "flop_products": {
             "title": "Produits les moins performants",
@@ -292,6 +324,53 @@
                 "classification_desc": "Classification ABC et Matrice",
                 "comparative": "Position sur le marché",
                 "comparative_desc": "Analyse comparative et benchmarking"
+            },
+            "info": {
+                "aria_label": "Plus d’informations",
+                "best_practice": "Bonne pratique",
+                "overview": {
+                    "what": "Vue d’ensemble de la santé du produit : score global, marge, stock et rotation regroupés pour repérer en un coup d’œil ce qui va bien ou nécessite une action.",
+                    "tip": "Commencez toujours par cet aperçu. Un score global sous 50 ou une alerte de rupture indique le produit à traiter en priorité."
+                },
+                "pricing": {
+                    "what": "Suivi du prix de vente, du prix d’achat et du taux de marge, avec l’historique de leur évolution dans le temps.",
+                    "tip": "Visez une marge stable et positive. Si le prix d’achat grimpe sans répercussion sur le prix de vente, ajustez vos tarifs pour préserver la marge."
+                },
+                "stock": {
+                    "what": "Niveau de stock actuel, stock de sécurité recommandé et historique des ruptures pour évaluer la disponibilité du produit.",
+                    "tip": "Maintenez le stock au-dessus du seuil de sécurité. Un taux de rupture élevé fait perdre des ventes : déclenchez un réappro avant d’atteindre ce seuil."
+                },
+                "sales": {
+                    "what": "Mesure la vitesse d’écoulement du produit : taux de rotation, vélocité des ventes par jour et tendance de la demande.",
+                    "tip": "Une rotation élevée et croissante est saine. Une rotation faible signale un sur-stockage : réduisez les commandes ou lancez une promotion."
+                },
+                "profitability": {
+                    "what": "Performance financière du produit : ROI, profit total, profit moyen par vente et contribution au chiffre d’affaires global.",
+                    "tip": "Concentrez vos efforts sur les produits à fort ROI et forte contribution. Un profit faible malgré un bon volume peut justifier de revoir le prix ou le fournisseur."
+                },
+                "restock": {
+                    "what": "Analyse de la chaîne d’approvisionnement : fréquence et coût des réappros, délais de livraison et taux de réception.",
+                    "tip": "Surveillez les délais de livraison pour calibrer le stock de sécurité. Des délais longs ou irréguliers imposent une marge de stock plus large."
+                },
+                "predictions": {
+                    "what": "Prévisions générées par l’IA : statut d’alerte, date estimée de rupture, jours de couverture et quantité optimale à recommander.",
+                    "tip": "Passez commande lorsque le stock atteint le point de réapprovisionnement suggéré, en respectant la quantité optimale pour éviter rupture et sur-stock."
+                },
+                "predictions_metrics": {
+                    "alert_status": "Niveau d’urgence déduit du stock actuel et du rythme de vente : « OK » (stock confortable), « Stock faible » (sous le point de réappro) ou « Rupture » (stock épuisé ou imminent).",
+                    "days_coverage": "Nombre de jours pendant lesquels le stock actuel couvre la demande, au rythme de vente moyen. Calcul : stock actuel ÷ ventes moyennes par jour.",
+                    "stockout_date": "Date estimée d’épuisement du stock si le rythme de vente actuel se maintient. Elle correspond à aujourd’hui + le nombre de jours de couverture.",
+                    "optimal_qty": "Quantité conseillée à commander pour reconstituer un stock optimal (couvrir la demande jusqu’à la prochaine livraison) sans surstock.",
+                    "reorder_point": "Seuil de déclenchement : passez commande dès que le stock descend à ce niveau, afin d’être livré avant la rupture compte tenu du délai fournisseur."
+                },
+                "classification": {
+                    "what": "Classement du produit : classe ABC (importance) et scores de popularité, rentabilité et fiabilité sur 100.",
+                    "tip": "Donnez la priorité aux produits de classe A : ils pèsent le plus dans votre activité et méritent le suivi le plus étroit."
+                },
+                "comparative": {
+                    "what": "Positionnement du produit face à sa catégorie et à son fournisseur : performance relative, rang et part de marché.",
+                    "tip": "Un produit nettement sous la moyenne de sa catégorie doit être analysé : prix, visibilité ou qualité peuvent être en cause."
+                }
             },
             "metrics": {
                 "abc_class": "Classe ABC",

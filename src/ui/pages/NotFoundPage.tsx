@@ -17,10 +17,10 @@ export default function NotFoundPage() {
       <img src={abstract2} alt="" aria-hidden className="absolute bottom-0 right-0 z-20 w-[35%]" />
       <img src={abstract1} alt="" aria-hidden className="absolute bottom-0 left-0 z-20 w-[35%]" />
 
-      <div className="relative z-30 w-full max-w-[420px] rounded-[28px] bg-white p-10 text-center shadow-2xl">
+      <div className="relative z-30 w-full max-w-[420px] rounded-[28px] bg-card p-10 text-center shadow-2xl">
         <img src={illustration404} alt="Illustration 404" className="mx-auto w-56" />
-        <h1 className="mt-8 text-2xl font-semibold text-gray-900">Oups, page introuvable</h1>
-        <p className="mt-3 text-sm text-gray-500">
+        <h1 className="mt-8 text-2xl font-semibold text-foreground">Oups, page introuvable</h1>
+        <p className="mt-3 text-sm text-muted-foreground">
           It seems the page you're looking for no longer exists or has been moved.
         </p>
         <Link

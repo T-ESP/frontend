@@ -14,7 +14,7 @@ export default function AuthPage() {
 
       {/* ── Panneau gauche (caché sur mobile) ── */}
       <div
-        className="hidden flex-col justify-between p-10 text-white lg:flex !bg-[#7b5fa2]"
+        className="hidden flex-col justify-between p-10 text-white lg:flex !bg-primary"
         style={{ background: "hsl(var(--primary))" }}
       >
         {/* Logo en haut */}

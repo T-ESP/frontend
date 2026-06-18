@@ -25,6 +25,7 @@ import {
 } from 'recharts';
 import { useTranslation } from 'react-i18next';
 import PageLayout from '@/ui/components/layouts/PageLayout';
+import { InfoTip } from '@/ui/components/common/InfoTip/InfoTip';
 
 export default function ProductKPIsPage() {
   const { t, i18n } = useTranslation();
@@ -73,12 +74,13 @@ export default function ProductKPIsPage() {
     val != null ? new Intl.NumberFormat(currentLang, { style: 'currency', currency: 'EUR' }).format(val) : 'N/A';
   const formatPercent = (val?: number | null) => val != null ? `${val.toFixed(1)}%` : 'N/A';
   const formatNum = (val?: number | null) => val != null ? val.toLocaleString(currentLang) : 'N/A';
+  const formatInt = (val?: number | null) => val != null ? Math.round(val).toLocaleString(currentLang) : 'N/A';
 
   const StatusBadge = ({ status }: { status: string }) => {
     const getStyles = () => {
-      if (['critical', 'stockout', 'below', 'C', 'Z'].includes(status)) return 'bg-rose-50 text-rose-700 ring-rose-200';
-      if (['warning', 'low', 'low_stock', 'average', 'B', 'Y'].includes(status)) return 'bg-amber-50 text-amber-700 ring-amber-200';
-      if (['optimal', 'good', 'fast', 'above', 'star', 'A', 'X'].includes(status)) return 'bg-emerald-50 text-emerald-700 ring-emerald-200';
+      if (['critical', 'stockout', 'below', 'C', 'Z'].includes(status)) return 'bg-rose-500/10 text-rose-700 dark:text-rose-300 ring-rose-200';
+      if (['warning', 'low', 'low_stock', 'average', 'B', 'Y'].includes(status)) return 'bg-amber-500/10 text-amber-700 dark:text-amber-300 ring-amber-200';
+      if (['optimal', 'good', 'fast', 'above', 'star', 'A', 'X'].includes(status)) return 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-emerald-200';
       if (['excess', 'high'].includes(status)) return 'bg-accent text-primary ring-primary/20';
       return 'bg-muted/40 text-foreground ring-border';
     };
@@ -90,13 +92,13 @@ export default function ProductKPIsPage() {
   };
 
   const TrendIndicator = ({ value }: { value: 'increasing' | 'stable' | 'decreasing' }) => {
-    if (value === 'increasing') return <span className="inline-flex items-center text-xs font-medium text-emerald-600"><TrendingUp className="w-3 h-3 mr-1" />{t('inventory.kpi_modal.trends.inc')}</span>;
-    if (value === 'decreasing') return <span className="inline-flex items-center text-xs font-medium text-rose-600"><TrendingDown className="w-3 h-3 mr-1" />{t('inventory.kpi_modal.trends.dec')}</span>;
+    if (value === 'increasing') return <span className="inline-flex items-center text-xs font-medium text-emerald-600 dark:text-emerald-400"><TrendingUp className="w-3 h-3 mr-1" />{t('inventory.kpi_modal.trends.inc')}</span>;
+    if (value === 'decreasing') return <span className="inline-flex items-center text-xs font-medium text-rose-600 dark:text-rose-400"><TrendingDown className="w-3 h-3 mr-1" />{t('inventory.kpi_modal.trends.dec')}</span>;
     return <span className="inline-flex items-center text-xs font-medium text-muted-foreground"><span className="w-3 h-0.5 bg-muted-foreground mr-1" />{t('inventory.kpi_modal.trends.stable')}</span>;
   };
 
   const StatCard = ({ title, value, subtext, icon: Icon, trend, alert }: any) => (
-    <div className={`flex flex-col justify-between p-5 bg-white border rounded-xl ${alert ? 'border-rose-200' : 'border-border'}`}>
+    <div className={`flex flex-col justify-between p-5 bg-card border rounded-xl ${alert ? 'border-rose-500/30' : 'border-border'}`}>
       <div className="flex items-start justify-between">
         <p className="text-sm font-medium text-foreground">{title}</p>
         {Icon && (
@@ -107,7 +109,7 @@ export default function ProductKPIsPage() {
           />
         )}
       </div>
-      <p className={`mt-4 text-2xl font-semibold tracking-tight tabular-nums ${alert ? 'text-rose-600' : 'text-foreground'}`}>
+      <p className={`mt-4 text-2xl font-semibold tracking-tight tabular-nums ${alert ? 'text-rose-600 dark:text-rose-400' : 'text-foreground'}`}>
         {value}
       </p>
       {(subtext || trend) && (
@@ -119,9 +121,17 @@ export default function ProductKPIsPage() {
     </div>
   );
 
-  const SectionTitle = ({ title, desc }: { icon?: any; title: string; desc: string }) => (
+  const SectionTitle = ({ title, desc, infoKey }: { icon?: any; title: string; desc: string; infoKey?: string }) => (
     <div className="mb-5">
-      <h2 className="text-base font-semibold text-foreground">{title}</h2>
+      <h2 className="flex items-center text-base font-semibold text-foreground">
+        {title}
+        {infoKey && (
+          <InfoTip
+            what={t(`inventory.kpi_modal.info.${infoKey}.what`)}
+            tip={t(`inventory.kpi_modal.info.${infoKey}.tip`)}
+          />
+        )}
+      </h2>
       <p className="mt-0.5 text-sm text-muted-foreground">{desc}</p>
     </div>
   );
@@ -129,7 +139,7 @@ export default function ProductKPIsPage() {
   const CustomTooltip = ({ active, payload, label, formatter }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="p-3 bg-white border rounded-lg shadow-lg border-border">
+        <div className="p-3 bg-card border rounded-lg shadow-lg border-border">
           <p className="mb-1 text-xs text-muted-foreground">{new Date(label).toLocaleDateString(currentLang)}</p>
           <p className="text-sm font-bold text-foreground">
             {formatter ? formatter(payload[0].value) : payload[0].value}
@@ -186,11 +196,11 @@ export default function ProductKPIsPage() {
 
         {/* OVERVIEW */}
         <section>
-          <SectionTitle icon={Activity} title={t('inventory.kpi_modal.sections.overview')} desc={t('inventory.kpi_modal.sections.overview_desc')} />
+          <SectionTitle icon={Activity} title={t('inventory.kpi_modal.sections.overview')} desc={t('inventory.kpi_modal.sections.overview_desc')} infoKey="overview" />
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4 mb-6">
             <StatCard
               title={t('inventory.kpi_modal.metrics.global_score')}
-              value={`${formatNum(kpis.scoringClassification?.global_score)}/100`}
+              value={`${formatInt(kpis.scoringClassification?.global_score)}/100`}
               icon={Target}
               alert={(kpis.scoringClassification?.global_score ?? 100) < 50}
             />
@@ -215,9 +225,9 @@ export default function ProductKPIsPage() {
             />
           </div>
           {kpis.predictionsAlerts && (
-            <div className={`p-6 bg-white border rounded-xl ${kpis.predictionsAlerts.alert_status === 'stockout' ? 'border-rose-200' : 'border-border'}`}>
+            <div className={`p-6 bg-card border rounded-xl ${kpis.predictionsAlerts.alert_status === 'stockout' ? 'border-rose-500/30' : 'border-border'}`}>
               <div className="flex items-center gap-3 mb-4">
-                <div className={`flex items-center justify-center w-9 h-9 rounded-lg ${kpis.predictionsAlerts.alert_status === 'stockout' ? 'bg-rose-50 text-rose-600' : 'bg-accent text-primary'}`}>
+                <div className={`flex items-center justify-center w-9 h-9 rounded-lg ${kpis.predictionsAlerts.alert_status === 'stockout' ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400' : 'bg-accent text-primary'}`}>
                   <Zap size={18} />
                 </div>
                 <div className="flex-1">
@@ -239,7 +249,7 @@ export default function ProductKPIsPage() {
                 </div>
                 <div className="p-3 border rounded-lg bg-muted/30 border-border">
                   <p className="text-xs tracking-wider uppercase text-muted-foreground">{t('inventory.kpi_modal.metrics.days_coverage')}</p>
-                  <p className="mt-1 text-lg font-semibold tabular-nums text-foreground">{formatNum(kpis.predictionsAlerts.days_of_coverage)}</p>
+                  <p className="mt-1 text-lg font-semibold tabular-nums text-foreground">{formatInt(kpis.predictionsAlerts.days_of_coverage)}</p>
                 </div>
               </div>
             </div>
@@ -251,14 +261,14 @@ export default function ProductKPIsPage() {
         {/* PRICING */}
         {kpis.pricingMargin && (
           <section>
-            <SectionTitle icon={DollarSign} title={t('inventory.kpi_modal.sections.pricing')} desc={t('inventory.kpi_modal.sections.pricing_desc')} />
+            <SectionTitle icon={DollarSign} title={t('inventory.kpi_modal.sections.pricing')} desc={t('inventory.kpi_modal.sections.pricing_desc')} infoKey="pricing" />
             <div className="grid grid-cols-3 gap-5 mb-6">
               <StatCard title={t('inventory.kpi_modal.metrics.selling_price')} value={formatCurrency(kpis.pricingMargin.current_selling_price)} icon={DollarSign} />
               <StatCard title={t('inventory.kpi_modal.metrics.buying_price')} value={formatCurrency(kpis.pricingMargin.current_buying_price)} icon={DollarSign} />
               <StatCard title={t('inventory.kpi_modal.metrics.margin')} value={formatPercent(kpis.pricingMargin.margin_rate)} icon={PieChart} />
             </div>
             {kpis.priceEvolution && (
-              <div className="p-6 bg-white border shadow-sm rounded-2xl border-border">
+              <div className="p-6 bg-card border shadow-sm rounded-lg border-border">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="font-bold text-foreground">{t('inventory.kpi_modal.metrics.price_evolution')}</h3>
                   <div className="flex gap-4 text-sm">
@@ -281,8 +291,8 @@ export default function ProductKPIsPage() {
                       <AreaChart data={kpis.priceEvolution.selling_price_history.length > 0 ? kpis.priceEvolution.selling_price_history : kpis.priceEvolution.buying_price_history}>
                         <defs>
                           <linearGradient id="colorSell" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.1} />
-                            <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                            <stop offset="5%" stopColor="#6366f1" stopOpacity={0.1} />
+                            <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
                           </linearGradient>
                           <linearGradient id="colorBuy" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="var(--color-primary)" stopOpacity={0.1} />
@@ -294,7 +304,7 @@ export default function ProductKPIsPage() {
                         <YAxis tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
                         <Tooltip content={<CustomTooltip formatter={formatCurrency} />} />
                         {kpis.priceEvolution.selling_price_history.length > 0 && (
-                          <Area type="monotone" dataKey="price" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorSell)" />
+                          <Area type="monotone" dataKey="price" stroke="#6366f1" strokeWidth={3} fillOpacity={1} fill="url(#colorSell)" />
                         )}
                         {kpis.priceEvolution.buying_price_history.length > 0 && kpis.priceEvolution.selling_price_history.length === 0 && (
                           <Area type="monotone" dataKey="price" stroke="var(--color-primary)" strokeWidth={3} fillOpacity={1} fill="url(#colorBuy)" />
@@ -313,9 +323,9 @@ export default function ProductKPIsPage() {
         {/* STOCK */}
         {kpis.stockAvailability && (
           <section>
-            <SectionTitle icon={Package} title={t('inventory.kpi_modal.sections.stock')} desc={t('inventory.kpi_modal.sections.stock_desc')} />
+            <SectionTitle icon={Package} title={t('inventory.kpi_modal.sections.stock')} desc={t('inventory.kpi_modal.sections.stock_desc')} infoKey="stock" />
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="p-6 bg-white border rounded-2xl border-border">
+              <div className="p-6 bg-card border rounded-lg border-border">
                 <h3 className="flex items-center gap-2 mb-4 font-bold text-foreground">
                   <Package className="text-muted-foreground/70" size={18} />{t('inventory.kpi_modal.metrics.current_status')}
                 </h3>
@@ -330,11 +340,11 @@ export default function ProductKPIsPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">{t('inventory.kpi_modal.metrics.safety_level')}</span>
-                    <span className="font-bold text-amber-600">{kpis.stockAvailability.safety_stock_recommended}</span>
+                    <span className="font-bold text-amber-600 dark:text-amber-400">{kpis.stockAvailability.safety_stock_recommended}</span>
                   </div>
                 </div>
               </div>
-              <div className="p-6 bg-white border rounded-2xl border-border">
+              <div className="p-6 bg-card border rounded-lg border-border">
                 <h3 className="flex items-center gap-2 mb-4 font-bold text-foreground">
                   <AlertTriangle className="text-muted-foreground/70" size={18} />{t('inventory.kpi_modal.metrics.stockout_analysis')}
                 </h3>
@@ -352,7 +362,7 @@ export default function ProductKPIsPage() {
                   </div>
                   <div className="text-right">
                     <p className="text-muted-foreground/70">{t('inventory.kpi_modal.metrics.avg_duration')}</p>
-                    <p className="font-medium text-foreground">{kpis.stockAvailability.avg_stockout_duration_days?.toFixed(1)} {t('inventory.kpi_modal.labels.days')}</p>
+                    <p className="font-medium text-foreground">{formatInt(kpis.stockAvailability.avg_stockout_duration_days)} {t('inventory.kpi_modal.labels.days')}</p>
                   </div>
                 </div>
               </div>
@@ -365,7 +375,7 @@ export default function ProductKPIsPage() {
         {/* SALES */}
         {kpis.salesRotation && (
           <section>
-            <SectionTitle icon={BarChart3} title={t('inventory.kpi_modal.sections.sales')} desc={t('inventory.kpi_modal.sections.sales_desc')} />
+            <SectionTitle icon={BarChart3} title={t('inventory.kpi_modal.sections.sales')} desc={t('inventory.kpi_modal.sections.sales_desc')} infoKey="sales" />
             <div className="grid grid-cols-1 gap-5 md:grid-cols-3 mb-6">
               <StatCard
                 title={t('inventory.kpi_modal.metrics.turnover_rate')}
@@ -386,7 +396,7 @@ export default function ProductKPIsPage() {
                 icon={Activity}
               />
             </div>
-            <div className="p-6 bg-white border rounded-2xl border-border">
+            <div className="p-6 bg-card border rounded-lg border-border">
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h3 className="font-bold text-foreground">{t('inventory.kpi_modal.metrics.rotation_analysis')}</h3>
@@ -398,11 +408,11 @@ export default function ProductKPIsPage() {
                 <div className="space-y-4">
                   <div className="flex justify-between p-4 bg-muted/40 rounded-xl">
                     <span className="text-muted-foreground">{t('inventory.kpi_modal.metrics.avg_storage')}</span>
-                    <span className="font-bold text-foreground">{formatNum(kpis.salesRotation.avg_storage_duration_days)} {t('inventory.kpi_modal.labels.days')}</span>
+                    <span className="font-bold text-foreground">{formatInt(kpis.salesRotation.avg_storage_duration_days)} {t('inventory.kpi_modal.labels.days')}</span>
                   </div>
                   <div className="flex justify-between p-4 bg-muted/40 rounded-xl">
                     <span className="text-muted-foreground">{t('inventory.kpi_modal.metrics.avg_per_order')}</span>
-                    <span className="font-bold text-foreground">{formatNum(kpis.salesRotation.avg_quantity_per_order)}</span>
+                    <span className="font-bold text-foreground">{formatInt(kpis.salesRotation.avg_quantity_per_order)}</span>
                   </div>
                 </div>
                 <div className="space-y-4">
@@ -425,7 +435,7 @@ export default function ProductKPIsPage() {
         {/* PROFITABILITY */}
         {kpis.profitability && (
           <section>
-            <SectionTitle icon={PieChart} title={t('inventory.kpi_modal.sections.profitability')} desc={t('inventory.kpi_modal.sections.profitability_desc')} />
+            <SectionTitle icon={PieChart} title={t('inventory.kpi_modal.sections.profitability')} desc={t('inventory.kpi_modal.sections.profitability_desc')} infoKey="profitability" />
             <div className="grid grid-cols-1 gap-5 md:grid-cols-4 mb-6">
               <StatCard title={t('inventory.kpi_modal.metrics.roi')} value={formatPercent(kpis.profitability.roi)} icon={TrendingUp} />
               <StatCard title={t('inventory.kpi_modal.metrics.total_profit')} value={formatCurrency(kpis.profitability.total_profit)} icon={DollarSign} />
@@ -433,12 +443,12 @@ export default function ProductKPIsPage() {
               <StatCard title={t('inventory.kpi_modal.metrics.revenue_percent')} value={formatPercent(kpis.profitability.contribution_to_total_revenue_percent)} icon={Target} />
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="p-6 bg-white border rounded-xl border-border">
+              <div className="p-6 bg-card border rounded-xl border-border">
                 <h3 className="mb-4 text-base font-semibold text-foreground">{t('inventory.kpi_modal.metrics.profit_metrics')}</h3>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between p-3 border rounded-lg bg-muted/30 border-border">
                     <span className="text-sm text-muted-foreground">{t('inventory.kpi_modal.metrics.total_profit')}</span>
-                    <span className="text-base font-semibold tabular-nums text-emerald-600">{formatCurrency(kpis.profitability.total_profit)}</span>
+                    <span className="text-base font-semibold tabular-nums text-emerald-600 dark:text-emerald-400">{formatCurrency(kpis.profitability.total_profit)}</span>
                   </div>
                   <div className="flex items-center justify-between p-3 border rounded-lg bg-muted/30 border-border">
                     <span className="text-sm text-muted-foreground">{t('inventory.kpi_modal.metrics.roi')}</span>
@@ -446,7 +456,7 @@ export default function ProductKPIsPage() {
                   </div>
                 </div>
               </div>
-              <div className="p-6 bg-white border rounded-xl border-border">
+              <div className="p-6 bg-card border rounded-xl border-border">
                 <h3 className="mb-4 text-base font-semibold text-foreground">{t('inventory.kpi_modal.metrics.contribution')}</h3>
                 <div className="space-y-4">
                   <div>
@@ -478,14 +488,14 @@ export default function ProductKPIsPage() {
         {/* RESTOCK */}
         {kpis.restock && (
           <section>
-            <SectionTitle icon={Truck} title={t('inventory.kpi_modal.sections.restock')} desc={t('inventory.kpi_modal.sections.restock_desc')} />
+            <SectionTitle icon={Truck} title={t('inventory.kpi_modal.sections.restock')} desc={t('inventory.kpi_modal.sections.restock_desc')} infoKey="restock" />
             <div className="grid grid-cols-1 gap-5 md:grid-cols-3 mb-6">
               <StatCard title={t('inventory.kpi_modal.metrics.restock_count_label')} value={kpis.restock.restock_count} icon={Truck} />
-              <StatCard title={t('inventory.kpi_modal.metrics.avg_qty_label')} value={formatNum(kpis.restock.avg_quantity_per_restock)} icon={AlertTriangle} />
-              <StatCard title={t('inventory.kpi_modal.metrics.avg_delay_label')} value={`${formatNum(kpis.restock.avg_delivery_delay_days)} ${t('inventory.kpi_modal.labels.days')}`} icon={Package} />
+              <StatCard title={t('inventory.kpi_modal.metrics.avg_qty_label')} value={formatInt(kpis.restock.avg_quantity_per_restock)} icon={AlertTriangle} />
+              <StatCard title={t('inventory.kpi_modal.metrics.avg_delay_label')} value={`${formatInt(kpis.restock.avg_delivery_delay_days)} ${t('inventory.kpi_modal.labels.days')}`} icon={Package} />
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="p-6 bg-white border rounded-2xl border-border">
+              <div className="p-6 bg-card border rounded-lg border-border">
                 <h3 className="flex items-center gap-2 mb-6 font-bold text-foreground">
                   <Truck size={18} className="text-muted-foreground/70" />{t('inventory.kpi_modal.metrics.supply_chain')}
                 </h3>
@@ -500,7 +510,7 @@ export default function ProductKPIsPage() {
                   </div>
                   <div>
                     <p className="mb-1 text-xs tracking-wider uppercase text-muted-foreground">{t('inventory.kpi_modal.metrics.avg_qty_label')}</p>
-                    <p className="text-2xl font-bold text-foreground">{formatNum(kpis.restock.avg_quantity_per_restock)}</p>
+                    <p className="text-2xl font-bold text-foreground">{formatInt(kpis.restock.avg_quantity_per_restock)}</p>
                   </div>
                   <div>
                     <p className="mb-1 text-xs tracking-wider uppercase text-muted-foreground">{t('inventory.kpi_modal.metrics.reception_rate')}</p>
@@ -508,7 +518,7 @@ export default function ProductKPIsPage() {
                   </div>
                 </div>
               </div>
-              <div className="p-6 bg-white border rounded-xl border-border">
+              <div className="p-6 bg-card border rounded-xl border-border">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-accent text-primary">
                     <Target size={18} />
@@ -521,7 +531,7 @@ export default function ProductKPIsPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <div className="p-3 border rounded-lg bg-muted/30 border-border">
                     <p className="text-xs text-muted-foreground">{t('inventory.kpi_modal.metrics.frequency')}</p>
-                    <p className="mt-1 text-base font-semibold text-foreground">{t('inventory.kpi_modal.metrics.every')} {formatNum(kpis.restock.restock_frequency_days)} {t('inventory.kpi_modal.labels.days')}</p>
+                    <p className="mt-1 text-base font-semibold text-foreground">{t('inventory.kpi_modal.metrics.every')} {formatInt(kpis.restock.restock_frequency_days)} {t('inventory.kpi_modal.labels.days')}</p>
                   </div>
                   <div className="p-3 border rounded-lg bg-muted/30 border-border">
                     <p className="text-xs text-muted-foreground">{t('inventory.kpi_modal.metrics.avg_cost')}</p>
@@ -538,8 +548,8 @@ export default function ProductKPIsPage() {
         {/* PREDICTIONS */}
         {kpis.predictionsAlerts && (
           <section>
-            <SectionTitle icon={Zap} title={t('inventory.kpi_modal.sections.predictions')} desc={t('inventory.kpi_modal.sections.predictions_desc')} />
-            <div className="p-6 mb-6 bg-white border rounded-xl border-border">
+            <SectionTitle icon={Zap} title={t('inventory.kpi_modal.sections.predictions')} desc={t('inventory.kpi_modal.sections.predictions_desc')} infoKey="predictions" />
+            <div className="p-6 mb-6 bg-card border rounded-xl border-border">
               <div className="flex items-center gap-3 mb-6">
                 <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-accent text-primary">
                   <Zap size={18} />
@@ -551,15 +561,24 @@ export default function ProductKPIsPage() {
               </div>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 <div className="p-4 border rounded-lg bg-muted/30 border-border">
-                  <p className="mb-2 text-xs tracking-wider uppercase text-muted-foreground">{t('inventory.kpi_modal.metrics.status')}</p>
+                  <p className="mb-2 flex items-center text-xs tracking-wider uppercase text-muted-foreground">
+                    {t('inventory.kpi_modal.metrics.status')}
+                    <InfoTip what={t('inventory.kpi_modal.info.predictions_metrics.alert_status')} />
+                  </p>
                   <StatusBadge status={kpis.predictionsAlerts.alert_status} />
                 </div>
                 <div className="p-4 border rounded-lg bg-muted/30 border-border">
-                  <p className="mb-2 text-xs tracking-wider uppercase text-muted-foreground">{t('inventory.kpi_modal.metrics.days_coverage')}</p>
-                  <p className="text-2xl font-semibold tabular-nums text-foreground">{formatNum(kpis.predictionsAlerts.days_of_coverage)}</p>
+                  <p className="mb-2 flex items-center text-xs tracking-wider uppercase text-muted-foreground">
+                    {t('inventory.kpi_modal.metrics.days_coverage')}
+                    <InfoTip what={t('inventory.kpi_modal.info.predictions_metrics.days_coverage')} />
+                  </p>
+                  <p className="text-2xl font-semibold tabular-nums text-foreground">{formatInt(kpis.predictionsAlerts.days_of_coverage)}</p>
                 </div>
                 <div className="p-4 border rounded-lg bg-muted/30 border-border">
-                  <p className="mb-2 text-xs tracking-wider uppercase text-muted-foreground">{t('inventory.kpi_modal.metrics.stockout_date')}</p>
+                  <p className="mb-2 flex items-center text-xs tracking-wider uppercase text-muted-foreground">
+                    {t('inventory.kpi_modal.metrics.stockout_date')}
+                    <InfoTip what={t('inventory.kpi_modal.info.predictions_metrics.stockout_date')} />
+                  </p>
                   <p className="text-base font-semibold text-foreground">
                     {kpis.predictionsAlerts.estimated_stockout_date
                       ? new Date(kpis.predictionsAlerts.estimated_stockout_date).toLocaleDateString()
@@ -569,29 +588,35 @@ export default function ProductKPIsPage() {
               </div>
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="p-6 bg-white border rounded-xl border-border">
+              <div className="p-6 bg-card border rounded-xl border-border">
                 <h3 className="mb-4 text-base font-semibold text-foreground">{t('inventory.kpi_modal.metrics.reorder_recs')}</h3>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between p-3 border rounded-lg bg-muted/30 border-border">
                     <div>
-                      <p className="text-sm text-foreground">{t('inventory.kpi_modal.metrics.optimal_qty')}</p>
+                      <p className="flex items-center text-sm text-foreground">
+                        {t('inventory.kpi_modal.metrics.optimal_qty')}
+                        <InfoTip what={t('inventory.kpi_modal.info.predictions_metrics.optimal_qty')} />
+                      </p>
                       <p className="text-xs text-muted-foreground">{t('inventory.kpi_modal.metrics.based_on_forecast')}</p>
                     </div>
                     <span className="text-xl font-semibold tabular-nums text-primary">{kpis.predictionsAlerts.optimal_reorder_quantity}</span>
                   </div>
                   <div className="flex items-center justify-between p-3 border rounded-lg bg-muted/30 border-border">
                     <div>
-                      <p className="text-sm text-foreground">{t('inventory.kpi_modal.metrics.reorder_point')}</p>
+                      <p className="flex items-center text-sm text-foreground">
+                        {t('inventory.kpi_modal.metrics.reorder_point')}
+                        <InfoTip what={t('inventory.kpi_modal.info.predictions_metrics.reorder_point')} />
+                      </p>
                       <p className="text-xs text-muted-foreground">{t('inventory.kpi_modal.metrics.trigger_threshold')}</p>
                     </div>
-                    <span className="text-xl font-semibold tabular-nums text-amber-600">{kpis.predictionsAlerts.optimal_reorder_point}</span>
+                    <span className="text-xl font-semibold tabular-nums text-amber-600 dark:text-amber-400">{kpis.predictionsAlerts.optimal_reorder_point}</span>
                   </div>
                 </div>
               </div>
-              <div className="p-6 bg-white border rounded-xl border-border">
+              <div className="p-6 bg-card border rounded-xl border-border">
                 <h3 className="mb-6 text-base font-semibold text-foreground">{t('inventory.kpi_modal.metrics.coverage_analysis')}</h3>
                 <div className="py-6 text-center">
-                  <p className="text-5xl font-semibold tabular-nums text-foreground">{formatNum(kpis.predictionsAlerts.days_of_coverage)}</p>
+                  <p className="text-5xl font-semibold tabular-nums text-foreground">{formatInt(kpis.predictionsAlerts.days_of_coverage)}</p>
                   <p className="mt-1 text-sm text-muted-foreground">{t('inventory.kpi_modal.labels.days')}</p>
                   <p className="mt-4 text-sm text-muted-foreground">{t('inventory.kpi_modal.metrics.current_coverage')}</p>
                   <div className="inline-flex items-center gap-2 mt-3 text-xs text-muted-foreground">
@@ -609,9 +634,9 @@ export default function ProductKPIsPage() {
         {/* CLASSIFICATION */}
         {kpis.scoringClassification && (
           <section>
-            <SectionTitle icon={Target} title={t('inventory.kpi_modal.sections.classification')} desc={t('inventory.kpi_modal.sections.classification_desc')} />
+            <SectionTitle icon={Target} title={t('inventory.kpi_modal.sections.classification')} desc={t('inventory.kpi_modal.sections.classification_desc')} infoKey="classification" />
             <div className="grid grid-cols-2 gap-6">
-              <div className="flex flex-col justify-between p-6 bg-white border rounded-xl border-border">
+              <div className="flex flex-col justify-between p-6 bg-card border rounded-xl border-border">
                 <div>
                   <p className="text-xs tracking-wider uppercase text-muted-foreground">{t('inventory.kpi_modal.metrics.abc_class')}</p>
                   <p className="mt-2 text-5xl font-semibold tracking-tight text-primary">{kpis.scoringClassification.abc_classification}</p>
@@ -621,7 +646,7 @@ export default function ProductKPIsPage() {
                   <span>{kpis.scoringClassification.performance_category} {t('inventory.kpi_modal.labels.performance')}</span>
                 </div>
               </div>
-              <div className="p-6 bg-white border rounded-xl border-border">
+              <div className="p-6 bg-card border rounded-xl border-border">
                 <h3 className="mb-6 text-base font-semibold text-foreground">{t('inventory.kpi_modal.metrics.score_breakdown')}</h3>
                 <div className="space-y-6">
                   {['Popularity', 'Profitability', 'Reliability'].map((metric) => {
@@ -650,7 +675,7 @@ export default function ProductKPIsPage() {
         {/* COMPARATIVE */}
         {kpis.comparative && (
           <section>
-            <SectionTitle icon={RefreshCw} title={t('inventory.kpi_modal.sections.comparative')} desc={t('inventory.kpi_modal.sections.comparative_desc')} />
+            <SectionTitle icon={RefreshCw} title={t('inventory.kpi_modal.sections.comparative')} desc={t('inventory.kpi_modal.sections.comparative_desc')} infoKey="comparative" />
             <div className="grid grid-cols-1 gap-5 md:grid-cols-3 mb-6">
               <StatCard
                 title={t('inventory.kpi_modal.metrics.vs_category_avg')}
@@ -670,7 +695,7 @@ export default function ProductKPIsPage() {
                 icon={PieChart}
               />
             </div>
-            <div className="p-6 bg-white border rounded-2xl border-border mb-6">
+            <div className="p-6 bg-card border rounded-lg border-border mb-6">
               <h3 className="mb-6 font-bold text-foreground">{t('inventory.kpi_modal.metrics.competitive_position')}</h3>
               <div className="space-y-6">
                 <div>
@@ -694,19 +719,19 @@ export default function ProductKPIsPage() {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-6">
-              <div className="p-6 bg-white border rounded-xl border-border">
+              <div className="p-6 bg-card border rounded-xl border-border">
                 <div className="flex items-center justify-between">
                   <h4 className="text-sm font-medium text-foreground">{t('inventory.kpi_modal.metrics.perf_vs_avg')}</h4>
                   <TrendingUp size={16} className="text-muted-foreground" />
                 </div>
-                <p className={`mt-4 text-2xl font-semibold tabular-nums ${(kpis.comparative.performance_vs_category_percent ?? 0) > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                <p className={`mt-4 text-2xl font-semibold tabular-nums ${(kpis.comparative.performance_vs_category_percent ?? 0) > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
                   {(kpis.comparative.performance_vs_category_percent ?? 0) > 0 ? '+' : ''}{formatPercent(kpis.comparative.performance_vs_category_percent)}
                 </p>
                 <p className="mt-2 text-sm text-muted-foreground">
                   {(kpis.comparative.performance_vs_category_percent ?? 0) > 0 ? t('inventory.kpi_modal.metrics.above_avg') : t('inventory.kpi_modal.metrics.below_avg')}
                 </p>
               </div>
-              <div className="p-6 bg-white border rounded-xl border-border">
+              <div className="p-6 bg-card border rounded-xl border-border">
                 <div className="flex items-center justify-between">
                   <h4 className="text-sm font-medium text-foreground">{t('inventory.kpi_modal.metrics.market_share')}</h4>
                   <Target size={16} className="text-muted-foreground" />

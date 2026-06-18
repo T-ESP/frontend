@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -12,21 +12,23 @@ import {
 } from "@/components/ui/table";
 import type { Product } from "@/domain/models/Product";
 import type { TopProduct } from "../../../types/dashboard.types";
+import { productKpisService } from "@/infrastructure/api/services/productKpisService";
 
 interface TopProductsProps {
   products: Product[];
 }
 
 export function TopProducts({ products }: TopProductsProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const currentLang = i18n.language || "fr-FR";
 
   const topProducts = useMemo<TopProduct[]>(() => {
     const sorted = [...products].sort(
       (a, b) => b.stock_quantity - a.stock_quantity
     );
 
-    return sorted.slice(0, 10).map((product, index) => {
+    return sorted.slice(0, 10).map((product) => {
       const totalValue = product.buying_price * product.stock_quantity;
       return {
         id: product.id,
@@ -39,13 +41,40 @@ export function TopProducts({ products }: TopProductsProps) {
         }).format(totalValue),
         trend: product.stock_quantity > 50 ? "up" : ("down" as "up" | "down"),
         change: `${product.stock_quantity} ${t("common.units")}`,
-        rating: 4.5 + index * 0.1,
       };
     });
   }, [products, t]);
 
-  const handleClick = (name: string, id: string | number) => {
-    navigate(`/inventory?search=${encodeURIComponent(name)}&productId=${id}`);
+  // Real per-product score, identical to the one shown on the product KPI page
+  // (same scoring-classification endpoint). Keyed by product id, /100.
+  const [scores, setScores] = useState<Record<number, number | null>>({});
+
+  useEffect(() => {
+    let cancelled = false;
+    const ids = topProducts.map((p) => p.id);
+    if (ids.length === 0) {
+      setScores({});
+      return;
+    }
+
+    Promise.all(
+      ids.map((id) =>
+        productKpisService
+          .getScoringClassification(id)
+          .then((s) => [id, s.global_score] as const)
+          .catch(() => [id, null] as const)
+      )
+    ).then((entries) => {
+      if (!cancelled) setScores(Object.fromEntries(entries));
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [topProducts]);
+
+  const handleClick = (_name: string, id: string | number) => {
+    navigate(`/inventory/${id}/kpis`);
   };
 
   return (
@@ -81,7 +110,9 @@ export function TopProducts({ products }: TopProductsProps) {
                 {product.sales.toLocaleString()}
               </TableCell>
               <TableCell className="px-6 font-medium tabular-nums">
-                {product.rating.toFixed(1)} / 5
+                {scores[product.id] != null
+                  ? `${scores[product.id]!.toLocaleString(currentLang, { maximumFractionDigits: 1 })}/100`
+                  : "—"}
               </TableCell>
               <TableCell className="px-6 font-medium tabular-nums">
                 {product.revenue}

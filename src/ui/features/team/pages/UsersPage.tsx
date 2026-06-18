@@ -56,7 +56,7 @@ function UserProfilePanel({
     <div className="fixed inset-0 z-50 flex" onClick={onClose}>
       <div className="flex-1 bg-black/30" />
       <div
-        className="w-[420px] bg-white h-full shadow-2xl flex flex-col overflow-y-auto"
+        className="w-[420px] bg-card h-full shadow-2xl flex flex-col overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -65,7 +65,7 @@ function UserProfilePanel({
             <FiX className="w-5 h-5" />
           </button>
           <div className="flex items-end gap-4 mt-4">
-            <div className="w-20 h-20 rounded-2xl bg-white/20 flex items-center justify-center text-3xl font-black border-2 border-white/30">
+            <div className="w-20 h-20 rounded-lg bg-white/20 flex items-center justify-center text-3xl font-black border-2 border-white/30">
               {initials}
             </div>
             <div>
@@ -76,47 +76,47 @@ function UserProfilePanel({
         </div>
 
         {/* Stats row */}
-        <div className="grid grid-cols-2 border-b border-gray-100">
-          <div className="p-5 border-r border-gray-100">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Commandes</p>
-            <p className="text-2xl font-black text-gray-900 mt-1">{userOrders.length}</p>
+        <div className="grid grid-cols-2 border-b border-border">
+          <div className="p-5 border-r border-border">
+            <p className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-wider">Commandes</p>
+            <p className="text-2xl font-black text-foreground mt-1">{userOrders.length}</p>
           </div>
           <div className="p-5">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total dépensé</p>
-            <p className="text-2xl font-black text-gray-900 mt-1">{formatCurrency(totalSpent)}</p>
+            <p className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-wider">Total dépensé</p>
+            <p className="text-2xl font-black text-foreground mt-1">{formatCurrency(totalSpent)}</p>
           </div>
         </div>
 
         {/* Contact info */}
         <div className="p-6 space-y-4">
-          <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider">Informations</h3>
+          <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Informations</h3>
           <div className="space-y-3">
             <div className="flex items-center gap-3 text-sm">
-              <FiMail className="w-4 h-4 text-gray-400 flex-shrink-0" />
+              <FiMail className="w-4 h-4 text-muted-foreground/70 flex-shrink-0" />
               <div>
-                <p className="text-xs text-gray-400">Email</p>
-                <p className="font-medium text-gray-900">{user.email}</p>
+                <p className="text-xs text-muted-foreground/70">Email</p>
+                <p className="font-medium text-foreground">{user.email}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 text-sm">
-              <FiPhone className="w-4 h-4 text-gray-400 flex-shrink-0" />
+              <FiPhone className="w-4 h-4 text-muted-foreground/70 flex-shrink-0" />
               <div>
-                <p className="text-xs text-gray-400">Téléphone</p>
-                <p className="font-medium text-gray-900">{user.phone || "—"}</p>
+                <p className="text-xs text-muted-foreground/70">Téléphone</p>
+                <p className="font-medium text-foreground">{user.phone || "—"}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 text-sm">
-              <FiCalendar className="w-4 h-4 text-gray-400 flex-shrink-0" />
+              <FiCalendar className="w-4 h-4 text-muted-foreground/70 flex-shrink-0" />
               <div>
-                <p className="text-xs text-gray-400">Inscrit le</p>
-                <p className="font-medium text-gray-900">{formatDate(user.created_at)}</p>
+                <p className="text-xs text-muted-foreground/70">Inscrit le</p>
+                <p className="font-medium text-foreground">{formatDate(user.created_at)}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 text-sm">
-              <FiCalendar className="w-4 h-4 text-gray-400 flex-shrink-0" />
+              <FiCalendar className="w-4 h-4 text-muted-foreground/70 flex-shrink-0" />
               <div>
-                <p className="text-xs text-gray-400">Dernière modification</p>
-                <p className="font-medium text-gray-900">{formatDate(user.updated_at)}</p>
+                <p className="text-xs text-muted-foreground/70">Dernière modification</p>
+                <p className="font-medium text-foreground">{formatDate(user.updated_at)}</p>
               </div>
             </div>
           </div>
@@ -124,46 +124,46 @@ function UserProfilePanel({
 
         {/* Order history */}
         <div className="px-6 pb-4">
-          <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider mb-3">
+          <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3">
             Commandes associées ({userOrders.length})
           </h3>
           {userOrders.length === 0 ? (
-            <div className="py-6 text-center text-gray-400">
+            <div className="py-6 text-center text-muted-foreground/70">
               <p className="text-sm">Aucune commande</p>
             </div>
           ) : (
             <div className="space-y-2 max-h-56 overflow-y-auto">
               {userOrders.slice(0, 8).map((o) => {
                 const statusColors: Record<string, string> = {
-                  pending: "bg-amber-100 text-amber-700",
-                  confirmed: "bg-blue-100 text-blue-700",
+                  pending: "bg-amber-500/15 text-amber-700 dark:text-amber-300",
+                  confirmed: "bg-blue-500/15 text-blue-700 dark:text-blue-300",
                   shipped: "bg-purple-100 text-purple-700",
-                  delivered: "bg-emerald-100 text-emerald-700",
-                  cancelled: "bg-rose-100 text-rose-700",
+                  delivered: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
+                  cancelled: "bg-rose-500/15 text-rose-700 dark:text-rose-300",
                 };
-                const sc = statusColors[o.status.toLowerCase()] ?? "bg-gray-100 text-gray-700";
+                const sc = statusColors[o.status.toLowerCase()] ?? "bg-muted text-muted-foreground";
                 return (
-                  <div key={o.id} className="flex items-center justify-between p-2.5 rounded-lg bg-gray-50 text-sm">
+                  <div key={o.id} className="flex items-center justify-between p-2.5 rounded-lg bg-muted text-sm">
                     <div>
-                      <p className="font-medium text-gray-900">#{o.id}</p>
-                      <p className="text-xs text-gray-400">{new Date(o.order_date).toLocaleDateString("fr-FR")}</p>
+                      <p className="font-medium text-foreground">#{o.id}</p>
+                      <p className="text-xs text-muted-foreground/70">{new Date(o.order_date).toLocaleDateString("fr-FR")}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${sc}`}>{o.status}</span>
-                      <span className="font-bold text-gray-900">{formatCurrency(o.amount)}</span>
+                      <span className="font-bold text-foreground">{formatCurrency(o.amount)}</span>
                     </div>
                   </div>
                 );
               })}
               {userOrders.length > 8 && (
-                <p className="text-xs text-center text-gray-400 pt-1">+ {userOrders.length - 8} autres commandes</p>
+                <p className="text-xs text-center text-muted-foreground/70 pt-1">+ {userOrders.length - 8} autres commandes</p>
               )}
             </div>
           )}
         </div>
 
         {/* Actions */}
-        <div className="p-6 border-t border-gray-100 mt-auto flex gap-3">
+        <div className="p-6 border-t border-border mt-auto flex gap-3">
           <button
             onClick={() => onEdit(user)}
             className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-purple-700 bg-purple-50 border border-purple-200 rounded-xl hover:bg-purple-100 transition-colors"
@@ -172,7 +172,7 @@ function UserProfilePanel({
           </button>
           <button
             onClick={() => onDelete(user)}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-rose-600 bg-rose-50 border border-rose-200 rounded-xl hover:bg-rose-100 transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-rose-600 dark:text-rose-400 bg-rose-500/10 border border-rose-500/30 rounded-xl hover:bg-rose-500/15 transition-colors"
           >
             <FiTrash2 className="w-4 h-4" /> Supprimer
           </button>
@@ -294,11 +294,11 @@ export default function UsersPage() {
       </div>
 
       {/* Controls */}
-      <div className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm mb-6">
+      <div className="bg-card border border-border rounded-xl p-6 shadow-sm mb-6">
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
           <div className="flex flex-1 gap-3 max-w-xl">
             <div className="relative flex-1">
-              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70" />
               <Input
                 type="text"
                 value={searchQuery}
@@ -307,7 +307,7 @@ export default function UsersPage() {
                 className="h-10 pl-9"
               />
               {searchQuery && (
-                <button onClick={() => setSearchQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                <button onClick={() => setSearchQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/70 hover:text-muted-foreground">
                   <FiX className="w-3.5 h-3.5" />
                 </button>
               )}
@@ -315,7 +315,7 @@ export default function UsersPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as any)}
-              className="px-3 py-2.5 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="px-3 py-2.5 text-sm bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
               <option value="all">Tous les statuts</option>
               <option value="active">Actifs</option>
@@ -326,7 +326,7 @@ export default function UsersPage() {
             <button
               onClick={loadData}
               disabled={loading}
-              className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-muted-foreground bg-card border border-border rounded-lg hover:bg-muted transition-colors disabled:opacity-50"
             >
               <FiRefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
               Actualiser
@@ -344,7 +344,7 @@ export default function UsersPage() {
 
       {/* Error state */}
       {error && (
-        <div className="flex items-center gap-3 p-4 mb-6 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-sm">
+        <div className="flex items-center gap-3 p-4 mb-6 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-700 dark:text-rose-300 text-sm">
           <FiAlertTriangle className="w-5 h-5 flex-shrink-0" />
           {error}
           <button onClick={loadData} className="ml-auto px-3 py-1 bg-rose-600 text-white rounded-lg text-xs hover:bg-rose-700">Réessayer</button>
@@ -355,25 +355,25 @@ export default function UsersPage() {
       {loading && (
         <div className="space-y-3">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-20 bg-white border border-gray-100 rounded-xl animate-pulse" />
+            <div key={i} className="h-20 bg-card border border-border rounded-xl animate-pulse" />
           ))}
         </div>
       )}
 
       {/* User list */}
       {!loading && filteredUsers.length === 0 && (
-        <div className="py-16 text-center bg-white border border-gray-100 rounded-xl shadow-sm">
-          <FiUser className="w-12 h-12 text-gray-200 mx-auto mb-3" />
-          <p className="text-sm font-semibold text-gray-500">
+        <div className="py-16 text-center bg-card border border-border rounded-xl shadow-sm">
+          <FiUser className="w-12 h-12 text-muted-foreground/70 mx-auto mb-3" />
+          <p className="text-sm font-semibold text-muted-foreground">
             {searchQuery ? "Aucun utilisateur ne correspond à la recherche" : "Aucun utilisateur enregistré"}
           </p>
         </div>
       )}
 
       {!loading && filteredUsers.length > 0 && (
-        <div className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
+        <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
           {/* Table header */}
-          <div className="px-6 py-3 bg-gray-50 border-b border-gray-100 grid grid-cols-12 text-xs font-bold uppercase tracking-wider text-gray-500">
+          <div className="px-6 py-3 bg-muted border-b border-border grid grid-cols-12 text-xs font-bold uppercase tracking-wider text-muted-foreground">
             <div className="col-span-4">Utilisateur</div>
             <div className="col-span-3">Email</div>
             <div className="col-span-2">Téléphone</div>
@@ -383,7 +383,7 @@ export default function UsersPage() {
           </div>
 
           {/* Rows */}
-          <div className="divide-y divide-gray-50">
+          <div className="divide-y divide-border">
             {filteredUsers.map((user) => {
               const gradient = getAvatarGradient(user.id);
               const initials = `${user.firstname[0] ?? ""}${user.lastname[0] ?? ""}`.toUpperCase();
@@ -402,43 +402,43 @@ export default function UsersPage() {
                       {initials}
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-gray-900 group-hover:text-purple-700 transition-colors">
+                      <p className="text-sm font-semibold text-foreground group-hover:text-purple-700 transition-colors">
                         {user.firstname} {user.lastname}
                       </p>
-                      <p className="text-xs text-gray-400">Inscrit {formatDate(user.created_at)}</p>
+                      <p className="text-xs text-muted-foreground/70">Inscrit {formatDate(user.created_at)}</p>
                     </div>
                   </div>
 
                   {/* Email */}
                   <div className="col-span-3">
-                    <div className="flex items-center gap-1.5 text-sm text-gray-600">
-                      <FiMail className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                    <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                      <FiMail className="w-3.5 h-3.5 text-muted-foreground/70 flex-shrink-0" />
                       <span className="truncate">{user.email}</span>
                     </div>
                   </div>
 
                   {/* Phone */}
-                  <div className="col-span-2 text-sm text-gray-500">
+                  <div className="col-span-2 text-sm text-muted-foreground">
                     {user.phone ? (
                       <div className="flex items-center gap-1.5">
-                        <FiPhone className="w-3.5 h-3.5 text-gray-400" />
+                        <FiPhone className="w-3.5 h-3.5 text-muted-foreground/70" />
                         {user.phone}
                       </div>
                     ) : (
-                      <span className="text-gray-300">—</span>
+                      <span className="text-muted-foreground/60">—</span>
                     )}
                   </div>
 
                   {/* Order count */}
                   <div className="col-span-1 text-center">
-                    <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-xs font-bold ${orderCount > 0 ? "bg-purple-100 text-purple-700" : "bg-gray-100 text-gray-400"}`}>
+                    <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-xs font-bold ${orderCount > 0 ? "bg-purple-100 text-purple-700" : "bg-muted text-muted-foreground/70"}`}>
                       {orderCount}
                     </span>
                   </div>
 
                   {/* Status */}
                   <div className="col-span-1 text-center">
-                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${isActive ? "bg-emerald-50 text-emerald-700" : "bg-gray-100 text-gray-500"}`}>
+                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${isActive ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : "bg-muted text-muted-foreground"}`}>
                       {isActive ? <FiCheck className="w-3 h-3" /> : <FiX className="w-3 h-3" />}
                       {isActive ? "Actif" : "Inactif"}
                     </span>
@@ -448,14 +448,14 @@ export default function UsersPage() {
                   <div className="col-span-1 flex items-center justify-center gap-1" onClick={(e) => e.stopPropagation()}>
                     <button
                       onClick={() => openEdit(user)}
-                      className="p-1.5 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+                      className="p-1.5 text-muted-foreground/70 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
                       title="Modifier"
                     >
                       <FiEdit2 className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => openDelete(user)}
-                      className="p-1.5 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                      className="p-1.5 text-muted-foreground/70 hover:text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors"
                       title="Supprimer"
                     >
                       <FiTrash2 className="w-4 h-4" />
@@ -467,8 +467,8 @@ export default function UsersPage() {
           </div>
 
           {/* Footer */}
-          <div className="px-6 py-3 border-t border-gray-100 bg-gray-50">
-            <p className="text-xs text-gray-400">
+          <div className="px-6 py-3 border-t border-border bg-muted">
+            <p className="text-xs text-muted-foreground/70">
               {filteredUsers.length === users.length
                 ? `${users.length} utilisateur${users.length !== 1 ? "s" : ""} au total`
                 : `${filteredUsers.length} sur ${users.length} utilisateurs`}

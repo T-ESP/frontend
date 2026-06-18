@@ -59,17 +59,17 @@ export function ViewOrderModal({ order, onClose }: ViewOrderModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-[2px]">
-      <div className="bg-white w-full max-w-2xl border border-gray-200 rounded-2xl shadow-xl max-h-[90vh] flex flex-col overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+      <div className="bg-card w-full max-w-2xl border border-border rounded-lg shadow-xl max-h-[90vh] flex flex-col overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-9 h-9 rounded-full bg-purple-50 text-purple-600">
               <ShoppingCart size={18} />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-gray-900">
+              <h2 className="text-base font-semibold text-foreground">
                 {t('orders.view_modal.title', { id: order.id })}
               </h2>
-              <p className="mt-0.5 text-xs text-gray-500">
+              <p className="mt-0.5 text-xs text-muted-foreground">
                 {new Date(order.order_date).toLocaleDateString(locale, {
                   year: 'numeric',
                   month: 'long',
@@ -80,7 +80,7 @@ export function ViewOrderModal({ order, onClose }: ViewOrderModalProps) {
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-gray-400 transition-colors rounded-md hover:text-gray-700 hover:bg-gray-100"
+            className="p-1.5 text-muted-foreground/70 transition-colors rounded-md hover:text-muted-foreground hover:bg-muted"
           >
             <X size={18} />
           </button>
@@ -89,19 +89,19 @@ export function ViewOrderModal({ order, onClose }: ViewOrderModalProps) {
         <div className="flex-1 px-6 py-5 space-y-5 overflow-y-auto">
           {/* Summary grid */}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <div className="p-3 border border-gray-200 rounded-lg">
-              <div className="text-xs font-medium text-gray-500">
+            <div className="p-3 border border-border rounded-lg">
+              <div className="text-xs font-medium text-muted-foreground">
                 {t('orders.view_modal.user_label')}
               </div>
-              <div className="mt-1 text-sm font-semibold text-gray-900">
+              <div className="mt-1 text-sm font-semibold text-foreground">
                 #{order.user_id}
               </div>
             </div>
-            <div className="p-3 border border-gray-200 rounded-lg">
-              <div className="text-xs font-medium text-gray-500">
+            <div className="p-3 border border-border rounded-lg">
+              <div className="text-xs font-medium text-muted-foreground">
                 {t('orders.view_modal.date_label')}
               </div>
-              <div className="mt-1 text-sm font-semibold text-gray-900">
+              <div className="mt-1 text-sm font-semibold text-foreground">
                 {new Date(order.order_date).toLocaleDateString(locale, {
                   month: 'short',
                   day: 'numeric',
@@ -110,8 +110,8 @@ export function ViewOrderModal({ order, onClose }: ViewOrderModalProps) {
                 })}
               </div>
             </div>
-            <div className="p-3 border border-gray-200 rounded-lg">
-              <div className="text-xs font-medium text-gray-500">
+            <div className="p-3 border border-border rounded-lg">
+              <div className="text-xs font-medium text-muted-foreground">
                 {t('orders.view_modal.status_label')}
               </div>
               <div className="mt-1.5">
@@ -121,11 +121,11 @@ export function ViewOrderModal({ order, onClose }: ViewOrderModalProps) {
                 </span>
               </div>
             </div>
-            <div className="p-3 border border-gray-200 rounded-lg">
-              <div className="text-xs font-medium text-gray-500">
+            <div className="p-3 border border-border rounded-lg">
+              <div className="text-xs font-medium text-muted-foreground">
                 {t('orders.view_modal.amount_label')}
               </div>
-              <div className="mt-1 text-sm font-semibold text-gray-900 tabular-nums">
+              <div className="mt-1 text-sm font-semibold text-foreground tabular-nums">
                 {formatCurrency(order.amount)}
               </div>
             </div>
@@ -133,22 +133,22 @@ export function ViewOrderModal({ order, onClose }: ViewOrderModalProps) {
 
           {/* Line items */}
           <div>
-            <h3 className="mb-2 text-sm font-semibold text-gray-900">
+            <h3 className="mb-2 text-sm font-semibold text-foreground">
               {t('orders.view_modal.items_title')}
             </h3>
 
             {loading ? (
-              <div className="flex items-center justify-center py-10 text-gray-500 border border-gray-200 rounded-lg bg-gray-50/50">
+              <div className="flex items-center justify-center py-10 text-muted-foreground border border-border rounded-lg bg-gray-50/50">
                 <Loader2 className="w-4 h-4 mr-2 text-purple-600 animate-spin" />
                 <span className="text-sm">{t('orders.view_modal.loading_items')}</span>
               </div>
             ) : error ? (
-              <div className="flex items-start gap-2 px-3 py-2.5 text-sm border border-rose-200 rounded-lg bg-rose-50 text-rose-700">
+              <div className="flex items-start gap-2 px-3 py-2.5 text-sm border border-rose-500/30 rounded-lg bg-rose-500/10 text-rose-700 dark:text-rose-300">
                 <AlertTriangle size={16} className="mt-0.5 shrink-0" />
                 <span>{error}</span>
               </div>
             ) : lineItems.length === 0 ? (
-              <div className="py-10 text-sm text-center text-gray-500 border border-gray-200 rounded-lg bg-gray-50/50">
+              <div className="py-10 text-sm text-center text-muted-foreground border border-border rounded-lg bg-gray-50/50">
                 {t('orders.view_modal.no_items')}
               </div>
             ) : (
@@ -191,7 +191,7 @@ export function ViewOrderModal({ order, onClose }: ViewOrderModalProps) {
             )}
           </div>
 
-          <div className="pt-3 space-y-1 text-xs text-gray-500 border-t border-gray-100">
+          <div className="pt-3 space-y-1 text-xs text-muted-foreground border-t border-border">
             <div>
               {t('orders.view_modal.created_at')}: {new Date(order.created_at).toLocaleString(locale)}
             </div>
@@ -201,7 +201,7 @@ export function ViewOrderModal({ order, onClose }: ViewOrderModalProps) {
           </div>
         </div>
 
-        <div className="flex justify-end px-6 py-4 border-t border-gray-100 bg-gray-50/50">
+        <div className="flex justify-end px-6 py-4 border-t border-border bg-gray-50/50">
           <button
             onClick={onClose}
             className="px-4 py-2 text-sm font-medium text-white transition-colors bg-purple-600 border border-purple-600 rounded-lg hover:bg-purple-700"

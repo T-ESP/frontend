@@ -11,10 +11,10 @@ import { mockSalesData } from "@/ui/features/sales/constants";
 
 export function SalesChart() {
   return (
-    <div className="p-6 bg-white rounded-xl shadow-sm">
+    <div className="p-6 bg-card rounded-xl shadow-sm">
       <div className="flex justify-between items-center mb-4">
-        <p className="font-semibold text-gray-800">Sales Details</p>
-        <select className="px-3 py-1 text-sm bg-gray-100 rounded-md outline-none">
+        <p className="font-semibold text-foreground">Sales Details</p>
+        <select className="px-3 py-1 text-sm bg-muted rounded-md outline-none">
           <option>October</option>
         </select>
       </div>
@@ -26,8 +26,8 @@ export function SalesChart() {
         >
           <defs>
             <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+              <stop offset="5%" stopColor="#818cf8" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#818cf8" stopOpacity={0} />
             </linearGradient>
           </defs>
           <XAxis dataKey="name" />
@@ -37,7 +37,7 @@ export function SalesChart() {
           <Area
             type="monotone"
             dataKey="sales"
-            stroke="#8884d8"
+            stroke="#818cf8"
             fillOpacity={1}
             fill="url(#colorSales)"
           />

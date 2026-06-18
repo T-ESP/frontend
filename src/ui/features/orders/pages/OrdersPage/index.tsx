@@ -194,7 +194,7 @@ export default function OrdersPage() {
     <div className="flex items-center gap-2">
       <button
         onClick={loadOrders}
-        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-lg hover:bg-muted transition-colors"
       >
         <RefreshCw className="w-4 h-4" />
         {t('common.refresh')}
@@ -213,10 +213,10 @@ export default function OrdersPage() {
     return (
       <PageLayout title={t('orders.title')} subtitle={t('orders.subtitle', { count: 0 })}>
         <div className="flex items-center justify-center py-24">
-          <div className="text-center text-gray-500">
+          <div className="text-center text-muted-foreground">
             <Loader2 className="w-6 h-6 mx-auto mb-3 text-purple-600 animate-spin" />
-            <div className="text-sm font-medium text-gray-700">{t('orders.loading')}</div>
-            <p className="mt-1 text-xs text-gray-500">{t('orders.fetching')}</p>
+            <div className="text-sm font-medium text-muted-foreground">{t('orders.loading')}</div>
+            <p className="mt-1 text-xs text-muted-foreground">{t('orders.fetching')}</p>
           </div>
         </div>
       </PageLayout>
@@ -227,10 +227,10 @@ export default function OrdersPage() {
     return (
       <PageLayout title={t('orders.title')}>
         <div className="flex items-center justify-center py-16">
-          <div className="max-w-md p-6 text-center bg-white border border-rose-200 rounded-2xl">
+          <div className="max-w-md p-6 text-center bg-card border border-rose-500/30 rounded-lg">
             <AlertTriangle className="w-8 h-8 mx-auto mb-3 text-rose-500" />
-            <h2 className="mb-1 text-base font-semibold text-gray-900">{t('orders.error_title')}</h2>
-            <p className="text-sm text-gray-500">{error}</p>
+            <h2 className="mb-1 text-base font-semibold text-foreground">{t('orders.error_title')}</h2>
+            <p className="text-sm text-muted-foreground">{error}</p>
             <button
               onClick={loadOrders}
               className="flex items-center gap-2 px-4 py-2 mx-auto mt-4 text-sm font-medium text-white transition-colors bg-gray-900 rounded-lg hover:bg-gray-800"
@@ -258,11 +258,11 @@ export default function OrdersPage() {
         <OrderStats orders={orders} />
 
         {/* Filters card */}
-        <div className="bg-white border border-gray-200 rounded-2xl">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <div className="bg-card border border-border rounded-lg">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-border">
             <div className="flex items-center gap-3">
-              <h3 className="text-base font-semibold text-gray-900">{t('orders.list_title')}</h3>
-              <span className="text-sm text-gray-500">
+              <h3 className="text-base font-semibold text-foreground">{t('orders.list_title')}</h3>
+              <span className="text-sm text-muted-foreground">
                 {filteredAndSortedOrders.length === orders.length
                   ? `${orders.length.toLocaleString()} ${t('orders.orders_label')}`
                   : `${filteredAndSortedOrders.length.toLocaleString()} ${t('common.of')} ${orders.length.toLocaleString()} ${t('orders.orders_label')}`}
@@ -270,7 +270,7 @@ export default function OrdersPage() {
               {activeFiltersCount > 0 && (
                 <button
                   onClick={clearAllFilters}
-                  className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
+                  className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-muted-foreground bg-muted rounded-full hover:bg-muted transition-colors"
                 >
                   <X className="w-3 h-3" />
                   {t('orders.clear_filters', { count: activeFiltersCount })}
@@ -282,11 +282,11 @@ export default function OrdersPage() {
           <div className="px-6 py-4">
             <div className="grid items-end grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-6">
               <div className="space-y-1.5 lg:col-span-2">
-                <label className="ml-1 text-xs font-medium text-gray-500">
+                <label className="ml-1 text-xs font-medium text-muted-foreground">
                   {t('orders.filters.search')}
                 </label>
                 <div className="relative">
-                  <Search className="absolute w-4 h-4 text-gray-400 -translate-y-1/2 left-3 top-1/2" />
+                  <Search className="absolute w-4 h-4 text-muted-foreground/70 -translate-y-1/2 left-3 top-1/2" />
                   <Input
                     type="text"
                     value={searchQuery}
@@ -297,7 +297,7 @@ export default function OrdersPage() {
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery('')}
-                      className="absolute text-gray-400 -translate-y-1/2 right-2.5 top-1/2 hover:text-gray-600 p-1"
+                      className="absolute text-muted-foreground/70 -translate-y-1/2 right-2.5 top-1/2 hover:text-muted-foreground p-1"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
@@ -306,13 +306,13 @@ export default function OrdersPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="ml-1 text-xs font-medium text-gray-500">
+                <label className="ml-1 text-xs font-medium text-muted-foreground">
                   {t('inventory.header.status_label', 'Status')}
                 </label>
                 <select
                   value={selectedStatus}
                   onChange={(e) => setSelectedStatus(e.target.value)}
-                  className="w-full px-3 py-2 text-sm font-medium bg-white border border-gray-200 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 transition-shadow"
+                  className="w-full px-3 py-2 text-sm font-medium bg-card border border-border rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 transition-shadow"
                 >
                   <option value="All Status">{t('orders.filters.all_status')}</option>
                   <option value="Pending">{t('orders.filters.pending')}</option>
@@ -324,13 +324,13 @@ export default function OrdersPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="ml-1 text-xs font-medium text-gray-500">
+                <label className="ml-1 text-xs font-medium text-muted-foreground">
                   {t('inventory.header.sort_label', 'Sort By')}
                 </label>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full px-3 py-2 text-sm font-medium bg-white border border-gray-200 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 transition-shadow"
+                  className="w-full px-3 py-2 text-sm font-medium bg-card border border-border rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 transition-shadow"
                 >
                   <option value="date">{t('orders.filters.sort_date')}</option>
                   <option value="amount">{t('orders.filters.sort_amount')}</option>
@@ -341,25 +341,25 @@ export default function OrdersPage() {
 
               <div className="flex gap-2">
                 <div className="flex-1 space-y-1.5">
-                  <label className="ml-1 text-xs font-medium text-gray-500">
+                  <label className="ml-1 text-xs font-medium text-muted-foreground">
                     {t('inventory.header.order_label', 'Order')}
                   </label>
                   <button
                     onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                    className="flex items-center justify-center w-full gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                    className="flex items-center justify-center w-full gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-lg hover:bg-muted transition-colors"
                   >
                     {sortOrder === 'asc' ? `↑ ${t('orders.filters.asc', 'Asc')}` : `↓ ${t('orders.filters.desc', 'Desc')}`}
                   </button>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="ml-1 text-xs font-medium text-gray-500 opacity-0">.</label>
+                  <label className="ml-1 text-xs font-medium text-muted-foreground opacity-0">.</label>
                   <button
                     onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
                     className={`flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium border rounded-lg transition-colors ${
                       showAdvancedFilters
                         ? 'text-purple-700 bg-purple-50 border-purple-200'
-                        : 'text-gray-700 bg-white border-gray-200 hover:bg-gray-50'
+                        : 'text-muted-foreground bg-card border-border hover:bg-muted'
                     }`}
                   >
                     <Filter className="w-4 h-4" />
@@ -370,21 +370,21 @@ export default function OrdersPage() {
             </div>
 
             {showAdvancedFilters && (
-              <div className="p-4 mt-4 space-y-3 border border-gray-200 rounded-lg bg-gray-50">
+              <div className="p-4 mt-4 space-y-3 border border-border rounded-lg bg-muted">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-semibold text-gray-700">
+                  <h4 className="text-sm font-semibold text-muted-foreground">
                     {t('orders.filters.advanced', 'Advanced')}
                   </h4>
                   <button
                     onClick={() => setAmountRange({ min: 0, max: 10000 })}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-muted-foreground bg-card border border-border rounded-lg hover:bg-muted transition-colors"
                   >
                     <X className="w-3 h-3" />
                     {t('orders.filters.reset', 'Reset')}
                   </button>
                 </div>
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-muted-foreground">
                     {t('orders.filters.amount_range')}
                   </label>
                   <div className="flex items-center gap-3">
@@ -411,7 +411,7 @@ export default function OrdersPage() {
         </div>
 
         {/* Orders table */}
-        <div className="overflow-hidden bg-card border rounded-2xl">
+        <div className="overflow-hidden bg-card border rounded-lg">
           <Table>
             <TableHeader>
               <TableRow>
@@ -493,9 +493,9 @@ export default function OrdersPage() {
           </Table>
 
           {filteredAndSortedOrders.length > 0 && (
-            <div className="flex flex-col gap-3 px-6 py-4 border-t border-gray-100 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-3 px-6 py-4 border-t border-border sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3">
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-muted-foreground">
                   {t('orders.pagination.showing', {
                     start: (currentPage - 1) * itemsPerPage + 1,
                     end: Math.min(currentPage * itemsPerPage, filteredAndSortedOrders.length),
@@ -508,7 +508,7 @@ export default function OrdersPage() {
                     setItemsPerPage(Number(e.target.value));
                     setCurrentPage(1);
                   }}
-                  className="px-2 py-1 text-xs bg-white border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500"
+                  className="px-2 py-1 text-xs bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500"
                 >
                   <option value={10}>10 {t('orders.pagination.per_page')}</option>
                   <option value={25}>25 {t('orders.pagination.per_page')}</option>
@@ -521,7 +521,7 @@ export default function OrdersPage() {
                 <button
                   onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
                   disabled={currentPage === 1}
-                  className="flex items-center justify-center w-8 h-8 text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="flex items-center justify-center w-8 h-8 text-muted-foreground bg-card border border-border rounded-md hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
@@ -540,7 +540,7 @@ export default function OrdersPage() {
                       className={`min-w-[32px] h-8 px-2 text-xs font-medium rounded-md transition-colors ${
                         currentPage === pageNum
                           ? 'text-white bg-gray-900 border border-gray-900'
-                          : 'text-gray-700 bg-white border border-gray-200 hover:bg-gray-50'
+                          : 'text-muted-foreground bg-card border border-border hover:bg-muted'
                       }`}
                     >
                       {pageNum}
@@ -551,7 +551,7 @@ export default function OrdersPage() {
                 <button
                   onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
-                  className="flex items-center justify-center w-8 h-8 text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="flex items-center justify-center w-8 h-8 text-muted-foreground bg-card border border-border rounded-md hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>

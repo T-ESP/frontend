@@ -172,12 +172,12 @@ export default function TeamPage() {
     return (
       <PageLayout title={t('team.members.title')} icon={<UsersIcon size={28} />}>
         <div className="flex items-center justify-center min-h-100">
-          <div className="text-red-600">
+          <div className="text-red-600 dark:text-red-400">
             <h2 className="text-2xl font-bold mb-2">{t('team.members.error_title')}</h2>
             <p>{error}</p>
             <button
               onClick={loadUsers}
-              className="mt-4 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+              className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
             >
               {t('team.members.retry')}
             </button>
@@ -191,31 +191,31 @@ export default function TeamPage() {
     <PageLayout title={t('team.members.title')} icon={<UsersIcon size={28} />}>
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-xl border border-slate-100 p-6">
+        <div className="bg-card rounded-xl border border-slate-100 p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-slate-600">{t('team.members.total')}</p>
               <p className="text-2xl font-bold text-slate-900 mt-2">{stats.total}</p>
             </div>
-            <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center">
-              <UsersIcon className="text-blue-600" size={24} />
+            <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center">
+              <UsersIcon className="text-blue-600 dark:text-blue-400" size={24} />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-100 p-6">
+        <div className="bg-card rounded-xl border border-slate-100 p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-slate-600">{t('team.members.active_label')}</p>
-              <p className="text-2xl font-bold text-green-600 mt-2">{stats.active}</p>
+              <p className="text-2xl font-bold text-green-600 dark:text-green-400 mt-2">{stats.active}</p>
             </div>
-            <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center">
-              <UserCheck className="text-green-600" size={24} />
+            <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center">
+              <UserCheck className="text-green-600 dark:text-green-400" size={24} />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-100 p-6">
+        <div className="bg-card rounded-xl border border-slate-100 p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-slate-600">{t('team.members.inactive_label')}</p>
@@ -227,21 +227,21 @@ export default function TeamPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-100 p-6">
+        <div className="bg-card rounded-xl border border-slate-100 p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-slate-600">{t('team.members.with_phone')}</p>
               <p className="text-2xl font-bold text-slate-900 mt-2">{stats.withPhone}</p>
             </div>
-            <div className="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center">
-              <Phone className="text-indigo-600" size={24} />
+            <div className="w-12 h-12 bg-indigo-500/10 rounded-lg flex items-center justify-center">
+              <Phone className="text-indigo-600 dark:text-indigo-400" size={24} />
             </div>
           </div>
         </div>
       </div>
 
       {/* Controls */}
-      <div className="bg-white rounded-xl border border-slate-100 p-6 mb-8">
+      <div className="bg-card rounded-xl border border-slate-100 p-6 mb-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="flex-1 max-w-md">
             <div className="relative">
@@ -287,7 +287,7 @@ export default function TeamPage() {
             </button>
             <button
               onClick={() => setShowAddModal(true)}
-              className="flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+              className="flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
             >
               <Plus size={16} />
               {t('team.members.add')}
@@ -297,10 +297,10 @@ export default function TeamPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-slate-100 overflow-hidden">
+      <div className="bg-card rounded-xl border border-slate-100 overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <RefreshCw className="animate-spin text-gray-400" size={32} />
+            <RefreshCw className="animate-spin text-muted-foreground/70" size={32} />
           </div>
         ) : filteredAndSortedUsers.length === 0 ? (
           <div className="text-center py-12">
@@ -371,13 +371,13 @@ export default function TeamPage() {
             </Table>
 
             {/* Pagination */}
-            <div className="flex items-center justify-between px-6 py-4 bg-white border-t border-slate-100 rounded-b-xl">
+            <div className="flex items-center justify-between px-6 py-4 bg-card border-t border-slate-100 rounded-b-xl">
               <div className="flex items-center gap-2 text-sm text-slate-600">
                 <span>{t('team.members.pagination.show')}</span>
                 <select
                   value={itemsPerPage}
                   onChange={(e) => setItemsPerPage(Number(e.target.value))}
-                  className="px-3 py-1.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                  className="px-3 py-1.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30"
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>
@@ -393,14 +393,14 @@ export default function TeamPage() {
                 <button
                   onClick={() => setCurrentPage(1)}
                   disabled={currentPage === 1}
-                  className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-card border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {t('team.members.pagination.first')}
                 </button>
                 <button
                   onClick={() => setCurrentPage(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-card border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {t('team.members.pagination.previous')}
                 </button>
@@ -410,14 +410,14 @@ export default function TeamPage() {
                 <button
                   onClick={() => setCurrentPage(currentPage + 1)}
                   disabled={currentPage >= totalPages}
-                  className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-card border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {t('team.members.pagination.next')}
                 </button>
                 <button
                   onClick={() => setCurrentPage(totalPages)}
                   disabled={currentPage >= totalPages}
-                  className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-card border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {t('team.members.pagination.last')}
                 </button>

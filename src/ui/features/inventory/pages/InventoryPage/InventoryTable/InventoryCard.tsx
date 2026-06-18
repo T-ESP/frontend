@@ -14,23 +14,23 @@ interface InventoryCardProps {
 
 const statusStyles = {
   "In Stock": {
-    bg: "bg-emerald-50",
-    text: "text-emerald-700",
-    border: "border-emerald-200",
+    bg: "bg-emerald-500/10",
+    text: "text-emerald-700 dark:text-emerald-300",
+    border: "border-emerald-500/30",
     dot: "bg-emerald-500",
     key: "inventory.status.in_stock"
   },
   "Low Stock": {
-    bg: "bg-amber-50",
-    text: "text-amber-700",
-    border: "border-amber-200",
+    bg: "bg-amber-500/10",
+    text: "text-amber-700 dark:text-amber-300",
+    border: "border-amber-500/30",
     dot: "bg-amber-500",
     key: "inventory.status.low_stock"
   },
   "Out of Stock": {
-    bg: "bg-rose-50",
-    text: "text-rose-700",
-    border: "border-rose-200",
+    bg: "bg-rose-500/10",
+    text: "text-rose-700 dark:text-rose-300",
+    border: "border-rose-500/30",
     dot: "bg-rose-500",
     key: "inventory.status.out_of_stock"
   }
@@ -53,7 +53,7 @@ export function InventoryCard({ item, index, onEdit, onDelete, onStockUpdate, on
 
   return (
     <div
-      className="mb-3 transition-all duration-300 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md group"
+      className="mb-3 transition-all duration-300 bg-card border border-border rounded-lg shadow-sm hover:shadow-md group"
       style={{ animationDelay: `${index * 30}ms` }}
     >
       <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
@@ -65,20 +65,20 @@ export function InventoryCard({ item, index, onEdit, onDelete, onStockUpdate, on
             onError={(e) => {
               e.currentTarget.src = 'https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg?semt=ais_hybrid&w=740&q=80';
             }}
-            className="object-cover w-16 h-16 border border-gray-200 rounded-lg"
+            className="object-cover w-16 h-16 border border-border rounded-lg"
           />
         </div> */}
 
         {/* Middle: Product Info */}
         <div className="flex-1 min-w-0">
-          <h3 className="text-base font-bold leading-tight text-gray-900 truncate transition-colors group-hover:text-purple-600">
+          <h3 className="text-base font-bold leading-tight text-foreground truncate transition-colors group-hover:text-purple-600">
             {item.name}
           </h3>
           <div className="flex items-center gap-3 mt-1">
-            <span className="text-sm text-gray-500">{t('inventory.card.sku')}: {item.sku}</span>
-            <span className="text-gray-300">•</span>
-            <div className="flex items-center gap-1.5 text-gray-600">
-              <FiPackage className="w-3.5 h-3.5 text-gray-400" />
+            <span className="text-sm text-muted-foreground">{t('inventory.card.sku')}: {item.sku}</span>
+            <span className="text-muted-foreground/60">•</span>
+            <div className="flex items-center gap-1.5 text-muted-foreground">
+              <FiPackage className="w-3.5 h-3.5 text-muted-foreground/70" />
               <span className="text-sm">{item.category}</span>
             </div>
           </div>
@@ -99,18 +99,18 @@ export function InventoryCard({ item, index, onEdit, onDelete, onStockUpdate, on
             <button
               onClick={() => handleStockChange(-1)}
               disabled={updating || item.piece <= 0}
-              className="p-1.5 text-gray-600 border border-gray-200 rounded hover:text-red-600 hover:bg-red-50 hover:border-red-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="p-1.5 text-muted-foreground border border-border rounded hover:text-red-600 dark:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               title={t('inventory.card.decrease_stock')}
             >
               <FiMinus className="w-3.5 h-3.5" />
             </button>
-            <span className="text-sm font-semibold text-center text-gray-900 min-w-15">
+            <span className="text-sm font-semibold text-center text-foreground min-w-15">
               {item.piece.toLocaleString()}
             </span>
             <button
               onClick={() => handleStockChange(1)}
               disabled={updating}
-              className="p-1.5 text-gray-600 border border-gray-200 rounded hover:text-green-600 hover:bg-green-50 hover:border-green-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="p-1.5 text-muted-foreground border border-border rounded hover:text-green-600 dark:text-green-400 hover:bg-green-500/10 hover:border-green-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               title={t('inventory.card.increase_stock')}
             >
               <FiPlus className="w-3.5 h-3.5" />
@@ -119,7 +119,7 @@ export function InventoryCard({ item, index, onEdit, onDelete, onStockUpdate, on
 
           {/* Price */}
           <div className="text-right shrink-0 min-w-25">
-            <p className="text-lg font-bold text-gray-900">{item.price}</p>
+            <p className="text-lg font-bold text-foreground">{item.price}</p>
           </div>
 
           {/* Action Buttons */}

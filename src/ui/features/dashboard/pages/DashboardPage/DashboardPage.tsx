@@ -14,6 +14,12 @@ import type { Product } from "@/domain/models/Product";
 import type { User } from "@/domain/models/User";
 import { useTranslation } from "react-i18next";
 import { FiSettings, FiCheck } from "react-icons/fi";
+import {
+  startOnboardingTour,
+  hasSeenTour,
+  consumeReplayFlag,
+  TOUR_START_EVENT,
+} from "@/ui/features/onboarding/onboardingTour";
 
 export default function DashboardPage() {
   const { t } = useTranslation();
@@ -30,6 +36,23 @@ export default function DashboardPage() {
   useEffect(() => {
     loadDashboardData();
   }, [dateRange]);
+
+  // Permet de (re)lancer le tour à la demande depuis le header.
+  useEffect(() => {
+    const handler = () => startOnboardingTour();
+    window.addEventListener(TOUR_START_EVENT, handler);
+    return () => window.removeEventListener(TOUR_START_EVENT, handler);
+  }, []);
+
+  // Lance le tour automatiquement à la première visite (ou si une relecture est demandée),
+  // une fois que les données — donc les zones ciblées — sont affichées.
+  useEffect(() => {
+    if (loading) return;
+    if (!hasSeenTour() || consumeReplayFlag()) {
+      const id = setTimeout(() => startOnboardingTour(), 500);
+      return () => clearTimeout(id);
+    }
+  }, [loading]);
 
   const loadDashboardData = async () => {
     try {
@@ -86,11 +109,12 @@ export default function DashboardPage() {
         <div className="flex items-center gap-2">
           {/* Edit Mode toggle */}
           <button
+            data-tour="customize"
             onClick={() => setEditMode((v) => !v)}
-            className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-xl border transition-all ${
+            className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg border transition-all ${
               editMode
-                ? "bg-purple-600 text-white border-purple-600 shadow-sm"
-                : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                : "bg-card text-muted-foreground border-border hover:bg-muted hover:text-foreground"
             }`}
           >
             {editMode ? (
@@ -117,29 +141,33 @@ export default function DashboardPage() {
         <div className="space-y-8">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-32 bg-white border border-gray-100 rounded-2xl animate-pulse" />
+              <div key={i} className="h-32 border bg-card border-border rounded-lg animate-pulse" />
             ))}
           </div>
-          <div className="bg-white border border-gray-100 h-96 rounded-2xl animate-pulse" />
+          <div className="border bg-card border-border h-96 rounded-lg animate-pulse" />
         </div>
       ) : (
         <>
           {/* KPI Cards with edit modal */}
-          <KPICards
-            orders={orders}
-            products={products}
-            users={users}
-            totalRevenue={totalRevenue}
-            evolution={evolution}
-            totalOrderCount={totalOrderCount}
-            dateRange={dateRange}
-            editMode={editMode}
-            onCloseEdit={() => setEditMode(false)}
-          />
+          <div data-tour="kpis">
+            <KPICards
+              orders={orders}
+              products={products}
+              users={users}
+              totalRevenue={totalRevenue}
+              evolution={evolution}
+              totalOrderCount={totalOrderCount}
+              dateRange={dateRange}
+              editMode={editMode}
+              onCloseEdit={() => setEditMode(false)}
+            />
+          </div>
 
           <ChartContainer orders={orders} users={users} dateRange={dateRange} />
 
-          <AlertsWidget />
+          <div data-tour="alerts">
+            <AlertsWidget />
+          </div>
 
           <TopProducts products={products} />
         </>

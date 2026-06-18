@@ -51,18 +51,18 @@ export default function SalesChart({ data, rangeLabel, loading }: SalesChartProp
     }).format(val);
 
   return (
-    <Card className="bg-white border border-gray-200 rounded-2xl ring-0 shadow-none">
-      <CardHeader className="flex flex-row items-center justify-between p-6 border-b border-gray-100 space-y-0">
+    <Card className="bg-card border border-border rounded-lg ring-0 shadow-none">
+      <CardHeader className="flex flex-row items-center justify-between p-6 border-b border-border space-y-0">
         <div>
-          <CardTitle className="text-lg font-semibold text-gray-900">
+          <CardTitle className="text-lg font-semibold text-foreground">
             {t("sales.charts.revenue_trend", "Tendance des revenus")}
           </CardTitle>
-          <CardDescription className="mt-1 text-sm text-gray-500">
+          <CardDescription className="mt-1 text-sm text-muted-foreground">
             {t("sales.charts.daily_revenue_30d", "Revenus quotidiens sur les 30 derniers jours")}
           </CardDescription>
         </div>
         {rangeLabel && (
-          <button className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 focus:outline-none">
+          <button className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-muted-foreground bg-card border border-border rounded-lg hover:bg-muted focus:outline-none">
             {rangeLabel}
           </button>
         )}
@@ -70,14 +70,14 @@ export default function SalesChart({ data, rangeLabel, loading }: SalesChartProp
 
       <CardContent className="p-6">
         {loading ? (
-          <div className="flex items-center justify-center h-[350px] text-gray-400">
+          <div className="flex items-center justify-center h-[350px] text-muted-foreground/70">
             <FiLoader className="w-6 h-6 mr-2 animate-spin" />
             <span className="text-sm">Chargement…</span>
           </div>
         ) : data.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-[350px] text-gray-400">
+          <div className="flex flex-col items-center justify-center h-[350px] text-muted-foreground/70">
             <p className="text-sm font-medium">Aucune donnée sur la période</p>
-            <p className="mt-1 text-xs text-gray-300">Essayez une plage plus large</p>
+            <p className="mt-1 text-xs text-muted-foreground/60">Essayez une plage plus large</p>
           </div>
         ) : (
           <ChartContainer config={chartConfig} className="h-[350px] w-full">
@@ -88,7 +88,7 @@ export default function SalesChart({ data, rangeLabel, loading }: SalesChartProp
                   <stop offset="100%" stopColor="var(--color-primary)" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1b2640" />
               <XAxis
                 dataKey="date"
                 axisLine={false}
@@ -115,7 +115,7 @@ export default function SalesChart({ data, rangeLabel, loading }: SalesChartProp
                 }
               />
               <ChartTooltip
-                cursor={{ stroke: "#e2e8f0", strokeWidth: 1, strokeDasharray: "3 3" }}
+                cursor={{ stroke: "#1b2640", strokeWidth: 1, strokeDasharray: "3 3" }}
                 content={
                   <ChartTooltipContent
                     labelFormatter={(label) =>

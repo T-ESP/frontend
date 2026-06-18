@@ -4,7 +4,7 @@ import { Check, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/ui/features/auth/hooks/useAuth";
 
-const BRAND = "#7b5fa2";
+const BRAND = "#6366f1";
 
 export default function PricingPage() {
     const { t } = useTranslation();
@@ -79,41 +79,41 @@ export default function PricingPage() {
     ];
 
     return (
-        <div className="min-h-screen bg-white font-sans">
+        <div className="min-h-screen bg-card font-sans">
 
 
             {/* Hero */}
             <div className="text-center pt-20 pb-12 px-8">
                 {isAuthenticated && (
-                    <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-sm font-bold shadow-sm">
+                    <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-700 text-sm font-bold shadow-sm">
                         🎉 Tarifs préférentiels appliqués pour votre compte
                     </div>
                 )}
                 <p className="text-sm font-semibold uppercase tracking-widest mb-4" style={{ color: BRAND }}>
                     Tarifs
                 </p>
-                <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight">
+                <h1 className="text-4xl md:text-5xl font-extrabold text-foreground mb-4 leading-tight">
                     {t("pricing.title")}
                 </h1>
-                <p className="text-gray-500 text-lg max-w-xl mx-auto">{t("pricing.subtitle")}</p>
+                <p className="text-muted-foreground text-lg max-w-xl mx-auto">{t("pricing.subtitle")}</p>
 
                 {/* Billing toggle */}
                 <div className="flex justify-center mt-10">
-                    <div className="bg-gray-100 p-1 rounded-xl flex items-center">
+                    <div className="bg-muted p-1 rounded-xl flex items-center">
                         <button
                             onClick={() => setIsYearly(false)}
-                            className={`px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${!isYearly ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-900"
+                            className={`px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${!isYearly ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
                                 }`}
                         >
                             {t("pricing.billing.monthly")}
                         </button>
                         <button
                             onClick={() => setIsYearly(true)}
-                            className={`px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${isYearly ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-900"
+                            className={`px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${isYearly ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
                                 }`}
                         >
                             {t("pricing.billing.yearly")}{" "}
-                            <span className="text-emerald-600 text-xs ml-1 font-bold">-20%</span>
+                            <span className="text-indigo-600 text-xs ml-1 font-bold">-20%</span>
                         </button>
                     </div>
                 </div>
@@ -124,9 +124,9 @@ export default function PricingPage() {
                 {TIERS.map((tier) => (
                     <div
                         key={tier.name}
-                        className={`relative bg-white rounded-2xl p-8 border transition-all duration-300 ${tier.popular
+                        className={`relative bg-card rounded-lg p-8 border transition-all duration-300 ${tier.popular
                             ? "shadow-xl ring-2 scale-105 z-10"
-                            : "border-gray-200 shadow-sm hover:shadow-md"
+                            : "border-border shadow-sm hover:shadow-md"
                             }`}
                         style={tier.popular ? { borderColor: BRAND } : {}}
                     >
@@ -143,18 +143,18 @@ export default function PricingPage() {
                             <h3 className="text-lg font-bold mb-2" style={{ color: tier.popular ? BRAND : "#374151" }}>
                                 {tier.name}
                             </h3>
-                            <p className="text-gray-500 text-sm h-10">{tier.description}</p>
+                            <p className="text-muted-foreground text-sm h-10">{tier.description}</p>
                             <div className="mt-4 flex flex-col items-center justify-center gap-1">
                                 <div className="flex items-baseline justify-center gap-1">
-                                    <span className="text-4xl font-extrabold text-gray-900">
-                                        €{isYearly ? tier.priceYearly : tier.priceMonthly}
+                                    <span className="text-4xl font-extrabold text-foreground">
+                                        {isYearly ? tier.priceYearly : tier.priceMonthly}€
                                     </span>
-                                    <span className="text-gray-500">
+                                    <span className="text-muted-foreground">
                                         /{isYearly ? t("pricing.billing.yearly").toLowerCase() : t("pricing.billing.monthly").toLowerCase()}
                                     </span>
                                 </div>
                                 {isAuthenticated && !tier.isCurrent && (
-                                    <span className="text-xs text-emerald-600 font-semibold mt-1">
+                                    <span className="text-xs text-indigo-600 font-semibold mt-1">
                                         Prix membre appliqué
                                     </span>
                                 )}
@@ -167,15 +167,15 @@ export default function PricingPage() {
                                     <div className="mt-0.5 p-1 rounded-full shrink-0" style={{ backgroundColor: "#d4f0e0" }}>
                                         <Check size={11} style={{ color: "#27ae60" }} strokeWidth={3} />
                                     </div>
-                                    <span className="text-gray-700">{feature}</span>
+                                    <span className="text-muted-foreground">{feature}</span>
                                 </li>
                             ))}
                             {tier.notIncluded.map((feature) => (
                                 <li key={feature} className="flex items-start gap-3 text-sm opacity-40">
-                                    <div className="mt-0.5 p-1 rounded-full bg-gray-100 shrink-0">
-                                        <X size={11} className="text-gray-400" strokeWidth={3} />
+                                    <div className="mt-0.5 p-1 rounded-full bg-muted shrink-0">
+                                        <X size={11} className="text-muted-foreground/70" strokeWidth={3} />
                                     </div>
-                                    <span className="text-gray-500">{feature}</span>
+                                    <span className="text-muted-foreground">{feature}</span>
                                 </li>
                             ))}
                         </ul>
@@ -199,17 +199,17 @@ export default function PricingPage() {
             </div>
 
             {/* FAQ */}
-            <div className="bg-gray-50 py-20 px-8">
+            <div className="bg-muted py-20 px-8">
                 <div className="max-w-3xl mx-auto">
-                    <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">{t("pricing.faq.title")}</h2>
+                    <h2 className="text-2xl font-bold text-center text-foreground mb-8">{t("pricing.faq.title")}</h2>
                     <div className="space-y-4">
                         {[
                             { q: t("pricing.faq.upgrade.q"), a: t("pricing.faq.upgrade.a") },
                             { q: t("pricing.faq.setup_fee.q"), a: t("pricing.faq.setup_fee.a") },
                         ].map((item, i) => (
-                            <div key={i} className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-                                <h4 className="font-semibold text-gray-900 mb-2">{item.q}</h4>
-                                <p className="text-gray-500 text-sm">{item.a}</p>
+                            <div key={i} className="bg-card p-6 rounded-xl border border-border shadow-sm">
+                                <h4 className="font-semibold text-foreground mb-2">{item.q}</h4>
+                                <p className="text-muted-foreground text-sm">{item.a}</p>
                             </div>
                         ))}
                     </div>
@@ -218,9 +218,9 @@ export default function PricingPage() {
 
             {/* Footer CTA */}
             {!isAppMode && (
-                <div className="text-center py-16 px-8 bg-white border-t border-gray-100">
-                    <p className="text-gray-500 text-sm mb-4">Des questions ? <a href="mailto:contact@stocks.app" className="font-semibold" style={{ color: BRAND }}>Contactez-nous</a></p>
-                    <Link to="/" className="text-sm text-gray-400 hover:text-gray-600 transition-colors">← Retour à l'accueil</Link>
+                <div className="text-center py-16 px-8 bg-card border-t border-border">
+                    <p className="text-muted-foreground text-sm mb-4">Des questions ? <a href="mailto:contact@stocks.app" className="font-semibold" style={{ color: BRAND }}>Contactez-nous</a></p>
+                    <Link to="/" className="text-sm text-muted-foreground/70 hover:text-muted-foreground transition-colors">← Retour à l'accueil</Link>
                 </div>
             )}
         </div>

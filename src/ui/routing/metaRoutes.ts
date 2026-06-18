@@ -209,6 +209,43 @@ export const ROUTES: Record<string, RouteMeta> = {
     title: 'StockS - Conditions Générales d\'Utilisation',
   },
 
+  ABOUT: {
+    path: '/a-propos',
+    label: 'À propos',
+    page: 'About',
+    layout: 'none',
+    restricted: false,
+    hiddenInMenu: true,
+    title: 'StockS - À propos',
+  },
+  CONTACT: {
+    path: '/contact',
+    label: 'Contact',
+    page: 'Contact',
+    layout: 'none',
+    restricted: false,
+    hiddenInMenu: true,
+    title: 'StockS - Contact',
+  },
+  PRIVACY: {
+    path: '/confidentialite',
+    label: 'Confidentialité',
+    page: 'Privacy',
+    layout: 'none',
+    restricted: false,
+    hiddenInMenu: true,
+    title: 'StockS - Politique de confidentialité',
+  },
+  FEATURES: {
+    path: '/fonctionnalites',
+    label: 'Fonctionnalités',
+    page: 'Features',
+    layout: 'none',
+    restricted: false,
+    hiddenInMenu: true,
+    title: 'StockS - Fonctionnalités',
+  },
+
   DEMO: {
     path: '/demo',
     label: 'Demo',

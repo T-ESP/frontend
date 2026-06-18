@@ -40,19 +40,19 @@ function SupplierProfile({
       {/* Back button */}
       <button
         onClick={onBack}
-        className="flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-purple-700 transition-colors"
+        className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-purple-700 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
         Retour à la liste
       </button>
 
       {/* Hero card */}
-      <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-card border border-border rounded-lg shadow-sm overflow-hidden">
         <div className={`h-28 bg-gradient-to-r ${gradient}`} />
         <div className="px-8 pb-8 -mt-12">
           <div className="flex flex-wrap items-end gap-4">
             <div
-              className={`w-24 h-24 rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center text-white text-4xl font-black shadow-lg border-4 border-white`}
+              className={`w-24 h-24 rounded-lg bg-gradient-to-br ${gradient} flex items-center justify-center text-white text-4xl font-black shadow-lg border-4 border-white`}
             >
               {initial}
             </div>
@@ -66,7 +66,7 @@ function SupplierProfile({
               </button>
               <button
                 onClick={() => onDelete(supplier)}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-rose-600 bg-rose-50 border border-rose-200 rounded-lg hover:bg-rose-100 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-rose-600 dark:text-rose-400 bg-rose-500/10 border border-rose-500/30 rounded-lg hover:bg-rose-500/15 transition-colors"
               >
                 <Trash2 className="w-4 h-4" />
                 Supprimer
@@ -74,23 +74,23 @@ function SupplierProfile({
             </div>
           </div>
 
-          <h2 className="mt-4 text-2xl font-black text-gray-900">{supplier.name_sup}</h2>
-          <p className="text-sm text-gray-500 mt-0.5">Fournisseur #{supplier.id}</p>
+          <h2 className="mt-4 text-2xl font-black text-foreground">{supplier.name_sup}</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">Fournisseur #{supplier.id}</p>
         </div>
       </div>
 
       {/* Info cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Email */}
-        <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm space-y-2">
-          <div className="flex items-center gap-2 text-blue-600">
+        <div className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-2">
+          <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
             <Mail className="w-4 h-4" />
             <span className="text-xs font-semibold uppercase tracking-wider">Email</span>
           </div>
-          <p className="text-sm font-medium text-gray-900 break-all">{supplier.email_sup}</p>
+          <p className="text-sm font-medium text-foreground break-all">{supplier.email_sup}</p>
           <a
             href={`mailto:${supplier.email_sup}`}
-            className="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline"
+            className="inline-flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400 hover:underline"
           >
             <ExternalLink className="w-3 h-3" />
             Envoyer un email
@@ -98,16 +98,16 @@ function SupplierProfile({
         </div>
 
         {/* Phone */}
-        <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm space-y-2">
-          <div className="flex items-center gap-2 text-green-600">
+        <div className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-2">
+          <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
             <Phone className="w-4 h-4" />
             <span className="text-xs font-semibold uppercase tracking-wider">Téléphone</span>
           </div>
-          <p className="text-sm font-medium text-gray-900">{supplier.phone_sup || '—'}</p>
+          <p className="text-sm font-medium text-foreground">{supplier.phone_sup || '—'}</p>
           {supplier.phone_sup && (
             <a
               href={`tel:${supplier.phone_sup}`}
-              className="inline-flex items-center gap-1 text-xs text-green-600 hover:underline"
+              className="inline-flex items-center gap-1 text-xs text-green-600 dark:text-green-400 hover:underline"
             >
               <ExternalLink className="w-3 h-3" />
               Appeler
@@ -116,31 +116,31 @@ function SupplierProfile({
         </div>
 
         {/* Address */}
-        <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm space-y-2">
-          <div className="flex items-center gap-2 text-amber-600">
+        <div className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-2">
+          <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
             <MapPin className="w-4 h-4" />
             <span className="text-xs font-semibold uppercase tracking-wider">Adresse</span>
           </div>
-          <p className="text-sm font-medium text-gray-900">{supplier.address_sup || '—'}</p>
+          <p className="text-sm font-medium text-foreground">{supplier.address_sup || '—'}</p>
         </div>
       </div>
 
       {/* Metadata */}
-      <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm">
-        <h4 className="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-2">
-          <Building2 className="w-4 h-4 text-gray-400" />
+      <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
+        <h4 className="text-sm font-semibold text-muted-foreground mb-4 flex items-center gap-2">
+          <Building2 className="w-4 h-4 text-muted-foreground/70" />
           Informations système
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
-            <span className="text-gray-500">ID fournisseur</span>
-            <p className="font-medium text-gray-900">#{supplier.id}</p>
+            <span className="text-muted-foreground">ID fournisseur</span>
+            <p className="font-medium text-foreground">#{supplier.id}</p>
           </div>
           <div>
-            <span className="text-gray-500 flex items-center gap-1">
+            <span className="text-muted-foreground flex items-center gap-1">
               <Calendar className="w-3 h-3" /> Créé le
             </span>
-            <p className="font-medium text-gray-900">
+            <p className="font-medium text-foreground">
               {supplier.created_at
                 ? new Date(supplier.created_at).toLocaleDateString('fr-FR', {
                     year: 'numeric', month: 'long', day: 'numeric',
@@ -149,10 +149,10 @@ function SupplierProfile({
             </p>
           </div>
           <div>
-            <span className="text-gray-500 flex items-center gap-1">
+            <span className="text-muted-foreground flex items-center gap-1">
               <Calendar className="w-3 h-3" /> Dernière mise à jour
             </span>
-            <p className="font-medium text-gray-900">
+            <p className="font-medium text-foreground">
               {supplier.updated_at
                 ? new Date(supplier.updated_at).toLocaleDateString('fr-FR', {
                     year: 'numeric', month: 'long', day: 'numeric',
@@ -274,9 +274,9 @@ export default function SuppliersPage() {
     return (
       <PageLayout title={t('suppliers.title')} icon={<Users size={28} />}>
         <div className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2 lg:grid-cols-4">
-          {[1, 2, 3, 4].map((i) => <div key={i} className="h-28 bg-white border rounded-xl animate-pulse" />)}
+          {[1, 2, 3, 4].map((i) => <div key={i} className="h-28 bg-card border rounded-xl animate-pulse" />)}
         </div>
-        <div className="h-64 bg-white border rounded-xl animate-pulse" />
+        <div className="h-64 bg-card border rounded-xl animate-pulse" />
       </PageLayout>
     );
   }
@@ -285,7 +285,7 @@ export default function SuppliersPage() {
     return (
       <PageLayout title={t('suppliers.title')} icon={<Users size={28} />}>
         <div className="flex items-center justify-center min-h-64">
-          <div className="text-center text-red-600">
+          <div className="text-center text-red-600 dark:text-red-400">
             <h2 className="mb-2 text-2xl font-bold">Erreur</h2>
             <p>{error}</p>
             <button onClick={loadSuppliers} className="px-4 py-2 mt-4 text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors">
@@ -337,7 +337,7 @@ export default function SuppliersPage() {
       </div>
 
       {/* Controls */}
-      <div className="p-6 mb-6 bg-white border rounded-xl border-slate-100 shadow-sm">
+      <div className="p-6 mb-6 bg-card border rounded-xl border-slate-100 shadow-sm">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex-1 max-w-md">
             <div className="relative">
@@ -371,7 +371,7 @@ export default function SuppliersPage() {
 
       {/* Supplier Cards Grid */}
       {filteredAndSortedSuppliers.length === 0 ? (
-        <div className="py-16 text-center bg-white border border-slate-100 rounded-xl shadow-sm">
+        <div className="py-16 text-center bg-card border border-slate-100 rounded-xl shadow-sm">
           <Users className="mx-auto mb-4 text-slate-300" size={48} />
           <p className="text-lg font-semibold text-slate-600">{t('suppliers.no_suppliers')}</p>
           <p className="mt-2 text-sm text-slate-400">
@@ -386,7 +386,7 @@ export default function SuppliersPage() {
               const colors = ['from-purple-500 to-purple-700', 'from-blue-500 to-blue-700', 'from-emerald-500 to-emerald-700', 'from-rose-500 to-rose-700'];
               const gradient = colors[supplier.id % colors.length];
               return (
-                <div key={supplier.id} className="bg-white border border-slate-100 rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5 group">
+                <div key={supplier.id} className="bg-card border border-slate-100 rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5 group">
                   <div className="p-5">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-3">
@@ -400,7 +400,7 @@ export default function SuppliersPage() {
                           <p className="text-xs text-slate-400 mt-0.5">#{supplier.id}</p>
                         </div>
                       </div>
-                      <span className="inline-flex items-center px-2 py-0.5 text-xs font-semibold bg-emerald-50 text-emerald-700 rounded-full border border-emerald-200">
+                      <span className="inline-flex items-center px-2 py-0.5 text-xs font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 rounded-full border border-emerald-500/30">
                         Actif
                       </span>
                     </div>
@@ -434,7 +434,7 @@ export default function SuppliersPage() {
                       <button onClick={() => handleEdit(supplier)} className="p-1.5 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors" title={t('common.edit')}>
                         <Edit size={14} />
                       </button>
-                      <button onClick={() => handleDelete(supplier)} className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors" title={t('common.delete')}>
+                      <button onClick={() => handleDelete(supplier)} className="p-1.5 text-slate-400 hover:text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors" title={t('common.delete')}>
                         <Trash2 size={14} />
                       </button>
                     </div>
@@ -445,7 +445,7 @@ export default function SuppliersPage() {
           </div>
 
           {/* Pagination */}
-          <div className="flex items-center justify-between px-6 py-4 bg-white border border-slate-100 rounded-xl shadow-sm">
+          <div className="flex items-center justify-between px-6 py-4 bg-card border border-slate-100 rounded-xl shadow-sm">
             <div className="flex items-center gap-2 text-sm text-slate-600">
               <span>Afficher</span>
               <select value={itemsPerPage} onChange={(e) => setItemsPerPage(Number(e.target.value))} className="px-3 py-1.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm">
@@ -454,11 +454,11 @@ export default function SuppliersPage() {
               <span>par page — <strong>{((currentPage - 1) * itemsPerPage) + 1}–{Math.min(currentPage * itemsPerPage, filteredAndSortedSuppliers.length)}</strong> sur {filteredAndSortedSuppliers.length}</span>
             </div>
             <div className="flex gap-2">
-              <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1} className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">Premier</button>
-              <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1} className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">Préc.</button>
+              <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1} className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-card border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">Premier</button>
+              <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1} className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-card border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">Préc.</button>
               <span className="flex items-center px-4 text-sm font-medium text-slate-700">Page {currentPage} / {totalPages || 1}</span>
-              <button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage >= totalPages} className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">Suiv.</button>
-              <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage >= totalPages} className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">Dernier</button>
+              <button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage >= totalPages} className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-card border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">Suiv.</button>
+              <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage >= totalPages} className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-card border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">Dernier</button>
             </div>
           </div>
         </>

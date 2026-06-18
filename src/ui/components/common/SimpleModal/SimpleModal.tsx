@@ -59,7 +59,7 @@ export function SimpleModal({
       {/* Modal */}
       <div
         className={`
-          relative bg-white rounded-lg shadow-lg w-full ${sizeClasses[size]}
+          relative bg-card rounded-lg shadow-lg w-full ${sizeClasses[size]}
           transform transition-all duration-200 ease-out
           ${isVisible ? "scale-100 translate-y-0" : "scale-95 translate-y-4"}
         `}
@@ -93,7 +93,7 @@ export function SimpleModal({
             {cancelText && (
               <button
                 onClick={handleCancel}
-                className="px-4 py-2 text-sm font-medium bg-white rounded-md border transition-colors text-neutral-700 border-border hover:bg-neutral-50"
+                className="px-4 py-2 text-sm font-medium bg-card rounded-md border transition-colors text-neutral-700 border-border hover:bg-neutral-50"
               >
                 {cancelText}
               </button>

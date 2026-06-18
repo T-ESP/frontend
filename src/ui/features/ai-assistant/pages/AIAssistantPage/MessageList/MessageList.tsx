@@ -113,7 +113,7 @@ export function MessageList({ messages }: MessageListProps) {
               )}
               <div
                 className={cn(
-                  "max-w-[min(75%,42rem)] rounded-2xl px-3.5 py-2 text-sm leading-relaxed",
+                  "max-w-[min(75%,42rem)] rounded-lg px-3.5 py-2 text-sm leading-relaxed",
                   isUser
                     ? "bg-primary text-primary-foreground rounded-br-md"
                     : "bg-muted text-foreground rounded-bl-md"

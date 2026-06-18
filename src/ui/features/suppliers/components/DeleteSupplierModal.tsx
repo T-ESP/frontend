@@ -41,17 +41,17 @@ export function DeleteSupplierModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full">
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
+      <div className="bg-card rounded-lg shadow-xl max-w-md w-full">
+        <div className="flex items-center justify-between p-6 border-b border-border">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-red-100 rounded-lg">
-              <FiAlertTriangle className="text-red-600" size={20} />
+            <div className="p-2 bg-red-500/15 rounded-lg">
+              <FiAlertTriangle className="text-red-600 dark:text-red-400" size={20} />
             </div>
-            <h2 className="text-xl font-semibold text-gray-900">Delete Supplier</h2>
+            <h2 className="text-xl font-semibold text-foreground">Delete Supplier</h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+            className="p-2 text-muted-foreground/70 hover:text-muted-foreground rounded-lg hover:bg-muted"
           >
             <FiX size={20} />
           </button>
@@ -59,14 +59,14 @@ export function DeleteSupplierModal({
 
         <div className="p-6 space-y-4">
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+            <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-700 dark:text-red-300 text-sm">
               {error}
             </div>
           )}
 
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             Are you sure you want to delete{" "}
-            <span className="font-semibold text-gray-900">{supplierName}</span> ?
+            <span className="font-semibold text-foreground">{supplierName}</span> ?
             This action is irreversible.
           </p>
 
@@ -75,7 +75,7 @@ export function DeleteSupplierModal({
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50"
+              className="flex-1 px-4 py-2 text-sm font-medium text-muted-foreground bg-card rounded-lg border border-border hover:bg-muted disabled:opacity-50"
             >
               Annuler
             </button>

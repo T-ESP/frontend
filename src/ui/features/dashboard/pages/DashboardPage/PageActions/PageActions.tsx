@@ -35,18 +35,18 @@ export function PageActions({ onDateRangeChange, currentRange = 30 }: PageAction
   const currentLabel = dateRanges.find(r => r.days === currentRange)?.label || t('common.date_range.last_30_days');
 
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-3" data-tour="period">
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setShowDateMenu(!showDateMenu)}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors border rounded-lg text-muted-foreground bg-card border-border hover:bg-muted hover:text-foreground"
         >
           <FiCalendar size={16} />
           {currentLabel}
           <FiChevronDown size={14} className={`transition-transform ${showDateMenu ? 'rotate-180' : ''}`} />
         </button>
         {showDateMenu && (
-          <div className="absolute right-0 z-10 w-48 py-1 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg">
+          <div className="absolute right-0 z-10 w-48 py-1 mt-2 border rounded-lg shadow-lg bg-popover border-border">
             {dateRanges.map(range => (
               <button
                 key={range.days}
@@ -54,7 +54,7 @@ export function PageActions({ onDateRangeChange, currentRange = 30 }: PageAction
                   onDateRangeChange?.(range.days);
                   setShowDateMenu(false);
                 }}
-                className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${range.days === currentRange ? 'text-blue-600 font-medium' : 'text-gray-700'
+                className={`w-full text-left px-4 py-2 text-sm hover:bg-muted ${range.days === currentRange ? 'text-primary font-medium' : 'text-muted-foreground'
                   }`}
               >
                 {range.label}

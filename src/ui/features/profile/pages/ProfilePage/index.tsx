@@ -40,7 +40,7 @@ function PasswordField({
       <button
         type="button"
         onClick={() => setVisible((v) => !v)}
-        className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+        className="absolute inset-y-0 right-3 flex items-center text-muted-foreground/70 hover:text-muted-foreground transition-colors"
         tabIndex={-1}
       >
         {visible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -128,39 +128,39 @@ export default function ProfilePage() {
       subtitle={t("profile.subtitle", "Gérez vos informations personnelles et vos paramètres de compte.")}
     >
       {/* Avatar card */}
-      <div className="bg-white border border-gray-100 rounded-xl shadow-sm p-6 flex items-center gap-5">
+      <div className="bg-card border border-border rounded-xl shadow-sm p-6 flex items-center gap-5">
         <div className="w-16 h-16 rounded-full bg-gray-900 flex items-center justify-center text-white text-xl font-bold shrink-0">
           {initials || <User className="w-7 h-7" />}
         </div>
         <div>
-          <p className="text-lg font-bold text-gray-900">{firstname} {lastname}</p>
-          <p className="text-sm text-gray-500 mt-0.5">{getAuthToken() ? t("profile.security.session_active", "Session active") : t("profile.security.no", "Non connecté")}</p>
+          <p className="text-lg font-bold text-foreground">{firstname} {lastname}</p>
+          <p className="text-sm text-muted-foreground mt-0.5">{getAuthToken() ? t("profile.security.session_active", "Session active") : t("profile.security.no", "Non connecté")}</p>
         </div>
       </div>
 
       {/* Personal info */}
-      <div className="bg-white border border-gray-100 rounded-xl shadow-sm">
-        <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100">
-          <User className="w-4 h-4 text-gray-400" />
-          <h2 className="text-base font-semibold text-gray-900">{t("profile.personal_info.title", "Informations personnelles")}</h2>
+      <div className="bg-card border border-border rounded-xl shadow-sm">
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-border">
+          <User className="w-4 h-4 text-muted-foreground/70" />
+          <h2 className="text-base font-semibold text-foreground">{t("profile.personal_info.title", "Informations personnelles")}</h2>
         </div>
         <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
             <Label>{t("profile.personal_info.firstname", "Prénom")}</Label>
-            <Input value={firstname ?? ""} disabled className="bg-gray-50 text-gray-500" />
+            <Input value={firstname ?? ""} disabled className="bg-muted text-muted-foreground" />
           </div>
           <div className="space-y-1.5">
             <Label>{t("profile.personal_info.lastname", "Nom")}</Label>
-            <Input value={lastname ?? ""} disabled className="bg-gray-50 text-gray-500" />
+            <Input value={lastname ?? ""} disabled className="bg-muted text-muted-foreground" />
           </div>
         </div>
       </div>
 
       {/* Change email */}
-      <div className="bg-white border border-gray-100 rounded-xl shadow-sm">
-        <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100">
-          <Mail className="w-4 h-4 text-gray-400" />
-          <h2 className="text-base font-semibold text-gray-900">{t("profile.email.title", "Changer l'adresse email")}</h2>
+      <div className="bg-card border border-border rounded-xl shadow-sm">
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-border">
+          <Mail className="w-4 h-4 text-muted-foreground/70" />
+          <h2 className="text-base font-semibold text-foreground">{t("profile.email.title", "Changer l'adresse email")}</h2>
         </div>
         <form onSubmit={handleEmailSubmit} className="p-6 space-y-4">
           <div className="space-y-1.5">
@@ -198,10 +198,10 @@ export default function ProfilePage() {
       </div>
 
       {/* Change password */}
-      <div className="bg-white border border-gray-100 rounded-xl shadow-sm">
-        <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100">
-          <KeyRound className="w-4 h-4 text-gray-400" />
-          <h2 className="text-base font-semibold text-gray-900">{t("profile.password.title", "Changer le mot de passe")}</h2>
+      <div className="bg-card border border-border rounded-xl shadow-sm">
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-border">
+          <KeyRound className="w-4 h-4 text-muted-foreground/70" />
+          <h2 className="text-base font-semibold text-foreground">{t("profile.password.title", "Changer le mot de passe")}</h2>
         </div>
         <form onSubmit={handlePasswordSubmit} className="p-6 space-y-4">
           <div className="space-y-1.5">
@@ -248,15 +248,15 @@ export default function ProfilePage() {
       </div>
 
       {/* Logout */}
-      <div className="bg-white border border-gray-100 rounded-xl shadow-sm">
-        <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100">
-          <LogOut className="w-4 h-4 text-gray-400" />
-          <h2 className="text-base font-semibold text-gray-900">{t("profile.security.title", "Session")}</h2>
+      <div className="bg-card border border-border rounded-xl shadow-sm">
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-border">
+          <LogOut className="w-4 h-4 text-muted-foreground/70" />
+          <h2 className="text-base font-semibold text-foreground">{t("profile.security.title", "Session")}</h2>
         </div>
         <div className="p-6 flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-700">{t("profile.security.logout_desc", "Se déconnecter de votre compte")}</p>
-            <p className="text-xs text-gray-400 mt-0.5">{t("profile.security.logout_hint", "Vous serez redirigé vers la page de connexion.")}</p>
+            <p className="text-sm font-medium text-muted-foreground">{t("profile.security.logout_desc", "Se déconnecter de votre compte")}</p>
+            <p className="text-xs text-muted-foreground/70 mt-0.5">{t("profile.security.logout_hint", "Vous serez redirigé vers la page de connexion.")}</p>
           </div>
           <Button
             type="button"

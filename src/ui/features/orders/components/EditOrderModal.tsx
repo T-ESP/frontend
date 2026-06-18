@@ -45,19 +45,19 @@ export function EditOrderModal({ order, onClose, onSuccess, onDeleteRequest }: E
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-[2px]">
-      <div className="bg-white w-full max-w-md border border-gray-200 rounded-2xl shadow-xl overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+      <div className="bg-card w-full max-w-md border border-border rounded-lg shadow-xl overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <div>
-            <h2 className="text-base font-semibold text-gray-900">
+            <h2 className="text-base font-semibold text-foreground">
               {t('orders.edit_modal.title', { id: order.id })}
             </h2>
-            <p className="mt-0.5 text-xs text-gray-500">
+            <p className="mt-0.5 text-xs text-muted-foreground">
               {t('orders.edit_modal.subtitle', 'Modifier le statut de la commande')}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-gray-400 transition-colors rounded-md hover:text-gray-700 hover:bg-gray-100"
+            className="p-1.5 text-muted-foreground/70 transition-colors rounded-md hover:text-muted-foreground hover:bg-muted"
           >
             <X size={18} />
           </button>
@@ -66,42 +66,42 @@ export function EditOrderModal({ order, onClose, onSuccess, onDeleteRequest }: E
         <form onSubmit={handleSubmit}>
           <div className="px-6 py-5 space-y-4">
             {error && (
-              <div className="flex items-start gap-2 px-3 py-2.5 text-sm border border-rose-200 rounded-lg bg-rose-50 text-rose-700">
+              <div className="flex items-start gap-2 px-3 py-2.5 text-sm border border-rose-500/30 rounded-lg bg-rose-500/10 text-rose-700 dark:text-rose-300">
                 <AlertTriangle size={16} className="mt-0.5 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
 
-            <div className="overflow-hidden border border-gray-200 rounded-lg divide-y divide-gray-100">
+            <div className="overflow-hidden border border-border rounded-lg divide-y divide-border">
               <div className="flex items-center justify-between px-3 py-2.5 text-sm">
-                <span className="text-gray-500">{t('orders.edit_modal.user_label')}</span>
-                <span className="font-medium text-gray-900">
+                <span className="text-muted-foreground">{t('orders.edit_modal.user_label')}</span>
+                <span className="font-medium text-foreground">
                   {t('orders.user_label')} #{order.user_id}
                 </span>
               </div>
               <div className="flex items-center justify-between px-3 py-2.5 text-sm">
-                <span className="text-gray-500">{t('orders.edit_modal.date_label')}</span>
-                <span className="font-medium text-gray-900">
+                <span className="text-muted-foreground">{t('orders.edit_modal.date_label')}</span>
+                <span className="font-medium text-foreground">
                   {new Date(order.order_date).toLocaleDateString(locale)}
                 </span>
               </div>
               <div className="flex items-center justify-between px-3 py-2.5 text-sm">
-                <span className="text-gray-500">{t('orders.edit_modal.amount_label')}</span>
-                <span className="font-semibold text-gray-900 tabular-nums">
+                <span className="text-muted-foreground">{t('orders.edit_modal.amount_label')}</span>
+                <span className="font-semibold text-foreground tabular-nums">
                   {new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(order.amount)}
                 </span>
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-gray-500">
+              <label className="text-xs font-medium text-muted-foreground">
                 {t('orders.edit_modal.status_label')}
               </label>
               <select
                 required
                 value={formData.status}
                 onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                className="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 transition-shadow"
+                className="w-full px-3 py-2 text-sm bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 transition-shadow"
               >
                 <option value="pending">{t('orders.status.pending')}</option>
                 <option value="confirmed">{t('orders.status.confirmed')}</option>
@@ -115,7 +115,7 @@ export function EditOrderModal({ order, onClose, onSuccess, onDeleteRequest }: E
               <button
                 type="button"
                 onClick={onDeleteRequest}
-                className="flex items-center justify-center w-full gap-2 px-3 py-2 text-sm font-medium text-rose-600 transition-colors bg-white border border-rose-200 rounded-lg hover:bg-rose-50"
+                className="flex items-center justify-center w-full gap-2 px-3 py-2 text-sm font-medium text-rose-600 dark:text-rose-400 transition-colors bg-card border border-rose-500/30 rounded-lg hover:bg-rose-500/10"
               >
                 <Trash2 size={14} />
                 {t('orders.edit_modal.delete_order', 'Supprimer cette commande')}
@@ -123,11 +123,11 @@ export function EditOrderModal({ order, onClose, onSuccess, onDeleteRequest }: E
             )}
           </div>
 
-          <div className="flex justify-end gap-2 px-6 py-4 border-t border-gray-100 bg-gray-50/50">
+          <div className="flex justify-end gap-2 px-6 py-4 border-t border-border bg-gray-50/50">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+              className="px-4 py-2 text-sm font-medium text-muted-foreground transition-colors bg-card border border-border rounded-lg hover:bg-muted"
             >
               {t('orders.edit_modal.cancel')}
             </button>

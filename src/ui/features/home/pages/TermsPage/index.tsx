@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { Logo } from "@/ui/components/common/Logo";
-
-const BRAND = "#7b5fa2";
+import { Reveal } from "../HomePage/landingMotion";
+import { MarketingLayout } from "../../components/MarketingLayout";
+import { Eyebrow } from "../../components/marketingUI";
 
 const SECTIONS = [
     {
@@ -88,55 +88,44 @@ Pour exercer ces droits, l'Utilisateur peut contacter : privacy@stocks-app.fr
 
 export default function TermsPage() {
     return (
-        <div className="min-h-screen bg-white font-sans">
-            {/* Navbar */}
-            <nav className="flex items-center justify-between px-8 md:px-16 py-5 border-b border-gray-100 sticky top-0 bg-white z-50">
-                <Link to="/" className="flex items-center gap-2">
-                    <Logo className="w-7 h-7" />
-                    <span className="text-gray-900 font-bold text-base tracking-tight">Stocks</span>
-                </Link>
-                <Link
-                    to="/login"
-                    className="text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-opacity hover:opacity-90"
-                    style={{ backgroundColor: BRAND }}
-                >
-                    Se connecter
-                </Link>
-            </nav>
-
+        <MarketingLayout>
             {/* Header */}
-            <div className="max-w-3xl mx-auto px-6 pt-16 pb-10">
-                <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: BRAND }}>
-                    Légal
-                </p>
-                <h1 className="text-4xl font-extrabold text-gray-900 mb-3">Conditions Générales d'Utilisation</h1>
-                <p className="text-sm text-gray-400">Dernière mise à jour : {new Date().toLocaleDateString("fr-FR", { year: "numeric", month: "long", day: "numeric" })}</p>
+            <div className="max-w-3xl mx-auto px-6 pt-16 pb-10 sm:px-8">
+                <Reveal>
+                    <Eyebrow>Légal</Eyebrow>
+                    <h1 className="text-balance text-[32px] font-bold leading-[1.1] tracking-[-0.02em] text-foreground sm:text-[40px]">
+                        Conditions Générales d'Utilisation
+                    </h1>
+                    <p className="mt-3 text-sm text-muted-foreground/70">
+                        Dernière mise à jour : {new Date().toLocaleDateString("fr-FR", { year: "numeric", month: "long", day: "numeric" })}
+                    </p>
+                </Reveal>
             </div>
 
             {/* Content */}
-            <div className="max-w-3xl mx-auto px-6 pb-24">
+            <div className="max-w-3xl mx-auto px-6 pb-24 sm:px-8">
                 <div className="flex flex-col gap-10">
                     {SECTIONS.map((section, i) => (
                         <div key={i}>
-                            <h2 className="text-lg font-bold text-gray-900 mb-3">{section.title}</h2>
-                            <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{section.content}</p>
+                            <h2 className="text-lg font-bold text-foreground mb-3">{section.title}</h2>
+                            <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">{section.content}</p>
                         </div>
                     ))}
                 </div>
 
                 {/* Divider + back */}
-                <div className="mt-16 pt-8 border-t border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <p className="text-xs text-gray-400">© {new Date().getFullYear()} StockS SAS. Tous droits réservés.</p>
+                <div className="mt-16 pt-8 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <p className="text-xs text-muted-foreground/70">© {new Date().getFullYear()} StockS SAS. Tous droits réservés.</p>
                     <div className="flex gap-4">
-                        <Link to="/login" className="text-sm font-semibold transition-colors" style={{ color: BRAND }}>
-                            Se connecter →
+                        <Link to="/confidentialite" className="text-sm font-semibold text-primary transition-colors hover:underline">
+                            Voir la confidentialité →
                         </Link>
-                        <Link to="/" className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
+                        <Link to="/" className="text-sm text-muted-foreground/70 hover:text-muted-foreground transition-colors">
                             Retour à l'accueil
                         </Link>
                     </div>
                 </div>
             </div>
-        </div>
+        </MarketingLayout>
     );
 }

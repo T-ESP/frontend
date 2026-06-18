@@ -13,7 +13,7 @@ export const mockData = [
     date: "12.09.2019",
     time: "12:53 PM",
     quantity: 423,
-    amount: "$34,295",
+    amount: "34,295€",
     status: "Delivered",
     avatar: "https://i.pravatar.cc/40?img=1"
   },
@@ -24,7 +24,7 @@ export const mockData = [
     date: "15.09.2019",
     time: "03:22 PM",
     quantity: 156,
-    amount: "$62,180",
+    amount: "62,180€",
     status: "Pending",
     avatar: "https://i.pravatar.cc/40?img=2"
   },
@@ -35,7 +35,7 @@ export const mockData = [
     date: "18.09.2019",
     time: "09:15 AM",
     quantity: 892,
-    amount: "$98,120",
+    amount: "98,120€",
     status: "Delivered",
     avatar: "https://i.pravatar.cc/40?img=3"
   },
@@ -46,7 +46,7 @@ export const mockData = [
     date: "20.09.2019",
     time: "11:40 AM",
     quantity: 1240,
-    amount: "$28,960",
+    amount: "28,960€",
     status: "Cancelled",
     avatar: "https://i.pravatar.cc/40?img=4"
   },
@@ -57,7 +57,7 @@ export const mockData = [
     date: "22.09.2019",
     time: "02:18 PM",
     quantity: 567,
-    amount: "$45,360",
+    amount: "45,360€",
     status: "Delivered",
     avatar: "https://i.pravatar.cc/40?img=5"
   }

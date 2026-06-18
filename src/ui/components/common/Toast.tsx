@@ -100,7 +100,7 @@ const CONFIG: Record<ToastType, { icon: typeof CheckCircle; accent: string; icon
   info: {
     icon: Info,
     accent: "bg-gray-900",
-    iconClass: "text-gray-500",
+    iconClass: "text-muted-foreground",
   },
 };
 
@@ -127,28 +127,28 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: () => void }) 
   }, [duration, onRemove]);
 
   return (
-    <div className="relative w-72 bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden">
+    <div className="relative w-72 bg-card border border-border rounded-xl shadow-md overflow-hidden">
       {/* Left accent bar */}
       <div className={`absolute left-0 top-0 bottom-0 w-[3px] ${accent}`} />
 
       <div className="flex items-start gap-3 px-4 py-3 pl-5">
         <Icon className={`w-4 h-4 mt-0.5 shrink-0 ${iconClass}`} />
         <div className="flex-1 min-w-0">
-          <p className="text-[13px] font-semibold text-gray-900 leading-snug">{title}</p>
+          <p className="text-[13px] font-semibold text-foreground leading-snug">{title}</p>
           {description && (
-            <p className="mt-0.5 text-[12px] text-gray-500 leading-snug">{description}</p>
+            <p className="mt-0.5 text-[12px] text-muted-foreground leading-snug">{description}</p>
           )}
         </div>
         <button
           onClick={onRemove}
-          className="shrink-0 text-gray-400 hover:text-gray-700 transition-colors mt-0.5"
+          className="shrink-0 text-muted-foreground/70 hover:text-muted-foreground transition-colors mt-0.5"
         >
           <X size={14} />
         </button>
       </div>
 
       {/* Progress bar at bottom */}
-      <div className="h-[2px] bg-gray-100">
+      <div className="h-[2px] bg-muted">
         <div
           className={`h-full ${accent} transition-none`}
           style={{ width: `${progress}%` }}

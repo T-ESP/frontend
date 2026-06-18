@@ -1,6 +1,19 @@
 import { useState, type ReactNode } from 'react';
-import { ResponsiveContainer, BarChart, Bar, LineChart, Line, LabelList } from 'recharts';
+import { ResponsiveContainer, BarChart, Bar, LineChart, Line, LabelList, Tooltip } from 'recharts';
 import { Info } from 'lucide-react';
+
+function SparklineTooltip({ active, payload, title }: any) {
+  if (!active || !payload || !payload.length) return null;
+  const value = payload[0]?.value;
+  return (
+    <div className="px-3 py-2 bg-card border border-border rounded-lg shadow-lg">
+      <p className="text-[11px] font-medium text-muted-foreground">{title}</p>
+      <p className="text-sm font-bold text-foreground tabular-nums">
+        {typeof value === 'number' ? value.toLocaleString('fr-FR') : value}
+      </p>
+    </div>
+  );
+}
 
 export type KpiTrend = 'up' | 'down' | 'neutral';
 export type KpiChartType = 'line' | 'bar';
@@ -36,7 +49,7 @@ function InfoTip({ text }: { text: string }) {
         onMouseLeave={() => setShow(false)}
         onFocus={() => setShow(true)}
         onBlur={() => setShow(false)}
-        className="text-gray-400 hover:text-gray-600 transition-colors focus:outline-none"
+        className="text-muted-foreground/70 hover:text-muted-foreground transition-colors focus:outline-none"
         aria-label="Information"
       >
         <Info className="w-3.5 h-3.5" />
@@ -66,19 +79,19 @@ export function KpiStatCard({
   const data = chartData && chartData.length > 0 ? chartData : FALLBACK_DATA;
 
   const trendClass =
-    trend === 'down' ? 'text-rose-500' : trend === 'up' ? 'text-emerald-500' : 'text-gray-500';
+    trend === 'down' ? 'text-rose-500' : trend === 'up' ? 'text-emerald-500' : 'text-muted-foreground';
 
   return (
-    <div className="p-6 transition-all duration-300 bg-white border border-gray-200 rounded-2xl flex flex-col justify-between h-[280px]">
+    <div className="p-6 transition-all duration-300 bg-card border border-border rounded-lg flex flex-col justify-between h-[280px]">
       <div>
         <div className="flex items-center justify-between">
-          <h3 className="font-semibold text-[15px] text-gray-900 flex items-center">
+          <h3 className="font-semibold text-[15px] text-foreground flex items-center">
             {title}
             {infoTooltip && <InfoTip text={infoTooltip} />}
           </h3>
-          {icon && <span className="text-gray-400">{icon}</span>}
+          {icon && <span className="text-muted-foreground/70">{icon}</span>}
         </div>
-        <p className="mt-5 text-2xl font-bold tracking-tight text-gray-900 tabular-nums">
+        <p className="mt-5 text-2xl font-bold tracking-tight text-foreground tabular-nums">
           {value}
         </p>
         {(change || description) && (
@@ -86,7 +99,7 @@ export function KpiStatCard({
             {change && (
               <span className={`font-semibold tracking-wide ${trendClass}`}>{change}</span>
             )}
-            {description && <span className="text-gray-500">{description}</span>}
+            {description && <span className="text-muted-foreground">{description}</span>}
           </div>
         )}
       </div>
@@ -95,13 +108,17 @@ export function KpiStatCard({
         {chartType === 'line' ? (
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
+              <Tooltip
+                cursor={{ stroke: '#1b2640', strokeWidth: 1 }}
+                content={<SparklineTooltip title={title} />}
+              />
               <Line
                 type="linear"
                 dataKey="value"
-                stroke="#0f172a"
+                stroke="#818cf8"
                 strokeWidth={2}
-                dot={{ stroke: '#0f172a', strokeWidth: 2, fill: 'white', r: 4.5 }}
-                activeDot={{ stroke: '#0f172a', strokeWidth: 2, fill: 'white', r: 6 }}
+                dot={{ stroke: '#818cf8', strokeWidth: 2, fill: '#0d1424', r: 4.5 }}
+                activeDot={{ stroke: '#818cf8', strokeWidth: 2, fill: '#0d1424', r: 6 }}
                 isAnimationActive
               />
             </LineChart>
@@ -114,12 +131,16 @@ export function KpiStatCard({
               barGap={2}
               barCategoryGap={6}
             >
-              <Bar dataKey="value" fill="#0f172a" radius={[3, 3, 0, 0]}>
+              <Tooltip
+                cursor={{ fill: 'rgba(129, 140, 248, 0.08)' }}
+                content={<SparklineTooltip title={title} />}
+              />
+              <Bar dataKey="value" fill="#818cf8" radius={[3, 3, 0, 0]}>
                 {showChartLabels && (
                   <LabelList
                     dataKey="value"
                     position="top"
-                    fill="#374151"
+                    fill="#94a3b8"
                     fontSize={11}
                     fontWeight={500}
                     offset={8}

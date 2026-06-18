@@ -77,20 +77,20 @@ export default function PricingPage() {
     >
       {/* Billing Toggle */}
       <div className="flex justify-center mb-12">
-        <div className="bg-gray-100 p-1 rounded-xl flex items-center relative">
+        <div className="bg-muted p-1 rounded-xl flex items-center relative">
           <button
             onClick={() => setIsYearly(false)}
-            className={`px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${!isYearly ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900'
+            className={`px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${!isYearly ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
               }`}
           >
             {t('pricing.billing.monthly')}
           </button>
           <button
             onClick={() => setIsYearly(true)}
-            className={`px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${isYearly ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900'
+            className={`px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${isYearly ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
               }`}
           >
-            {t('pricing.billing.yearly')} <span className="text-emerald-600 text-xs ml-1 font-bold">-20%</span>
+            {t('pricing.billing.yearly')} <span className="text-emerald-600 dark:text-emerald-400 text-xs ml-1 font-bold">-20%</span>
           </button>
         </div>
       </div>
@@ -100,9 +100,9 @@ export default function PricingPage() {
         {TIERS.map((tier) => (
           <div
             key={tier.name}
-            className={`relative bg-white rounded-2xl p-8 border transition-all duration-300 ${tier.popular
+            className={`relative bg-card rounded-lg p-8 border transition-all duration-300 ${tier.popular
                 ? 'border-purple-200 shadow-xl scale-105 z-10 ring-1 ring-purple-100'
-                : 'border-gray-200 shadow-sm hover:shadow-md'
+                : 'border-border shadow-sm hover:shadow-md'
               }`}
           >
             {tier.popular && (
@@ -113,12 +113,12 @@ export default function PricingPage() {
 
             <div className="text-center mb-8">
               <h3 className={`text-lg font-bold text-${tier.color}-600 mb-2`}>{tier.name}</h3>
-              <p className="text-gray-500 text-sm h-10">{tier.description}</p>
+              <p className="text-muted-foreground text-sm h-10">{tier.description}</p>
               <div className="mt-4 flex items-baseline justify-center gap-1">
-                <span className="text-4xl font-extrabold text-gray-900">
-                  €{isYearly ? tier.priceYearly : tier.priceMonthly}
+                <span className="text-4xl font-extrabold text-foreground">
+                  {isYearly ? tier.priceYearly : tier.priceMonthly}€
                 </span>
-                <span className="text-gray-500">/{isYearly ? t('pricing.billing.yearly').toLowerCase() : t('pricing.billing.monthly').toLowerCase()}</span>
+                <span className="text-muted-foreground">/{isYearly ? t('pricing.billing.yearly').toLowerCase() : t('pricing.billing.monthly').toLowerCase()}</span>
               </div>
             </div>
 
@@ -128,22 +128,22 @@ export default function PricingPage() {
                   <div className={`mt-0.5 p-1 rounded-full bg-${tier.color}-50 text-${tier.color}-600`}>
                     <FiCheck size={12} />
                   </div>
-                  <span className="text-gray-700">{feature}</span>
+                  <span className="text-muted-foreground">{feature}</span>
                 </li>
               ))}
               {tier.notIncluded.map((feature) => (
                 <li key={feature} className="flex items-start gap-3 text-sm opacity-50">
-                  <div className="mt-0.5 p-1 rounded-full bg-gray-100 text-gray-400">
+                  <div className="mt-0.5 p-1 rounded-full bg-muted text-muted-foreground/70">
                     <FiX size={12} />
                   </div>
-                  <span className="text-gray-500 decoration-gray-300">{feature}</span>
+                  <span className="text-muted-foreground decoration-gray-300">{feature}</span>
                 </li>
               ))}
             </ul>
 
             <button className={`w-full py-3 rounded-xl font-semibold transition-colors ${tier.popular
                 ? 'bg-purple-600 text-white hover:bg-purple-700 shadow-lg shadow-purple-200'
-                : 'bg-gray-50 text-gray-900 hover:bg-gray-100 border border-gray-200'
+                : 'bg-muted text-foreground hover:bg-muted border border-border'
               }`}>
               {tier.cta}
             </button>
@@ -153,19 +153,19 @@ export default function PricingPage() {
 
       {/* FAQ Section */}
       <div className="mt-20 max-w-3xl mx-auto">
-        <h3 className="text-2xl font-bold text-center text-gray-900 mb-8">{t('pricing.faq.title')}</h3>
+        <h3 className="text-2xl font-bold text-center text-foreground mb-8">{t('pricing.faq.title')}</h3>
         <div className="space-y-4">
-          <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-            <h4 className="font-semibold text-gray-900 flex items-center gap-2">
-              <FiHelpCircle className="text-gray-400" /> {t('pricing.faq.upgrade.q')}
+          <div className="bg-card p-6 rounded-xl border border-border shadow-sm">
+            <h4 className="font-semibold text-foreground flex items-center gap-2">
+              <FiHelpCircle className="text-muted-foreground/70" /> {t('pricing.faq.upgrade.q')}
             </h4>
-            <p className="text-gray-600 mt-2 text-sm ml-6">{t('pricing.faq.upgrade.a')}</p>
+            <p className="text-muted-foreground mt-2 text-sm ml-6">{t('pricing.faq.upgrade.a')}</p>
           </div>
-          <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-            <h4 className="font-semibold text-gray-900 flex items-center gap-2">
-              <FiHelpCircle className="text-gray-400" /> {t('pricing.faq.setup_fee.q')}
+          <div className="bg-card p-6 rounded-xl border border-border shadow-sm">
+            <h4 className="font-semibold text-foreground flex items-center gap-2">
+              <FiHelpCircle className="text-muted-foreground/70" /> {t('pricing.faq.setup_fee.q')}
             </h4>
-            <p className="text-gray-600 mt-2 text-sm ml-6">{t('pricing.faq.setup_fee.a')}</p>
+            <p className="text-muted-foreground mt-2 text-sm ml-6">{t('pricing.faq.setup_fee.a')}</p>
           </div>
         </div>
       </div>

@@ -252,10 +252,10 @@ export default function SalesPage() {
         <div className="space-y-8">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-32 bg-white border border-gray-200 rounded-2xl animate-pulse" />
+              <div key={i} className="h-32 bg-card border border-border rounded-lg animate-pulse" />
             ))}
           </div>
-          <div className="bg-white border border-gray-200 h-96 rounded-2xl animate-pulse" />
+          <div className="bg-card border border-border h-96 rounded-lg animate-pulse" />
         </div>
       ) : (
         <>
@@ -305,10 +305,10 @@ export default function SalesPage() {
               <SalesChart data={chartData} />
             </div>
 
-            <div className="lg:col-span-1 bg-white border border-gray-200 rounded-2xl overflow-hidden">
-              <div className="p-6 border-b border-gray-100">
-                <h3 className="text-lg font-semibold text-gray-900">{t("sales.by_category")}</h3>
-                <p className="mt-1 text-sm text-gray-500">
+            <div className="lg:col-span-1 bg-card border border-border rounded-lg overflow-hidden">
+              <div className="p-6 border-b border-border">
+                <h3 className="text-lg font-semibold text-foreground">{t("sales.by_category")}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
                   {t("sales.charts.daily_revenue_30d", "30 derniers jours")}
                 </p>
               </div>
@@ -316,7 +316,7 @@ export default function SalesPage() {
               <div className="flex flex-col items-center p-6">
                 <div className="w-full h-56">
                   {categoryData.length === 0 ? (
-                    <div className="flex items-center justify-center h-full text-sm text-gray-400">
+                    <div className="flex items-center justify-center h-full text-sm text-muted-foreground/70">
                       Aucune donnée
                     </div>
                   ) : (
@@ -338,8 +338,10 @@ export default function SalesPage() {
                         <RechartsTooltip
                           formatter={(value) => formatCurrency(Number(value) || 0)}
                           contentStyle={{
-                            borderRadius: 8,
-                            border: "1px solid #e5e7eb",
+                            borderRadius: 6,
+                            border: "1px solid #1b2640",
+                            background: "#0d1424",
+                            color: "#f1f5f9",
                             fontSize: 12,
                           }}
                         />
@@ -356,9 +358,9 @@ export default function SalesPage() {
                           className="inline-block w-2.5 h-2.5 rounded-full"
                           style={{ backgroundColor: cat.color }}
                         />
-                        <span className="text-gray-600">{cat.name}</span>
+                        <span className="text-muted-foreground">{cat.name}</span>
                       </div>
-                      <span className="font-semibold tabular-nums text-gray-900">
+                      <span className="font-semibold tabular-nums text-foreground">
                         {formatCurrency(cat.value)}
                       </span>
                     </div>

@@ -190,14 +190,14 @@ export default function ClientsPage() {
       </div>
 
       {/* Header Section */}
-      <div className="bg-white border border-gray-100 shadow-sm rounded-xl">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+      <div className="bg-card border border-border shadow-sm rounded-xl">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <div>
-            <h3 className="text-xl font-bold text-gray-900">Client Management</h3>
-            <p className="text-sm text-gray-500 mt-0.5">{filteredClients.length} clients</p>
+            <h3 className="text-xl font-bold text-foreground">Client Management</h3>
+            <p className="text-sm text-muted-foreground mt-0.5">{filteredClients.length} clients</p>
           </div>
           <div className="flex items-center gap-2">
-            <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+            <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground transition-colors bg-card border border-border rounded-lg hover:bg-muted">
               <FiRefreshCw className="w-4 h-4" />
               Refresh
             </button>
@@ -216,7 +216,7 @@ export default function ClientsPage() {
         <div className="px-6 py-4">
           <div className="flex gap-3">
             <div className="relative flex-1">
-              <FiSearch className="absolute w-5 h-5 text-gray-400 -translate-y-1/2 left-3 top-1/2" />
+              <FiSearch className="absolute w-5 h-5 text-muted-foreground/70 -translate-y-1/2 left-3 top-1/2" />
               <Input
                 type="text"
                 value={searchQuery}
@@ -228,7 +228,7 @@ export default function ClientsPage() {
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="px-4 py-2.5 text-sm font-medium bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent hover:border-gray-300 transition-all cursor-pointer min-w-40"
+              className="px-4 py-2.5 text-sm font-medium bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent hover:border-border transition-all cursor-pointer min-w-40"
             >
               <option value="All Status">All Status</option>
               <option value="Active">✓ Active</option>
@@ -246,27 +246,27 @@ export default function ClientsPage() {
           return (
             <div
               key={client.id}
-              className="transition-all duration-300 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md hover:border-l-4 hover:border-l-purple-500 group"
+              className="transition-all duration-300 bg-card border border-border rounded-lg shadow-sm hover:shadow-md hover:border-l-4 hover:border-l-purple-500 group"
             >
               <div className="flex items-center gap-4 p-4">
                 <img
                   src={client.avatar}
                   alt={client.name}
-                  className="w-12 h-12 border-2 border-gray-200 rounded-full"
+                  className="w-12 h-12 border-2 border-border rounded-full"
                 />
 
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-base font-bold leading-tight text-gray-900 transition-colors group-hover:text-purple-600">
+                  <h3 className="text-base font-bold leading-tight text-foreground transition-colors group-hover:text-purple-600">
                     {client.name}
                   </h3>
                   <div className="flex items-center gap-3 mt-1">
-                    <div className="flex items-center gap-1.5 text-gray-600">
-                      <FiMail className="w-3.5 h-3.5 text-gray-400" />
+                    <div className="flex items-center gap-1.5 text-muted-foreground">
+                      <FiMail className="w-3.5 h-3.5 text-muted-foreground/70" />
                       <span className="text-sm">{client.email}</span>
                     </div>
-                    <span className="text-gray-300">•</span>
-                    <div className="flex items-center gap-1.5 text-gray-600">
-                      <FiPhone className="w-3.5 h-3.5 text-gray-400" />
+                    <span className="text-muted-foreground/60">•</span>
+                    <div className="flex items-center gap-1.5 text-muted-foreground">
+                      <FiPhone className="w-3.5 h-3.5 text-muted-foreground/70" />
                       <span className="text-sm">{client.phone}</span>
                     </div>
                   </div>
@@ -281,12 +281,12 @@ export default function ClientsPage() {
 
                 <div className="flex items-center gap-6">
                   <div className="text-center min-w-20">
-                    <p className="text-lg font-bold text-gray-900">{client.orders}</p>
-                    <p className="text-xs text-gray-500">Orders</p>
+                    <p className="text-lg font-bold text-foreground">{client.orders}</p>
+                    <p className="text-xs text-muted-foreground">Orders</p>
                   </div>
                   <div className="text-center min-w-25">
-                    <p className="text-lg font-bold text-gray-900">{client.totalSpent.toLocaleString()} €</p>
-                    <p className="text-xs text-gray-500">Total Spent</p>
+                    <p className="text-lg font-bold text-foreground">{client.totalSpent.toLocaleString()} €</p>
+                    <p className="text-xs text-muted-foreground">Total Spent</p>
                   </div>
 
                   {/* Loyalty points */}
@@ -297,16 +297,16 @@ export default function ClientsPage() {
                         {loyalty !== undefined ? loyalty.total_points.toLocaleString() : "—"}
                       </p>
                     </div>
-                    <p className="text-xs text-gray-500">Points</p>
+                    <p className="text-xs text-muted-foreground">Points</p>
                   </div>
 
                   <span
                     className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${
                       client.status === "VIP"
-                        ? "bg-amber-50 text-amber-700 border border-amber-200"
+                        ? "bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30"
                         : client.status === "Active"
-                        ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                        : "bg-gray-50 text-gray-700 border border-gray-200"
+                        ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30"
+                        : "bg-muted text-muted-foreground border border-border"
                     }`}
                   >
                     {client.status === "VIP" && "⭐ "}
@@ -324,7 +324,7 @@ export default function ClientsPage() {
                     <FiMessageSquare className="w-4 h-4" />
                     Message
                   </button>
-                  <button className="p-2 text-gray-600 transition-colors rounded-lg hover:bg-gray-100">
+                  <button className="p-2 text-muted-foreground transition-colors rounded-lg hover:bg-muted">
                     <FiMoreVertical className="w-5 h-5" />
                   </button>
                 </div>
@@ -337,16 +337,16 @@ export default function ClientsPage() {
       {/* Adjust Points Modal */}
       {adjustModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-6">
-            <h4 className="text-lg font-bold text-gray-900 mb-1">Adjust Loyalty Points</h4>
-            <p className="text-sm text-gray-500 mb-5">
+          <div className="bg-card rounded-xl shadow-xl w-full max-w-md mx-4 p-6">
+            <h4 className="text-lg font-bold text-foreground mb-1">Adjust Loyalty Points</h4>
+            <p className="text-sm text-muted-foreground mb-5">
               {adjustModal.clientName} — current balance:{" "}
               <strong className="text-purple-700">{adjustModal.currentPoints} pts</strong>
             </p>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label className="block text-sm font-medium text-muted-foreground mb-1.5">
                   Points adjustment
                 </label>
                 <div className="flex gap-2">
@@ -358,7 +358,7 @@ export default function ClientsPage() {
                         return String(Math.abs(n) > 0 ? -Math.abs(n) : n);
                       })
                     }
-                    className="flex items-center justify-center w-10 h-10 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition-colors shrink-0"
+                    className="flex items-center justify-center w-10 h-10 border border-red-500/30 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-500/10 transition-colors shrink-0"
                     title="Deduct points"
                   >
                     <FiMinus className="w-4 h-4" />
@@ -368,7 +368,7 @@ export default function ClientsPage() {
                     value={adjustAmount}
                     onChange={(e) => setAdjustAmount(e.target.value)}
                     placeholder="e.g. 50 to add, -20 to deduct"
-                    className="flex-1 px-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all"
+                    className="flex-1 px-4 py-2.5 text-sm bg-muted border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-card transition-all"
                   />
                   <button
                     type="button"
@@ -378,30 +378,30 @@ export default function ClientsPage() {
                         return String(Math.abs(n));
                       })
                     }
-                    className="flex items-center justify-center w-10 h-10 border border-emerald-200 text-emerald-600 rounded-lg hover:bg-emerald-50 transition-colors shrink-0"
+                    className="flex items-center justify-center w-10 h-10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 rounded-lg hover:bg-emerald-500/10 transition-colors shrink-0"
                     title="Add points"
                   >
                     <FiPlus className="w-4 h-4" />
                   </button>
                 </div>
-                <p className="text-xs text-gray-400 mt-1">Positive number adds points, negative deducts.</p>
+                <p className="text-xs text-muted-foreground/70 mt-1">Positive number adds points, negative deducts.</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Reason <span className="text-gray-400 font-normal">(optional)</span>
+                <label className="block text-sm font-medium text-muted-foreground mb-1.5">
+                  Reason <span className="text-muted-foreground/70 font-normal">(optional)</span>
                 </label>
                 <input
                   type="text"
                   value={adjustReason}
                   onChange={(e) => setAdjustReason(e.target.value)}
                   placeholder="e.g. Birthday bonus, correction..."
-                  className="w-full px-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all"
+                  className="w-full px-4 py-2.5 text-sm bg-muted border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-card transition-all"
                 />
               </div>
 
               {adjustError && (
-                <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                <p className="text-sm text-red-600 dark:text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2">
                   {adjustError}
                 </p>
               )}
@@ -410,7 +410,7 @@ export default function ClientsPage() {
             <div className="flex justify-end gap-3 mt-6">
               <button
                 onClick={() => setAdjustModal(null)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-lg hover:bg-muted transition-colors"
               >
                 Cancel
               </button>

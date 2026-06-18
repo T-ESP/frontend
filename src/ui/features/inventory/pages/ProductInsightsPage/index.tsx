@@ -80,13 +80,14 @@ export default function ProductInsightsPage() {
     val != null ? new Intl.NumberFormat(currentLang, { style: 'currency', currency: 'EUR' }).format(val) : 'N/A';
   const formatPercent = (val?: number | null) => val != null ? `${val.toFixed(1)}%` : 'N/A';
   const formatNum = (val?: number | null) => val != null ? val.toLocaleString(currentLang) : 'N/A';
+  const formatInt = (val?: number | null) => val != null ? Math.round(val).toLocaleString(currentLang) : 'N/A';
 
   // --- Sub-components ---
   const StatusBadge = ({ status }: { status: string }) => {
     const getStyles = () => {
-      if (['critical', 'stockout', 'below', 'C', 'Z'].includes(status)) return 'bg-rose-50 text-rose-700 ring-rose-200';
-      if (['warning', 'low', 'low_stock', 'average', 'B', 'Y'].includes(status)) return 'bg-amber-50 text-amber-700 ring-amber-200';
-      if (['optimal', 'good', 'fast', 'above', 'star', 'A', 'X'].includes(status)) return 'bg-emerald-50 text-emerald-700 ring-emerald-200';
+      if (['critical', 'stockout', 'below', 'C', 'Z'].includes(status)) return 'bg-rose-500/10 text-rose-700 dark:text-rose-300 ring-rose-200';
+      if (['warning', 'low', 'low_stock', 'average', 'B', 'Y'].includes(status)) return 'bg-amber-500/10 text-amber-700 dark:text-amber-300 ring-amber-200';
+      if (['optimal', 'good', 'fast', 'above', 'star', 'A', 'X'].includes(status)) return 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-emerald-200';
       if (['excess', 'high'].includes(status)) return 'bg-purple-50 text-purple-700 ring-purple-200';
       return 'bg-slate-50 text-slate-700 ring-slate-200';
     };
@@ -98,13 +99,13 @@ export default function ProductInsightsPage() {
   };
 
   const TrendIndicator = ({ value }: { value: 'increasing' | 'stable' | 'decreasing' }) => {
-    if (value === 'increasing') return <div className="flex items-center text-xs font-medium text-emerald-600"><TrendingUp className="w-3 h-3 mr-1" /> {t('inventory.kpi_modal.trends.inc')}</div>;
-    if (value === 'decreasing') return <div className="flex items-center text-xs font-medium text-rose-600"><TrendingDown className="w-3 h-3 mr-1" /> {t('inventory.kpi_modal.trends.dec')}</div>;
+    if (value === 'increasing') return <div className="flex items-center text-xs font-medium text-emerald-600 dark:text-emerald-400"><TrendingUp className="w-3 h-3 mr-1" /> {t('inventory.kpi_modal.trends.inc')}</div>;
+    if (value === 'decreasing') return <div className="flex items-center text-xs font-medium text-rose-600 dark:text-rose-400"><TrendingDown className="w-3 h-3 mr-1" /> {t('inventory.kpi_modal.trends.dec')}</div>;
     return <div className="flex items-center text-xs font-medium text-slate-500"><div className="w-3 h-0.5 bg-slate-400 mr-1" /> {t('inventory.kpi_modal.trends.stable')}</div>;
   };
 
   const StatCard = ({ title, value, subtext, icon: Icon, trend, alert }: any) => (
-    <div className="relative p-5 overflow-hidden transition-all duration-300 bg-white border shadow-sm group rounded-2xl border-slate-200 hover:shadow-md">
+    <div className="relative p-5 overflow-hidden transition-all duration-300 bg-card border shadow-sm group rounded-lg border-slate-200 hover:shadow-md">
       <div className="flex items-start justify-between">
         <div>
           <p className="mb-1 text-sm font-medium text-slate-500">{title}</p>
@@ -116,7 +117,7 @@ export default function ProductInsightsPage() {
             </div>
           )}
         </div>
-        <div className={`p-2 rounded-xl ${alert ? 'bg-rose-100 text-rose-600' : 'bg-slate-50 text-slate-500 group-hover:bg-purple-50 group-hover:text-purple-600'} transition-colors`}>
+        <div className={`p-2 rounded-xl ${alert ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400' : 'bg-slate-50 text-slate-500 group-hover:bg-purple-50 group-hover:text-purple-600'} transition-colors`}>
           {Icon ? <Icon size={20} /> : <Activity size={20} />}
         </div>
       </div>
@@ -141,7 +142,7 @@ export default function ProductInsightsPage() {
   const CustomTooltip = ({ active, payload, label, formatter }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="p-3 bg-white border rounded-lg shadow-lg border-slate-200">
+        <div className="p-3 bg-card border rounded-lg shadow-lg border-slate-200">
           <p className="mb-1 text-xs text-slate-500">{new Date(label).toLocaleDateString(currentLang)}</p>
           <p className="text-sm font-bold text-slate-900">
             {formatter ? formatter(payload[0].value) : payload[0].value}
@@ -191,7 +192,7 @@ export default function ProductInsightsPage() {
       <div className="flex items-center gap-4 mb-8">
         <button
           onClick={() => navigate('/inventory')}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 bg-card border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors"
         >
           <ArrowLeft size={16} />
           {t('common.back', 'Retour')}
@@ -210,7 +211,7 @@ export default function ProductInsightsPage() {
       <div className="space-y-10">
 
         {/* ── OVERVIEW ── */}
-        <section className="p-8 bg-white border shadow-sm rounded-2xl border-slate-200">
+        <section className="p-8 bg-card border shadow-sm rounded-lg border-slate-200">
           <SectionHeader
             title={t('inventory.kpi_modal.sections.overview')}
             desc={t('inventory.kpi_modal.sections.overview_desc')}
@@ -219,7 +220,7 @@ export default function ProductInsightsPage() {
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
             <StatCard
               title={t('inventory.kpi_modal.metrics.global_score')}
-              value={`${formatNum(kpis.scoringClassification?.global_score)}/100`}
+              value={`${formatInt(kpis.scoringClassification?.global_score)}/100`}
               icon={Target}
               alert={kpis.scoringClassification?.global_score! < 50}
             />
@@ -245,8 +246,8 @@ export default function ProductInsightsPage() {
           </div>
 
           {kpis.predictionsAlerts && (
-            <div className={`flex items-start gap-4 p-6 mt-6 rounded-2xl border ${kpis.predictionsAlerts.alert_status === 'stockout' ? 'bg-rose-50 border-rose-100' : 'bg-slate-50 border-slate-200'}`}>
-              <div className={`p-3 rounded-xl ${kpis.predictionsAlerts.alert_status === 'stockout' ? 'bg-rose-100 text-rose-600' : 'bg-slate-100 text-slate-500'}`}>
+            <div className={`flex items-start gap-4 p-6 mt-6 rounded-lg border ${kpis.predictionsAlerts.alert_status === 'stockout' ? 'bg-rose-500/10 border-rose-500/20' : 'bg-slate-50 border-slate-200'}`}>
+              <div className={`p-3 rounded-xl ${kpis.predictionsAlerts.alert_status === 'stockout' ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400' : 'bg-slate-100 text-slate-500'}`}>
                 <Zap size={24} />
               </div>
               <div>
@@ -266,7 +267,7 @@ export default function ProductInsightsPage() {
                   </div>
                   <div>
                     <p className="text-xs tracking-wider uppercase text-slate-500">{t('inventory.kpi_modal.metrics.days_coverage')}</p>
-                    <p className="text-xl font-bold text-slate-900">{formatNum(kpis.predictionsAlerts.days_of_coverage)}</p>
+                    <p className="text-xl font-bold text-slate-900">{formatInt(kpis.predictionsAlerts.days_of_coverage)}</p>
                   </div>
                 </div>
               </div>
@@ -278,7 +279,7 @@ export default function ProductInsightsPage() {
 
         {/* ── PRICING ── */}
         {kpis.pricingMargin && (
-          <section className="p-8 bg-white border shadow-sm rounded-2xl border-slate-200">
+          <section className="p-8 bg-card border shadow-sm rounded-lg border-slate-200">
             <SectionHeader
               title={t('inventory.kpi_modal.sections.pricing')}
               desc={t('inventory.kpi_modal.sections.pricing_desc')}
@@ -291,7 +292,7 @@ export default function ProductInsightsPage() {
             </div>
 
             {kpis.priceEvolution && (
-              <div className="p-6 bg-slate-50 border rounded-2xl border-slate-200">
+              <div className="p-6 bg-slate-50 border rounded-lg border-slate-200">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="font-bold text-slate-900">{t('inventory.kpi_modal.metrics.price_evolution')}</h3>
                   {(kpis.priceEvolution.selling_price_history.length > 0 || kpis.priceEvolution.buying_price_history.length > 0) && (
@@ -321,12 +322,12 @@ export default function ProductInsightsPage() {
                       }>
                         <defs>
                           <linearGradient id="colorSell" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.1} />
-                            <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                            <stop offset="5%" stopColor="#6366f1" stopOpacity={0.1} />
+                            <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
                           </linearGradient>
                           <linearGradient id="colorBuy" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#7b5fa2" stopOpacity={0.1} />
-                            <stop offset="95%" stopColor="#7b5fa2" stopOpacity={0} />
+                            <stop offset="5%" stopColor="#818cf8" stopOpacity={0.1} />
+                            <stop offset="95%" stopColor="#818cf8" stopOpacity={0} />
                           </linearGradient>
                         </defs>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -334,10 +335,10 @@ export default function ProductInsightsPage() {
                         <YAxis tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
                         <Tooltip content={<CustomTooltip formatter={formatCurrency} />} />
                         {kpis.priceEvolution.selling_price_history.length > 0 && (
-                          <Area type="monotone" dataKey="price" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorSell)" />
+                          <Area type="monotone" dataKey="price" stroke="#6366f1" strokeWidth={3} fillOpacity={1} fill="url(#colorSell)" />
                         )}
                         {kpis.priceEvolution.buying_price_history.length > 0 && kpis.priceEvolution.selling_price_history.length === 0 && (
-                          <Area type="monotone" dataKey="price" stroke="#7b5fa2" strokeWidth={3} fillOpacity={1} fill="url(#colorBuy)" />
+                          <Area type="monotone" dataKey="price" stroke="#818cf8" strokeWidth={3} fillOpacity={1} fill="url(#colorBuy)" />
                         )}
                       </AreaChart>
                     </ResponsiveContainer>
@@ -352,18 +353,18 @@ export default function ProductInsightsPage() {
 
         {/* ── STOCK ── */}
         {kpis.stockAvailability && (
-          <section className="p-8 bg-white border shadow-sm rounded-2xl border-slate-200">
+          <section className="p-8 bg-card border shadow-sm rounded-lg border-slate-200">
             <SectionHeader
               title={t('inventory.kpi_modal.sections.stock')}
               desc={t('inventory.kpi_modal.sections.stock_desc')}
               icon={Package}
             />
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="p-6 bg-slate-50 border rounded-2xl border-slate-200">
+              <div className="p-6 bg-slate-50 border rounded-lg border-slate-200">
                 <h3 className="flex items-center gap-2 mb-4 font-bold text-slate-900">
                   <Package className="text-slate-400" size={20} /> {t('inventory.kpi_modal.metrics.current_status')}
                 </h3>
-                <div className="flex items-center justify-between p-4 mb-4 bg-white rounded-xl">
+                <div className="flex items-center justify-between p-4 mb-4 bg-card rounded-xl">
                   <span className="font-medium text-slate-500">{t('inventory.kpi_modal.metrics.availability')}</span>
                   <StatusBadge status={kpis.stockAvailability.product_status} />
                 </div>
@@ -374,12 +375,12 @@ export default function ProductInsightsPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">{t('inventory.kpi_modal.metrics.safety_level')}</span>
-                    <span className="font-bold text-amber-600">{kpis.stockAvailability.safety_stock_recommended}</span>
+                    <span className="font-bold text-amber-600 dark:text-amber-400">{kpis.stockAvailability.safety_stock_recommended}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="p-6 bg-slate-50 border rounded-2xl border-slate-200">
+              <div className="p-6 bg-slate-50 border rounded-lg border-slate-200">
                 <h3 className="flex items-center gap-2 mb-4 font-bold text-slate-900">
                   <AlertTriangle className="text-slate-400" size={20} /> {t('inventory.kpi_modal.metrics.stockout_analysis')}
                 </h3>
@@ -397,7 +398,7 @@ export default function ProductInsightsPage() {
                   </div>
                   <div className="text-right">
                     <p className="text-slate-400">{t('inventory.kpi_modal.metrics.avg_duration')}</p>
-                    <p className="font-medium text-slate-900">{kpis.stockAvailability.avg_stockout_duration_days?.toFixed(1)} {t('inventory.kpi_modal.labels.days')}</p>
+                    <p className="font-medium text-slate-900">{formatInt(kpis.stockAvailability.avg_stockout_duration_days)} {t('inventory.kpi_modal.labels.days')}</p>
                   </div>
                 </div>
               </div>
@@ -409,7 +410,7 @@ export default function ProductInsightsPage() {
 
         {/* ── SALES ── */}
         {kpis.salesRotation && (
-          <section className="p-8 bg-white border shadow-sm rounded-2xl border-slate-200">
+          <section className="p-8 bg-card border shadow-sm rounded-lg border-slate-200">
             <SectionHeader
               title={t('inventory.kpi_modal.sections.sales')}
               desc={t('inventory.kpi_modal.sections.sales_desc')}
@@ -436,7 +437,7 @@ export default function ProductInsightsPage() {
               />
             </div>
 
-            <div className="p-6 bg-slate-50 border rounded-2xl border-slate-200">
+            <div className="p-6 bg-slate-50 border rounded-lg border-slate-200">
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h3 className="font-bold text-slate-900">{t('inventory.kpi_modal.metrics.rotation_analysis')}</h3>
@@ -446,21 +447,21 @@ export default function ProductInsightsPage() {
               </div>
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-4">
-                  <div className="flex justify-between p-4 bg-white rounded-xl">
+                  <div className="flex justify-between p-4 bg-card rounded-xl">
                     <span className="text-slate-500">{t('inventory.kpi_modal.metrics.avg_storage')}</span>
-                    <span className="font-bold text-slate-900">{formatNum(kpis.salesRotation.avg_storage_duration_days)} {t('inventory.kpi_modal.labels.days')}</span>
+                    <span className="font-bold text-slate-900">{formatInt(kpis.salesRotation.avg_storage_duration_days)} {t('inventory.kpi_modal.labels.days')}</span>
                   </div>
-                  <div className="flex justify-between p-4 bg-white rounded-xl">
+                  <div className="flex justify-between p-4 bg-card rounded-xl">
                     <span className="text-slate-500">{t('inventory.kpi_modal.metrics.avg_per_order')}</span>
-                    <span className="font-bold text-slate-900">{formatNum(kpis.salesRotation.avg_quantity_per_order)}</span>
+                    <span className="font-bold text-slate-900">{formatInt(kpis.salesRotation.avg_quantity_per_order)}</span>
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <div className="flex justify-between p-4 bg-white rounded-xl">
+                  <div className="flex justify-between p-4 bg-card rounded-xl">
                     <span className="text-slate-500">{t('inventory.kpi_modal.metrics.revenue')}</span>
                     <span className="font-bold text-slate-900">{formatCurrency(kpis.salesRotation.revenue)}</span>
                   </div>
-                  <div className="flex justify-between p-4 bg-white rounded-xl">
+                  <div className="flex justify-between p-4 bg-card rounded-xl">
                     <span className="text-slate-500">{t('inventory.kpi_modal.metrics.sales_trend')}</span>
                     <TrendIndicator value={kpis.salesRotation.sales_trend as 'increasing' | 'stable' | 'decreasing'} />
                   </div>
@@ -474,7 +475,7 @@ export default function ProductInsightsPage() {
 
         {/* ── PROFITABILITY ── */}
         {kpis.profitability && (
-          <section className="p-8 bg-white border shadow-sm rounded-2xl border-slate-200">
+          <section className="p-8 bg-card border shadow-sm rounded-lg border-slate-200">
             <SectionHeader
               title={t('inventory.kpi_modal.sections.profitability')}
               desc={t('inventory.kpi_modal.sections.profitability_desc')}
@@ -488,21 +489,21 @@ export default function ProductInsightsPage() {
             </div>
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="p-6 bg-slate-50 border rounded-2xl border-slate-200">
+              <div className="p-6 bg-slate-50 border rounded-lg border-slate-200">
                 <h3 className="mb-6 font-bold text-slate-900">{t('inventory.kpi_modal.metrics.profit_metrics')}</h3>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 border bg-emerald-50 rounded-xl border-emerald-100">
+                  <div className="flex items-center justify-between p-4 border bg-emerald-500/10 rounded-xl border-emerald-500/20">
                     <span className="text-slate-600">{t('inventory.kpi_modal.metrics.total_profit')}</span>
-                    <span className="text-xl font-bold text-emerald-700">{formatCurrency(kpis.profitability.total_profit)}</span>
+                    <span className="text-xl font-bold text-emerald-700 dark:text-emerald-300">{formatCurrency(kpis.profitability.total_profit)}</span>
                   </div>
-                  <div className="flex items-center justify-between p-4 bg-white rounded-xl">
+                  <div className="flex items-center justify-between p-4 bg-card rounded-xl">
                     <span className="text-slate-600">{t('inventory.kpi_modal.metrics.roi')}</span>
                     <span className="text-xl font-bold text-slate-900">{formatPercent(kpis.profitability.roi)}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="p-6 bg-slate-50 border rounded-2xl border-slate-200">
+              <div className="p-6 bg-slate-50 border rounded-lg border-slate-200">
                 <h3 className="mb-6 font-bold text-slate-900">{t('inventory.kpi_modal.metrics.contribution')}</h3>
                 <div className="space-y-4">
                   <div>
@@ -533,7 +534,7 @@ export default function ProductInsightsPage() {
 
         {/* ── RESTOCK ── */}
         {kpis.restock && (
-          <section className="p-8 bg-white border shadow-sm rounded-2xl border-slate-200">
+          <section className="p-8 bg-card border shadow-sm rounded-lg border-slate-200">
             <SectionHeader
               title={t('inventory.kpi_modal.sections.restock')}
               desc={t('inventory.kpi_modal.sections.restock_desc')}
@@ -541,11 +542,11 @@ export default function ProductInsightsPage() {
             />
             <div className="grid grid-cols-1 gap-5 md:grid-cols-3 mb-6">
               <StatCard title={t('inventory.kpi_modal.metrics.restock_count_label')} value={kpis.restock.restock_count} icon={Truck} />
-              <StatCard title={t('inventory.kpi_modal.metrics.avg_qty_label')} value={formatNum(kpis.restock.avg_quantity_per_restock)} icon={AlertTriangle} />
-              <StatCard title={t('inventory.kpi_modal.metrics.avg_delay_label')} value={`${formatNum(kpis.restock.avg_delivery_delay_days)} ${t('inventory.kpi_modal.labels.days')}`} icon={Package} />
+              <StatCard title={t('inventory.kpi_modal.metrics.avg_qty_label')} value={formatInt(kpis.restock.avg_quantity_per_restock)} icon={AlertTriangle} />
+              <StatCard title={t('inventory.kpi_modal.metrics.avg_delay_label')} value={`${formatInt(kpis.restock.avg_delivery_delay_days)} ${t('inventory.kpi_modal.labels.days')}`} icon={Package} />
             </div>
 
-            <div className="p-6 bg-slate-50 border rounded-2xl border-slate-200 mb-6">
+            <div className="p-6 bg-slate-50 border rounded-lg border-slate-200 mb-6">
               <h3 className="flex items-center gap-2 mb-6 font-bold text-slate-900">
                 <Truck size={20} className="text-slate-400" /> {t('inventory.kpi_modal.metrics.supply_chain')}
               </h3>
@@ -556,7 +557,7 @@ export default function ProductInsightsPage() {
                 </div>
                 <div>
                   <p className="mb-1 text-xs tracking-wider uppercase text-slate-500">{t('inventory.kpi_modal.metrics.avg_qty_label')}</p>
-                  <p className="text-2xl font-bold text-slate-900">{formatNum(kpis.restock.avg_quantity_per_restock)}</p>
+                  <p className="text-2xl font-bold text-slate-900">{formatInt(kpis.restock.avg_quantity_per_restock)}</p>
                 </div>
                 <div>
                   <p className="mb-1 text-xs tracking-wider uppercase text-slate-500">{t('inventory.kpi_modal.metrics.total_cost')}</p>
@@ -569,7 +570,7 @@ export default function ProductInsightsPage() {
               </div>
             </div>
 
-            <div className="p-6 border border-purple-200 bg-linear-to-br from-purple-50 to-indigo-50 rounded-2xl">
+            <div className="p-6 border border-purple-200 bg-linear-to-br from-purple-50 to-indigo-50 rounded-lg">
               <div className="flex items-start gap-4">
                 <div className="p-3 text-purple-600 bg-purple-100 rounded-xl">
                   <Target size={24} />
@@ -580,7 +581,7 @@ export default function ProductInsightsPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="p-4 bg-white/60 rounded-xl">
                       <p className="text-sm text-slate-600">{t('inventory.kpi_modal.metrics.frequency')}</p>
-                      <p className="text-xl font-bold text-slate-900">{t('inventory.kpi_modal.metrics.every')} {formatNum(kpis.restock.restock_frequency_days)} {t('inventory.kpi_modal.labels.days')}</p>
+                      <p className="text-xl font-bold text-slate-900">{t('inventory.kpi_modal.metrics.every')} {formatInt(kpis.restock.restock_frequency_days)} {t('inventory.kpi_modal.labels.days')}</p>
                     </div>
                     <div className="p-4 bg-white/60 rounded-xl">
                       <p className="text-sm text-slate-600">{t('inventory.kpi_modal.metrics.avg_cost')}</p>
@@ -597,14 +598,14 @@ export default function ProductInsightsPage() {
 
         {/* ── PREDICTIONS ── */}
         {kpis.predictionsAlerts && (
-          <section className="p-8 bg-white border shadow-sm rounded-2xl border-slate-200">
+          <section className="p-8 bg-card border shadow-sm rounded-lg border-slate-200">
             <SectionHeader
               title={t('inventory.kpi_modal.sections.predictions')}
               desc={t('inventory.kpi_modal.sections.predictions_desc')}
               icon={Zap}
             />
 
-            <div className="relative p-8 overflow-hidden text-white bg-linear-to-br from-violet-500 via-purple-500 to-indigo-600 rounded-3xl mb-6">
+            <div className="relative p-8 overflow-hidden text-white bg-linear-to-br from-violet-500 via-purple-500 to-indigo-600 rounded-xl mb-6">
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
@@ -616,15 +617,15 @@ export default function ProductInsightsPage() {
                   </div>
                 </div>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                  <div className="p-5 border bg-white/10 backdrop-blur-sm rounded-2xl border-white/20">
+                  <div className="p-5 border bg-white/10 backdrop-blur-sm rounded-lg border-white/20">
                     <p className="mb-2 text-sm text-violet-100">{t('inventory.kpi_modal.metrics.status')}</p>
                     <StatusBadge status={kpis.predictionsAlerts.alert_status} />
                   </div>
-                  <div className="p-5 border bg-white/10 backdrop-blur-sm rounded-2xl border-white/20">
+                  <div className="p-5 border bg-white/10 backdrop-blur-sm rounded-lg border-white/20">
                     <p className="mb-2 text-sm text-violet-100">{t('inventory.kpi_modal.metrics.days_coverage')}</p>
-                    <p className="text-3xl font-bold">{formatNum(kpis.predictionsAlerts.days_of_coverage)}</p>
+                    <p className="text-3xl font-bold">{formatInt(kpis.predictionsAlerts.days_of_coverage)}</p>
                   </div>
-                  <div className="p-5 border bg-white/10 backdrop-blur-sm rounded-2xl border-white/20">
+                  <div className="p-5 border bg-white/10 backdrop-blur-sm rounded-lg border-white/20">
                     <p className="mb-2 text-sm text-violet-100">{t('inventory.kpi_modal.metrics.stockout_date')}</p>
                     <p className="text-lg font-bold">{kpis.predictionsAlerts.estimated_stockout_date ? new Date(kpis.predictionsAlerts.estimated_stockout_date).toLocaleDateString() : 'N/A'}</p>
                   </div>
@@ -634,7 +635,7 @@ export default function ProductInsightsPage() {
             </div>
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="p-6 bg-slate-50 border rounded-2xl border-slate-200">
+              <div className="p-6 bg-slate-50 border rounded-lg border-slate-200">
                 <h3 className="mb-6 font-bold text-slate-900">{t('inventory.kpi_modal.metrics.reorder_recs')}</h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-4 border border-purple-100 bg-purple-50 rounded-xl">
@@ -644,22 +645,22 @@ export default function ProductInsightsPage() {
                     </div>
                     <span className="text-2xl font-bold text-purple-600">{kpis.predictionsAlerts.optimal_reorder_quantity}</span>
                   </div>
-                  <div className="flex items-center justify-between p-4 border bg-amber-50 rounded-xl border-amber-100">
+                  <div className="flex items-center justify-between p-4 border bg-amber-500/10 rounded-xl border-amber-500/20">
                     <div>
                       <p className="text-sm text-slate-600">{t('inventory.kpi_modal.metrics.reorder_point')}</p>
                       <p className="text-xs text-slate-400">{t('inventory.kpi_modal.metrics.trigger_threshold')}</p>
                     </div>
-                    <span className="text-2xl font-bold text-amber-600">{kpis.predictionsAlerts.optimal_reorder_point}</span>
+                    <span className="text-2xl font-bold text-amber-600 dark:text-amber-400">{kpis.predictionsAlerts.optimal_reorder_point}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="p-6 bg-slate-50 border rounded-2xl border-slate-200">
+              <div className="p-6 bg-slate-50 border rounded-lg border-slate-200">
                 <h3 className="mb-6 font-bold text-slate-900">{t('inventory.kpi_modal.metrics.coverage_analysis')}</h3>
                 <div className="py-8 text-center">
                   <div className="inline-flex items-center justify-center w-32 h-32 mb-4 rounded-full bg-linear-to-br from-purple-100 to-indigo-100">
                     <div className="text-center">
-                      <p className="text-4xl font-bold text-slate-900">{formatNum(kpis.predictionsAlerts.days_of_coverage)}</p>
+                      <p className="text-4xl font-bold text-slate-900">{formatInt(kpis.predictionsAlerts.days_of_coverage)}</p>
                       <p className="mt-1 text-xs text-slate-500">{t('inventory.kpi_modal.labels.days')}</p>
                     </div>
                   </div>
@@ -678,14 +679,14 @@ export default function ProductInsightsPage() {
 
         {/* ── CLASSIFICATION ── */}
         {kpis.scoringClassification && (
-          <section className="p-8 bg-white border shadow-sm rounded-2xl border-slate-200">
+          <section className="p-8 bg-card border shadow-sm rounded-lg border-slate-200">
             <SectionHeader
               title={t('inventory.kpi_modal.sections.classification')}
               desc={t('inventory.kpi_modal.sections.classification_desc')}
               icon={Target}
             />
             <div className="grid grid-cols-2 gap-6">
-              <div className="relative p-8 overflow-hidden text-white bg-linear-to-br from-indigo-500 to-purple-600 rounded-3xl">
+              <div className="relative p-8 overflow-hidden text-white bg-linear-to-br from-indigo-500 to-purple-600 rounded-xl">
                 <div className="relative z-10">
                   <p className="mb-1 font-medium text-indigo-100">{t('inventory.kpi_modal.metrics.abc_class')}</p>
                   <h2 className="text-6xl font-bold">{kpis.scoringClassification.abc_classification}</h2>
@@ -697,7 +698,7 @@ export default function ProductInsightsPage() {
                 <Target className="absolute w-48 h-48 -bottom-8 -right-8 text-white/10" />
               </div>
 
-              <div className="p-8 bg-slate-50 border rounded-3xl border-slate-200">
+              <div className="p-8 bg-slate-50 border rounded-xl border-slate-200">
                 <h3 className="mb-6 font-bold text-slate-900">{t('inventory.kpi_modal.metrics.score_breakdown')}</h3>
                 <div className="space-y-6">
                   {['Popularity', 'Profitability', 'Reliability'].map((metric) => {
@@ -725,7 +726,7 @@ export default function ProductInsightsPage() {
 
         {/* ── COMPARATIVE ── */}
         {kpis.comparative && (
-          <section className="p-8 bg-white border shadow-sm rounded-2xl border-slate-200">
+          <section className="p-8 bg-card border shadow-sm rounded-lg border-slate-200">
             <SectionHeader
               title={t('inventory.kpi_modal.sections.comparative')}
               desc={t('inventory.kpi_modal.sections.comparative_desc')}
@@ -751,7 +752,7 @@ export default function ProductInsightsPage() {
               />
             </div>
 
-            <div className="p-6 bg-slate-50 border rounded-2xl border-slate-200 mb-6">
+            <div className="p-6 bg-slate-50 border rounded-lg border-slate-200 mb-6">
               <h3 className="mb-6 font-bold text-slate-900">{t('inventory.kpi_modal.metrics.competitive_position')}</h3>
               <div className="space-y-6">
                 <div>
@@ -776,14 +777,14 @@ export default function ProductInsightsPage() {
             </div>
 
             <div className="grid grid-cols-2 gap-6">
-              <div className="p-6 border bg-linear-to-br from-emerald-50 to-teal-50 rounded-2xl border-emerald-200">
+              <div className="p-6 border bg-linear-to-br from-emerald-50 to-teal-50 rounded-lg border-emerald-500/30">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600">
+                  <div className="p-2 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
                     <TrendingUp size={20} />
                   </div>
                   <h4 className="font-bold text-slate-900">{t('inventory.kpi_modal.metrics.perf_vs_avg')}</h4>
                 </div>
-                <p className="mb-2 text-4xl font-bold text-emerald-600">
+                <p className="mb-2 text-4xl font-bold text-emerald-600 dark:text-emerald-400">
                   {(kpis.comparative.performance_vs_category_percent ?? 0) > 0 ? '+' : ''}{formatPercent(kpis.comparative.performance_vs_category_percent)}
                 </p>
                 <p className="text-sm text-slate-600">
@@ -791,7 +792,7 @@ export default function ProductInsightsPage() {
                 </p>
               </div>
 
-              <div className="p-6 border border-purple-200 bg-linear-to-br from-purple-50 to-indigo-50 rounded-2xl">
+              <div className="p-6 border border-purple-200 bg-linear-to-br from-purple-50 to-indigo-50 rounded-lg">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="p-2 text-purple-600 bg-purple-100 rounded-lg">
                     <Target size={20} />

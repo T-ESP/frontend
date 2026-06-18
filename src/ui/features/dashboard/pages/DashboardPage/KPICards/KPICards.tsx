@@ -1,61 +1,26 @@
 import { useState, useEffect, useMemo } from "react";
-import { FiDollarSign, FiShoppingCart, FiPackage, FiUsers } from "react-icons/fi";
 import { Settings, Check, X } from "lucide-react";
 import { KPICard } from "./KPICard";
-import type { KPI } from "@/ui/features/dashboard/types";
 import type { Order } from "@/domain/models/Order";
 import type { Product } from "@/domain/models/Product";
 import type { User } from "@/domain/models/User";
+import type { Supplier } from "@/domain/models/Supplier";
 import { useTranslation } from "react-i18next";
 import { Checkbox } from "@/components/ui/checkbox";
 import { salesService } from "@/infrastructure/api/services/salesService";
+import { supplierService } from "@/infrastructure/api/services/supplierService";
+import {
+  KPI_CATALOG,
+  KPI_CATALOG_MAP,
+  KPI_CATEGORY_ORDER,
+  DEFAULT_KPI_KEYS,
+  type KpiContext,
+} from "./kpiCatalog";
 
 function grainForRange(days: number): "day" | "week" | "month" {
   if (days <= 30) return "day";
   if (days <= 90) return "week";
   return "month";
-}
-
-function buildOrdersSparkline(orders: Order[]): { value: number }[] {
-  if (orders.length === 0) return [];
-  const buckets = new Map<string, number>();
-  orders.forEach((order) => {
-    const date = new Date(order.order_date || order.created_at);
-    if (isNaN(date.getTime())) return;
-    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-    buckets.set(key, (buckets.get(key) ?? 0) + 1);
-  });
-  const sorted = Array.from(buckets.entries()).sort(([a], [b]) => a.localeCompare(b));
-  return sorted.slice(-8).map(([, v]) => ({ value: v }));
-}
-
-function buildUsersSparkline(users: User[]): { value: number }[] {
-  if (users.length === 0) return [];
-  const usersWithDate = users.filter((u) => u.created_at);
-  if (usersWithDate.length < 2) {
-    // Pas assez de données temporelles : distribuer uniformément sur 6 buckets fictifs
-    const perBucket = Math.floor(users.length / 6);
-    const remainder = users.length % 6;
-    return Array.from({ length: 6 }, (_, i) => ({
-      value: perBucket + (i === 5 ? remainder : 0),
-    }));
-  }
-  const buckets = new Map<string, number>();
-  usersWithDate.forEach((user) => {
-    const d = new Date(user.created_at!);
-    if (isNaN(d.getTime())) return;
-    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-    buckets.set(key, (buckets.get(key) ?? 0) + 1);
-  });
-  const sorted = Array.from(buckets.entries()).sort(([a], [b]) => a.localeCompare(b));
-  return sorted.slice(-8).map(([, v]) => ({ value: v }));
-}
-
-function buildStockSparkline(products: Product[]): { value: number }[] {
-  return [...products]
-    .sort((a, b) => a.stock_quantity - b.stock_quantity)
-    .slice(0, 8)
-    .map((p) => ({ value: p.stock_quantity }));
 }
 
 interface KPICardsProps {
@@ -71,23 +36,24 @@ interface KPICardsProps {
 }
 
 const KPI_STORAGE_KEY = "dashboard_kpi_visible";
-const ALL_KPI_KEYS = ["revenue", "orders", "stock", "users"] as const;
-type KPIKey = typeof ALL_KPI_KEYS[number];
 
-function readPreferences(): KPIKey[] {
+const isValidKey = (key: string) => key in KPI_CATALOG_MAP;
+
+function readPreferences(): string[] {
   try {
     const saved = localStorage.getItem(KPI_STORAGE_KEY);
     if (saved) {
-      const parsed = JSON.parse(saved) as KPIKey[];
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      const parsed = JSON.parse(saved) as string[];
+      const valid = Array.isArray(parsed) ? parsed.filter(isValidKey) : [];
+      if (valid.length > 0) return valid;
     }
   } catch {
     // ignore
   }
-  return [...ALL_KPI_KEYS];
+  return [...DEFAULT_KPI_KEYS];
 }
 
-function writePreferences(keys: KPIKey[]) {
+function writePreferences(keys: string[]) {
   try {
     localStorage.setItem(KPI_STORAGE_KEY, JSON.stringify(keys));
   } catch {
@@ -108,9 +74,10 @@ export function KPICards({
 }: KPICardsProps) {
   const { t } = useTranslation();
 
-  const [visibleKPIs, setVisibleKPIs] = useState<KPIKey[]>(() => readPreferences());
-  const [pendingVisible, setPendingVisible] = useState<KPIKey[]>(visibleKPIs);
+  const [visibleKPIs, setVisibleKPIs] = useState<string[]>(() => readPreferences());
+  const [pendingVisible, setPendingVisible] = useState<string[]>(visibleKPIs);
   const [revenueSparkline, setRevenueSparkline] = useState<{ value: number }[]>([]);
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
 
   useEffect(() => {
     const fetchSparkline = async () => {
@@ -132,6 +99,14 @@ export function KPICards({
     fetchSparkline();
   }, [dateRange]);
 
+  // Suppliers power the supplier-related KPIs; fetched lazily, errors are non-fatal.
+  useEffect(() => {
+    supplierService
+      .getAll()
+      .then(setSuppliers)
+      .catch(() => setSuppliers([]));
+  }, []);
+
   // Sync pending each time the modal opens
   useEffect(() => {
     if (editMode) setPendingVisible(visibleKPIs);
@@ -148,7 +123,7 @@ export function KPICards({
   }, [editMode, onCloseEdit]);
 
   const applyChanges = () => {
-    const next = pendingVisible.length > 0 ? pendingVisible : [...ALL_KPI_KEYS];
+    const next = pendingVisible.length > 0 ? pendingVisible : [...DEFAULT_KPI_KEYS];
     setVisibleKPIs(next);
     writePreferences(next);
     onCloseEdit?.();
@@ -159,7 +134,7 @@ export function KPICards({
     onCloseEdit?.();
   };
 
-  const toggleKPI = (key: KPIKey) => {
+  const toggleKPI = (key: string) => {
     setPendingVisible((prev) =>
       prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
     );
@@ -178,98 +153,58 @@ export function KPICards({
     return `${sign}${(value || 0).toFixed(1)}%`;
   };
 
-  const lowStockProducts = products.filter((p) => p.stock_quantity < 10).length;
-
-  const ordersSparkline = useMemo(() => buildOrdersSparkline(orders), [orders]);
-  const usersSparkline = useMemo(() => buildUsersSparkline(users), [users]);
-  const stockSparkline = useMemo(() => buildStockSparkline(products), [products]);
-
-  const getDateRangeLabel = () => {
+  const dateRangeLabel = useMemo(() => {
     if (dateRange === 7) return t("common.date_range.last_7_days");
     if (dateRange === 90) return t("common.date_range.last_90_days");
     if (dateRange === 365) return t("common.date_range.last_year");
     return t("common.date_range.last_30_days");
-  };
+  }, [dateRange, t]);
 
   const orderCount = totalOrderCount ?? orders.length;
 
-  const allKPIData: Record<KPIKey, KPI> = {
-    revenue: {
-      title: t("dashboard.kpi.total_revenue"),
-      value: formatCurrency(totalRevenue),
-      change: formatPercentage(evolution),
-      trend: evolution >= 0 ? "up" : "down",
-      icon: FiDollarSign,
-      color: "emerald",
-      description: getDateRangeLabel(),
-      isPrimary: false,
-      sparkline: revenueSparkline,
-      chartType: "line",
-    },
-    orders: {
-      title: t("dashboard.kpi.total_orders"),
-      value: orderCount.toString(),
-      change: "+0.0%",
-      trend: "up",
-      icon: FiShoppingCart,
-      color: "blue",
-      description: t("common.all_time"),
-      sparkline: ordersSparkline,
-      chartType: "bar",
-    },
-    stock: {
-      title: t("dashboard.kpi.low_stock_alert"),
-      value: lowStockProducts.toString(),
-      change:
-        lowStockProducts > 5 ? t("dashboard.kpi.high") : t("dashboard.kpi.normal"),
-      trend: lowStockProducts > 5 ? "down" : "up",
-      icon: FiPackage,
-      color: lowStockProducts > 5 ? "amber" : "purple",
-      description: t("dashboard.kpi.products_low_units"),
-      sparkline: stockSparkline,
-      chartType: "line",
-    },
-    users: {
-      title: t("dashboard.kpi.total_users"),
-      value: users.length.toString(),
-      change: "+0.0%",
-      trend: "up",
-      icon: FiUsers,
-      color: "purple",
-      description: t("common.all_time"),
-      sparkline: usersSparkline,
-      chartType: "bar",
-    },
-  };
-
-  const kpiLabels: Record<KPIKey, string> = {
-    revenue: t("dashboard.kpi.total_revenue"),
-    orders: t("dashboard.kpi.total_orders"),
-    stock: t("dashboard.kpi.low_stock_alert"),
-    users: t("dashboard.kpi.total_users"),
-  };
+  const ctx: KpiContext = useMemo(
+    () => ({
+      orders,
+      products,
+      users,
+      suppliers,
+      totalRevenue,
+      evolution,
+      orderCount,
+      dateRange,
+      t,
+      fmtCurrency: formatCurrency,
+      fmtPercent: formatPercentage,
+      dateRangeLabel,
+      revenueSparkline,
+    }),
+    [orders, products, users, suppliers, totalRevenue, evolution, orderCount, dateRange, t, dateRangeLabel, revenueSparkline],
+  );
 
   const hasChanges =
     pendingVisible.length !== visibleKPIs.length ||
     pendingVisible.some((k) => !visibleKPIs.includes(k));
 
+  // Render in catalog order so layout stays stable regardless of selection order.
+  const visibleDefs = KPI_CATALOG.filter((def) => visibleKPIs.includes(def.key));
+
   return (
     <div className="mb-8">
       {/* KPI Grid */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {ALL_KPI_KEYS.filter((key) => visibleKPIs.includes(key)).map((key) => (
-          <KPICard key={key} kpi={allKPIData[key]} />
+        {visibleDefs.map((def) => (
+          <KPICard key={def.key} kpi={def.compute(ctx)} />
         ))}
       </div>
 
       {/* Edit Modal */}
       {editMode && (
         <div
-          className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-foreground/40 backdrop-blur-sm animate-in fade-in duration-150"
+          className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150"
           onClick={cancelChanges}
         >
           <div
-            className="w-full max-w-md bg-white border shadow-xl rounded-xl border-border animate-in zoom-in-95 duration-150"
+            className="flex flex-col w-full max-w-md max-h-[85vh] bg-card border shadow-xl rounded-xl border-border animate-in zoom-in-95 duration-150"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between px-6 py-4 border-b border-border">
@@ -294,26 +229,37 @@ export function KPICards({
               </button>
             </div>
 
-            <div className="p-6 space-y-2">
-              {ALL_KPI_KEYS.map((key) => {
-                const isSelected = pendingVisible.includes(key);
+            <div className="flex-1 p-6 space-y-5 overflow-y-auto">
+              {KPI_CATEGORY_ORDER.map((category) => {
+                const defs = KPI_CATALOG.filter((d) => d.category === category);
+                if (defs.length === 0) return null;
                 return (
-                  <label
-                    key={key}
-                    className={`flex items-center justify-between px-4 py-3 transition-colors border rounded-lg cursor-pointer ${
-                      isSelected
-                        ? "bg-accent border-primary/20"
-                        : "bg-white border-border hover:bg-muted"
-                    }`}
-                  >
-                    <span className={`text-sm font-medium ${isSelected ? "text-primary" : "text-foreground"}`}>
-                      {kpiLabels[key]}
-                    </span>
-                    <Checkbox
-                      checked={isSelected}
-                      onCheckedChange={() => toggleKPI(key)}
-                    />
-                  </label>
+                  <div key={category} className="space-y-2">
+                    <p className="px-1 text-xs font-semibold tracking-wide uppercase text-muted-foreground">
+                      {t(`dashboard.kpi_edit.categories.${category}`)}
+                    </p>
+                    {defs.map((def) => {
+                      const isSelected = pendingVisible.includes(def.key);
+                      return (
+                        <label
+                          key={def.key}
+                          className={`flex items-center justify-between px-4 py-3 transition-colors border rounded-lg cursor-pointer ${
+                            isSelected
+                              ? "bg-accent border-primary/40"
+                              : "bg-secondary border-border hover:bg-muted"
+                          }`}
+                        >
+                          <span className={`text-sm font-medium ${isSelected ? "text-primary" : "text-foreground"}`}>
+                            {def.label(t)}
+                          </span>
+                          <Checkbox
+                            checked={isSelected}
+                            onCheckedChange={() => toggleKPI(def.key)}
+                          />
+                        </label>
+                      );
+                    })}
+                  </div>
                 );
               })}
               {pendingVisible.length === 0 && (

@@ -41,24 +41,24 @@ export function DeleteOrderModal({ order, onClose, onSuccess }: DeleteOrderModal
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-[2px]">
-      <div className="bg-white w-full max-w-md border border-gray-200 rounded-2xl shadow-xl overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+      <div className="bg-card w-full max-w-md border border-border rounded-lg shadow-xl overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-full bg-rose-50 text-rose-600">
+            <div className="flex items-center justify-center w-9 h-9 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400">
               <AlertTriangle size={18} />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-gray-900">
+              <h2 className="text-base font-semibold text-foreground">
                 {t('orders.delete_modal.title')}
               </h2>
-              <p className="mt-0.5 text-xs text-gray-500">
+              <p className="mt-0.5 text-xs text-muted-foreground">
                 {t('orders.delete_modal.warning')}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-gray-400 transition-colors rounded-md hover:text-gray-700 hover:bg-gray-100"
+            className="p-1.5 text-muted-foreground/70 transition-colors rounded-md hover:text-muted-foreground hover:bg-muted"
           >
             <X size={18} />
           </button>
@@ -66,51 +66,51 @@ export function DeleteOrderModal({ order, onClose, onSuccess }: DeleteOrderModal
 
         <div className="px-6 py-5 space-y-4">
           {error && (
-            <div className="flex items-start gap-2 px-3 py-2.5 text-sm border border-rose-200 rounded-lg bg-rose-50 text-rose-700">
+            <div className="flex items-start gap-2 px-3 py-2.5 text-sm border border-rose-500/30 rounded-lg bg-rose-500/10 text-rose-700 dark:text-rose-300">
               <AlertTriangle size={16} className="mt-0.5 shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
-          <p className="text-sm text-gray-600">{t('orders.delete_modal.confirm_msg')}</p>
+          <p className="text-sm text-muted-foreground">{t('orders.delete_modal.confirm_msg')}</p>
 
-          <div className="overflow-hidden border border-gray-200 rounded-lg divide-y divide-gray-100">
+          <div className="overflow-hidden border border-border rounded-lg divide-y divide-border">
             <div className="flex items-center justify-between px-3 py-2.5 text-sm">
-              <span className="text-gray-500">{t('orders.delete_modal.id_label')}</span>
-              <span className="font-medium text-gray-900">#{order.id}</span>
+              <span className="text-muted-foreground">{t('orders.delete_modal.id_label')}</span>
+              <span className="font-medium text-foreground">#{order.id}</span>
             </div>
             <div className="flex items-center justify-between px-3 py-2.5 text-sm">
-              <span className="text-gray-500">{t('orders.delete_modal.user_label')}</span>
-              <span className="font-medium text-gray-900">
+              <span className="text-muted-foreground">{t('orders.delete_modal.user_label')}</span>
+              <span className="font-medium text-foreground">
                 {t('orders.user_label')} #{order.user_id}
               </span>
             </div>
             <div className="flex items-center justify-between px-3 py-2.5 text-sm">
-              <span className="text-gray-500">{t('orders.delete_modal.date_label')}</span>
-              <span className="font-medium text-gray-900">
+              <span className="text-muted-foreground">{t('orders.delete_modal.date_label')}</span>
+              <span className="font-medium text-foreground">
                 {new Date(order.order_date).toLocaleDateString(locale)}
               </span>
             </div>
             <div className="flex items-center justify-between px-3 py-2.5 text-sm">
-              <span className="text-gray-500">{t('orders.delete_modal.status_label')}</span>
-              <span className="font-medium text-gray-900">
+              <span className="text-muted-foreground">{t('orders.delete_modal.status_label')}</span>
+              <span className="font-medium text-foreground">
                 {t(`orders.status.${order.status.toLowerCase()}`, order.status)}
               </span>
             </div>
             <div className="flex items-center justify-between px-3 py-2.5 text-sm">
-              <span className="text-gray-500">{t('orders.delete_modal.amount_label')}</span>
-              <span className="font-semibold text-gray-900 tabular-nums">
+              <span className="text-muted-foreground">{t('orders.delete_modal.amount_label')}</span>
+              <span className="font-semibold text-foreground tabular-nums">
                 {new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(order.amount)}
               </span>
             </div>
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 px-6 py-4 border-t border-gray-100 bg-gray-50/50">
+        <div className="flex justify-end gap-2 px-6 py-4 border-t border-border bg-gray-50/50">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+            className="px-4 py-2 text-sm font-medium text-muted-foreground transition-colors bg-card border border-border rounded-lg hover:bg-muted"
           >
             {t('common.cancel')}
           </button>

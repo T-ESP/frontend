@@ -30,7 +30,7 @@ export default function LoginPage() {
         <div style={{
           position: "absolute", top: "-8rem", left: "-8rem",
           width: "400px", height: "400px", borderRadius: "50%",
-          background: "#7b5fa2", filter: "blur(130px)", opacity: 0.3,
+          background: "#6366f1", filter: "blur(130px)", opacity: 0.3,
           pointerEvents: "none",
         }} />
         <div style={{
@@ -140,8 +140,8 @@ export default function LoginPage() {
           <div style={{
             background: "white",
             borderRadius: "1.25rem",
-            border: "1px solid #e9d8fb",
-            boxShadow: "0 8px 30px rgba(123,95,162,0.12)",
+            border: "1px solid #e0e7ff",
+            boxShadow: "0 8px 30px rgba(99, 102, 241,0.12)",
             padding: "2rem 1.75rem",
           }}>
             <LoginForm />

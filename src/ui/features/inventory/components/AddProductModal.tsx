@@ -85,7 +85,7 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
 
   return (
     <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-foreground/40 backdrop-blur-sm animate-in fade-in duration-150">
-      <div className="w-full max-w-lg bg-white border shadow-xl rounded-xl border-border animate-in zoom-in-95 duration-150">
+      <div className="w-full max-w-lg bg-card border shadow-xl rounded-xl border-border animate-in zoom-in-95 duration-150">
         {/* Header */}
         <div className="flex items-start justify-between px-6 py-4 border-b border-border">
           <div className="flex items-center gap-3">
@@ -200,7 +200,7 @@ export function AddProductModal({ isOpen, onClose, onProductAdded }: AddProductM
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex items-center justify-center h-10 px-4 text-sm font-medium transition-colors bg-white border rounded-lg border-border text-foreground hover:bg-muted"
+              className="inline-flex items-center justify-center h-10 px-4 text-sm font-medium transition-colors bg-card border rounded-lg border-border text-foreground hover:bg-muted"
             >
               {t('common.cancel')}
             </button>

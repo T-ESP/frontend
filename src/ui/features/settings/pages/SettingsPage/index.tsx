@@ -42,30 +42,30 @@ const settingsSections = [
 export default function SettingsPage() {
   return (
     <div className="space-y-6">
-      <div className="px-6 py-4 bg-white border border-gray-100 shadow-sm rounded-xl">
+      <div className="px-6 py-4 bg-card border border-border shadow-sm rounded-xl">
         <div>
-          <h3 className="text-xl font-bold text-gray-900">Settings</h3>
-          <p className="text-sm text-gray-500 mt-0.5">Manage your account and application preferences</p>
+          <h3 className="text-xl font-bold text-foreground">Settings</h3>
+          <p className="text-sm text-muted-foreground mt-0.5">Manage your account and application preferences</p>
         </div>
       </div>
 
       <div className="space-y-6">
         {settingsSections.map((section) => (
-          <div key={section.title} className="bg-white border border-gray-100 shadow-sm rounded-xl">
-            <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100">
+          <div key={section.title} className="bg-card border border-border shadow-sm rounded-xl">
+            <div className="flex items-center gap-3 px-6 py-4 border-b border-border">
               <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-purple-50">
                 <section.icon className="w-5 h-5 text-purple-600" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900">{section.title}</h3>
+              <h3 className="text-lg font-bold text-foreground">{section.title}</h3>
             </div>
             <div className="p-6 space-y-4">
               {section.items.map((item) => (
-                <div key={item.label} className="flex flex-col gap-3 p-4 transition-all border border-gray-200 rounded-lg bg-gray-50 hover:border-purple-300 hover:shadow-sm sm:flex-row sm:items-center sm:justify-between">
+                <div key={item.label} className="flex flex-col gap-3 p-4 transition-all border border-border rounded-lg bg-muted hover:border-purple-300 hover:shadow-sm sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900">{item.label}</h4>
-                    <p className="mt-1 text-sm text-gray-500">{item.description}</p>
+                    <h4 className="font-semibold text-foreground">{item.label}</h4>
+                    <p className="mt-1 text-sm text-muted-foreground">{item.description}</p>
                   </div>
-                  <button className="shrink-0 px-4 py-2 text-sm font-medium text-purple-600 transition-colors bg-white border border-purple-200 rounded-lg hover:bg-purple-50">
+                  <button className="shrink-0 px-4 py-2 text-sm font-medium text-purple-600 transition-colors bg-card border border-purple-200 rounded-lg hover:bg-purple-50">
                     Configure
                   </button>
                 </div>

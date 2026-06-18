@@ -256,7 +256,7 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs, o
   }
 
   return (
-    <div className="overflow-hidden bg-white border rounded-xl border-border">
+    <div className="overflow-hidden bg-card border rounded-xl border-border">
       <InventoryTableHeader
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
@@ -322,7 +322,7 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs, o
                   setItemsPerPage(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-                className="h-8 px-2 text-sm bg-white border rounded-md border-border focus:outline-none focus:ring-2 focus:ring-ring"
+                className="h-8 px-2 text-sm bg-card border rounded-md border-border focus:outline-none focus:ring-2 focus:ring-ring"
               >
                 <option value={10}>10 {t('inventory.table.per_page')}</option>
                 <option value={25}>25 {t('inventory.table.per_page')}</option>
@@ -335,14 +335,14 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs, o
               <button
                 onClick={() => setCurrentPage(1)}
                 disabled={currentPage === 1}
-                className="h-8 px-2.5 text-sm font-medium transition-colors bg-white border rounded-md border-border text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed"
+                className="h-8 px-2.5 text-sm font-medium transition-colors bg-card border rounded-md border-border text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {t('inventory.table.first')}
               </button>
               <button
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
-                className="h-8 px-2.5 text-sm font-medium transition-colors bg-white border rounded-md border-border text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed"
+                className="h-8 px-2.5 text-sm font-medium transition-colors bg-card border rounded-md border-border text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {t('inventory.table.previous')}
               </button>
@@ -367,7 +367,7 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs, o
                       className={`h-8 min-w-[2rem] px-2 text-sm font-medium rounded-md transition-colors ${
                         currentPage === pageNum
                           ? 'text-primary-foreground bg-primary'
-                          : 'text-foreground bg-white border border-border hover:bg-muted'
+                          : 'text-foreground bg-card border border-border hover:bg-muted'
                       }`}
                     >
                       {pageNum}
@@ -379,14 +379,14 @@ export function InventoryTable({ onEdit, onDelete, refreshTrigger, onViewKPIs, o
               <button
                 onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                 disabled={currentPage === totalPages}
-                className="h-8 px-2.5 text-sm font-medium transition-colors bg-white border rounded-md border-border text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed"
+                className="h-8 px-2.5 text-sm font-medium transition-colors bg-card border rounded-md border-border text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {t('inventory.table.next')}
               </button>
               <button
                 onClick={() => setCurrentPage(totalPages)}
                 disabled={currentPage === totalPages}
-                className="h-8 px-2.5 text-sm font-medium transition-colors bg-white border rounded-md border-border text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed"
+                className="h-8 px-2.5 text-sm font-medium transition-colors bg-card border rounded-md border-border text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {t('inventory.table.last')}
               </button>

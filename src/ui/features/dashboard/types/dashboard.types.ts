@@ -21,7 +21,7 @@ export type TopProduct = {
   revenue: string;
   trend: "up" | "down";
   change: string;
-  rating: number;
+  rating?: number;
 };
 
 export type Customer = {

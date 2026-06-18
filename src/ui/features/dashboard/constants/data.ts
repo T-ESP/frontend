@@ -17,7 +17,7 @@ export const revenueData : RevenueData[] = [
 ];
 
 export const customerData : Customer[] = [
-  { name: "New Customers", value: 68.4, count: 34249, color: "#7b5fa2" },
+  { name: "New Customers", value: 68.4, count: 34249, color: "#818cf8" },
   { name: "Returning", value: 31.6, count: 15824, color: "#06b6d4" },
 ];
 
@@ -27,7 +27,7 @@ export const topProducts : TopProduct[] = [
     name: "MacBook Pro 16\"",
     image: "https://i.imgur.com/mbNua4x.png",
     sales: 2847,
-    revenue: "$428,050",
+    revenue: "428,050€",
     trend: "up",
     change: "+12.5%",
     rating: 4.8
@@ -37,7 +37,7 @@ export const topProducts : TopProduct[] = [
     name: "iPhone 15 Pro",
     image: "https://i.imgur.com/7j9X5Kw.png",
     sales: 1923,
-    revenue: "$192,300",
+    revenue: "192,300€",
     trend: "up",
     change: "+8.3%",
     rating: 4.9
@@ -47,7 +47,7 @@ export const topProducts : TopProduct[] = [
     name: "AirPods Pro",
     image: "https://i.imgur.com/9wQm5Nx.png",
     sales: 1456,
-    revenue: "$36,240",
+    revenue: "36,240€",
     trend: "down",
     change: "-2.1%",
     rating: 4.7
@@ -57,7 +57,7 @@ export const topProducts : TopProduct[] = [
 export const kpiData : KPI[] = [
   {
     title: "Total Revenue",
-    value: "$1.2M",
+    value: "1.2M€",
     change: "+12.5%",
     trend: "up",
     icon: FiDollarSign,

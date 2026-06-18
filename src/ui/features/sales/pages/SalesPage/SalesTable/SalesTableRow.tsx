@@ -7,12 +7,12 @@ interface SalesTableRowProps {
 
 const getStatusStyle = (status: string) => {
   const statusLower = status.toLowerCase();
-  if (statusLower === 'delivered') return "bg-emerald-50 text-emerald-700 border border-emerald-200";
-  if (statusLower === 'pending') return "bg-amber-50 text-amber-700 border border-amber-200";
-  if (statusLower === 'cancelled') return "bg-rose-50 text-rose-700 border border-rose-200";
-  if (statusLower === 'confirmed') return "bg-blue-50 text-blue-700 border border-blue-200";
+  if (statusLower === 'delivered') return "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30";
+  if (statusLower === 'pending') return "bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30";
+  if (statusLower === 'cancelled') return "bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-500/30";
+  if (statusLower === 'confirmed') return "bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/30";
   if (statusLower === 'shipped') return "bg-purple-50 text-purple-700 border border-purple-200";
-  return "bg-gray-50 text-gray-700 border border-gray-200";
+  return "bg-muted text-muted-foreground border border-border";
 };
 
 const getStatusDotColor = (status: string) => {
@@ -63,14 +63,14 @@ export function SalesTableRow({ order, index }: SalesTableRowProps) {
             </div>
             <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
           </div>
-          <span className="font-medium text-gray-900 transition-colors group-hover:text-purple-600">
+          <span className="font-medium text-foreground transition-colors group-hover:text-purple-600">
             Order #{order.id}
           </span>
         </div>
       </td>
       <td className="px-6 py-4">
-        <div className="flex gap-2 items-center text-gray-600">
-          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="flex gap-2 items-center text-muted-foreground">
+          <svg className="w-4 h-4 text-muted-foreground/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
           <span className="text-sm">User #{order.user_id}</span>
@@ -78,12 +78,12 @@ export function SalesTableRow({ order, index }: SalesTableRowProps) {
       </td>
       <td className="px-6 py-4">
         <div className="flex flex-col">
-          <span className="font-medium text-gray-900">{formatDate(order.order_date)}</span>
-          <span className="text-xs text-gray-500">{formatTime(order.order_date)}</span>
+          <span className="font-medium text-foreground">{formatDate(order.order_date)}</span>
+          <span className="text-xs text-muted-foreground">{formatTime(order.order_date)}</span>
         </div>
       </td>
       <td className="px-6 py-4">
-        <span className="text-base font-semibold text-gray-900">
+        <span className="text-base font-semibold text-foreground">
           {formatAmount(order.amount)}
         </span>
       </td>

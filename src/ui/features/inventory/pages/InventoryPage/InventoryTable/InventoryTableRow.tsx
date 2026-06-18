@@ -46,7 +46,7 @@ export function InventoryTableRow({
     <TableRow>
       <TableCell className="px-6 py-3.5">
         <div className="flex flex-col">
-          <span className="text-sm font-medium">{item.name}</span>
+          <span className="text-sm font-medium text-foreground">{item.name}</span>
           <span className="mt-0.5 text-xs text-muted-foreground">SKU: {item.sku}</span>
         </div>
       </TableCell>
@@ -56,7 +56,7 @@ export function InventoryTableRow({
           {item.category}
         </span>
       </TableCell>
-      <TableCell className="px-6 py-3.5 text-sm font-medium tabular-nums">
+      <TableCell className="px-6 py-3.5 text-sm font-medium tabular-nums text-foreground num">
         {item.price}
       </TableCell>
       <TableCell className="px-6 py-3.5">
