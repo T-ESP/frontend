@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Settings, Check, X } from "lucide-react";
 import { KPICard } from "./KPICard";
 import type { Order } from "@/domain/models/Order";
@@ -153,6 +153,13 @@ export function KPICards({
     return `${sign}${(value || 0).toFixed(1)}%`;
   };
 
+  // Adapte le `t` d'i18next à la signature simple attendue par KpiContext.
+  const tStr = useCallback(
+    (key: string, fallback?: string): string =>
+      t(key, fallback !== undefined ? { defaultValue: fallback } : undefined),
+    [t],
+  );
+
   const dateRangeLabel = useMemo(() => {
     if (dateRange === 7) return t("common.date_range.last_7_days");
     if (dateRange === 90) return t("common.date_range.last_90_days");
@@ -172,13 +179,13 @@ export function KPICards({
       evolution,
       orderCount,
       dateRange,
-      t,
+      t: tStr,
       fmtCurrency: formatCurrency,
       fmtPercent: formatPercentage,
       dateRangeLabel,
       revenueSparkline,
     }),
-    [orders, products, users, suppliers, totalRevenue, evolution, orderCount, dateRange, t, dateRangeLabel, revenueSparkline],
+    [orders, products, users, suppliers, totalRevenue, evolution, orderCount, dateRange, tStr, dateRangeLabel, revenueSparkline],
   );
 
   const hasChanges =
@@ -250,7 +257,7 @@ export function KPICards({
                           }`}
                         >
                           <span className={`text-sm font-medium ${isSelected ? "text-primary" : "text-foreground"}`}>
-                            {def.label(t)}
+                            {def.label(tStr)}
                           </span>
                           <Checkbox
                             checked={isSelected}
