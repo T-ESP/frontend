@@ -285,6 +285,25 @@ html, body, #root {
   --color-neutral-700: #5b6b7e;
   --color-border: #e2e8f0;
   --color-black: #0f172a;
+
+  /* ── Landing « premium violet » (zone publique) — variante CLAIRE ──
+   * Tokens dédiés à la landing/pages publiques, INDÉPENDANTS des tokens
+   * navy de l'app, pour garder l'identité violette dans les 2 modes.
+   * Bordure/glow/grid en triplet RGB → l'alpha est réinjecté à l'usage :
+   *   rgba(var(--lp-border))  ·  rgba(var(--lp-glow), 0.3)  ·  rgba(var(--lp-grid), 0.17)
+   */
+  --lp-bg:      #faf8ff;            /* fond de page */
+  --lp-bg-rgb:  250, 248, 255;     /* idem en rgb (navbar translucide) */
+  --lp-bg-2:    #f1ecfb;           /* fond de section alternée */
+  --lp-card:    #ffffff;           /* fond des cartes / mockup */
+  --lp-border:  17, 12, 40, 0.08;  /* bordures « glass » */
+  --lp-glass:   17, 12, 40, 0.03;  /* remplissage « glass » translucide */
+  --lp-text:    #14101f;           /* texte principal */
+  --lp-text-2:  #5b5670;           /* texte secondaire */
+  --lp-accent:  #7c3aed;           /* violet d'accent (contraste sur clair) */
+  --lp-accent-rgb: 124, 58, 237;   /* idem en rgb (fonds accent translucides) */
+  --lp-glow:    139, 92, 246;      /* rgb du halo (alpha à l'usage) */
+  --lp-grid:    17, 12, 40;        /* rgb des lignes de grille */
 }
 
 /* ── Mode SOMBRE "Terminal" (navy + emerald) ───────────────── */
@@ -329,6 +348,21 @@ html, body, #root {
   --color-neutral-700: #aab6cb;
   --color-border: #1b2640;
   --color-black: #f1f5f9;
+
+  /* ── Landing « premium violet » (zone publique) — variante SOMBRE ──
+   * Valeurs actuelles de la landing (hardcodées jusqu'ici dans les .tsx). */
+  --lp-bg:      #0a0613;
+  --lp-bg-rgb:  10, 6, 19;
+  --lp-bg-2:    #0c0816;
+  --lp-card:    #0f0a1d;
+  --lp-border:  255, 255, 255, 0.08;
+  --lp-glass:   255, 255, 255, 0.04;
+  --lp-text:    #ffffff;
+  --lp-text-2:  #9ca3af;
+  --lp-accent:  #a855f7;
+  --lp-accent-rgb: 168, 85, 247;
+  --lp-glow:    139, 92, 246;
+  --lp-grid:    255, 255, 255;
 }
 
 @layer base {
@@ -385,4 +419,46 @@ html, body, #root {
   0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5); }
   70% { box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
   100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+}
+
+/* ============================================================
+ * Marquee — défilement horizontal infini (bande logos clients).
+ * Le contenu est dupliqué 2× dans le DOM ; on translate de -50%
+ * pour une boucle sans couture. Vitesse via --marquee-duration.
+ * ============================================================ */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee-scroll var(--marquee-duration, 36s) linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee { animation: none; }
+}
+
+/* ============================================================
+ * SmartIndicators — animations ambiantes des visuels SVG.
+ * Toutes désactivées si l'utilisateur réduit les animations.
+ * ============================================================ */
+@keyframes si-wave   { to { transform: translateX(-160px); } }
+@keyframes si-pulse  { 0%,100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.55); opacity: .3; } }
+@keyframes si-ping   { 0% { transform: scale(.35); opacity: .7; } 80%,100% { transform: scale(1.7); opacity: 0; } }
+@keyframes si-spin   { to { transform: rotate(360deg); } }
+@keyframes si-spinrev{ to { transform: rotate(-360deg); } }
+@keyframes si-breathe{ 0%,100% { opacity: .25; } 50% { opacity: .75; } }
+@keyframes si-zzz    { 0% { transform: translateY(6px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-16px); opacity: 0; } }
+
+.si-wave    { animation: si-wave 3.6s linear infinite; }
+.si-pulse   { animation: si-pulse 1.9s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+.si-ping    { animation: si-ping 2.6s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+.si-spin    { animation: si-spin 16s linear infinite; transform-box: fill-box; transform-origin: center; }
+.si-spinrev { animation: si-spinrev 20s linear infinite; transform-box: fill-box; transform-origin: center; }
+.si-breathe { animation: si-breathe 4.2s ease-in-out infinite; }
+.si-zzz     { animation: si-zzz 3s ease-in-out infinite; transform-box: fill-box; }
+
+@media (prefers-reduced-motion: reduce) {
+  .si-wave, .si-pulse, .si-ping, .si-spin, .si-spinrev, .si-breathe, .si-zzz { animation: none; }
 }

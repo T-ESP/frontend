@@ -2,6 +2,18 @@ import { LoginForm } from "./components/LoginForm";
 import { Link } from "react-router-dom";
 import { Package, TrendingUp, Users, ShieldCheck } from "lucide-react";
 
+/* ============================================================
+ * Palette alignée sur la LANDING PAGE (hero) pour la cohérence :
+ *   - LP_BG     : fond sombre du hero (#0a0613)
+ *   - LP_CARD   : surface légèrement + claire (#0f0a1d)
+ *   - LP_GLOW   : violet du halo (#8b5cf6)
+ *   - LP_ACCENT : violet d'accent (#a855f7) — bouton, liens, focus
+ *   - LP_VIOLET : violet clair pour les accents texte sur fond sombre
+ * ============================================================ */
+const LP_GLOW = "#8b5cf6";
+const LP_ACCENT = "#a855f7";
+const LP_VIOLET = "#c4b5fd";
+
 const features = [
   { icon: Package, label: "Gestion des stocks en temps réel" },
   { icon: TrendingUp, label: "Tableaux de bord & analyses" },
@@ -13,11 +25,11 @@ export default function LoginPage() {
   return (
     <div style={{ minHeight: "100vh", display: "flex" }}>
 
-      {/* ── Panneau gauche — violet sombre ─────────────────── */}
+      {/* ── Panneau gauche — dark hero (= landing page) ────── */}
       <div
         style={{
           width: "50%",
-          background: "linear-gradient(150deg, #1e1230 0%, #2d1f48 45%, #3d2a5c 100%)",
+          background: "linear-gradient(150deg, #0a0613 0%, #0f0a1d 50%, #160c28 100%)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
@@ -26,17 +38,17 @@ export default function LoginPage() {
           overflow: "hidden",
         }}
       >
-        {/* Glow décoratif */}
+        {/* Glows violets (mêmes teintes que le hero) */}
         <div style={{
           position: "absolute", top: "-8rem", left: "-8rem",
           width: "400px", height: "400px", borderRadius: "50%",
-          background: "#6366f1", filter: "blur(130px)", opacity: 0.3,
+          background: LP_GLOW, filter: "blur(130px)", opacity: 0.3,
           pointerEvents: "none",
         }} />
         <div style={{
           position: "absolute", bottom: 0, right: 0,
           width: "280px", height: "280px", borderRadius: "50%",
-          background: "#a480d1", filter: "blur(100px)", opacity: 0.2,
+          background: LP_ACCENT, filter: "blur(100px)", opacity: 0.2,
           pointerEvents: "none",
         }} />
 
@@ -45,27 +57,27 @@ export default function LoginPage() {
           <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
             <div style={{
               width: "2.25rem", height: "2.25rem", borderRadius: "0.75rem",
-              background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)",
+              background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)",
               display: "flex", alignItems: "center", justifyContent: "center",
             }}>
-              <Package size={18} color="white" />
+              <Package size={18} color={LP_VIOLET} />
             </div>
             <span style={{ color: "white", fontWeight: 700, fontSize: "1.1rem", letterSpacing: "-0.02em" }}>
-              StockFlow
+              Stock<span style={{ color: LP_ACCENT }}>S</span>
             </span>
           </div>
         </div>
 
         {/* Contenu central */}
         <div style={{ position: "relative", zIndex: 10, flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", padding: "3rem 0" }}>
-          <p style={{ color: "#c0a2e5", fontSize: "0.75rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "1rem" }}>
+          <p style={{ color: LP_VIOLET, fontSize: "0.75rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "1rem" }}>
             Plateforme de gestion
           </p>
           <h1 style={{ color: "white", fontWeight: 800, fontSize: "2.4rem", lineHeight: 1.2, marginBottom: "1.25rem" }}>
             Pilotez votre commerce<br />
-            <span style={{ color: "#c0a2e5" }}>sans effort.</span>
+            <span style={{ color: LP_VIOLET }}>sans effort.</span>
           </h1>
-          <p style={{ color: "rgba(196,181,220,0.75)", fontSize: "0.95rem", lineHeight: 1.7, maxWidth: "340px", marginBottom: "2.5rem" }}>
+          <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.95rem", lineHeight: 1.7, maxWidth: "340px", marginBottom: "2.5rem" }}>
             Stocks, ventes, clients — tout centralisé dans un seul tableau de bord conçu pour les commerçants.
           </p>
 
@@ -75,12 +87,12 @@ export default function LoginPage() {
               <li key={label} style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
                 <div style={{
                   width: "2rem", height: "2rem", borderRadius: "0.5rem", flexShrink: 0,
-                  background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)",
+                  background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                 }}>
-                  <Icon size={14} color="#d4bbf0" />
+                  <Icon size={14} color={LP_VIOLET} />
                 </div>
-                <span style={{ color: "rgba(220,205,240,0.9)", fontSize: "0.875rem", fontWeight: 500 }}>
+                <span style={{ color: "rgba(255,255,255,0.82)", fontSize: "0.875rem", fontWeight: 500 }}>
                   {label}
                 </span>
               </li>
@@ -90,17 +102,17 @@ export default function LoginPage() {
 
         {/* Footer gauche */}
         <div style={{ position: "relative", zIndex: 10 }}>
-          <p style={{ color: "rgba(192,162,229,0.4)", fontSize: "0.7rem" }}>
-            © 2025 StockFlow. Tous droits réservés.
+          <p style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.7rem" }}>
+            © 2025 StockS. Tous droits réservés.
           </p>
         </div>
       </div>
 
-      {/* ── Panneau droit — violet clair ───────────────────── */}
+      {/* ── Panneau droit — clair, teinté violet LP ────────── */}
       <div
         style={{
           width: "50%",
-          background: "linear-gradient(160deg, #f5f0fc 0%, #ede5f8 50%, #e4d8f4 100%)",
+          background: "linear-gradient(160deg, #f6f2fe 0%, #efe7fb 50%, #e6dbf7 100%)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -110,18 +122,18 @@ export default function LoginPage() {
           overflow: "hidden",
         }}
       >
-        {/* Glow haut-droite */}
+        {/* Glow haut-droite (violet LP) */}
         <div style={{
           position: "absolute", top: "-6rem", right: "-6rem",
           width: "320px", height: "320px", borderRadius: "50%",
-          background: "#c0a2e5", filter: "blur(110px)", opacity: 0.45,
+          background: LP_GLOW, filter: "blur(110px)", opacity: 0.35,
           pointerEvents: "none",
         }} />
-        {/* Glow bas-gauche */}
+        {/* Glow bas-gauche (violet LP) */}
         <div style={{
           position: "absolute", bottom: "-4rem", left: "-4rem",
           width: "240px", height: "240px", borderRadius: "50%",
-          background: "#a480d1", filter: "blur(90px)", opacity: 0.3,
+          background: LP_ACCENT, filter: "blur(90px)", opacity: 0.25,
           pointerEvents: "none",
         }} />
 
@@ -140,8 +152,8 @@ export default function LoginPage() {
           <div style={{
             background: "white",
             borderRadius: "1.25rem",
-            border: "1px solid #e0e7ff",
-            boxShadow: "0 8px 30px rgba(99, 102, 241,0.12)",
+            border: "1px solid #ede9fe",
+            boxShadow: "0 8px 30px rgba(168,85,247,0.12)",
             padding: "2rem 1.75rem",
           }}>
             <LoginForm />
