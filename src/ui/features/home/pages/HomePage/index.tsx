@@ -1,4 +1,5 @@
-import { Reveal } from "./landingMotion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform, useSpring, useReducedMotion } from "framer-motion";
 import { ClientLogos } from "./ClientLogos";
 import { HorizonSection } from "./HorizonSection";
 import { Features2Col } from "./Features2Col";
@@ -102,6 +103,46 @@ function AppMockup() {
           <DashboardPreview />
         </div>
       </div>
+    </div>
+  );
+}
+
+/* Révélation 3D du dashboard PILOTÉE PAR LE SCROLL (réintégrée de l'ancien
+ * Hero) : à mesure qu'il entre dans le viewport, le mockup se redresse
+ * (incliné → à plat), monte légèrement, grandit et s'éclaircit.
+ * Réglages : l'angle de départ (18deg), le scale (0.92) et l'opacité (0.4).
+ * Respecte prefers-reduced-motion (rendu statique). */
+function ScrollRevealDashboard() {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+
+  // Progress 0 → 1 pendant que le mockup remonte du bas du viewport vers le centre.
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "center center"],
+  });
+  const p = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.0004 });
+  const rotateX = useTransform(p, [0, 1], [18, 0]);
+  const scale = useTransform(p, [0, 1], [0.92, 1]);
+  const y = useTransform(p, [0, 1], [40, 0]);
+  const opacity = useTransform(p, [0, 0.55], [0.4, 1]);
+
+  if (reduce) {
+    return (
+      <div className="relative z-10">
+        <AppMockup />
+      </div>
+    );
+  }
+
+  return (
+    // `perspective` sur le parent pour que rotateX donne un vrai effet 3D.
+    <div ref={ref} className="relative z-10" style={{ perspective: 1500 }}>
+      <motion.div
+        style={{ rotateX, scale, y, opacity, transformOrigin: "center top", willChange: "transform, opacity" }}
+      >
+        <AppMockup />
+      </motion.div>
     </div>
   );
 }
@@ -262,11 +303,8 @@ function Hero() {
             }}
           />
 
-          {/* Dashboard mockup — passe AU-DESSUS du halo (z-10) tout en
-                recouvrant la moitié basse du radial. */}
-          <Reveal className="relative z-10" delay={0.15} y={28}>
-            <AppMockup />
-          </Reveal>
+          {/* Dashboard mockup — révélation 3D au scroll (z-10), au-dessus du halo. */}
+          <ScrollRevealDashboard />
         </div>
       </div>
     </section>
