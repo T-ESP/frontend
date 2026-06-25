@@ -1,5 +1,5 @@
 import type { SidebarItemType, SidebarSectionType } from "@/ui/components/layouts/Sidebar/Sidebar.types";
-import { Bell, Box, ChartLine, Gift, LayoutDashboard, LogOut, Package, Settings, ShoppingCartIcon } from "lucide-react";
+import { Bell, Box, ChartLine, Gift, LayoutDashboard, LogOut, Package, Settings, ShoppingCartIcon, Tag } from "lucide-react";
 
 export const sections: SidebarSectionType[] = [
   {
@@ -21,6 +21,7 @@ export const sections: SidebarSectionType[] = [
     label: "sidebar.sections.engagement",
     items: [
       { label: "sidebar.loyalty", to: "/loyalty", icon: Gift },
+      { label: "sidebar.promotions", to: "/promotions", icon: Tag },
       { label: "sidebar.alerts", to: "/alerts", icon: Bell },
     ],
   },

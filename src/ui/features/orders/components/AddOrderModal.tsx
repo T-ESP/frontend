@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, Loader2, AlertTriangle } from 'lucide-react';
+import { Plus, Trash2, Loader2, AlertTriangle, Tag, X, CheckCircle2 } from 'lucide-react';
 import { orderService } from '@/infrastructure/api/services/orderService';
 import { userService } from '@/infrastructure/api/services/userService';
 import { productService } from '@/infrastructure/api/services/productService';
+import { discountService } from '@/infrastructure/api/services/discountService';
 import type { CreateOrderDto, CreateLineItemDto } from '@/domain/models/Order';
 import type { User as UserType } from '@/domain/models/User';
 import type { Product as ProductType } from '@/domain/models/Product';
+import type { ApplicableDiscount, CheckDiscountResponse } from '@/domain/models/Discount';
 import { useToast } from '@/ui/components/common/Toast';
 import { useTranslation } from 'react-i18next';
 
@@ -52,6 +54,12 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
   const [loading, setLoading] = useState(false);
   const [isDataLoading, setIsDataLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Discount flow
+  const [checkingDiscounts, setCheckingDiscounts] = useState(false);
+  const [discountResult, setDiscountResult] = useState<CheckDiscountResponse | null>(null);
+  const [selectedDiscountIds, setSelectedDiscountIds] = useState<number[]>([]);
+
   const { addToast } = useToast();
 
   useEffect(() => {
@@ -74,15 +82,19 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
     loadStaticData();
   }, []);
 
+  const resetDiscounts = () => { setDiscountResult(null); setSelectedDiscountIds([]); };
+
   const addLineItem = () => {
     setLineItems([...lineItems, INITIAL_LINE_ITEM]);
     setError(null);
+    resetDiscounts();
   };
 
   const removeLineItem = (index: number) => {
     if (lineItems.length > 1) {
       setLineItems(lineItems.filter((_, i) => i !== index));
       setError(null);
+      resetDiscounts();
     }
   };
 
@@ -91,6 +103,49 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
     const finalValue = field === 'quantity' ? Math.max(1, value) : value;
     updated[index] = { ...updated[index], [field]: finalValue };
     setLineItems(updated);
+    // Reset discount check when cart changes
+    setDiscountResult(null);
+    setSelectedDiscountIds([]);
+  };
+
+  const handleCheckDiscounts = async () => {
+    const validItems = lineItems.filter((i) => i.product_id !== 0 && i.quantity > 0);
+    if (validItems.length === 0) return;
+    setCheckingDiscounts(true);
+    try {
+      const checkItems = validItems.map((li) => {
+        const p = products.find((x) => x.id === li.product_id);
+        return {
+          product_id: li.product_id,
+          quantity: li.quantity,
+          line_total: p ? p.buying_price * li.quantity : 0,
+        };
+      });
+      const result = await discountService.check({
+        line_items: checkItems,
+        total_amount: total,
+      });
+      setDiscountResult(result);
+      // Pre-select all applicable (respecting cumul rule: all cumulatives + best non-cumulative)
+      const cumulatives = result.applicable_discounts.filter((d) => d.cumulative);
+      const nonCumulatives = result.applicable_discounts.filter((d) => !d.cumulative);
+      const bestNc = nonCumulatives.reduce<ApplicableDiscount | null>(
+        (best, d) => (!best || d.saving_amount > best.saving_amount ? d : best),
+        null,
+      );
+      const preSelected = [...cumulatives.map((d) => d.id), ...(bestNc ? [bestNc.id] : [])];
+      setSelectedDiscountIds(preSelected);
+    } catch {
+      addToast('Remises', 'Impossible de vérifier les remises applicables.', 'error');
+    } finally {
+      setCheckingDiscounts(false);
+    }
+  };
+
+  const toggleDiscount = (id: number) => {
+    setSelectedDiscountIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -113,7 +168,7 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
     setError(null);
 
     try {
-      const finalPayload = {
+      const finalPayload: CreateOrderDto = {
         ...formData,
         line_items: lineItems.map((item) => {
           const productDetails = products.find((p) => p.id === item.product_id);
@@ -123,6 +178,7 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
             unit_price: productDetails ? productDetails.buying_price : 0,
           };
         }),
+        discount_ids: selectedDiscountIds.length > 0 ? selectedDiscountIds : undefined,
       };
 
       await orderService.create(finalPayload);
@@ -270,16 +326,103 @@ export function AddOrderModal({ onClose, onSuccess }: AddOrderModalProps) {
                 </div>
 
                 {total > 0 && (
-                  <div className="mt-1 flex items-center justify-between rounded-lg border bg-muted/30 px-3 py-2 text-sm">
-                    <span className="text-muted-foreground">
-                      {t('orders.add_modal.estimated_total', 'Total estimé')}
-                    </span>
-                    <span className="font-semibold tabular-nums">
-                      {new Intl.NumberFormat('fr-FR', {
-                        style: 'currency',
-                        currency: 'EUR',
-                      }).format(total)}
-                    </span>
+                  <div className="mt-1 space-y-2">
+                    {/* Total brut */}
+                    <div className="flex items-center justify-between rounded-lg border bg-muted/30 px-3 py-2 text-sm">
+                      <span className="text-muted-foreground">
+                        {t('orders.add_modal.estimated_total', 'Total estimé')}
+                      </span>
+                      <span className="font-semibold tabular-nums">
+                        {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(total)}
+                      </span>
+                    </div>
+
+                    {/* Discount check button */}
+                    {!discountResult && (
+                      <button
+                        type="button"
+                        onClick={handleCheckDiscounts}
+                        disabled={checkingDiscounts || lineItems.some((i) => i.product_id === 0)}
+                        className="flex items-center gap-2 w-full justify-center px-3 py-2 text-sm font-medium text-primary border border-primary/30 rounded-lg hover:bg-primary/5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                      >
+                        {checkingDiscounts
+                          ? <Loader2 className="w-4 h-4 animate-spin" />
+                          : <Tag className="w-4 h-4" />}
+                        {checkingDiscounts ? 'Vérification…' : 'Vérifier les remises applicables'}
+                      </button>
+                    )}
+
+                    {/* Discount results */}
+                    {discountResult && (
+                      <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <p className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">
+                            Remises ({discountResult.applicable_discounts.length})
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => { setDiscountResult(null); setSelectedDiscountIds([]); }}
+                            className="text-muted-foreground/60 hover:text-muted-foreground"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+
+                        {discountResult.applicable_discounts.length === 0 ? (
+                          <p className="text-[12px] text-muted-foreground/70">Aucune remise applicable pour cette commande.</p>
+                        ) : (
+                          <>
+                            {discountResult.applicable_discounts.map((d) => {
+                              const selected = selectedDiscountIds.includes(d.id);
+                              return (
+                                <button
+                                  key={d.id}
+                                  type="button"
+                                  onClick={() => toggleDiscount(d.id)}
+                                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg border text-sm transition-colors ${
+                                    selected
+                                      ? 'border-primary/40 bg-primary/5 text-primary'
+                                      : 'border-border bg-card text-muted-foreground hover:bg-muted'
+                                  }`}
+                                >
+                                  <div className="flex items-center gap-2 text-left">
+                                    <CheckCircle2 className={`w-4 h-4 shrink-0 ${selected ? 'text-primary' : 'text-muted-foreground/30'}`} />
+                                    <div>
+                                      <p className="font-medium text-[13px]">{d.name}</p>
+                                      <p className="text-[11px] text-muted-foreground/70">
+                                        {d.cumulative ? 'Cumulable' : 'Non cumulable'}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <span className="font-semibold tabular-nums text-[13px] shrink-0 ml-2">
+                                    -{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(d.saving_amount)}
+                                  </span>
+                                </button>
+                              );
+                            })}
+
+                            {/* Summary */}
+                            {selectedDiscountIds.length > 0 && (() => {
+                              const saving = discountResult.applicable_discounts
+                                .filter((d) => selectedDiscountIds.includes(d.id))
+                                .reduce((s, d) => s + d.saving_amount, 0);
+                              const finalTotal = total - saving;
+                              return (
+                                <div className="flex items-center justify-between pt-1 border-t border-border text-sm font-semibold">
+                                  <span className="text-muted-foreground">Total après remise</span>
+                                  <span className="text-foreground tabular-nums">
+                                    {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(finalTotal)}
+                                    <span className="text-emerald-600 dark:text-emerald-400 text-[11px] font-medium ml-1">
+                                      (-{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(saving)})
+                                    </span>
+                                  </span>
+                                </div>
+                              );
+                            })()}
+                          </>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
