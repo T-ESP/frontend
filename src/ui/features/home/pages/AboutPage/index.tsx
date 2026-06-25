@@ -1,8 +1,13 @@
-import { Link } from "react-router-dom";
-import { ArrowRight, Target, Eye, HeartHandshake, Sparkles } from "lucide-react";
+import { Target, Eye, HeartHandshake, Sparkles } from "lucide-react";
 import { Reveal, RevealGroup, RevealItem } from "../HomePage/landingMotion";
 import { MarketingLayout } from "../../components/MarketingLayout";
 import { Eyebrow } from "../../components/marketingUI";
+import { FinalCTA } from "../HomePage/FinalCTA";
+
+/* ============================================================
+ * PAGE « À propos » — style premium violet, theme-aware (--lp-*).
+ * Réutilise le hero de page (glow), les cartes glass et FinalCTA.
+ * ============================================================ */
 
 const STATS = [
   { value: "2024", label: "Année de création" },
@@ -21,17 +26,24 @@ const VALUES = [
 export default function AboutPage() {
   return (
     <MarketingLayout>
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-background" style={{ background: "radial-gradient(circle at 50% -10%, color-mix(in oklab, var(--primary) 10%, var(--background)) 0%, var(--background) 55%)" }}>
-        <div className="relative mx-auto max-w-[860px] px-6 pt-20 pb-12 text-center sm:px-8">
+      {/* ===== Hero de page (glow violet discret derrière le titre) ===== */}
+      <section className="relative isolate overflow-hidden">
+        {/* Glow radial doux, centré en haut. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[760px] max-w-[120vw] -translate-x-1/2 -translate-y-1/3 rounded-full blur-[120px]"
+          style={{ background: "radial-gradient(closest-side, rgba(var(--lp-glow),0.28) 0%, rgba(var(--lp-glow),0.08) 50%, transparent 80%)" }}
+        />
+        <div className="relative mx-auto max-w-[860px] px-6 pb-12 pt-32 text-center sm:px-8 sm:pt-40">
           <Reveal>
             <div className="mb-4 flex justify-center">
               <Eyebrow>Notre raison d'être</Eyebrow>
             </div>
-            <h1 className="text-balance text-[34px] font-bold leading-[1.07] tracking-[-0.025em] text-foreground sm:text-5xl">
-              On rend le pilotage des stocks <span className="text-primary">simple et intelligent</span>.
+            <h1 className="text-balance text-4xl font-bold leading-[1.07] tracking-tight text-[var(--lp-text)] sm:text-6xl">
+              On rend le pilotage des stocks{" "}
+              <span className="text-[var(--lp-accent)]">simple et intelligent</span>.
             </h1>
-            <p className="mx-auto mt-6 max-w-[620px] text-pretty text-[16px] leading-[1.62] text-muted-foreground sm:text-[18px]">
+            <p className="mx-auto mt-6 max-w-[620px] text-pretty text-base leading-[1.62] text-[var(--lp-text-2)] sm:text-lg">
               StockS est né d'un constat simple : trop de commerçants perdent des ventes par
               rupture, ou immobilisent leur trésorerie en surstock — faute d'outils clairs.
               Notre mission est de mettre l'intelligence de la donnée à la portée de tous.
@@ -40,29 +52,32 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="py-12 lg:py-16 border-y border-border bg-secondary">
+      {/* ===== Stats ===== */}
+      <section
+        className="border-y py-12 lg:py-16"
+        style={{ borderColor: "rgba(var(--lp-border))", background: "var(--lp-bg-2)" }}
+      >
         <div className="mx-auto max-w-[1180px] px-6 sm:px-8">
           <RevealGroup className="grid grid-cols-2 gap-6 lg:grid-cols-4">
             {STATS.map((s) => (
               <RevealItem key={s.label} className="text-center">
-                <p className="font-mono text-3xl font-bold text-foreground sm:text-4xl">{s.value}</p>
-                <p className="mt-2 text-[13px] text-muted-foreground">{s.label}</p>
+                <p className="font-mono text-3xl font-bold text-[var(--lp-text)] sm:text-4xl">{s.value}</p>
+                <p className="mt-2 text-[13px] text-[var(--lp-text-2)]">{s.label}</p>
               </RevealItem>
             ))}
           </RevealGroup>
         </div>
       </section>
 
-      {/* Story */}
+      {/* ===== Story ===== */}
       <section className="py-20 lg:py-28">
         <div className="mx-auto max-w-[820px] px-6 sm:px-8">
           <Reveal>
             <Eyebrow>Notre histoire</Eyebrow>
-            <h2 className="text-balance text-[28px] font-bold leading-[1.12] tracking-[-0.02em] text-foreground sm:text-[36px]">
+            <h2 className="text-balance text-[28px] font-bold leading-[1.12] tracking-tight text-[var(--lp-text)] sm:text-[36px]">
               De la frustration à la solution
             </h2>
-            <div className="mt-6 space-y-4 text-[16px] leading-[1.7] text-muted-foreground">
+            <div className="mt-6 space-y-4 text-base leading-[1.7] text-[var(--lp-text-2)]">
               <p>
                 Gérer un stock à l'instinct ou dans un tableur, c'est passer son temps à éteindre
                 des incendies : ruptures découvertes trop tard, commandes « au feeling », données
@@ -82,51 +97,40 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Values */}
-      <section className="py-20 lg:py-28 border-y border-border bg-secondary">
+      {/* ===== Valeurs ===== */}
+      <section
+        className="border-y py-20 lg:py-28"
+        style={{ borderColor: "rgba(var(--lp-border))", background: "var(--lp-bg-2)" }}
+      >
         <div className="mx-auto max-w-[1180px] px-6 sm:px-8">
           <Reveal className="max-w-[720px]">
             <Eyebrow>Ce qui nous guide</Eyebrow>
-            <h2 className="text-balance text-[28px] font-bold leading-[1.12] tracking-[-0.02em] text-foreground sm:text-[36px]">
+            <h2 className="text-balance text-[28px] font-bold leading-[1.12] tracking-tight text-[var(--lp-text)] sm:text-[36px]">
               Nos valeurs
             </h2>
           </Reveal>
-          <RevealGroup className="grid gap-5 mt-12 sm:grid-cols-2">
+          <RevealGroup className="mt-12 grid gap-5 sm:grid-cols-2">
             {VALUES.map((v) => (
-              <RevealItem key={v.title} className="p-6 border rounded-xl border-border bg-card transition-colors hover:border-primary/40">
-                <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <v.Icon className="w-5 h-5" />
+              <RevealItem
+                key={v.title}
+                className="rounded-xl border border-[rgba(var(--lp-border))] bg-[var(--lp-card)] p-6 transition-colors"
+              >
+                <span
+                  className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg text-[var(--lp-accent)]"
+                  style={{ background: "rgba(var(--lp-accent-rgb),0.12)" }}
+                >
+                  <v.Icon className="h-5 w-5" />
                 </span>
-                <h3 className="mb-2 text-base font-semibold text-foreground">{v.title}</h3>
-                <p className="text-[14px] leading-[1.6] text-muted-foreground">{v.body}</p>
+                <h3 className="mb-2 text-base font-semibold text-[var(--lp-text)]">{v.title}</h3>
+                <p className="text-[14px] leading-[1.6] text-[var(--lp-text-2)]">{v.body}</p>
               </RevealItem>
             ))}
           </RevealGroup>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 lg:py-28">
-        <div className="mx-auto max-w-[820px] px-6 text-center sm:px-8">
-          <Reveal>
-            <h2 className="text-balance text-[26px] font-bold leading-[1.15] tracking-[-0.02em] text-foreground sm:text-[34px]">
-              Envie de reprendre le contrôle ?
-            </h2>
-            <p className="mx-auto mt-4 max-w-[460px] text-[16px] leading-[1.55] text-muted-foreground">
-              Essayez StockS gratuitement, sans carte bancaire.
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-              <Link to="/login" className="inline-flex items-center gap-2 rounded-lg bg-primary px-7 py-3.5 text-[15px] font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
-                Commencer gratuitement
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link to="/contact" className="inline-flex items-center rounded-lg border border-border bg-foreground/[0.04] px-6 py-3.5 text-[15px] font-medium text-foreground transition-colors hover:bg-foreground/10">
-                Nous contacter
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+      {/* ===== CTA final (réutilisé) ===== */}
+      <FinalCTA />
     </MarketingLayout>
   );
 }

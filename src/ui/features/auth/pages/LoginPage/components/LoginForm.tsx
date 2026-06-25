@@ -95,7 +95,7 @@ export function LoginForm() {
           placeholder="vous@exemple.com"
           value={formValues.email}
           onChange={handleInputChange}
-          className="h-10 text-foreground placeholder:text-muted-foreground/70 border-border focus-visible:ring-[#6366f1]/40"
+          className="h-10 text-foreground placeholder:text-muted-foreground/70 border-border focus-visible:ring-[#a855f7]/40"
           required
         />
       </div>
@@ -108,7 +108,7 @@ export function LoginForm() {
           </Label>
           <a
             href="#"
-            className="text-xs text-muted-foreground/70 hover:text-[#6366f1] transition-colors font-medium"
+            className="text-xs text-muted-foreground/70 hover:text-[#a855f7] transition-colors font-medium"
           >
             Mot de passe oublié ?
           </a>
@@ -120,7 +120,7 @@ export function LoginForm() {
           placeholder="••••••••"
           value={formValues.password}
           onChange={handleInputChange}
-          className="h-10 text-foreground placeholder:text-muted-foreground/70 border-border focus-visible:ring-[#6366f1]/40"
+          className="h-10 text-foreground placeholder:text-muted-foreground/70 border-border focus-visible:ring-[#a855f7]/40"
           required
         />
       </div>
@@ -157,7 +157,7 @@ export function LoginForm() {
       <Button
         type="submit"
         className="w-full h-10 font-semibold mt-1"
-        style={{ backgroundColor: "#6366f1" }}
+        style={{ backgroundColor: "#a855f7" }}
         disabled={status === "loading"}
       >
         {status === "loading" ? "Connexion en cours…" : "Se connecter"}
