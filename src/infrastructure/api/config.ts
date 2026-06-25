@@ -72,6 +72,16 @@ export const API_ENDPOINTS = {
     bulkUpdateStatus: '/alerts/bulk-status',
     cleanup: '/alerts/cleanup',
   },
+  discounts: {
+    getAll: '/discounts',
+    getById: (id: number) => `/discounts/${id}`,
+    create: '/discounts',
+    update: (id: number) => `/discounts/${id}`,
+    delete: (id: number) => `/discounts/${id}`,
+    check: '/discounts/check',
+    getOrders: (id: number) => `/discounts/${id}/orders`,
+    getOrderApplied: (orderId: number) => `/discounts/order/${orderId}/applied`,
+  },
   ai: {
     forecasts: '/ai/forecasts',
     forecastByProduct: (productId: number) => `/ai/forecasts/${productId}`,

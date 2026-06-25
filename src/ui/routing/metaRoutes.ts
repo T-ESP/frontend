@@ -130,6 +130,15 @@ export const ROUTES: Record<string, RouteMeta> = {
     roles: ['admin', 'manager'],
     title: 'StockS - Loyalty Program',
   },
+  PROMOTIONS: {
+    path: '/promotions',
+    label: 'Promotions',
+    page: 'Promotions',
+    layout: 'app',
+    restricted: true,
+    roles: ['admin', 'manager'],
+    title: 'StockS - Promotions & Remises',
+  },
   SETTINGS: {
     path: '/settings',
     label: 'Settings',

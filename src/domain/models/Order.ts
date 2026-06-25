@@ -4,6 +4,7 @@ export interface Order {
   order_date: string;
   status: string;
   amount: number;
+  discount_amount: number;
   created_at: string;
   updated_at: string;
 }
@@ -38,6 +39,7 @@ export interface CreateOrderDto {
   user_id: number;
   status: string;
   line_items: CreateLineItemDto[];
+  discount_ids?: number[];
 }
 
 export interface UpdateOrderDto {

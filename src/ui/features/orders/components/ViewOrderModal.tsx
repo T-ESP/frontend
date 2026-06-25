@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { X, Loader2, AlertTriangle, ShoppingCart } from 'lucide-react';
+import { X, Loader2, AlertTriangle, ShoppingCart, Tag } from 'lucide-react';
 import { orderService } from '@/infrastructure/api/services/orderService';
+import { discountService } from '@/infrastructure/api/services/discountService';
 import type { Order, LineItem } from '@/domain/models/Order';
+import type { OrderDiscountSummary } from '@/domain/models/Discount';
 import { useTranslation } from 'react-i18next';
 import {
   Table,
@@ -36,9 +38,15 @@ export function ViewOrderModal({ order, onClose }: ViewOrderModalProps) {
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [appliedDiscounts, setAppliedDiscounts] = useState<OrderDiscountSummary[]>([]);
 
   useEffect(() => {
     loadLineItems();
+    if (order.discount_amount > 0) {
+      discountService.getOrderApplied(order.id)
+        .then(setAppliedDiscounts)
+        .catch(() => { /* non bloquant */ });
+    }
   }, [order.id]);
 
   const loadLineItems = async () => {
@@ -177,6 +185,19 @@ export function ViewOrderModal({ order, onClose }: ViewOrderModalProps) {
                     ))}
                   </TableBody>
                   <TableFooter>
+                    {appliedDiscounts.length > 0 && appliedDiscounts.map((d) => (
+                      <TableRow key={d.discount_id} className="text-emerald-700 dark:text-emerald-400">
+                        <TableCell colSpan={2} className="px-3 text-right font-medium">
+                          <span className="inline-flex items-center gap-1">
+                            <Tag size={12} />
+                            {d.discount_name}
+                          </span>
+                        </TableCell>
+                        <TableCell className="px-3 text-right font-semibold tabular-nums">
+                          -{formatCurrency(d.saving_amount)}
+                        </TableCell>
+                      </TableRow>
+                    ))}
                     <TableRow>
                       <TableCell colSpan={2} className="px-3 text-right font-medium">
                         {t('orders.view_modal.total_label')}
