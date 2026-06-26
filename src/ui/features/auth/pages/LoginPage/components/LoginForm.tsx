@@ -103,7 +103,7 @@ export function LoginForm() {
             height: 42, borderRadius: 12, border: "1.5px solid #e5e7eb",
             background: "#fafafa", fontSize: "0.8rem",
           }}
-          className="focus:border-[#a855f7] focus:shadow-[0_0_0_3px_rgba(168,85,247,0.1)] focus:bg-white placeholder:text-gray-300"
+          className="text-gray-900 focus:border-[#a855f7] focus:shadow-[0_0_0_3px_rgba(168,85,247,0.1)] focus:bg-white placeholder:text-gray-300"
         />
       </div>
 
@@ -137,7 +137,7 @@ export function LoginForm() {
             height: 42, borderRadius: 12, border: "1.5px solid #e5e7eb",
             background: "#fafafa", fontSize: "0.8rem",
           }}
-          className="focus:border-[#a855f7] focus:shadow-[0_0_0_3px_rgba(168,85,247,0.1)] focus:bg-white placeholder:text-gray-300"
+          className="text-gray-900 focus:border-[#a855f7] focus:shadow-[0_0_0_3px_rgba(168,85,247,0.1)] focus:bg-white placeholder:text-gray-300"
         />
       </div>
 
