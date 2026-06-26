@@ -339,9 +339,9 @@ export default function SalesPage() {
                           formatter={(value) => formatCurrency(Number(value) || 0)}
                           contentStyle={{
                             borderRadius: 6,
-                            border: "1px solid #1b2640",
-                            background: "#0d1424",
-                            color: "#f1f5f9",
+                            border: "1px solid var(--border)",
+                            background: "var(--card)",
+                            color: "var(--foreground)",
                             fontSize: 12,
                           }}
                         />

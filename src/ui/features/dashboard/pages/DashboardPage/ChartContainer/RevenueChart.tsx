@@ -1,4 +1,4 @@
-import { Line, LineChart } from "recharts";
+import { Line, LineChart, XAxis, YAxis, CartesianGrid } from "recharts";
 import { useTranslation } from "react-i18next";
 import { FiLoader } from "react-icons/fi";
 import type { RevenueChartProps } from "@/ui/features/dashboard/types";
@@ -25,13 +25,24 @@ interface Props extends RevenueChartProps {
 const chartConfig = {
   revenue: {
     label: "Revenus",
-    color: "#818cf8", // indigo — série principale
+    // Série principale = couleur de marque (identique à Insights & Sales).
+    color: "var(--color-primary)",
   },
   profit: {
     label: "Profit",
-    color: "#64748b", // slate — série secondaire
+    // Série secondaire = nuance claire de la marque (cf. Insights ABC).
+    color: "hsl(var(--brand-h) calc(var(--brand-s) + 8%) calc(var(--brand-l) + 18%))",
   },
 } satisfies ChartConfig;
+
+/** Format compact pour l'axe des ordonnées : 1 200 → « 1,2 k€ ». */
+const formatCompactEUR = (value: number) =>
+  new Intl.NumberFormat("fr-FR", {
+    style: "currency",
+    currency: "EUR",
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(value);
 
 export function RevenueChart({ data, rangeLabel, loading }: Props) {
   const { t } = useTranslation();
@@ -48,11 +59,7 @@ export function RevenueChart({ data, rangeLabel, loading }: Props) {
           </CardDescription>
         </div>
         {/* Make the rangePicker look like the 'Export' button from the design */}
-        {rangeLabel && (
-          <button className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-muted-foreground bg-card border border-border rounded-lg hover:bg-muted hover:text-foreground focus:outline-none">
-            {rangeLabel}
-          </button>
-        )}
+        {rangeLabel}
       </CardHeader>
 
       <CardContent className="p-6">
@@ -68,10 +75,27 @@ export function RevenueChart({ data, rangeLabel, loading }: Props) {
           </div>
         ) : (
           <ChartContainer config={chartConfig} className="h-[350px] w-full">
-            <LineChart data={data} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
+            <LineChart data={data} margin={{ top: 20, right: 20, left: 8, bottom: 8 }}>
+              <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="var(--border)" />
+              <XAxis
+                dataKey="month"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={10}
+                minTickGap={24}
+                tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+              />
+              <YAxis
+                width={64}
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                tickFormatter={(v) => formatCompactEUR(Number(v))}
+              />
               <ChartTooltip
                 cursor={{ stroke: '#f1f5f9', strokeWidth: 1 }}
-                content={<ChartTooltipContent />}
+                content={<ChartTooltipContent labelKey="month" />}
               />
               <Line
                 type="natural"

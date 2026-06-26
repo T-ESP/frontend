@@ -1,7 +1,13 @@
 import type { KPI } from "@/ui/features/dashboard/types";
-import { ResponsiveContainer, BarChart, Bar, AreaChart, Area, LabelList, Tooltip } from "recharts";
+import { ResponsiveContainer, BarChart, Bar, AreaChart, Area, Cell, Tooltip } from "recharts";
 import { FiArrowUp, FiArrowDown } from "react-icons/fi";
-import { CHART } from "@/ui/theme/chartTheme";
+
+// Palette alignée sur la page Insights : couleurs sémantiques via tokens CSS
+// (theme-aware clair/sombre) plutôt que des couleurs figées.
+const BRAND = "hsl(var(--brand-h) var(--brand-s) var(--brand-l))";
+const BRAND_LIGHT = "hsl(var(--brand-h) calc(var(--brand-s) + 8%) calc(var(--brand-l) + 18%))";
+const COLOR_UP = "var(--color-success)";
+const COLOR_DOWN = "var(--color-error)";
 
 function SparklineTooltip({ active, payload, title }: any) {
   if (!active || !payload || !payload.length) return null;
@@ -20,8 +26,15 @@ export function KPICard({ kpi }: { kpi: KPI }) {
   const isLine = kpi.chartType !== "bar";
   const chartData = kpi.sparkline && kpi.sparkline.length > 0 ? kpi.sparkline : null;
   const down = kpi.trend === "down";
-  // La sparkline reste en couleur de marque ; seul le badge ↑/↓ % reflète la tendance.
-  const accent = CHART.accent;
+
+  // La courbe prend la couleur de la tendance (vert ↑ / rouge ↓), comme les
+  // catégories colorées d'Insights ; les barres gardent l'accent de marque.
+  const lineColor = down ? COLOR_DOWN : COLOR_UP;
+  const gradientId = `kpi-area-${kpi.title.replace(/\s+/g, "-")}`;
+  const barGradientId = `kpi-bar-${kpi.title.replace(/\s+/g, "-")}`;
+
+  // Met en valeur la barre la plus haute (comme « Most Day Active »).
+  const maxValue = chartData ? Math.max(...chartData.map((d) => d.value)) : 0;
 
   return (
     <div className="flex flex-col justify-between p-4 transition-colors border bg-card border-border rounded-lg min-h-[180px] md:h-[240px] hover:border-primary/30">
@@ -49,43 +62,50 @@ export function KPICard({ kpi }: { kpi: KPI }) {
           <div className="flex items-center justify-center h-full text-xs text-muted-foreground/50">—</div>
         ) : isLine ? (
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={chartData} margin={{ top: 5, right: 6, left: 6, bottom: 0 }}>
+            <AreaChart data={chartData} margin={{ top: 6, right: 6, left: 6, bottom: 0 }}>
               <defs>
-                <linearGradient id={`kpi-${kpi.title}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={accent} stopOpacity={0.4} />
-                  <stop offset="100%" stopColor={accent} stopOpacity={0} />
+                <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={lineColor} stopOpacity={0.45} />
+                  <stop offset="100%" stopColor={lineColor} stopOpacity={0.02} />
                 </linearGradient>
               </defs>
               <Tooltip
-                cursor={{ stroke: CHART.grid, strokeWidth: 1 }}
+                cursor={{ stroke: lineColor, strokeWidth: 1, strokeDasharray: "3 3" }}
                 content={<SparklineTooltip title={kpi.title} />}
               />
               <Area
                 type="monotone"
                 dataKey="value"
-                stroke={accent}
-                strokeWidth={2}
-                fill={`url(#kpi-${kpi.title})`}
-                isAnimationActive={true}
+                stroke={lineColor}
+                strokeWidth={2.5}
+                fill={`url(#${gradientId})`}
+                dot={false}
+                activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--card)", fill: lineColor }}
+                isAnimationActive
               />
             </AreaChart>
           </ResponsiveContainer>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData} margin={{ top: 18, right: 0, left: 0, bottom: 0 }} barGap={2} barCategoryGap={6}>
+            <BarChart data={chartData} margin={{ top: 18, right: 0, left: 0, bottom: 0 }} barCategoryGap={6}>
+              <defs>
+                <linearGradient id={barGradientId} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={BRAND} stopOpacity={1} />
+                  <stop offset="100%" stopColor={BRAND_LIGHT} stopOpacity={0.85} />
+                </linearGradient>
+              </defs>
               <Tooltip
-                cursor={{ fill: "rgba(129, 140, 248, 0.08)" }}
+                cursor={{ fill: "color-mix(in srgb, var(--primary) 8%, transparent)" }}
                 content={<SparklineTooltip title={kpi.title} />}
               />
-              <Bar dataKey="value" fill={accent} radius={[2, 2, 0, 0]}>
-                <LabelList
-                  dataKey="value"
-                  position="top"
-                  fill={CHART.axis}
-                  fontSize={10}
-                  fontWeight={500}
-                  offset={6}
-                />
+              <Bar dataKey="value" radius={[4, 4, 0, 0]} isAnimationActive>
+                {chartData.map((entry, i) => (
+                  <Cell
+                    key={i}
+                    fill={entry.value === maxValue ? `url(#${barGradientId})` : BRAND}
+                    fillOpacity={entry.value === maxValue ? 1 : 0.28}
+                  />
+                ))}
               </Bar>
             </BarChart>
           </ResponsiveContainer>

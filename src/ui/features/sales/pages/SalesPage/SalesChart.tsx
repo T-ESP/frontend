@@ -88,7 +88,7 @@ export default function SalesChart({ data, rangeLabel, loading }: SalesChartProp
                   <stop offset="100%" stopColor="var(--color-primary)" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1b2640" />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
               <XAxis
                 dataKey="date"
                 axisLine={false}
@@ -115,7 +115,7 @@ export default function SalesChart({ data, rangeLabel, loading }: SalesChartProp
                 }
               />
               <ChartTooltip
-                cursor={{ stroke: "#1b2640", strokeWidth: 1, strokeDasharray: "3 3" }}
+                cursor={{ stroke: "var(--border)", strokeWidth: 1, strokeDasharray: "3 3" }}
                 content={
                   <ChartTooltipContent
                     labelFormatter={(label) =>

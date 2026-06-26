@@ -101,7 +101,7 @@ export function EditOrderModal({ order, onClose, onSuccess, onDeleteRequest }: E
                 required
                 value={formData.status}
                 onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                className="w-full px-3 py-2 text-sm bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 transition-shadow"
+                className="w-full px-3 py-2 text-sm bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-shadow"
               >
                 <option value="pending">{t('orders.status.pending')}</option>
                 <option value="confirmed">{t('orders.status.confirmed')}</option>
@@ -134,7 +134,7 @@ export function EditOrderModal({ order, onClose, onSuccess, onDeleteRequest }: E
             <button
               type="submit"
               disabled={loading}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white transition-colors bg-purple-600 border border-purple-600 rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary-foreground transition-colors bg-primary border border-primary rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               {loading ? t('orders.edit_modal.updating') : t('orders.edit_modal.submit')}

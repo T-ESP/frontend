@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { FiChevronUp, FiChevronDown } from "react-icons/fi";
 
 import {
   Table,
@@ -18,12 +19,19 @@ interface TopProductsProps {
   products: Product[];
 }
 
+/** Champ de tri du tableau des produits. */
+type SortKey = "rating" | "stock" | "value";
+type SortDir = "asc" | "desc";
+
+/** Donnée produit enrichie d'une valeur numérique pour le tri sur « Total Value ». */
+type SortableProduct = TopProduct & { value: number };
+
 export function TopProducts({ products }: TopProductsProps) {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const currentLang = i18n.language || "fr-FR";
 
-  const topProducts = useMemo<TopProduct[]>(() => {
+  const topProducts = useMemo<SortableProduct[]>(() => {
     const sorted = [...products].sort(
       (a, b) => b.stock_quantity - a.stock_quantity
     );
@@ -35,6 +43,7 @@ export function TopProducts({ products }: TopProductsProps) {
         name: product.name,
         image: `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name)}&background=random&size=80`,
         sales: product.stock_quantity,
+        value: totalValue,
         revenue: new Intl.NumberFormat("fr-FR", {
           style: "currency",
           currency: "EUR",
@@ -73,6 +82,39 @@ export function TopProducts({ products }: TopProductsProps) {
     };
   }, [topProducts]);
 
+  // Tri du tableau : « Rating » par défaut, sinon stock ou valeur totale.
+  const [sortKey, setSortKey] = useState<SortKey>("rating");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
+
+  const handleSort = (key: SortKey) => {
+    if (key === sortKey) {
+      setSortDir((d) => (d === "desc" ? "asc" : "desc"));
+    } else {
+      setSortKey(key);
+      setSortDir("desc");
+    }
+  };
+
+  const sortedProducts = useMemo<SortableProduct[]>(() => {
+    const accessor = (p: SortableProduct): number => {
+      if (sortKey === "stock") return p.sales;
+      if (sortKey === "value") return p.value;
+      // rating : score réel /100 ; produits sans score relégués en fin de liste.
+      return scores[p.id] ?? -Infinity;
+    };
+    const factor = sortDir === "desc" ? -1 : 1;
+    return [...topProducts].sort((a, b) => (accessor(a) - accessor(b)) * factor);
+  }, [topProducts, scores, sortKey, sortDir]);
+
+  const sortIcon = (key: SortKey) => {
+    if (key !== sortKey) return <FiChevronDown className="w-3.5 h-3.5 opacity-30" />;
+    return sortDir === "desc" ? (
+      <FiChevronDown className="w-3.5 h-3.5" />
+    ) : (
+      <FiChevronUp className="w-3.5 h-3.5" />
+    );
+  };
+
   const handleClick = (_name: string, id: string | number) => {
     navigate(`/inventory/${id}/kpis`);
   };
@@ -92,14 +134,44 @@ export function TopProducts({ products }: TopProductsProps) {
         <TableHeader>
           <TableRow>
             <TableHead className="px-6">{t("dashboard.top_products.product")}</TableHead>
-            <TableHead className="px-6">{t("dashboard.top_products.units_sold")}</TableHead>
-            <TableHead className="px-6">{t("dashboard.top_products.rating")}</TableHead>
-            <TableHead className="px-6">{t("dashboard.top_products.total_value")}</TableHead>
+            <TableHead className="px-6">
+              <button
+                type="button"
+                onClick={() => handleSort("stock")}
+                aria-sort={sortKey === "stock" ? (sortDir === "desc" ? "descending" : "ascending") : "none"}
+                className={`inline-flex items-center gap-1 transition-colors hover:text-foreground ${sortKey === "stock" ? "text-foreground font-semibold" : ""}`}
+              >
+                {t("dashboard.top_products.units_sold")}
+                {sortIcon("stock")}
+              </button>
+            </TableHead>
+            <TableHead className="px-6">
+              <button
+                type="button"
+                onClick={() => handleSort("rating")}
+                aria-sort={sortKey === "rating" ? (sortDir === "desc" ? "descending" : "ascending") : "none"}
+                className={`inline-flex items-center gap-1 transition-colors hover:text-foreground ${sortKey === "rating" ? "text-foreground font-semibold" : ""}`}
+              >
+                {t("dashboard.top_products.rating")}
+                {sortIcon("rating")}
+              </button>
+            </TableHead>
+            <TableHead className="px-6">
+              <button
+                type="button"
+                onClick={() => handleSort("value")}
+                aria-sort={sortKey === "value" ? (sortDir === "desc" ? "descending" : "ascending") : "none"}
+                className={`inline-flex items-center gap-1 transition-colors hover:text-foreground ${sortKey === "value" ? "text-foreground font-semibold" : ""}`}
+              >
+                {t("dashboard.top_products.total_value")}
+                {sortIcon("value")}
+              </button>
+            </TableHead>
             <TableHead className="px-6">{t("dashboard.top_products.status_col")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {topProducts.map((product) => (
+          {sortedProducts.map((product) => (
             <TableRow
               key={product.id}
               onClick={() => handleClick(product.name, product.id)}

@@ -168,7 +168,7 @@ export function ProductKPIsModal({ isOpen, onClose, productId, productName }: Pr
         {/* SIDEBAR NAVIGATION */}
         <div className="flex flex-col w-64 bg-card border-r shrink-0 border-border">
           <div className="p-6 border-b border-border">
-            <div className="flex items-center justify-center w-10 h-10 mb-3 text-white bg-primary shadow-lg rounded-xl shadow-purple-200">
+            <div className="flex items-center justify-center w-10 h-10 mb-3 text-primary-foreground bg-primary shadow-lg rounded-xl shadow-primary/20">
               <Package size={20} />
             </div>
             <h2 className="font-bold truncate text-foreground" title={productName}>{productName}</h2>
