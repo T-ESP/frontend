@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // ─── Palette ──────────────────────────────────────────────────────────────────
 const DARK   = "#0f0e17";
@@ -10,8 +10,6 @@ const LIGHT  = "#c4b5fd";
 
 const SHADOW =
   "0 28px 72px rgba(0,0,0,.55), 0 8px 24px rgba(0,0,0,.35), 0 0 0 0.5px rgba(255,255,255,.08)";
-const SHADOW_DARK =
-  "0 28px 72px rgba(0,0,0,.6), 0 8px 24px rgba(0,0,0,.4), 0 0 0 0.5px rgba(139,92,246,.25)";
 
 // ─── Slot layout (7 cards) ────────────────────────────────────────────────────
 const SLOT_Y: Record<0|1|2|3|4|5, number> = {
@@ -177,36 +175,6 @@ function TotalSalesCard() {
               <span style={{ fontSize: "0.66rem", fontWeight: 600, color: DARK }}>{Math.round(s.pct * 100)}%</span>
             </div>
           ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── Card 4 · Avis client ── 278px ────────────────────────────────────────────
-function ReviewCard() {
-  return (
-    <div style={{ padding: "1.35rem 1.45rem", background: "linear-gradient(145deg, #1e1b4b 0%, #2d1b69 100%)" }}>
-      <div style={{ display: "flex", gap: "2px", marginBottom: "0.7rem" }}>
-        {Array.from({ length: 5 }).map((_, i) => (
-          <svg key={i} width="13" height="13" viewBox="0 0 24 24" fill="#fbbf24">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-          </svg>
-        ))}
-      </div>
-      <p style={{ fontSize: "0.82rem", color: "rgba(255,255,255,.9)", lineHeight: 1.65, margin: "0 0 0.88rem" }}>
-        "StockS is surprisingly handy for keeping all my business in one place."
-      </p>
-      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-        <div style={{
-          width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
-          background: `linear-gradient(135deg, ${PURPLE}, ${ACCENT})`,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: "0.65rem", fontWeight: 700, color: "white",
-        }}>LV</div>
-        <div>
-          <p style={{ fontSize: "0.74rem", fontWeight: 700, color: "white", margin: 0 }}>Louis Vignac</p>
-          <p style={{ fontSize: "0.61rem", color: "rgba(255,255,255,.42)", margin: 0 }}>Manager</p>
         </div>
       </div>
     </div>
