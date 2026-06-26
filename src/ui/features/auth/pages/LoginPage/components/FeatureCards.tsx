@@ -13,16 +13,21 @@ const SHADOW =
 const SHADOW_DARK =
   "0 28px 72px rgba(0,0,0,.6), 0 8px 24px rgba(0,0,0,.4), 0 0 0 0.5px rgba(139,92,246,.25)";
 
-// ─── Slot layout ──────────────────────────────────────────────────────────────
-// 4 slots: center (0) · below-1 (1) · invisible/off-screen (2) · above (3)
-// Cards cycle: center → above → [wrap to off-screen below] → below-1 → center
+// ─── Slot layout (7 cards) ────────────────────────────────────────────────────
+const SLOT_Y: Record<0|1|2|3|4|5, number> = {
+  0: 0,       // Centre
+  1: 255,     // Carte juste en dessous (anciennement 250)
+  2: 510,     // Carte tout en bas (anciennement 450 -> réglait le chevauchement)
+  3: 800,     // Sortie basse (hors-champ)
+  4: -800,    // Entrée haute (hors-champ)
+  5: -255     // Carte juste au-dessus (anciennement -250)
+};
 
-const SLOT_Y:       Record<0|1|2|3, number> = { 0: 0,    1: 230, 2: 700, 3: -230 };
-const SLOT_OPACITY: Record<0|1|2|3, number> = { 0: 1.0,  1: 0.58, 2: 0,  3: 0.52 };
-const SLOT_Z:       Record<0|1|2|3, number> = { 0: 4,    1: 3,    2: 1,  3: 3    };
+const SLOT_OPACITY: Record<0|1|2|3|4|5, number> = { 0: 1.0, 1: 0.58, 2: 0.22, 3: 0, 4: 0, 5: 0.52 };
+const SLOT_Z:       Record<0|1|2|3|4|5, number> = { 0: 4, 1: 3, 2: 2, 3: 1, 4: 1, 5: 3 };
 
-function getSlot(cardIdx: number, s: number): 0|1|2|3 {
-  return ((cardIdx - s + 400) % 4) as 0|1|2|3;
+function getSlot(cardIdx: number, s: number): 0|1|2|3|4|5 {
+  return ((cardIdx - s + 600) % 6) as 0|1|2|3|4|5;
 }
 
 // ─── Robot icon ───────────────────────────────────────────────────────────────
@@ -189,7 +194,7 @@ function ReviewCard() {
           </svg>
         ))}
       </div>
-      <p style={{ fontSize: "0.82rem", color: "rgba(255,255,255,.9)", lineHeight: 1.65, fontStyle: "italic", margin: "0 0 0.88rem" }}>
+      <p style={{ fontSize: "0.82rem", color: "rgba(255,255,255,.9)", lineHeight: 1.65, margin: "0 0 0.88rem" }}>
         "StockS is surprisingly handy for keeping all my business in one place."
       </p>
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
@@ -208,12 +213,146 @@ function ReviewCard() {
   );
 }
 
+// ─── Card 5 · Inventory Alerts ── 345px ──────────────────────────────────────
+function InventoryCard() {
+  const items = [
+    { name: "Vodka Premium 70cl",   stock: 2,  status: "critical" },
+    { name: "Pringles Original",    stock: 1,  status: "critical" },
+    { name: "Red Bull 25cl × 24",   stock: 8,  status: "warning"  },
+    { name: "Coca-Cola 33cl × 24",  stock: 47, status: "ok"       },
+  ] as const;
+
+  const style = {
+    critical: { bg: "#fef2f2", border: "#fecaca", dot: "#ef4444", text: "#dc2626", label: "left" },
+    warning:  { bg: "#fffbeb", border: "#fde68a", dot: "#f59e0b", text: "#d97706", label: "left" },
+    ok:       { bg: "#f0fdf4", border: "#bbf7d0", dot: "#22c55e", text: "#16a34a", label: "left" },
+  };
+
+  return (
+    <div style={{ padding: "1.5rem 1.6rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+        <span style={{ fontSize: "0.65rem", fontWeight: 600, color: LGRAY, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+          Inventory Alerts
+        </span>
+        <span style={{ fontSize: "0.6rem", fontWeight: 700, color: "#dc2626", background: "#fee2e2", padding: "0.14rem 0.4rem", borderRadius: 4 }}>
+          3 Critical
+        </span>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+        {items.map((item, i) => {
+          const s = style[item.status];
+          return (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.7rem", padding: "0.55rem 0.65rem", background: s.bg, borderRadius: 12, border: `1px solid ${s.border}` }}>
+              <div style={{ width: 8, height: 8, borderRadius: "50%", background: s.dot, flexShrink: 0 }} />
+              <span style={{ fontSize: "0.72rem", color: DARK, flex: 1 }}>{item.name}</span>
+              <span style={{ fontSize: "0.68rem", fontWeight: 700, color: s.text }}>{item.stock} {item.status === "ok" ? "left" : "left"}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ─── Card 6 · Weekly Visitors ── 345px ───────────────────────────────────────
+function VisitorsCard() {
+  const days = [
+    { label: "Mon", h: 24 }, { label: "Tue", h: 34 }, { label: "Wed", h: 42 },
+    { label: "Thu", h: 36 }, { label: "Fri", h: 52 }, { label: "Sat", h: 46 },
+    { label: "Sun", h: 28 },
+  ];
+  const maxH = 56;
+
+  return (
+    <div style={{ padding: "1.5rem 1.6rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+        <span style={{ fontSize: "0.65rem", fontWeight: 600, color: LGRAY, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+          Weekly Visitors
+        </span>
+        <span style={{ fontSize: "0.6rem", fontWeight: 700, color: PURPLE, background: "#ede9fe", padding: "0.14rem 0.4rem", borderRadius: 4 }}>
+          ↑ +8.4%
+        </span>
+      </div>
+      <p style={{ fontSize: "2.4rem", fontWeight: 800, color: DARK, lineHeight: 1, letterSpacing: "-0.04em", margin: "0 0 1rem" }}>
+        1,284
+      </p>
+      <svg width="100%" height="56" viewBox="0 0 280 56" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="bar-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={PURPLE} />
+            <stop offset="100%" stopColor={LIGHT} />
+          </linearGradient>
+        </defs>
+        {days.map((d, i) => {
+          const isFri = d.label === "Fri";
+          const y = maxH - d.h;
+          return (
+            <rect key={i} x={i * 40} y={y} width={30} height={d.h} rx={5}
+              fill={isFri ? "url(#bar-grad)" : "#ede9fe"} />
+          );
+        })}
+      </svg>
+      <div style={{ display: "flex", justifyContent: "space-between", marginTop: "0.4rem" }}>
+        {days.map((d, i) => (
+          <span key={i} style={{ fontSize: "0.58rem", fontWeight: d.label === "Fri" ? 700 : 400, color: d.label === "Fri" ? PURPLE : LGRAY }}>
+            {d.label}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Card 7 · Top Products ── 345px ──────────────────────────────────────────
+function TopProductsCard() {
+  const products = [
+    { name: "Heineken 33cl",   revenue: "€ 1,240", pct: 0.88, fade: false },
+    { name: "Marlboro Red",    revenue: "€ 980",   pct: 0.70, fade: false },
+    { name: "Red Bull 25cl",   revenue: "€ 761",   pct: 0.55, fade: false },
+    { name: "Lay's Nature 45g",revenue: "€ 430",   pct: 0.31, fade: true  },
+  ];
+
+  return (
+    <div style={{ padding: "1.5rem 1.6rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+        <span style={{ fontSize: "0.65rem", fontWeight: 600, color: LGRAY, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+          Top Products
+        </span>
+        <span style={{ fontSize: "0.6rem", color: GRAY }}>This week</span>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+        {products.map((p, i) => (
+          <div key={i}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.28rem" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
+                <span style={{ fontSize: "0.72rem", fontWeight: 700, color: p.fade ? LGRAY : DARK, minWidth: 14 }}>{i + 1}</span>
+                <span style={{ fontSize: "0.72rem", color: p.fade ? GRAY : DARK }}>{p.name}</span>
+              </div>
+              <span style={{ fontSize: "0.7rem", fontWeight: p.fade ? 600 : 700, color: p.fade ? GRAY : DARK }}>{p.revenue}</span>
+            </div>
+            <div style={{ height: 5, background: "#f3f4f6", borderRadius: 99, overflow: "hidden" }}>
+              <div style={{
+                height: "100%", width: `${p.pct * 100}%`, borderRadius: 99,
+                background: p.fade
+                  ? "#e5e7eb"
+                  : `linear-gradient(90deg, ${PURPLE} ${(1 - p.pct) * 100}%, ${LIGHT})`,
+              }} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── Card registry ─────────────────────────────────────────────────────────────
 const CARDS = [
-  { width: 345, bg: "white",       shadow: SHADOW,      Comp: GrowthCard     },
-  { width: 285, bg: "white",       shadow: SHADOW,      Comp: RockyCard      },
-  { width: 328, bg: "white",       shadow: SHADOW,      Comp: TotalSalesCard },
-  { width: 278, bg: "transparent", shadow: SHADOW_DARK, Comp: ReviewCard     },
+  { width: 345, height: 240, bg: "white", shadow: SHADOW, Comp: GrowthCard      },
+  { width: 345, height: 240, bg: "white", shadow: SHADOW, Comp: RockyCard       },
+  { width: 345, height: 240, bg: "white", shadow: SHADOW, Comp: TotalSalesCard  },
+  { width: 345, height: 240, bg: "white", shadow: SHADOW, Comp: InventoryCard   },
+  { width: 345, height: 240, bg: "white", shadow: SHADOW, Comp: VisitorsCard    },
+  { width: 345, height: 240, bg: "white", shadow: SHADOW, Comp: TopProductsCard },
 ] as const;
 
 // ─── Slot-machine carousel ────────────────────────────────────────────────────
@@ -242,29 +381,18 @@ export function FeatureCards() {
   return (
     <div style={{ flex: 1, position: "relative", minHeight: 0, overflow: "hidden" }}>
 
-      {/* Top fade — blends above-card into the dark panel */}
-      <div style={{
-        position: "absolute", inset: "0 0 auto 0", height: 72, zIndex: 20,
-        background: "linear-gradient(to bottom, #0a0613 30%, transparent)",
-        pointerEvents: "none",
-      }} />
-      {/* Bottom fade — blends below-card into the dark panel */}
-      <div style={{
-        position: "absolute", inset: "auto 0 0 0", height: 88, zIndex: 20,
-        background: "linear-gradient(to top, #160c28 30%, transparent)",
-        pointerEvents: "none",
-      }} />
 
-      {CARDS.map(({ width, bg, shadow, Comp }, i) => {
+
+      {CARDS.map(({ width, height, bg, shadow, Comp }, i) => {
         const slot    = getSlot(i, step);
         const oldSlot = getSlot(i, prevStepRef.current);
 
         // Wrap: card leaves "above" and must teleport to off-screen below
-        const isWrap = oldSlot === 3 && slot === 2;
+        const isWrap = oldSlot === 5 && slot === 4;
 
-        const y    = isWrap ? 700        : SLOT_Y[slot];
-        const opac = isWrap ? 0          : SLOT_OPACITY[slot];
-        const z    = isWrap ? 1          : SLOT_Z[slot];
+        const y    = isWrap ? 700 : SLOT_Y[slot];
+        const opac = isWrap ? 0   : SLOT_OPACITY[slot];
+        const z    = isWrap ? 1   : SLOT_Z[slot];
 
         return (
           <div
@@ -275,6 +403,7 @@ export function FeatureCards() {
               left: "50%",
               marginLeft: -(width / 2),
               width,
+              height,  
               transform: `translateY(calc(-50% + ${y}px))`,
               opacity: opac,
               zIndex: z,
@@ -282,7 +411,6 @@ export function FeatureCards() {
               borderRadius: 28,
               boxShadow: shadow,
               overflow: "hidden",
-              // Wrap cards skip transition — all others animate smoothly
               transition: isWrap
                 ? "none"
                 : "transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease",
