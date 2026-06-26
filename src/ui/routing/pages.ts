@@ -22,6 +22,7 @@ export const PAGES = {
   PricingNewsAlerts: lazy(() => import("@/ui/features/pricing/pages/PricingNewsAlertsPage")),
   Suppliers: lazy(() => import("@/ui/features/suppliers/pages/SuppliersPage")),
   Orders: lazy(() => import("@/ui/features/orders/pages/OrdersPage")),
+  OrderKPIs: lazy(() => import("@/ui/features/orders/pages/OrderKPIsPage")),
   Team: lazy(() => import("@/ui/features/team/pages/TeamPage")),
   Settings: lazy(() => import("@/ui/features/settings/pages/SettingsPage")),
   Profile: lazy(() => import("@/ui/features/profile/pages/ProfilePage")),
