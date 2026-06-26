@@ -201,7 +201,7 @@ export default function OrdersPage() {
       </button>
       <button
         onClick={() => setShowAddModal(true)}
-        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-gray-900 border border-gray-900 rounded-lg hover:bg-gray-800 transition-colors"
+        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-primary-foreground bg-primary border border-primary rounded-lg hover:bg-primary/90 transition-colors"
       >
         <Plus className="w-4 h-4" />
         {t('orders.new_order')}
@@ -214,7 +214,7 @@ export default function OrdersPage() {
       <PageLayout title={t('orders.title')} subtitle={t('orders.subtitle', { count: 0 })}>
         <div className="flex items-center justify-center py-24">
           <div className="text-center text-muted-foreground">
-            <Loader2 className="w-6 h-6 mx-auto mb-3 text-purple-600 animate-spin" />
+            <Loader2 className="w-6 h-6 mx-auto mb-3 text-primary animate-spin" />
             <div className="text-sm font-medium text-muted-foreground">{t('orders.loading')}</div>
             <p className="mt-1 text-xs text-muted-foreground">{t('orders.fetching')}</p>
           </div>
@@ -233,7 +233,7 @@ export default function OrdersPage() {
             <p className="text-sm text-muted-foreground">{error}</p>
             <button
               onClick={loadOrders}
-              className="flex items-center gap-2 px-4 py-2 mx-auto mt-4 text-sm font-medium text-white transition-colors bg-gray-900 rounded-lg hover:bg-gray-800"
+              className="flex items-center gap-2 px-4 py-2 mx-auto mt-4 text-sm font-medium text-primary-foreground transition-colors bg-primary rounded-lg hover:bg-primary/90"
             >
               <RefreshCw size={14} />
               {t('orders.retry')}
@@ -312,7 +312,7 @@ export default function OrdersPage() {
                 <select
                   value={selectedStatus}
                   onChange={(e) => setSelectedStatus(e.target.value)}
-                  className="w-full px-3 py-2 text-sm font-medium bg-card border border-border rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 transition-shadow"
+                  className="w-full px-3 py-2 text-sm font-medium bg-card border border-border rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-shadow"
                 >
                   <option value="All Status">{t('orders.filters.all_status')}</option>
                   <option value="Pending">{t('orders.filters.pending')}</option>
@@ -330,7 +330,7 @@ export default function OrdersPage() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full px-3 py-2 text-sm font-medium bg-card border border-border rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 transition-shadow"
+                  className="w-full px-3 py-2 text-sm font-medium bg-card border border-border rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-shadow"
                 >
                   <option value="date">{t('orders.filters.sort_date')}</option>
                   <option value="amount">{t('orders.filters.sort_amount')}</option>
@@ -358,7 +358,7 @@ export default function OrdersPage() {
                     onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
                     className={`flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium border rounded-lg transition-colors ${
                       showAdvancedFilters
-                        ? 'text-purple-700 bg-purple-50 border-purple-200'
+                        ? 'text-primary bg-accent border-primary/30'
                         : 'text-muted-foreground bg-card border-border hover:bg-muted'
                     }`}
                   >
@@ -508,7 +508,7 @@ export default function OrdersPage() {
                     setItemsPerPage(Number(e.target.value));
                     setCurrentPage(1);
                   }}
-                  className="px-2 py-1 text-xs bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500"
+                  className="px-2 py-1 text-xs bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
                 >
                   <option value={10}>10 {t('orders.pagination.per_page')}</option>
                   <option value={25}>25 {t('orders.pagination.per_page')}</option>
@@ -539,7 +539,7 @@ export default function OrdersPage() {
                       onClick={() => setCurrentPage(pageNum)}
                       className={`min-w-[32px] h-8 px-2 text-xs font-medium rounded-md transition-colors ${
                         currentPage === pageNum
-                          ? 'text-white bg-gray-900 border border-gray-900'
+                          ? 'text-primary-foreground bg-primary border border-primary'
                           : 'text-muted-foreground bg-card border border-border hover:bg-muted'
                       }`}
                     >

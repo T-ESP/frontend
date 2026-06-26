@@ -1,6 +1,13 @@
 import { useState, type ReactNode } from 'react';
-import { ResponsiveContainer, BarChart, Bar, LineChart, Line, LabelList, Tooltip } from 'recharts';
+import { ResponsiveContainer, BarChart, Bar, AreaChart, Area, Cell, LabelList, Tooltip } from 'recharts';
 import { Info } from 'lucide-react';
+
+// Même palette colorée que les KPI du Dashboard (KPICard) : la courbe prend
+// la couleur de la tendance (vert ↑ / rouge ↓), les barres un dégradé de marque.
+const BRAND = 'hsl(var(--brand-h) var(--brand-s) var(--brand-l))';
+const BRAND_LIGHT = 'hsl(var(--brand-h) calc(var(--brand-s) + 8%) calc(var(--brand-l) + 18%))';
+const COLOR_UP = 'var(--color-success)';
+const COLOR_DOWN = 'var(--color-error)';
 
 function SparklineTooltip({ active, payload, title }: any) {
   if (!active || !payload || !payload.length) return null;
@@ -81,6 +88,12 @@ export function KpiStatCard({
   const trendClass =
     trend === 'down' ? 'text-rose-500' : trend === 'up' ? 'text-emerald-500' : 'text-muted-foreground';
 
+  // Couleur de la courbe selon la tendance (marque si neutre), comme KPICard.
+  const lineColor = trend === 'down' ? COLOR_DOWN : trend === 'up' ? COLOR_UP : BRAND;
+  const gradientId = `kpi-area-${title.replace(/\s+/g, '-')}`;
+  const barGradientId = `kpi-bar-${title.replace(/\s+/g, '-')}`;
+  const maxValue = Math.max(...data.map((d) => d.value));
+
   return (
     <div className="p-6 transition-all duration-300 bg-card border border-border rounded-lg flex flex-col justify-between h-[280px]">
       <div>
@@ -107,21 +120,28 @@ export function KpiStatCard({
       <div className="mt-8 h-24 w-full">
         {chartType === 'line' ? (
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
+            <AreaChart data={data} margin={{ top: 6, right: 6, left: 6, bottom: 0 }}>
+              <defs>
+                <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={lineColor} stopOpacity={0.45} />
+                  <stop offset="100%" stopColor={lineColor} stopOpacity={0.02} />
+                </linearGradient>
+              </defs>
               <Tooltip
-                cursor={{ stroke: '#1b2640', strokeWidth: 1 }}
+                cursor={{ stroke: lineColor, strokeWidth: 1, strokeDasharray: '3 3' }}
                 content={<SparklineTooltip title={title} />}
               />
-              <Line
-                type="linear"
+              <Area
+                type="monotone"
                 dataKey="value"
-                stroke="#818cf8"
-                strokeWidth={2}
-                dot={{ stroke: '#818cf8', strokeWidth: 2, fill: '#0d1424', r: 4.5 }}
-                activeDot={{ stroke: '#818cf8', strokeWidth: 2, fill: '#0d1424', r: 6 }}
+                stroke={lineColor}
+                strokeWidth={2.5}
+                fill={`url(#${gradientId})`}
+                dot={false}
+                activeDot={{ r: 4, strokeWidth: 2, stroke: 'var(--card)', fill: lineColor }}
                 isAnimationActive
               />
-            </LineChart>
+            </AreaChart>
           </ResponsiveContainer>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
@@ -131,16 +151,29 @@ export function KpiStatCard({
               barGap={2}
               barCategoryGap={6}
             >
+              <defs>
+                <linearGradient id={barGradientId} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={BRAND} stopOpacity={1} />
+                  <stop offset="100%" stopColor={BRAND_LIGHT} stopOpacity={0.85} />
+                </linearGradient>
+              </defs>
               <Tooltip
-                cursor={{ fill: 'rgba(129, 140, 248, 0.08)' }}
+                cursor={{ fill: 'color-mix(in srgb, var(--primary) 8%, transparent)' }}
                 content={<SparklineTooltip title={title} />}
               />
-              <Bar dataKey="value" fill="#818cf8" radius={[3, 3, 0, 0]}>
+              <Bar dataKey="value" radius={[3, 3, 0, 0]} isAnimationActive>
+                {data.map((entry, i) => (
+                  <Cell
+                    key={i}
+                    fill={entry.value === maxValue ? `url(#${barGradientId})` : BRAND}
+                    fillOpacity={entry.value === maxValue ? 1 : 0.28}
+                  />
+                ))}
                 {showChartLabels && (
                   <LabelList
                     dataKey="value"
                     position="top"
-                    fill="#94a3b8"
+                    fill="var(--muted-foreground)"
                     fontSize={11}
                     fontWeight={500}
                     offset={8}

@@ -25,11 +25,13 @@ interface Props extends RevenueChartProps {
 const chartConfig = {
   revenue: {
     label: "Revenus",
-    color: "#818cf8", // indigo — série principale
+    // Série principale = couleur de marque (identique à Insights & Sales).
+    color: "var(--color-primary)",
   },
   profit: {
     label: "Profit",
-    color: "#64748b", // slate — série secondaire
+    // Série secondaire = nuance claire de la marque (cf. Insights ABC).
+    color: "hsl(var(--brand-h) calc(var(--brand-s) + 8%) calc(var(--brand-l) + 18%))",
   },
 } satisfies ChartConfig;
 

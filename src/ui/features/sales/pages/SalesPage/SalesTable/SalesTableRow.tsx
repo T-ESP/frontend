@@ -52,18 +52,18 @@ export function SalesTableRow({ order, index }: SalesTableRowProps) {
 
   return (
     <tr
-      className="transition-colors duration-150 hover:bg-purple-50/30 group"
+      className="transition-colors duration-150 hover:bg-accent/40 group"
       style={{ animationDelay: `${index * 50}ms` }}
     >
       <td className="px-6 py-4">
         <div className="flex gap-3 items-center">
           <div className="relative">
-            <div className="w-10 h-10 rounded-full ring-2 ring-white shadow-sm bg-linear-to-br from-purple-400 to-blue-500 flex items-center justify-center text-white font-semibold text-sm">
+            <div className="w-10 h-10 rounded-full ring-2 ring-white shadow-sm bg-linear-to-br from-primary to-blue-500 flex items-center justify-center text-white font-semibold text-sm">
               #{order.id}
             </div>
             <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
           </div>
-          <span className="font-medium text-foreground transition-colors group-hover:text-purple-600">
+          <span className="font-medium text-foreground transition-colors group-hover:text-primary">
             Order #{order.id}
           </span>
         </div>

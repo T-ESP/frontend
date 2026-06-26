@@ -71,7 +71,7 @@ export function InventoryCard({ item, index, onEdit, onDelete, onStockUpdate, on
 
         {/* Middle: Product Info */}
         <div className="flex-1 min-w-0">
-          <h3 className="text-base font-bold leading-tight text-foreground truncate transition-colors group-hover:text-purple-600">
+          <h3 className="text-base font-bold leading-tight text-foreground truncate transition-colors group-hover:text-primary">
             {item.name}
           </h3>
           <div className="flex items-center gap-3 mt-1">
@@ -126,21 +126,21 @@ export function InventoryCard({ item, index, onEdit, onDelete, onStockUpdate, on
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => onViewKPIs(item.id, item.name)}
-              className="p-2 text-purple-600 transition-colors rounded-lg bg-purple-50 hover:bg-purple-100 hover:text-purple-700"
+              className="p-2 text-primary transition-colors rounded-lg bg-accent hover:bg-primary/15"
               title={t('inventory.card.view_kpis')}
             >
               <FiBarChart2 size={16} />
             </button>
             <button
               onClick={() => onEdit(item)}
-              className="p-2 text-purple-600 transition-colors rounded-lg bg-purple-50 hover:bg-purple-100 hover:text-purple-700"
+              className="p-2 text-primary transition-colors rounded-lg bg-accent hover:bg-primary/15"
               title={t('inventory.card.edit_product')}
             >
               <FiEdit size={16} />
             </button>
             <button
               onClick={() => onDelete(item.id, item.name)}
-              className="p-2 text-purple-600 transition-colors rounded-lg bg-purple-50 hover:bg-purple-100 hover:text-purple-700"
+              className="p-2 text-primary transition-colors rounded-lg bg-accent hover:bg-primary/15"
               title={t('inventory.card.delete_product')}
             >
               <FiTrash size={16} />

@@ -33,10 +33,10 @@ const colorClasses = {
     textBold: "text-blue-700 dark:text-blue-300"
   },
   purple: {
-    gradient: "from-purple-50 to-purple-100",
-    border: "border-purple-200",
-    text: "text-purple-600",
-    textBold: "text-purple-700"
+    gradient: "from-primary/10 to-primary/20",
+    border: "border-primary/30",
+    text: "text-primary",
+    textBold: "text-primary"
   }
 };
 
