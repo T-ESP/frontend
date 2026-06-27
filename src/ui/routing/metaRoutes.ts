@@ -103,6 +103,15 @@ export const ROUTES: Record<string, RouteMeta> = {
     roles: ['admin', 'manager'],
     title: 'StockS - Orders',
   },
+  ORDER_KPIS: {
+    path: '/orders/kpis',
+    label: 'Order KPIs',
+    page: 'OrderKPIs',
+    layout: 'app',
+    restricted: true,
+    roles: ['admin', 'manager'],
+    title: 'StockS - Statistiques commandes',
+  },
   TEAM: {
     path: '/team',
     label: 'Team',
