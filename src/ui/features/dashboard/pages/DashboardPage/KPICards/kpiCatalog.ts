@@ -95,6 +95,24 @@ function topN<T>(items: T[], metric: (item: T) => number, n = 8): { value: numbe
     .map((value) => ({ value }));
 }
 
+/**
+ * Distribution des produits par tranche de stock (0, 1-5, 6-10, 11-20, 21-50, 50+).
+ * La première barre = produits en rupture : une vraie répartition, pas une courbe factice.
+ */
+function stockBands(products: Product[]): { value: number }[] {
+  const bands = [0, 0, 0, 0, 0, 0]; // 0 · 1-5 · 6-10 · 11-20 · 21-50 · 50+
+  for (const p of products) {
+    const q = p.stock_quantity || 0;
+    if (q <= 0) bands[0] += 1;
+    else if (q <= 5) bands[1] += 1;
+    else if (q <= 10) bands[2] += 1;
+    else if (q <= 20) bands[3] += 1;
+    else if (q <= 50) bands[4] += 1;
+    else bands[5] += 1;
+  }
+  return bands.map((value) => ({ value }));
+}
+
 const isDelivered = (o: Order) => o.status?.toLowerCase() === "delivered";
 const productValue = (p: Product) => (p.buying_price || 0) * (p.stock_quantity || 0);
 
@@ -255,11 +273,9 @@ export const KPI_CATALOG: KpiDefinition[] = [
       trend: "up",
       icon: FiAlertTriangle,
       color: "rose",
-      description: ctx.t("dashboard.kpi.products_out", "produits indisponibles"),
-      sparkline: topN(
-        [...ctx.products].sort((a, b) => a.stock_quantity - b.stock_quantity),
-        (p) => p.stock_quantity,
-      ),
+      description: ctx.t("dashboard.kpi.stock_coverage", "répartition par niveau de stock"),
+      // Histogramme de couverture : 1re barre = ruptures, puis produits proches de la rupture.
+      sparkline: stockBands(ctx.products),
       chartType: "bar",
     }),
   },

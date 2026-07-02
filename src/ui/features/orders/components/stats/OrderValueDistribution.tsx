@@ -1,4 +1,6 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { Order } from '@/domain/models/Order';
 import { StatsCard, StatsEmpty } from './StatsCard';
@@ -19,18 +21,21 @@ const BUCKETS: { label: string; min: number; max: number }[] = [
 
 const BRAND = 'var(--color-primary)';
 
-function Tip({ active, payload, label }: ChartTooltipProps) {
+function Tip({ active, payload, label, t }: ChartTooltipProps & { t: TFunction }) {
   if (!active || !payload?.length) return null;
   return (
     <div className="px-3 py-2 bg-card border border-border rounded-lg shadow-lg">
       <p className="text-[11px] font-medium text-muted-foreground">{label}</p>
-      <p className="text-sm font-bold text-foreground tabular-nums">{payload[0].value} commande(s)</p>
+      <p className="text-sm font-bold text-foreground tabular-nums">
+        {t('orders.stats.distribution.orders_count', { count: payload[0].value })}
+      </p>
     </div>
   );
 }
 
 /** Histogramme : combien de commandes par tranche de montant. */
 export function OrderValueDistribution({ orders }: OrderValueDistributionProps) {
+  const { t } = useTranslation();
   const data = useMemo(() => {
     const counts = BUCKETS.map(() => 0);
     orders.forEach((o) => {
@@ -52,11 +57,11 @@ export function OrderValueDistribution({ orders }: OrderValueDistributionProps) 
 
   return (
     <StatsCard
-      title="Distribution des paniers"
-      subtitle={orders.length > 0 ? `Médiane : ${formatCurrency(median)}` : 'Répartition par tranche de montant'}
+      title={t('orders.stats.distribution.title')}
+      subtitle={orders.length > 0 ? t('orders.stats.distribution.median', { value: formatCurrency(median) }) : t('orders.stats.distribution.subtitle')}
     >
       {orders.length === 0 ? (
-        <StatsEmpty message="Aucune commande sur la période" />
+        <StatsEmpty message={t('orders.stats.distribution.empty')} />
       ) : (
         <ResponsiveContainer width="100%" height={260}>
           <BarChart data={data} margin={{ top: 10, right: 8, left: 0, bottom: 8 }}>
@@ -75,7 +80,7 @@ export function OrderValueDistribution({ orders }: OrderValueDistributionProps) 
               axisLine={false}
               tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }}
             />
-            <Tooltip content={<Tip />} cursor={{ fill: 'color-mix(in srgb, var(--primary) 8%, transparent)' }} />
+            <Tooltip content={<Tip t={t} />} cursor={{ fill: 'color-mix(in srgb, var(--primary) 8%, transparent)' }} />
             <Bar dataKey="count" radius={[4, 4, 0, 0]} maxBarSize={56} animationDuration={600}>
               {data.map((d, i) => (
                 <Cell key={i} fill={BRAND} fillOpacity={d.count === maxCount ? 1 : 0.45} />

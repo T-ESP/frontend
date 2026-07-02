@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Order } from '@/domain/models/Order';
 import { StatsCard, StatsEmpty } from './StatsCard';
 import {
   ORDER_STATUSES,
   STATUS_COLORS,
-  STATUS_LABELS,
   formatCurrency,
   normalizeStatus,
   sumAmount,
@@ -16,6 +16,7 @@ interface StatusBreakdownProps {
 
 /** Cycle de vie des commandes : volume et CA par statut, du début à la livraison. */
 export function StatusBreakdown({ orders }: StatusBreakdownProps) {
+  const { t } = useTranslation();
   const rows = useMemo(() => {
     const total = orders.length || 1;
     return ORDER_STATUSES.map((status) => {
@@ -32,9 +33,9 @@ export function StatusBreakdown({ orders }: StatusBreakdownProps) {
   const maxCount = Math.max(1, ...rows.map((r) => r.count));
 
   return (
-    <StatsCard title="Répartition par statut" subtitle="Cycle de vie des commandes">
+    <StatsCard title={t('orders.stats.status_breakdown.title')} subtitle={t('orders.stats.status_breakdown.subtitle')}>
       {orders.length === 0 ? (
-        <StatsEmpty message="Aucune commande sur la période" />
+        <StatsEmpty message={t('orders.stats.status_breakdown.empty')} />
       ) : (
         <div className="space-y-4">
           {rows.map((r) => (
@@ -45,7 +46,7 @@ export function StatusBreakdown({ orders }: StatusBreakdownProps) {
                     className="w-2.5 h-2.5 rounded-full"
                     style={{ backgroundColor: STATUS_COLORS[r.status] }}
                   />
-                  <span className="font-medium text-foreground">{STATUS_LABELS[r.status]}</span>
+                  <span className="font-medium text-foreground">{t(`orders.status.${r.status}`)}</span>
                 </div>
                 <div className="flex items-center gap-3 tabular-nums">
                   <span className="text-muted-foreground">{formatCurrency(r.revenue)}</span>

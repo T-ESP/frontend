@@ -22,6 +22,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { KpiStatCard } from "@/ui/components/common/KpiStatCard/KpiStatCard";
+import { PeriodFilterBar } from "@/ui/features/orders/components/stats/PeriodFilterBar";
+import {
+  type DateRange,
+  type PeriodPresetId,
+  adaptiveGrain,
+  presetRange,
+  toApiDate,
+} from "@/ui/features/orders/components/stats/statsHelpers";
 
 interface TopProduct {
   id: number;
@@ -66,20 +74,23 @@ export default function SalesPage() {
   const [loading, setLoading] = useState(true);
   const [topFilter, setTopFilter] = useState("");
 
+  const [preset, setPreset] = useState<PeriodPresetId>("30d");
+  const [range, setRange] = useState<DateRange>(() => presetRange("30d"));
+
   useEffect(() => {
     loadSalesData();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [range]);
 
   const loadSalesData = async () => {
     try {
       setLoading(true);
 
-      const endDate = new Date();
-      const startDate = new Date();
-      startDate.setDate(startDate.getDate() - 30);
-
-      const formatDate = (date: Date) => date.toISOString().split("T")[0];
-      const period = { start_date: formatDate(startDate), end_date: formatDate(endDate), grain: "day" };
+      const period = {
+        start_date: toApiDate(range.start),
+        end_date: toApiDate(range.end),
+        grain: adaptiveGrain(range),
+      };
 
       const [revenueData, basketData, ordersData, dailyRevenueData, productsData] = await Promise.allSettled([
         salesService.getTotalRevenue(period),
@@ -96,14 +107,21 @@ export default function SalesPage() {
         setAverageBasketEvolution(basketData.value.evolution_percentage || 0);
       }
 
-      if (
-        ordersData.status === "fulfilled" &&
-        ordersData.value &&
-        productsData.status === "fulfilled" &&
-        productsData.value
-      ) {
-        setOrders(ordersData.value);
-        await processInsights(ordersData.value, productsData.value);
+      // Ne conserver que les commandes de la période sélectionnée pour que les
+      // KPI (nb commandes) et les analyses (top produits/catégories) suivent le filtre.
+      const startMs = range.start.getTime();
+      const endMs = range.end.getTime();
+      const periodOrders =
+        ordersData.status === "fulfilled" && ordersData.value
+          ? ordersData.value.filter((o) => {
+              const ts = new Date(o.order_date).getTime();
+              return ts >= startMs && ts <= endMs;
+            })
+          : [];
+
+      if (productsData.status === "fulfilled" && productsData.value) {
+        setOrders(periodOrders);
+        await processInsights(periodOrders, productsData.value);
       }
 
       if (dailyRevenueData.status === "fulfilled" && dailyRevenueData.value) {
@@ -124,14 +142,12 @@ export default function SalesPage() {
         }
 
         const ordersByDate = new Map<string, number>();
-        if (ordersData.status === "fulfilled" && ordersData.value) {
-          ordersData.value.forEach((order) => {
-            if (order.status !== "Cancelled") {
-              const dateStr = new Date(order.order_date).toISOString().split("T")[0];
-              ordersByDate.set(dateStr, (ordersByDate.get(dateStr) || 0) + 1);
-            }
-          });
-        }
+        periodOrders.forEach((order) => {
+          if (order.status !== "Cancelled") {
+            const dateStr = new Date(order.order_date).toISOString().split("T")[0];
+            ordersByDate.set(dateStr, (ordersByDate.get(dateStr) || 0) + 1);
+          }
+        });
 
         const processedData = dailyData.map((item) => ({
           date: item.date,
@@ -233,6 +249,12 @@ export default function SalesPage() {
     return `${sign}${value.toFixed(1)}%`;
   };
 
+  // Libellé de la période sélectionnée, affiché sous les KPI.
+  const periodLabel =
+    preset === "custom"
+      ? `${range.start.toLocaleDateString(currentLang, { day: "2-digit", month: "short" })} – ${range.end.toLocaleDateString(currentLang, { day: "2-digit", month: "short" })}`
+      : t(`orders.stats.presets.${preset}`);
+
   // Series for KPI mini charts (last 7 buckets from chartData, trimmed)
   const trimmed = chartData.slice(-7);
   const revenueSeries = trimmed.map((d) => ({ value: d.revenue }));
@@ -248,6 +270,17 @@ export default function SalesPage() {
 
   return (
     <PageLayout title={t("sales.title")} subtitle={t("sales.subtitle")}>
+      <div className="mb-6">
+        <PeriodFilterBar
+          preset={preset}
+          range={range}
+          onChange={(p, r) => {
+            setPreset(p);
+            setRange(r);
+          }}
+        />
+      </div>
+
       {loading ? (
         <div className="space-y-8">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -266,7 +299,7 @@ export default function SalesPage() {
               value={formatCurrency(totalRevenue)}
               change={formatPercentage(revenueGrowth)}
               trend={revenueGrowth >= 0 ? "up" : "down"}
-              description={t("sales.stats.last_30_days")}
+              description={periodLabel}
               chartData={revenueSeries}
               chartType="line"
             />
@@ -275,7 +308,7 @@ export default function SalesPage() {
               value={orders.filter((o) => o.status !== "Cancelled").length.toString()}
               change="+0.0%"
               trend="up"
-              description={t("sales.stats.last_30_days")}
+              description={periodLabel}
               chartData={ordersSeries}
               chartType="bar"
             />
@@ -284,7 +317,7 @@ export default function SalesPage() {
               value={formatCurrency(averageBasket)}
               change={formatPercentage(averageBasketEvolution)}
               trend={averageBasketEvolution >= 0 ? "up" : "down"}
-              description={t("sales.stats.last_30_days")}
+              description={periodLabel}
               chartData={avgBasketSeries}
               chartType="line"
             />
@@ -309,7 +342,7 @@ export default function SalesPage() {
               <div className="p-6 border-b border-border">
                 <h3 className="text-lg font-semibold text-foreground">{t("sales.by_category")}</h3>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {t("sales.charts.daily_revenue_30d", "30 derniers jours")}
+                  {periodLabel}
                 </p>
               </div>
 

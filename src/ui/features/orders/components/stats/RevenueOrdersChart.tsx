@@ -1,4 +1,6 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import {
   Bar,
   CartesianGrid,
@@ -28,16 +30,10 @@ interface RevenueOrdersChartProps {
   range: DateRange;
 }
 
-const GRAIN_LABEL: Record<string, string> = {
-  day: 'jour',
-  week: 'semaine',
-  month: 'mois',
-};
-
 const BRAND = 'var(--color-primary)';
 const BRAND_LIGHT = 'hsl(var(--brand-h) calc(var(--brand-s) + 8%) calc(var(--brand-l) + 18%))';
 
-function ChartTip({ active, payload, label }: ChartTooltipProps) {
+function ChartTip({ active, payload, label, t }: ChartTooltipProps & { t: TFunction }) {
   if (!active || !payload?.length) return null;
   const revenue = payload.find((p) => p.dataKey === 'revenue')?.value ?? 0;
   const orders = payload.find((p) => p.dataKey === 'orders')?.value ?? 0;
@@ -45,13 +41,16 @@ function ChartTip({ active, payload, label }: ChartTooltipProps) {
     <div className="px-3 py-2 bg-card border border-border rounded-lg shadow-lg">
       <p className="text-[11px] font-medium text-muted-foreground">{label}</p>
       <p className="text-sm font-bold text-foreground tabular-nums">{formatCurrency(revenue)}</p>
-      <p className="text-xs text-muted-foreground tabular-nums">{orders} commande(s)</p>
+      <p className="text-xs text-muted-foreground tabular-nums">
+        {t('orders.stats.evolution.orders_count', { count: orders })}
+      </p>
     </div>
   );
 }
 
 /** Évolution temporelle du chiffre d'affaires (ligne) et du volume de commandes (barres). */
 export function RevenueOrdersChart({ orders, range }: RevenueOrdersChartProps) {
+  const { t } = useTranslation();
   const { data, grain } = useMemo(() => {
     const g = adaptiveGrain(range);
     const buckets = buildBuckets(range, g);
@@ -68,12 +67,12 @@ export function RevenueOrdersChart({ orders, range }: RevenueOrdersChartProps) {
 
   return (
     <StatsCard
-      title="Évolution des commandes"
-      subtitle={`Chiffre d'affaires et volume par ${GRAIN_LABEL[grain]}`}
+      title={t('orders.stats.evolution.title')}
+      subtitle={t('orders.stats.evolution.subtitle', { grain: t(`orders.stats.grain.${grain}`) })}
       className="lg:col-span-2"
     >
       {orders.length === 0 ? (
-        <StatsEmpty message="Aucune commande sur la période sélectionnée" />
+        <StatsEmpty message={t('orders.stats.evolution.empty')} />
       ) : (
         <ResponsiveContainer width="100%" height={340}>
           <ComposedChart data={data} margin={{ top: 10, right: 12, left: 8, bottom: 8 }}>
@@ -109,10 +108,10 @@ export function RevenueOrdersChart({ orders, range }: RevenueOrdersChartProps) {
               axisLine={false}
               tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }}
             />
-            <Tooltip content={<ChartTip />} cursor={{ fill: 'color-mix(in srgb, var(--primary) 8%, transparent)' }} />
+            <Tooltip content={<ChartTip t={t} />} cursor={{ fill: 'color-mix(in srgb, var(--primary) 8%, transparent)' }} />
             <Legend
               wrapperStyle={{ fontSize: 12 }}
-              formatter={(v) => (v === 'revenue' ? "Chiffre d'affaires" : 'Commandes')}
+              formatter={(v) => (v === 'revenue' ? t('orders.stats.evolution.revenue') : t('orders.stats.evolution.orders'))}
             />
             <Bar
               yAxisId="right"

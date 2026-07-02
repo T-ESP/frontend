@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Loader2 } from 'lucide-react';
 import { globalKpisService, type TopFlopProduct } from '@/infrastructure/api/services/globalKpisService';
 import { StatsCard, StatsEmpty } from './StatsCard';
@@ -12,6 +13,7 @@ type Metric = 'volume' | 'revenue';
 
 /** Classement des produits les plus commandés sur la période (endpoint /kpis/top-flop). */
 export function TopProductsOrdered({ range }: TopProductsOrderedProps) {
+  const { t } = useTranslation();
   const [metric, setMetric] = useState<Metric>('volume');
   const [byVolume, setByVolume] = useState<TopFlopProduct[]>([]);
   const [byRevenue, setByRevenue] = useState<TopFlopProduct[]>([]);
@@ -41,7 +43,7 @@ export function TopProductsOrdered({ range }: TopProductsOrderedProps) {
 
   const fmt = (v: number) =>
     metric === 'volume'
-      ? `${formatNumber(v)} u.`
+      ? t('orders.stats.top_products.units', { value: formatNumber(v) })
       : new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(v);
 
   const toggle = (
@@ -54,22 +56,22 @@ export function TopProductsOrdered({ range }: TopProductsOrderedProps) {
             metric === mtr ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'
           }`}
         >
-          {mtr === 'volume' ? 'Volume' : 'CA'}
+          {mtr === 'volume' ? t('orders.stats.top_products.volume') : t('orders.stats.top_products.revenue')}
         </button>
       ))}
     </div>
   );
 
   return (
-    <StatsCard title="Top produits commandés" subtitle="Classement sur la période" action={toggle}>
+    <StatsCard title={t('orders.stats.top_products.title')} subtitle={t('orders.stats.top_products.subtitle')} action={toggle}>
       {loading ? (
         <div className="flex items-center justify-center h-[260px] text-muted-foreground">
           <Loader2 className="w-5 h-5 animate-spin" />
         </div>
       ) : failed ? (
-        <StatsEmpty message="Donnée indisponible" />
+        <StatsEmpty message={t('orders.stats.top_products.unavailable')} />
       ) : list.length === 0 ? (
-        <StatsEmpty message="Aucun produit sur la période" />
+        <StatsEmpty message={t('orders.stats.top_products.empty')} />
       ) : (
         <div className="space-y-3">
           {list.map((p, i) => (

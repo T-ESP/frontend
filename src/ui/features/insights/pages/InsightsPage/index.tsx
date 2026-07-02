@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import {
   PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid,
@@ -23,18 +23,25 @@ const BRAND_PRIMARY = "hsl(var(--brand-h) var(--brand-s) var(--brand-l))";
 const BRAND_DARK = "hsl(var(--brand-h) var(--brand-s) calc(var(--brand-l) - 18%))";
 const BRAND_LIGHT = "hsl(var(--brand-h) calc(var(--brand-s) + 8%) calc(var(--brand-l) + 18%))";
 
-const stockHealthChartConfig = {
-  stockout: { label: "Rupture de stock", color: "var(--color-error)" },
-  low: { label: "Stock faible", color: "var(--color-warning)" },
-  healthy: { label: "En bonne santé", color: "var(--color-success)" },
-  overstock: { label: "Surstock", color: BRAND_PRIMARY },
-} satisfies ChartConfig;
+type StockHealthKey = "stockout" | "low" | "healthy" | "overstock";
+type AbcKey = "classA" | "classB" | "classC";
 
-const abcChartConfig = {
-  classA: { label: "Classe A – Haute Valeur", color: BRAND_DARK },
-  classB: { label: "Classe B – Valeur Moyenne", color: BRAND_PRIMARY },
-  classC: { label: "Classe C – Faible Valeur", color: BRAND_LIGHT },
-} satisfies ChartConfig;
+const STOCK_HEALTH_COLOR: Record<StockHealthKey, string> = {
+  stockout: "var(--color-error)",
+  low: "var(--color-warning)",
+  healthy: "var(--color-success)",
+  overstock: BRAND_PRIMARY,
+};
+const ABC_COLOR: Record<AbcKey, string> = {
+  classA: BRAND_DARK,
+  classB: BRAND_PRIMARY,
+  classC: BRAND_LIGHT,
+};
+const ABC_LABEL_KEY: Record<AbcKey, string> = {
+  classA: "class_a",
+  classB: "class_b",
+  classC: "class_c",
+};
 
 function InfoTip({ text }: { text: string }) {
   const [show, setShow] = useState(false);
@@ -66,15 +73,36 @@ export default function InsightsPage() {
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [stockHealth, setStockHealth] = useState<
-    { key: keyof typeof stockHealthChartConfig; name: string; value: number }[]
-  >([]);
-  const [abcStats, setAbcStats] = useState<
-    { key: keyof typeof abcChartConfig; name: string; count: number; valuePct: number }[]
-  >([]);
+  const [stockHealth, setStockHealth] = useState<{ key: StockHealthKey; value: number }[]>([]);
+  const [abcStats, setAbcStats] = useState<{ key: AbcKey; count: number; valuePct: number }[]>([]);
   const [riskProducts, setRiskProducts] = useState<Product[]>([]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { loadInsights(); }, []);
+
+  const stockHealthChartConfig = useMemo(
+    () =>
+      ({
+        stockout: { label: t("insights.status.stockout"), color: STOCK_HEALTH_COLOR.stockout },
+        low: { label: t("insights.status.low"), color: STOCK_HEALTH_COLOR.low },
+        healthy: { label: t("insights.status.healthy"), color: STOCK_HEALTH_COLOR.healthy },
+        overstock: { label: t("insights.status.overstock"), color: STOCK_HEALTH_COLOR.overstock },
+      }) satisfies ChartConfig,
+    [t],
+  );
+
+  const abcChartConfig = useMemo(
+    () =>
+      ({
+        classA: { label: t("insights.abc.class_a"), color: ABC_COLOR.classA },
+        classB: { label: t("insights.abc.class_b"), color: ABC_COLOR.classB },
+        classC: { label: t("insights.abc.class_c"), color: ABC_COLOR.classC },
+      }) satisfies ChartConfig,
+    [t],
+  );
+
+  const stockHealthLabel = (key: StockHealthKey) => t(`insights.status.${key}`);
+  const abcLabel = (key: AbcKey) => t(`insights.abc.${ABC_LABEL_KEY[key]}`);
 
   const loadInsights = async () => {
     try {
@@ -100,10 +128,10 @@ export default function InsightsPage() {
       else healthy++;
     });
     setStockHealth([
-      { key: "stockout", name: "Rupture de stock", value: stockout },
-      { key: "low", name: "Stock faible", value: low },
-      { key: "healthy", name: "En bonne santé", value: healthy },
-      { key: "overstock", name: "Surstock", value: overstock },
+      { key: "stockout", value: stockout },
+      { key: "low", value: low },
+      { key: "healthy", value: healthy },
+      { key: "overstock", value: overstock },
     ]);
   };
 
@@ -121,9 +149,9 @@ export default function InsightsPage() {
     const valueB = sorted.slice(countA, countA + countB).reduce((s, p) => s + p.buying_price * p.stock_quantity, 0);
     const valueC = sorted.slice(countA + countB).reduce((s, p) => s + p.buying_price * p.stock_quantity, 0);
     setAbcStats([
-      { key: "classA", name: "Classe A – Haute Valeur", count: countA, valuePct: totalValue ? Math.round((valueA / totalValue) * 100) : 0 },
-      { key: "classB", name: "Classe B – Valeur Moyenne", count: countB, valuePct: totalValue ? Math.round((valueB / totalValue) * 100) : 0 },
-      { key: "classC", name: "Classe C – Faible Valeur", count: countC, valuePct: totalValue ? Math.round((valueC / totalValue) * 100) : 0 },
+      { key: "classA", count: countA, valuePct: totalValue ? Math.round((valueA / totalValue) * 100) : 0 },
+      { key: "classB", count: countB, valuePct: totalValue ? Math.round((valueB / totalValue) * 100) : 0 },
+      { key: "classC", count: countC, valuePct: totalValue ? Math.round((valueC / totalValue) * 100) : 0 },
     ]);
   };
 
@@ -157,7 +185,7 @@ export default function InsightsPage() {
             className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-xl hover:bg-muted transition-colors disabled:opacity-50"
           >
             <FiRefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-            Actualiser
+            {t("common.refresh")}
           </button>
         </div>
       </header>
@@ -167,7 +195,7 @@ export default function InsightsPage() {
         {loading && (
           <div className="flex items-center justify-center h-64 text-muted-foreground/70">
             <FiRefreshCw className="w-5 h-5 animate-spin mr-2" />
-            <span className="text-sm">Chargement des analyses...</span>
+            <span className="text-sm">{t("insights.loading")}</span>
           </div>
         )}
 
@@ -180,10 +208,12 @@ export default function InsightsPage() {
               <Card className="overflow-hidden bg-card border border-border rounded-lg py-0 ring-0">
                 <CardContent className="p-6">
                   <h3 className="text-base font-semibold text-foreground mb-1 flex items-center">
-                    Santé des stocks
-                    <InfoTip text="Classifie chaque produit selon son niveau de stock : rupture (0 unité), faible (<10), sain (10-100), surstock (>100)." />
+                    {t("insights.health_card.title")}
+                    <InfoTip text={t("insights.health_card.info")} />
                   </h3>
-                  <p className="text-sm text-muted-foreground mb-4">{products.length} produits analysés</p>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    {t("insights.health_card.analyzed", { count: products.length })}
+                  </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                     <ChartContainer config={stockHealthChartConfig} className="h-72 w-full">
                       <PieChart>
@@ -192,13 +222,18 @@ export default function InsightsPage() {
                           content={
                             <ChartTooltipContent
                               nameKey="key"
-                              formatter={(value, _name, item) => (
-                                <div className="flex items-center gap-2">
-                                  <span className="inline-block w-2.5 h-2.5 rounded-full" style={{ background: `var(--color-${item.payload?.key})` }} />
-                                  <span className="text-muted-foreground">{item.payload?.name}</span>
-                                  <span className="ml-auto font-semibold text-foreground tabular-nums">{value} produits</span>
-                                </div>
-                              )}
+                              formatter={(value, _name, item) => {
+                                const key = item.payload?.key as StockHealthKey;
+                                return (
+                                  <div className="flex items-center gap-2">
+                                    <span className="inline-block w-2.5 h-2.5 rounded-full" style={{ background: `var(--color-${key})` }} />
+                                    <span className="text-muted-foreground">{stockHealthLabel(key)}</span>
+                                    <span className="ml-auto font-semibold text-foreground tabular-nums">
+                                      {t("insights.health_card.products", { value })}
+                                    </span>
+                                  </div>
+                                );
+                              }}
                               hideLabel
                             />
                           }
@@ -218,12 +253,12 @@ export default function InsightsPage() {
                     </ChartContainer>
 
                     <div className="flex flex-col justify-center">
-                      <h4 className="text-sm font-semibold text-muted-foreground mb-4">Détail par catégorie</h4>
+                      <h4 className="text-sm font-semibold text-muted-foreground mb-4">{t("insights.health_card.detail")}</h4>
                       <div className="space-y-2">
                         {stockHealth.map((item) => (
                           <div key={item.key} className="flex items-center gap-3 p-3 rounded-xl border border-border bg-card hover:bg-muted transition-colors">
-                            <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: `var(--color-${item.key}, ${stockHealthChartConfig[item.key].color})` }} />
-                            <span className="flex-1 text-sm font-medium text-muted-foreground">{item.name}</span>
+                            <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: `var(--color-${item.key}, ${STOCK_HEALTH_COLOR[item.key]})` }} />
+                            <span className="flex-1 text-sm font-medium text-muted-foreground">{stockHealthLabel(item.key)}</span>
                             <span className="text-sm font-semibold text-foreground tabular-nums">{item.value}</span>
                             <span className="text-xs text-muted-foreground/70 tabular-nums w-12 text-right">
                               {products.length > 0 ? Math.round((item.value / products.length) * 100) : 0}%
@@ -240,10 +275,10 @@ export default function InsightsPage() {
               <Card className="overflow-hidden bg-card border border-border rounded-lg py-0 ring-0">
                 <CardContent className="p-6">
                   <h3 className="text-base font-semibold text-foreground mb-1 flex items-center">
-                    Analyse ABC
-                    <InfoTip text="Méthode Pareto : Classe A = 20% des produits générant ~80% de la valeur. Classe B = 30% intermédiaires. Classe C = 50% restants à faible valeur." />
+                    {t("insights.abc_card.title")}
+                    <InfoTip text={t("insights.abc_card.info")} />
                   </h3>
-                  <p className="text-sm text-muted-foreground mb-4">Basée sur la valeur (prix d'achat × stock)</p>
+                  <p className="text-sm text-muted-foreground mb-4">{t("insights.abc_card.basis")}</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                     <ChartContainer config={abcChartConfig} className="h-72 w-full">
                       <BarChart data={abcStats} layout="vertical" margin={{ left: 10, right: 20, top: 10, bottom: 10 }}>
@@ -253,20 +288,25 @@ export default function InsightsPage() {
                           dataKey="key" type="category" width={120}
                           axisLine={false} tickLine={false}
                           tick={{ fontSize: 12, fill: "#475569" }}
-                          tickFormatter={(v) => abcChartConfig[v as keyof typeof abcChartConfig]?.label?.toString().split("–")[0].trim() ?? v}
+                          tickFormatter={(v) => t(`insights.abc_short.${ABC_LABEL_KEY[v as AbcKey] ?? v}`)}
                         />
                         <ChartTooltip
                           cursor={{ fill: "#f8fafc" }}
                           content={
                             <ChartTooltipContent
                               nameKey="key"
-                              formatter={(value, _name, item) => (
-                                <div className="flex items-center gap-2">
-                                  <span className="inline-block w-2.5 h-2.5 rounded-full" style={{ background: `var(--color-${item.payload?.key})` }} />
-                                  <span className="text-muted-foreground">{item.payload?.name}</span>
-                                  <span className="ml-auto font-semibold text-foreground tabular-nums">{value} produits ({item.payload?.valuePct}%)</span>
-                                </div>
-                              )}
+                              formatter={(value, _name, item) => {
+                                const key = item.payload?.key as AbcKey;
+                                return (
+                                  <div className="flex items-center gap-2">
+                                    <span className="inline-block w-2.5 h-2.5 rounded-full" style={{ background: `var(--color-${key})` }} />
+                                    <span className="text-muted-foreground">{abcLabel(key)}</span>
+                                    <span className="ml-auto font-semibold text-foreground tabular-nums">
+                                      {t("insights.abc_card.tooltip", { value, pct: item.payload?.valuePct })}
+                                    </span>
+                                  </div>
+                                );
+                              }}
                               hideLabel
                             />
                           }
@@ -280,23 +320,23 @@ export default function InsightsPage() {
                     </ChartContainer>
 
                     <div className="flex flex-col justify-center">
-                      <h4 className="text-sm font-semibold text-muted-foreground mb-4">Détail par classe</h4>
+                      <h4 className="text-sm font-semibold text-muted-foreground mb-4">{t("insights.abc_card.detail")}</h4>
                       <div className="space-y-2">
                         {abcStats.map((item) => (
                           <div key={item.key} className="p-4 rounded-xl border border-border">
                             <div className="flex items-center gap-3 mb-2">
-                              <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: `var(--color-${item.key}, ${abcChartConfig[item.key].color})` }} />
-                              <span className="text-sm font-semibold text-foreground">{item.name}</span>
+                              <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: `var(--color-${item.key}, ${ABC_COLOR[item.key]})` }} />
+                              <span className="text-sm font-semibold text-foreground">{abcLabel(item.key)}</span>
                             </div>
                             <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground tabular-nums">
-                              <span><strong className="text-foreground">{item.count}</strong> produits</span>
-                              <span><strong className="text-foreground">{item.valuePct}%</strong> de la valeur</span>
+                              <span><strong className="text-foreground">{item.count}</strong> {t("insights.abc_card.products")}</span>
+                              <span><strong className="text-foreground">{item.valuePct}%</strong> {t("insights.abc_card.of_value")}</span>
                             </div>
                           </div>
                         ))}
                       </div>
                       <p className="text-xs text-muted-foreground mt-4 px-1">
-                        Concentrez vos efforts sur la Classe A pour maximiser l'impact sur la trésorerie.
+                        {t("insights.abc_card.note")}
                       </p>
                     </div>
                   </div>
@@ -308,8 +348,8 @@ export default function InsightsPage() {
             <Card className="overflow-hidden bg-card border border-border rounded-lg py-0 ring-0">
               <CardContent className="p-6">
                 <h3 className="text-base font-semibold text-foreground mb-1 flex items-center">
-                  Alertes critiques
-                  <InfoTip text="Produits dont le stock est inférieur à 15 unités, triés par prix décroissant. Ce sont les produits dont la rupture aurait le plus grand impact financier." />
+                  {t("insights.critical.title")}
+                  <InfoTip text={t("insights.critical.info")} />
                   {riskProducts.length > 0 && (
                     <span className="ml-2 inline-flex items-center justify-center min-w-5 h-5 px-1.5 text-[10px] font-semibold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30 rounded-full">
                       {riskProducts.length}
@@ -317,30 +357,35 @@ export default function InsightsPage() {
                   )}
                 </h3>
                 <p className="text-sm text-muted-foreground mb-6">
-                  Articles de haute valeur presque épuisés — commandez dès maintenant
+                  {t("insights.critical.subtitle")}
                 </p>
 
                 {riskProducts.length === 0 ? (
                   <div className="flex flex-col items-center justify-center rounded-xl border bg-muted/30 py-16 text-muted-foreground">
                     <FiCheck className="mb-3 h-10 w-10 text-emerald-500" />
-                    <p className="text-sm font-medium text-foreground">Aucun risque critique détecté</p>
-                    <p className="mt-1 text-xs text-muted-foreground">Tous les produits sont en stock suffisant.</p>
+                    <p className="text-sm font-medium text-foreground">{t("insights.critical.empty_title")}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">{t("insights.critical.empty_desc")}</p>
                   </div>
                 ) : (
                   <div className="overflow-hidden rounded-xl border">
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead className="px-4">Produit</TableHead>
-                          <TableHead className="px-4">Catégorie</TableHead>
-                          <TableHead className="px-4 text-right">Prix d'achat</TableHead>
-                          <TableHead className="px-4 text-right">Stock restant</TableHead>
-                          <TableHead className="px-4 text-right">Valeur à risque</TableHead>
+                          <TableHead className="px-4">{t("insights.critical.col_product")}</TableHead>
+                          <TableHead className="px-4">{t("insights.critical.col_category")}</TableHead>
+                          <TableHead className="px-4 text-right">{t("insights.critical.col_buy_price")}</TableHead>
+                          <TableHead className="px-4 text-right">{t("insights.critical.col_stock")}</TableHead>
+                          <TableHead className="px-4 text-right">{t("insights.critical.col_value")}</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {riskProducts.map((p) => {
-                          const urgency = p.stock_quantity === 0 ? "Rupture" : p.stock_quantity < 5 ? "Critique" : "Faible";
+                          const urgency =
+                            p.stock_quantity === 0
+                              ? t("insights.urgency.stockout")
+                              : p.stock_quantity < 5
+                                ? t("insights.urgency.critical")
+                                : t("insights.urgency.low");
                           const urgencyDot = p.stock_quantity === 0 ? "bg-rose-500" : p.stock_quantity < 5 ? "bg-orange-500" : "bg-amber-500";
                           return (
                             <TableRow key={p.id}>

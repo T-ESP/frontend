@@ -4,6 +4,11 @@ import { ChevronsUpDown, MoreVertical, User, LogOut } from "lucide-react";
 
 import { Logo } from "@/ui/components/common/Logo";
 import { sections, footerItems } from "@/ui/constants/sidebar/sidebarItem";
+
+const allDestinations = [
+  ...sections.flatMap((section) => section.items.map((item) => item.to)),
+  ...footerItems.map((item) => item.to),
+];
 import { useAuth } from "@/ui/features/auth/hooks/useAuth";
 import {
   Sidebar as SidebarRoot,
@@ -28,8 +33,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { SidebarItemType } from "./Sidebar.types";
 
-function isItemActive(pathname: string, to: string) {
+function pathMatches(pathname: string, to: string) {
   return pathname === to || pathname.startsWith(`${to}/`);
+}
+
+function isItemActive(pathname: string, to: string) {
+  if (!pathMatches(pathname, to)) return false;
+  // Only the most specific matching route wins, so a parent item like
+  // "/orders" isn't highlighted while on a child route like "/orders/kpis".
+  return !allDestinations.some(
+    (other) =>
+      other !== to && other.startsWith(`${to}/`) && pathMatches(pathname, other),
+  );
 }
 
 function NavItem({ item }: { item: SidebarItemType }) {

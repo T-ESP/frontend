@@ -32,6 +32,21 @@
   "onboarding": {
     "replay": "Replay the guide"
   },
+  "daily_recap": {
+    "greeting": "Hello {{name}}",
+    "greeting_generic": "Hello",
+    "title": "Your day yesterday",
+    "revenue": "Revenue",
+    "orders": "Orders",
+    "avg_basket": "Average basket",
+    "new_clients": "New clients",
+    "delivered": "{{count}} delivered",
+    "pending": "{{count}} pending",
+    "stockouts": "{{count}} out of stock",
+    "no_activity": "No activity recorded yesterday.",
+    "close": "Close",
+    "go_dashboard": "Go to dashboard"
+  },
   "sidebar": {
     "sections": {
       "overview": "Overview",
@@ -43,6 +58,7 @@
     "inventory": "Inventory",
     "orders": "Orders",
     "insights": "Insights",
+    "predictions": "AI Predictions",
     "sales": "Sales",
     "pricing": "Pricing",
     "pricing_news": "Pricing & News",
@@ -51,6 +67,7 @@
     "loyalty": "Loyalty",
     "promotions": "Promotions",
     "alerts": "Alerts",
+    "users": "Users",
     "team": "Team",
     "settings": "Settings",
     "logout": "Logout",
@@ -85,6 +102,7 @@
       "total_value": "total value",
       "out_of_stock": "Out of Stock",
       "products_out": "unavailable products",
+      "stock_coverage": "breakdown by stock level",
       "suppliers_total": "Suppliers",
       "registered": "registered",
       "suppliers_with_phone": "Reachable Suppliers",
@@ -184,6 +202,46 @@
       "class_a": "Class A (High Value)",
       "class_b": "Class B (Medium Value)",
       "class_c": "Class C (Low Value)"
+    },
+    "abc_short": {
+      "class_a": "Class A",
+      "class_b": "Class B",
+      "class_c": "Class C"
+    },
+    "loading": "Loading insights…",
+    "health_card": {
+      "title": "Stock health",
+      "info": "Classifies each product by stock level: stockout (0 units), low (<10), healthy (10-100), overstock (>100).",
+      "analyzed": "{{count}} products analyzed",
+      "detail": "Breakdown by category",
+      "products": "{{value}} products"
+    },
+    "abc_card": {
+      "title": "ABC analysis",
+      "info": "Pareto method: Class A = 20% of products generating ~80% of value. Class B = 30% mid-tier. Class C = remaining 50% low value.",
+      "basis": "Based on value (buying price × stock)",
+      "detail": "Breakdown by class",
+      "products": "products",
+      "of_value": "of value",
+      "note": "Focus your efforts on Class A to maximize cash-flow impact.",
+      "tooltip": "{{value}} products ({{pct}}%)"
+    },
+    "critical": {
+      "title": "Critical alerts",
+      "info": "Products with stock below 15 units, sorted by descending price. These are the products whose stockout would have the greatest financial impact.",
+      "subtitle": "High-value items nearly depleted — order now",
+      "empty_title": "No critical risk detected",
+      "empty_desc": "All products have sufficient stock.",
+      "col_product": "Product",
+      "col_category": "Category",
+      "col_buy_price": "Buying price",
+      "col_stock": "Stock left",
+      "col_value": "Value at risk"
+    },
+    "urgency": {
+      "stockout": "Stockout",
+      "critical": "Critical",
+      "low": "Low"
     }
   },
   "inventory": {
@@ -197,7 +255,15 @@
       "in_stock": "In Stock",
       "low_stock": "Low Stock",
       "out_of_stock": "Out of Stock",
-      "total_products": "Total Products"
+      "total_products": "Total products",
+      "inventory_value": "Inventory value",
+      "in_catalog": "in catalog",
+      "total_value": "total value",
+      "products_to_watch": "products to watch",
+      "products_out": "products unavailable",
+      "of_catalog": "{{pct}}% of catalog",
+      "top_categories": "Top categories by value",
+      "uncategorized": "Uncategorized"
     },
     "table": {
       "product": "Product",
@@ -654,7 +720,395 @@
       "update_error": "Failed to update order"
     },
     "kpis_title": "Order statistics",
-    "kpis_subtitle": "Performance overview"
+    "kpis_subtitle": "Performance overview",
+    "stats": {
+      "period": "Period",
+      "presets": { "7d": "7 days", "30d": "30 days", "90d": "90 days", "12m": "12 months" },
+      "vs_previous": "vs previous period",
+      "pts": "pts",
+      "kpi": {
+        "revenue": "Revenue",
+        "revenue_info": "Sum of net order amounts over the period.",
+        "total": "Total orders",
+        "avg": "Average basket",
+        "avg_info": "Revenue divided by the number of orders.",
+        "clients": "Unique clients",
+        "clients_info": "Number of distinct clients who ordered over the period.",
+        "delivery_rate": "Delivery rate",
+        "delivery_info": "Share of orders with status “delivered”.",
+        "cancel_rate": "Cancellation rate",
+        "cancel_info": "Share of orders with status “cancelled”.",
+        "discount": "Discounts granted",
+        "discount_info": "Total amount of discounts applied over the period.",
+        "discount_rate": "Average discount rate",
+        "discount_rate_info": "Discounts relative to gross revenue (net + discounts)."
+      },
+      "evolution": {
+        "title": "Orders trend",
+        "subtitle": "Revenue and volume per {{grain}}",
+        "empty": "No orders in the selected period",
+        "revenue": "Revenue",
+        "orders": "Orders",
+        "orders_count": "{{count}} order(s)"
+      },
+      "grain": { "day": "day", "week": "week", "month": "month" },
+      "status_breakdown": { "title": "Breakdown by status", "subtitle": "Order lifecycle", "empty": "No orders in the period" },
+      "distribution": {
+        "title": "Basket distribution",
+        "median": "Median: {{value}}",
+        "subtitle": "Breakdown by amount range",
+        "empty": "No orders in the period",
+        "orders_count": "{{count}} order(s)"
+      },
+      "client_type": {
+        "title": "Average basket by client type",
+        "subtitle": "New clients vs loyal clients",
+        "unavailable": "Data unavailable",
+        "empty": "No data in the period",
+        "new": "New",
+        "loyal": "Loyal"
+      },
+      "heatmap": {
+        "title": "When clients order",
+        "peak": "Peak: {{day}} {{slot}} ({{n}})",
+        "fallback": "Distribution day × time slot",
+        "empty": "No orders in the period",
+        "cell": "{{day}} {{slot}}: {{n}} order(s)"
+      },
+      "weekdays": { "mon": "Mon", "tue": "Tue", "wed": "Wed", "thu": "Thu", "fri": "Fri", "sat": "Sat", "sun": "Sun" },
+      "top_products": {
+        "title": "Top ordered products",
+        "subtitle": "Ranking over the period",
+        "unavailable": "Data unavailable",
+        "empty": "No product in the period",
+        "volume": "Volume",
+        "revenue": "Revenue",
+        "units": "{{value}} u."
+      },
+      "top_clients": {
+        "title": "Top clients",
+        "subtitle": "By revenue over the period",
+        "empty": "No orders in the period",
+        "client_num": "Client #{{id}}",
+        "cmd": "{{count}} ord."
+      }
+    }
+  },
+  "alerts": {
+    "title": "Alerts & AI Forecasts",
+    "subtitle": "Track alerts generated by AI models and anticipate needs.",
+    "summary": { "critical": "Critical", "high": "High", "untreated": "Untreated", "total": "Total alerts" },
+    "tabs": { "alerts": "Alerts", "predictions": "AI Forecasts" },
+    "status": { "new": "New", "acknowledged": "Acknowledged", "in_progress": "In progress", "resolved": "Resolved", "dismissed": "Dismissed" },
+    "severity": { "critical": "Critical", "high": "High", "medium": "Medium", "low": "Low" },
+    "filters": {
+      "search": "Search by product or message...",
+      "all_severities": "All severities",
+      "all_statuses": "All statuses"
+    },
+    "bulk": { "acknowledge": "Mark as read ({{count}})", "resolve": "Resolve ({{count}})" },
+    "table": {
+      "product": "Product", "message": "Message", "source": "AI source",
+      "severity": "Severity", "status": "Status", "date": "Date",
+      "empty": "No alert found"
+    },
+    "footer_one": "{{count}} alert",
+    "footer_other": "{{count}} alerts",
+    "selected_one": " — {{count}} selected",
+    "selected_other": " — {{count}} selected",
+    "history": {
+      "title": "Alert history",
+      "subtitle_one": "{{name}} — {{count}} alert",
+      "subtitle_other": "{{name}} — {{count}} alerts",
+      "most_recent": "Most recent"
+    },
+    "view_in_inventory": "View in inventory",
+    "predictions": {
+      "restocks": {
+        "title": "Urgent restocks",
+        "subtitle": "Imminent stockout predictions",
+        "product": "Product", "current_stock": "Current stock", "recommended": "Recommended stock",
+        "to_order": "To order", "demand_day": "Demand / day", "days_left": "Days left", "urgency": "Urgency",
+        "empty": "No urgent restock"
+      },
+      "price": {
+        "title": "Price anomalies",
+        "subtitle": "Prices detected outside the normal range",
+        "product": "Product", "current_price": "Current price", "expected_price": "Expected price",
+        "gap": "Gap", "score": "Anomaly score",
+        "empty": "No price anomaly detected"
+      },
+      "sales": {
+        "title": "Sales anomalies",
+        "subtitle": "Unusual sales volumes detected by AI",
+        "product": "Product", "observed": "Observed volume", "expected": "Expected volume",
+        "gap": "Gap", "score": "Anomaly score",
+        "empty": "No sales anomaly detected"
+      }
+    }
+  },
+  "promotions": {
+    "title": "Promotions & Discounts",
+    "subtitle": "Manage discount rules applied to orders",
+    "new_discount": "New discount",
+    "backend_unavailable": "Backend unavailable — migration V005 must be applied to the tenant database and the server restarted. You can create discounts as soon as the backend is up to date.",
+    "load_error": "Unable to load discounts.",
+    "loading": "Loading…",
+    "stats": {
+      "active": "Active discounts",
+      "expired": "Expired",
+      "inactive": "Inactive"
+    },
+    "status": {
+      "active": "Active",
+      "expired": "Expired",
+      "inactive": "Inactive"
+    },
+    "trigger": {
+      "product": "Product: {{name}}",
+      "product_ref": "Product #{{id}}",
+      "amount": "Amount ≥ {{amount}}",
+      "qty_product": "Qty {{name}} ≥ {{qty}}",
+      "qty_total": "Total qty ≥ {{qty}}"
+    },
+    "scope": {
+      "global": "On the total",
+      "product": "On {{name}}",
+      "per_product": "Per product"
+    },
+    "validity": {
+      "range": "{{from}} → {{until}}",
+      "from": "Since {{from}}",
+      "until": "Until {{until}}",
+      "unlimited": "Unlimited"
+    },
+    "table": {
+      "title": "All discounts",
+      "count_one": "{{count}} discount",
+      "count_other": "{{count}} discounts",
+      "empty": "No discount configured. Create the first one!",
+      "name": "Name",
+      "trigger": "Trigger",
+      "action": "Action",
+      "scope": "Scope",
+      "validity": "Validity",
+      "usage": "Uses",
+      "cumul": "Stack",
+      "status": "Status",
+      "actions": "Actions",
+      "usage_used": "View orders",
+      "usage_never": "Never used",
+      "cumul_yes": "Stackable",
+      "cumul_no": "Not stackable",
+      "toggle": "Toggle state",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "modal": {
+      "edit_title": "Edit discount",
+      "new_title": "New discount",
+      "name_label": "Name *",
+      "name_placeholder": "e.g. Summer sale 2025",
+      "err_name": "Name is required.",
+      "err_value": "Value must be > 0.",
+      "err_save": "Error while saving.",
+      "trigger_legend": "Trigger",
+      "type": "Type",
+      "trigger_amount": "Total amount ≥ threshold",
+      "trigger_qty": "Quantity ≥ threshold",
+      "trigger_product": "Specific product present",
+      "trigger_locked": "The trigger type cannot be changed.",
+      "product_concerned": "Product concerned (optional for total quantity)",
+      "all_products": "— All products —",
+      "min_amount": "Minimum amount (€) *",
+      "min_amount_ph": "e.g. 100",
+      "min_qty": "Minimum quantity *",
+      "min_qty_ph": "e.g. 10",
+      "action_legend": "Action",
+      "discount_type": "Discount type",
+      "opt_percentage": "Percentage (%)",
+      "opt_fixed": "Fixed amount (€)",
+      "value": "Value *",
+      "scope": "Scope",
+      "scope_global": "On the order total",
+      "scope_product": "On a specific product",
+      "target_product": "Target product",
+      "trigger_product_default": "— Trigger product —",
+      "options_legend": "Options",
+      "valid_from": "Valid from",
+      "valid_until": "Valid until",
+      "cumulative": "Stackable",
+      "cumulative_hint": "Combines with other stackable discounts",
+      "active": "Active",
+      "active_hint": "The discount is available for new orders",
+      "saving": "Saving…",
+      "save": "Save"
+    },
+    "delete": {
+      "title": "Delete discount",
+      "confirm": "Are you sure you want to delete “{{name}}”? Existing orders are not affected.",
+      "error": "Unable to delete this discount.",
+      "deleting": "Deleting…",
+      "delete": "Delete"
+    },
+    "orders": {
+      "title": "Orders — {{name}}",
+      "usage_one": "{{count}} use",
+      "usage_other": "{{count}} uses",
+      "empty": "No order found.",
+      "col_order": "Order",
+      "col_date": "Date",
+      "col_saving": "Saving",
+      "col_total": "Total"
+    }
+  },
+  "loyalty": {
+    "title": "Loyalty program",
+    "subtitle": "Configure earning rules and manage user points",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved ✓",
+    "save_error": "Failed to save. Please try again.",
+    "backend_unavailable": "Backend unavailable — default values shown. The configuration will be created on the first save.",
+    "load_error": "Error while loading the configuration.",
+    "loading": "Loading…",
+    "cards": {
+      "euros_per_point": "Euros per point",
+      "euros_per_point_hint": "That is {{value}} pt per euro spent",
+      "points_required": "Points for discount",
+      "points_required_hint": "That is {{value}} € spent",
+      "discount": "Discount granted",
+      "discount_hint": "On the client's next order",
+      "per_pt": "€ / pt",
+      "pts": "pts"
+    },
+    "form": {
+      "title": "Edit configuration",
+      "subtitle": "Changes apply to new orders only",
+      "euros_per_point": "Euros per point",
+      "euros_per_point_hint": "1 point = {{euros}} € spent ({{rate}} pt/€)",
+      "points_required": "Points required for discount",
+      "points_required_hint": "Discount trigger threshold",
+      "discount_percent": "Discount percentage",
+      "discount_percent_hint": "Discount applied to the next order"
+    },
+    "how": {
+      "title": "How it works",
+      "subtitle": "Simulation with a typical order of {{amount}} €",
+      "step1_title": "Purchase → Points earned",
+      "step1_text": "On each order, the client automatically earns:",
+      "step2_title": "Accumulation",
+      "step2_text": "The client must reach {{points}} pts to trigger a discount.",
+      "step2_orders_one": " With {{amount}} € orders, they will get there in {{count}} order.",
+      "step2_orders_other": " With {{amount}} € orders, they will get there in {{count}} orders.",
+      "step3_title": "Discount applied",
+      "step3_text": "Once the threshold is reached, the client gets {{percent}} % off their next order. Points are reset."
+    },
+    "users": {
+      "title": "Users",
+      "subtitle_one": "{{count}} user — click to view and edit points",
+      "subtitle_other": "{{count}} users — click to view and edit points",
+      "loading": "Loading users…",
+      "search_placeholder": "Search by name or email…",
+      "no_results": "No results for this search.",
+      "no_users": "No user found.",
+      "view_points": "View points",
+      "results_one": "{{count}} result for “{{query}}”",
+      "results_other": "{{count}} results for “{{query}}”"
+    },
+    "modal": {
+      "current_points": "Current points",
+      "load_error": "Unable to load this user's points.",
+      "adjust": "Adjust points",
+      "points_placeholder": "e.g. +50 or -20",
+      "reason_placeholder": "Reason (optional)",
+      "adjust_error": "Adjustment failed. Please try again.",
+      "adjusting": "Adjusting…",
+      "adjusted": "Adjusted ✓",
+      "add_pts": "Add {{n}} pts",
+      "remove_pts": "Remove {{n}} pts",
+      "apply": "Apply adjustment",
+      "history": "History ({{n}})",
+      "order_ref": "Order #{{id}}",
+      "manual_adjust": "Manual adjustment",
+      "no_transactions": "No transaction for this user."
+    }
+  },
+  "predictions": {
+    "title": "AI Predictions",
+    "subtitle": "Revenue and demand forecasts plus recommendations from the AI engine",
+    "loading": "Loading predictions…",
+    "load_error": "Unable to load predictions.",
+    "error_title": "Error",
+    "retry": "Retry",
+    "forecast": {
+      "ca_30_title": "Forecast revenue (30d)",
+      "ca_30_desc": "Next month",
+      "ca_30_info": "Revenue projected over 30 days by linear extrapolation of recent revenue.",
+      "ca_90_title": "Forecast revenue (90d)",
+      "ca_90_desc": "Next quarter",
+      "ca_90_info": "Revenue projected over 90 days by linear extrapolation of recent revenue.",
+      "cash_title": "Restock cash need",
+      "cash_desc": "Pending restocks",
+      "cash_info": "Total amount required to fulfill pending restocks.",
+      "stockouts_title": "Predicted stockouts",
+      "stockouts_desc": "{{n}} optimization opportunities",
+      "stockouts_info": "Number of products with less than 7 days of stock coverage."
+    },
+    "demand": {
+      "title": "Demand forecast",
+      "subtitle": "Top 12 products by predicted demand (Prophet model)",
+      "empty": "No demand forecast available",
+      "tooltip_demand": "Predicted demand: {{value}} u.",
+      "tooltip_urgency": "Urgency: {{label}}"
+    },
+    "classification": {
+      "title": "ABC / XYZ classification",
+      "subtitle": "Breakdown of {{n}} products by value and demand regularity",
+      "empty": "No classification available",
+      "footer": "Rows: revenue contribution · Columns: demand predictability. AX products are top priority (high revenue, stable demand).",
+      "abc": { "A": "High revenue", "B": "Medium revenue", "C": "Low revenue" },
+      "xyz": { "X": "Stable demand", "Y": "Variable demand", "Z": "Erratic demand" }
+    },
+    "suppliers": {
+      "title": "Supplier scores",
+      "subtitle": "Top 5 suppliers · delivery, quality, lead time, fulfillment",
+      "empty": "No supplier score available",
+      "delivery": "Delivery",
+      "quality": "Quality",
+      "lead_time": "Lead time",
+      "fulfillment": "Fulfillment"
+    },
+    "restocks": {
+      "title": "Priority restocks",
+      "subtitle": "Products at risk of stockout based on predicted demand",
+      "empty": "No urgent restock",
+      "stock": "Stock",
+      "target": "target",
+      "order": "order",
+      "days": "{{d}}d",
+      "per_day": "{{value}}/day"
+    },
+    "price": {
+      "title": "Price suggestions",
+      "subtitle": "Pricing adjustments recommended by AI",
+      "empty": "No price suggestion",
+      "confidence": "Confidence {{value}}%"
+    },
+    "anomalies": {
+      "title": "Detected anomalies",
+      "subtitle": "Unusual deviations in prices and sales",
+      "empty": "No anomaly detected",
+      "prices": "Prices",
+      "sales": "Sales",
+      "expected": "exp. {{value}}"
+    },
+    "urgency": {
+      "URGENT": "Urgent",
+      "HIGH": "High",
+      "MEDIUM": "Medium",
+      "LOW": "Low"
+    }
   },
   "sales": {
     "title": "Sales Dashboard",
@@ -820,6 +1274,15 @@
   "profile": {
     "title": "My Profile",
     "subtitle": "Manage your personal information and account settings.",
+    "preferences": {
+      "title": "Preferences",
+      "daily_recap_label": "Daily recap",
+      "daily_recap_desc": "Recap window of the previous day when opening the app.",
+      "once_per_day": "Once per day",
+      "every_open": "Every open",
+      "saved_title": "Preference saved",
+      "saved_msg": "Your preferences have been updated."
+    },
     "personal_info": {
       "title": "Personal Information",
       "firstname": "First Name",

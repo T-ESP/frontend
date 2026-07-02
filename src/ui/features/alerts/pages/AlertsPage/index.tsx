@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Bell, PackageX, TrendingDown, TrendingUp, AlertTriangle,
@@ -35,13 +36,6 @@ const STATUS_BADGE: Record<string, string> = {
   resolved: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30',
   dismissed: 'bg-muted text-muted-foreground/70 border-border',
 };
-const STATUS_LABEL: Record<string, string> = {
-  new: 'Nouveau',
-  acknowledged: 'Pris en compte',
-  in_progress: 'En cours',
-  resolved: 'Résolu',
-  dismissed: 'Ignoré',
-};
 const URGENCY_COLOR: Record<string, string> = {
   URGENT: 'text-rose-600 dark:text-rose-400',
   HIGH: 'text-orange-600 dark:text-orange-400',
@@ -63,6 +57,7 @@ const formatCurrency = (v: string | number) =>
 // ─── Status dropdown ──────────────────────────────────────────────────────────
 
 function StatusDropdown({ alert, onUpdate }: { alert: Alert; onUpdate: (id: number, status: AlertStatus) => void }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const statuses: AlertStatus[] = ['acknowledged', 'in_progress', 'resolved', 'dismissed'];
 
@@ -72,7 +67,7 @@ function StatusDropdown({ alert, onUpdate }: { alert: Alert; onUpdate: (id: numb
         onClick={() => setOpen((v) => !v)}
         className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-medium rounded-full border transition-colors ${STATUS_BADGE[alert.status]}`}
       >
-        {STATUS_LABEL[alert.status] ?? alert.status}
+        {t(`alerts.status.${alert.status}`, alert.status)}
         <ChevronDown className="w-3 h-3" />
       </button>
       {open && (
@@ -83,7 +78,7 @@ function StatusDropdown({ alert, onUpdate }: { alert: Alert; onUpdate: (id: numb
               onClick={() => { onUpdate(alert.id, s); setOpen(false); }}
               className="w-full text-left px-3 py-1.5 text-xs hover:bg-muted transition-colors"
             >
-              {STATUS_LABEL[s]}
+              {t(`alerts.status.${s}`)}
             </button>
           ))}
         </div>
@@ -103,6 +98,7 @@ function AlertHistoryModal({
   history: Alert[];
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', onKey);
@@ -116,9 +112,9 @@ function AlertHistoryModal({
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <div>
-            <h3 className="text-[15px] font-semibold text-foreground">Historique des alertes</h3>
+            <h3 className="text-[15px] font-semibold text-foreground">{t('alerts.history.title')}</h3>
             <p className="text-[13px] text-muted-foreground mt-0.5">
-              {productName} — {history.length} alerte{history.length > 1 ? 's' : ''}
+              {t('alerts.history.subtitle', { name: productName, count: history.length })}
             </p>
           </div>
           <button
@@ -143,14 +139,14 @@ function AlertHistoryModal({
                   </span>
                   {idx === 0 && (
                     <span className="rounded border border-emerald-500/30 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-400">
-                      Plus récente
+                      {t('alerts.history.most_recent')}
                     </span>
                   )}
                   <span className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-medium ${SEVERITY_BADGE[a.severity]}`}>
-                    {a.severity}
+                    {t(`alerts.severity.${a.severity}`, a.severity)}
                   </span>
                   <span className={`rounded-full border px-2 py-0.5 text-[11px] font-medium ${STATUS_BADGE[a.status]}`}>
-                    {STATUS_LABEL[a.status] ?? a.status}
+                    {t(`alerts.status.${a.status}`, a.status)}
                   </span>
                 </div>
                 <p className="mt-1 text-[13px] text-muted-foreground">{a.message}</p>
@@ -170,11 +166,12 @@ function AlertHistoryModal({
 // ─── Product link (redirige vers l'inventaire avec le filtre pré-rempli) ───────
 
 function ProductLink({ name, onNavigate }: { name?: string | null; onNavigate: (name: string) => void }) {
+  const { t } = useTranslation();
   if (!name) return <>—</>;
   return (
     <button
       onClick={(e) => { e.stopPropagation(); onNavigate(name); }}
-      title="Voir dans l'inventaire"
+      title={t('alerts.view_in_inventory')}
       className="inline-flex items-center gap-1.5 text-left hover:text-violet-600 dark:text-violet-400 transition-colors group"
     >
       {name}
@@ -186,6 +183,7 @@ function ProductLink({ name, onNavigate }: { name?: string | null; onNavigate: (
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 export default function AlertsPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -323,15 +321,15 @@ export default function AlertsPage() {
 
   return (
     <PageLayout
-      title="Alertes & Prévisions IA"
-      subtitle="Suivez les alertes générées par les modèles IA et anticipez les besoins."
+      title={t('alerts.title')}
+      subtitle={t('alerts.subtitle')}
       actions={
         <button
           onClick={() => { loadAlerts(); if (tab === 'predictions') loadPredictions(); }}
           className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-lg hover:bg-muted transition-colors"
         >
           <RefreshCw className="w-4 h-4" />
-          Actualiser
+          {t('common.refresh')}
         </button>
       }
     >
@@ -339,10 +337,10 @@ export default function AlertsPage() {
       {summary && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:grid-cols-4">
           {([
-            { label: 'Critiques', count: summary.by_severity?.critical ?? 0, cardCls: 'bg-card border-border', textCls: 'text-foreground', iconCls: 'bg-rose-500/15 text-rose-600 dark:text-rose-400', Icon: ShieldAlert },
-            { label: 'Hautes', count: summary.by_severity?.high ?? 0, cardCls: 'bg-card border-border', textCls: 'text-foreground', iconCls: 'bg-orange-500/15 text-orange-600 dark:text-orange-400', Icon: AlertTriangle },
-            { label: 'Non traitées', count: summary.by_status?.new ?? 0, cardCls: 'bg-card border-border', textCls: 'text-foreground', iconCls: 'bg-muted text-muted-foreground/70', Icon: Clock },
-            { label: 'Total alertes', count: summary.total, cardCls: 'bg-card border-border', textCls: 'text-foreground', iconCls: 'bg-muted text-muted-foreground/70', Icon: Bell },
+            { label: t('alerts.summary.critical'), count: summary.by_severity?.critical ?? 0, cardCls: 'bg-card border-border', textCls: 'text-foreground', iconCls: 'bg-rose-500/15 text-rose-600 dark:text-rose-400', Icon: ShieldAlert },
+            { label: t('alerts.summary.high'), count: summary.by_severity?.high ?? 0, cardCls: 'bg-card border-border', textCls: 'text-foreground', iconCls: 'bg-orange-500/15 text-orange-600 dark:text-orange-400', Icon: AlertTriangle },
+            { label: t('alerts.summary.untreated'), count: summary.by_status?.new ?? 0, cardCls: 'bg-card border-border', textCls: 'text-foreground', iconCls: 'bg-muted text-muted-foreground/70', Icon: Clock },
+            { label: t('alerts.summary.total'), count: summary.total, cardCls: 'bg-card border-border', textCls: 'text-foreground', iconCls: 'bg-muted text-muted-foreground/70', Icon: Bell },
           ] as const).map(({ label, count, cardCls, textCls, iconCls, Icon }) => (
             <div key={label} className={`rounded-xl border p-6 shadow-sm ${cardCls}`}>
               <div className="flex items-start justify-between">
@@ -361,7 +359,7 @@ export default function AlertsPage() {
 
       {/* Tabs */}
       <div className="flex gap-1 p-1 bg-muted rounded-xl w-fit">
-        {([['alerts', 'Alertes', Bell], ['predictions', 'Prévisions IA', PackageX]] as const).map(([key, label, Icon]) => (
+        {([['alerts', Bell], ['predictions', PackageX]] as const).map(([key, Icon]) => (
           <button
             key={key}
             onClick={() => setSearchParams({ tab: key })}
@@ -370,7 +368,7 @@ export default function AlertsPage() {
             }`}
           >
             <Icon className="w-4 h-4" />
-            {label}
+            {t(`alerts.tabs.${key}`)}
           </button>
         ))}
       </div>
@@ -384,7 +382,7 @@ export default function AlertsPage() {
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Rechercher par produit ou message..."
+                placeholder={t('alerts.filters.search')}
                 className="h-9 pl-3"
               />
               {search && (
@@ -398,23 +396,23 @@ export default function AlertsPage() {
               onChange={(e) => setFilterSeverity(e.target.value)}
               className="h-9 px-3 text-sm border border-border rounded-lg bg-card focus:outline-none focus:ring-2 focus:ring-primary/30"
             >
-              <option value="all">Toutes les sévérités</option>
-              <option value="critical">Critique</option>
-              <option value="high">Haute</option>
-              <option value="medium">Moyenne</option>
-              <option value="low">Faible</option>
+              <option value="all">{t('alerts.filters.all_severities')}</option>
+              <option value="critical">{t('alerts.severity.critical')}</option>
+              <option value="high">{t('alerts.severity.high')}</option>
+              <option value="medium">{t('alerts.severity.medium')}</option>
+              <option value="low">{t('alerts.severity.low')}</option>
             </select>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
               className="h-9 px-3 text-sm border border-border rounded-lg bg-card focus:outline-none focus:ring-2 focus:ring-primary/30"
             >
-              <option value="all">Tous les statuts</option>
-              <option value="new">Nouveau</option>
-              <option value="acknowledged">Pris en compte</option>
-              <option value="in_progress">En cours</option>
-              <option value="resolved">Résolu</option>
-              <option value="dismissed">Ignoré</option>
+              <option value="all">{t('alerts.filters.all_statuses')}</option>
+              <option value="new">{t('alerts.status.new')}</option>
+              <option value="acknowledged">{t('alerts.status.acknowledged')}</option>
+              <option value="in_progress">{t('alerts.status.in_progress')}</option>
+              <option value="resolved">{t('alerts.status.resolved')}</option>
+              <option value="dismissed">{t('alerts.status.dismissed')}</option>
             </select>
             {selectedIds.size > 0 && (
               <>
@@ -423,14 +421,14 @@ export default function AlertsPage() {
                   className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-lg hover:bg-muted transition-colors"
                 >
                   <CheckCheck className="w-4 h-4" />
-                  Marquer comme lu ({selectedIds.size})
+                  {t('alerts.bulk.acknowledge', { count: selectedIds.size })}
                 </button>
                 <button
                   onClick={handleBulkResolve}
                   className="flex items-center gap-2 px-3 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
                 >
                   <CheckCheck className="w-4 h-4" />
-                  Résoudre ({selectedIds.size})
+                  {t('alerts.bulk.resolve', { count: selectedIds.size })}
                 </button>
               </>
             )}
@@ -452,12 +450,12 @@ export default function AlertsPage() {
                       className="rounded border-border"
                     />
                   </TableHead>
-                  <TableHead className="px-6">Produit</TableHead>
-                  <TableHead className="px-6">Message</TableHead>
-                  <TableHead className="px-6">Source IA</TableHead>
-                  <TableHead className="px-6">Sévérité</TableHead>
-                  <TableHead className="px-6">Statut</TableHead>
-                  <TableHead className="px-6">Date</TableHead>
+                  <TableHead className="px-6">{t('alerts.table.product')}</TableHead>
+                  <TableHead className="px-6">{t('alerts.table.message')}</TableHead>
+                  <TableHead className="px-6">{t('alerts.table.source')}</TableHead>
+                  <TableHead className="px-6">{t('alerts.table.severity')}</TableHead>
+                  <TableHead className="px-6">{t('alerts.table.status')}</TableHead>
+                  <TableHead className="px-6">{t('alerts.table.date')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -465,7 +463,7 @@ export default function AlertsPage() {
                   <TableRow className="hover:bg-transparent">
                     <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
                       <Bell className="mx-auto mb-2 size-6 text-muted-foreground/40" />
-                      Aucune alerte trouvée
+                      {t('alerts.table.empty')}
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -511,7 +509,7 @@ export default function AlertsPage() {
                       <TableCell className="px-6">
                         <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-medium rounded-full border ${SEVERITY_BADGE[alert.severity]}`}>
                           <span className={`size-1.5 rounded-full ${SEVERITY_DOT[alert.severity]}`} />
-                          {alert.severity}
+                          {t(`alerts.severity.${alert.severity}`, alert.severity)}
                         </span>
                       </TableCell>
                       <TableCell className="px-6" onClick={(e) => e.stopPropagation()}>
@@ -529,8 +527,8 @@ export default function AlertsPage() {
           )}
 
           <div className="px-6 py-3 border-t border-border text-xs text-muted-foreground">
-            {filtered.length} alerte{filtered.length > 1 ? 's' : ''}
-            {selectedIds.size > 0 && ` — ${selectedIds.size} sélectionnée${selectedIds.size > 1 ? 's' : ''}`}
+            {t('alerts.footer', { count: filtered.length })}
+            {selectedIds.size > 0 && t('alerts.selected', { count: selectedIds.size })}
           </div>
         </div>
       )}
@@ -548,25 +546,25 @@ export default function AlertsPage() {
               <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
                 <div className="flex items-center gap-3 px-6 py-4 border-b border-border">
                   <PackageX className="w-4 h-4 text-orange-500" />
-                  <h3 className="text-base font-semibold text-foreground">Réapprovisionnements urgents</h3>
-                  <span className="text-xs text-muted-foreground">Prédictions de rupture de stock imminente</span>
+                  <h3 className="text-base font-semibold text-foreground">{t('alerts.predictions.restocks.title')}</h3>
+                  <span className="text-xs text-muted-foreground">{t('alerts.predictions.restocks.subtitle')}</span>
                 </div>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="px-6">Produit</TableHead>
-                      <TableHead className="px-6">Stock actuel</TableHead>
-                      <TableHead className="px-6">Stock recommandé</TableHead>
-                      <TableHead className="px-6">À commander</TableHead>
-                      <TableHead className="px-6">Demande / jour</TableHead>
-                      <TableHead className="px-6">Jours restants</TableHead>
-                      <TableHead className="px-6">Urgence</TableHead>
+                      <TableHead className="px-6">{t('alerts.predictions.restocks.product')}</TableHead>
+                      <TableHead className="px-6">{t('alerts.predictions.restocks.current_stock')}</TableHead>
+                      <TableHead className="px-6">{t('alerts.predictions.restocks.recommended')}</TableHead>
+                      <TableHead className="px-6">{t('alerts.predictions.restocks.to_order')}</TableHead>
+                      <TableHead className="px-6">{t('alerts.predictions.restocks.demand_day')}</TableHead>
+                      <TableHead className="px-6">{t('alerts.predictions.restocks.days_left')}</TableHead>
+                      <TableHead className="px-6">{t('alerts.predictions.restocks.urgency')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {restocks.length === 0 ? (
                       <TableRow className="hover:bg-transparent">
-                        <TableCell colSpan={7} className="h-20 text-center text-muted-foreground">Aucun réapprovisionnement urgent</TableCell>
+                        <TableCell colSpan={7} className="h-20 text-center text-muted-foreground">{t('alerts.predictions.restocks.empty')}</TableCell>
                       </TableRow>
                     ) : (
                       restocks.map((r) => (
@@ -584,7 +582,7 @@ export default function AlertsPage() {
                             </span>
                           </TableCell>
                           <TableCell className="px-6">
-                            <span className={`text-xs font-semibold ${URGENCY_COLOR[r.urgency]}`}>{r.urgency}</span>
+                            <span className={`text-xs font-semibold ${URGENCY_COLOR[r.urgency]}`}>{t(`predictions.urgency.${r.urgency}`, r.urgency)}</span>
                           </TableCell>
                         </TableRow>
                       ))
@@ -597,23 +595,23 @@ export default function AlertsPage() {
               <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
                 <div className="flex items-center gap-3 px-6 py-4 border-b border-border">
                   <AlertTriangle className="w-4 h-4 text-amber-500" />
-                  <h3 className="text-base font-semibold text-foreground">Anomalies de prix</h3>
-                  <span className="text-xs text-muted-foreground">Prix détectés hors de la plage normale</span>
+                  <h3 className="text-base font-semibold text-foreground">{t('alerts.predictions.price.title')}</h3>
+                  <span className="text-xs text-muted-foreground">{t('alerts.predictions.price.subtitle')}</span>
                 </div>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="px-6">Produit</TableHead>
-                      <TableHead className="px-6">Prix actuel</TableHead>
-                      <TableHead className="px-6">Prix attendu</TableHead>
-                      <TableHead className="px-6">Écart</TableHead>
-                      <TableHead className="px-6">Score anomalie</TableHead>
+                      <TableHead className="px-6">{t('alerts.predictions.price.product')}</TableHead>
+                      <TableHead className="px-6">{t('alerts.predictions.price.current_price')}</TableHead>
+                      <TableHead className="px-6">{t('alerts.predictions.price.expected_price')}</TableHead>
+                      <TableHead className="px-6">{t('alerts.predictions.price.gap')}</TableHead>
+                      <TableHead className="px-6">{t('alerts.predictions.price.score')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {priceAnomalies.length === 0 ? (
                       <TableRow className="hover:bg-transparent">
-                        <TableCell colSpan={5} className="h-20 text-center text-muted-foreground">Aucune anomalie de prix détectée</TableCell>
+                        <TableCell colSpan={5} className="h-20 text-center text-muted-foreground">{t('alerts.predictions.price.empty')}</TableCell>
                       </TableRow>
                     ) : (
                       priceAnomalies.map((p) => {
@@ -645,23 +643,23 @@ export default function AlertsPage() {
               <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
                 <div className="flex items-center gap-3 px-6 py-4 border-b border-border">
                   <TrendingDown className="w-4 h-4 text-violet-500" />
-                  <h3 className="text-base font-semibold text-foreground">Anomalies de ventes</h3>
-                  <span className="text-xs text-muted-foreground">Volumes de ventes inhabituels détectés par l'IA</span>
+                  <h3 className="text-base font-semibold text-foreground">{t('alerts.predictions.sales.title')}</h3>
+                  <span className="text-xs text-muted-foreground">{t('alerts.predictions.sales.subtitle')}</span>
                 </div>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="px-6">Produit</TableHead>
-                      <TableHead className="px-6">Volume observé</TableHead>
-                      <TableHead className="px-6">Volume attendu</TableHead>
-                      <TableHead className="px-6">Écart</TableHead>
-                      <TableHead className="px-6">Score anomalie</TableHead>
+                      <TableHead className="px-6">{t('alerts.predictions.sales.product')}</TableHead>
+                      <TableHead className="px-6">{t('alerts.predictions.sales.observed')}</TableHead>
+                      <TableHead className="px-6">{t('alerts.predictions.sales.expected')}</TableHead>
+                      <TableHead className="px-6">{t('alerts.predictions.sales.gap')}</TableHead>
+                      <TableHead className="px-6">{t('alerts.predictions.sales.score')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {salesAnomalies.length === 0 ? (
                       <TableRow className="hover:bg-transparent">
-                        <TableCell colSpan={5} className="h-20 text-center text-muted-foreground">Aucune anomalie de ventes détectée</TableCell>
+                        <TableCell colSpan={5} className="h-20 text-center text-muted-foreground">{t('alerts.predictions.sales.empty')}</TableCell>
                       </TableRow>
                     ) : (
                       salesAnomalies.map((s) => {
