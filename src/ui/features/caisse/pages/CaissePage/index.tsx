@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ScanLine,
   Search,
@@ -50,6 +51,7 @@ const EUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" 
 const isValidEmail = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.trim());
 
 export default function CaissePage() {
+  const { t } = useTranslation();
   const { addToast } = useToast();
 
   // ----- Panier -----
@@ -115,10 +117,9 @@ export default function CaissePage() {
       const ref = reference.trim();
       if (!ref) return;
       // Corrige un éventuel mauvais layout clavier (scannette QWERTY sur poste AZERTY).
-      // On tente en priorité la version corrigée, puis la valeur brute.
       const normalized = normalizeScan(ref);
       const candidates = normalized !== ref ? [normalized, ref] : [ref];
-      const shown = normalized; // référence décodée (affichage)
+      const shown = normalized;
       setLookingUp(true);
       try {
         let product = null;
@@ -132,9 +133,13 @@ export default function CaissePage() {
         }
         if (product) {
           addProductToCart(product);
-          addToast("Produit ajouté", product.name, "success", 2000);
+          addToast(t("caisse.toast.product_added"), product.name, "success", 2000);
         } else {
-          addToast("Produit introuvable", `Référence « ${shown} » absente du catalogue`, "error");
+          addToast(
+            t("caisse.toast.product_not_found"),
+            t("caisse.toast.ref_absent", { ref: shown }),
+            "error"
+          );
         }
       } finally {
         setScanValue("");
@@ -144,7 +149,7 @@ export default function CaissePage() {
         focusScan();
       }
     },
-    [addProductToCart, addToast, focusScan]
+    [addProductToCart, addToast, focusScan, t]
   );
 
   useBarcodeScanner(lookupByReference, { enabled: !showNewClient });
@@ -179,9 +184,9 @@ export default function CaissePage() {
     try {
       const product = await productService.getById(id);
       addProductToCart(product);
-      addToast("Produit ajouté", product.name, "success", 2000);
+      addToast(t("caisse.toast.product_added"), product.name, "success", 2000);
     } catch {
-      addToast("Erreur", "Impossible d'ajouter ce produit", "error");
+      addToast(t("caisse.toast.error"), t("caisse.toast.cannot_add_product"), "error");
     } finally {
       setScanValue("");
       focusScan();
@@ -294,7 +299,7 @@ export default function CaissePage() {
 
   const handleCreateClient = async () => {
     if (!newClient.firstname || !newClient.lastname || !newClient.email || !newClient.password) {
-      addToast("Champs requis", "Renseignez tous les champs du compte fidélité", "error");
+      addToast(t("caisse.toast.required_fields"), t("caisse.toast.fill_all_fields"), "error");
       return;
     }
     setCreatingClient(true);
@@ -302,13 +307,13 @@ export default function CaissePage() {
       const created = await userService.create(newClient);
       setUsers((prev) => [...prev, created]);
       await selectClient(created);
-      addToast("Compte fidélité créé", `${created.firstname} ${created.lastname}`, "success");
+      addToast(t("caisse.toast.account_created"), `${created.firstname} ${created.lastname}`, "success");
       setShowNewClient(false);
       setNewClient({ firstname: "", lastname: "", email: "", password: "" });
     } catch (err) {
       addToast(
-        "Création impossible",
-        err instanceof Error ? err.message : "Erreur lors de la création du compte",
+        t("caisse.toast.create_failed"),
+        err instanceof Error ? err.message : t("caisse.toast.create_error"),
         "error"
       );
     } finally {
@@ -325,12 +330,12 @@ export default function CaissePage() {
   const handleValidate = async () => {
     if (cart.length === 0) return;
     if (!paymentMethod) {
-      addToast("Mode de paiement", "Choisissez Carte ou Espèces", "error");
+      addToast(t("caisse.toast.choose_payment_title"), t("caisse.toast.choose_payment_desc"), "error");
       return;
     }
     const userId = selectedClient?.id ?? users[0]?.id;
     if (userId == null) {
-      addToast("Aucun client disponible", "Créez au moins un compte client avant d'encaisser", "error");
+      addToast(t("caisse.toast.no_client_title"), t("caisse.toast.no_client_desc"), "error");
       return;
     }
 
@@ -347,24 +352,23 @@ export default function CaissePage() {
       const savings = Number(order.discount_amount ?? 0);
       const eurosPerPoint = loyaltyConfig ? Number(loyaltyConfig.euros_per_point) : 0;
       const earned = eurosPerPoint > 0 ? Math.floor(Number(order.amount) / eurosPerPoint) : 0;
-      addToast(
-        "Vente encaissée ✓",
-        `Commande #${order.id} — ${EUR.format(Number(order.amount))}` +
-          (savings > 0 ? ` · remise ${EUR.format(savings)}` : "") +
-          (selectedClient && earned > 0 ? ` · +${earned} pts fidélité` : ""),
-        "success",
-        6000
-      );
+      let desc = t("caisse.toast.order_summary", {
+        id: order.id,
+        amount: EUR.format(Number(order.amount)),
+      });
+      if (savings > 0) desc += t("caisse.toast.discount_suffix", { amount: EUR.format(savings) });
+      if (selectedClient && earned > 0) desc += t("caisse.toast.points_suffix", { n: earned });
+      addToast(t("caisse.toast.sale_done"), desc, "success", 6000);
 
       // Envoi du ticket par email si demandé (best-effort, ne bloque pas la vente)
       if (wantReceipt && receiptEmail.trim()) {
         try {
           await orderService.sendReceipt(order.id, receiptEmail.trim());
-          addToast("Ticket envoyé", receiptEmail.trim(), "success", 4000);
+          addToast(t("caisse.toast.receipt_sent"), receiptEmail.trim(), "success", 4000);
         } catch (err) {
           addToast(
-            "Ticket non envoyé",
-            err instanceof Error ? err.message : "Échec de l'envoi de l'email",
+            t("caisse.toast.receipt_not_sent"),
+            err instanceof Error ? err.message : t("caisse.toast.email_send_failed"),
             "error"
           );
         }
@@ -383,8 +387,8 @@ export default function CaissePage() {
       focusScan();
     } catch (err) {
       addToast(
-        "Échec de l'encaissement",
-        err instanceof Error ? err.message : "Vérifiez le stock et réessayez",
+        t("caisse.toast.checkout_failed"),
+        err instanceof Error ? err.message : t("caisse.toast.check_stock"),
         "error"
       );
     } finally {
@@ -397,12 +401,12 @@ export default function CaissePage() {
   // ---------------------------------------------------------------------------
   return (
     <PageLayout
-      title="Caisse"
-      subtitle="Scannez les articles, gérez le panier et encaissez vos ventes"
+      title={t("caisse.title")}
+      subtitle={t("caisse.subtitle")}
       actions={
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <ScanLine className="w-4 h-4 text-emerald-500" />
-          Scannette prête
+          {t("caisse.scanner_ready")}
         </div>
       }
     >
@@ -421,13 +425,13 @@ export default function CaissePage() {
                     value={scanValue}
                     onChange={(e) => setScanValue(e.target.value)}
                     onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
-                    placeholder="Scannez un code-barres ou recherchez un produit…"
+                    placeholder={t("caisse.scan_placeholder")}
                     className="pl-9 h-11 text-base"
                   />
                 </div>
                 <Button type="submit" size="lg" disabled={lookingUp || !scanValue.trim()}>
                   <ScanLine className="w-4 h-4" />
-                  Ajouter
+                  {t("caisse.add")}
                 </Button>
               </div>
 
@@ -448,9 +452,7 @@ export default function CaissePage() {
                 </div>
               )}
             </form>
-            <p className="mt-2 text-xs text-muted-foreground">
-              Astuce : le lecteur code-barres ajoute automatiquement l'article au panier.
-            </p>
+            <p className="mt-2 text-xs text-muted-foreground">{t("caisse.scan_hint")}</p>
           </div>
 
           {/* Panier */}
@@ -458,17 +460,17 @@ export default function CaissePage() {
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
               <h2 className="flex items-center gap-2 font-semibold text-foreground">
                 <ShoppingCart className="w-4 h-4" />
-                Panier
+                {t("caisse.cart")}
                 {totalItems > 0 && (
                   <span className="text-xs font-normal text-muted-foreground">
-                    ({totalItems} article{totalItems > 1 ? "s" : ""})
+                    ({t("caisse.items_count", { count: totalItems })})
                   </span>
                 )}
               </h2>
               {cart.length > 0 && (
                 <Button variant="ghost" size="sm" onClick={clearCart}>
                   <Trash2 className="w-4 h-4" />
-                  Vider
+                  {t("caisse.clear")}
                 </Button>
               )}
             </div>
@@ -476,7 +478,7 @@ export default function CaissePage() {
             {cart.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <ScanLine className="w-10 h-10 mb-3 opacity-40" />
-                <p className="text-sm">Aucun article. Scannez un produit pour commencer.</p>
+                <p className="text-sm">{t("caisse.empty_cart")}</p>
               </div>
             ) : (
               <ul className="divide-y divide-border">
@@ -487,22 +489,22 @@ export default function CaissePage() {
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-foreground truncate">{line.product.name}</p>
                         <p className="text-xs text-muted-foreground">
-                          {line.product.reference} · {EUR.format(line.product.buying_price)} / u
+                          {line.product.reference} · {EUR.format(line.product.buying_price)} {t("caisse.per_unit")}
                           {overStock && (
                             <span className="ml-2 inline-flex items-center gap-1 text-amber-600">
                               <AlertTriangle className="w-3 h-3" />
-                              stock : {line.product.stock_quantity}
+                              {t("caisse.stock_label", { n: line.product.stock_quantity })}
                             </span>
                           )}
                         </p>
                       </div>
 
                       <div className="flex items-center gap-1">
-                        <Button variant="outline" size="icon-sm" onClick={() => changeQty(line.product.id, -1)} aria-label="Diminuer">
+                        <Button variant="outline" size="icon-sm" onClick={() => changeQty(line.product.id, -1)} aria-label={t("caisse.decrease")}>
                           <Minus className="w-3.5 h-3.5" />
                         </Button>
                         <span className="w-8 text-center text-sm font-medium tabular-nums">{line.quantity}</span>
-                        <Button variant="outline" size="icon-sm" onClick={() => changeQty(line.product.id, 1)} aria-label="Augmenter">
+                        <Button variant="outline" size="icon-sm" onClick={() => changeQty(line.product.id, 1)} aria-label={t("caisse.increase")}>
                           <Plus className="w-3.5 h-3.5" />
                         </Button>
                       </div>
@@ -511,7 +513,7 @@ export default function CaissePage() {
                         {EUR.format(line.product.buying_price * line.quantity)}
                       </div>
 
-                      <Button variant="ghost" size="icon-sm" onClick={() => removeLine(line.product.id)} aria-label="Retirer">
+                      <Button variant="ghost" size="icon-sm" onClick={() => removeLine(line.product.id)} aria-label={t("caisse.remove")}>
                         <X className="w-4 h-4" />
                       </Button>
                     </li>
@@ -528,7 +530,7 @@ export default function CaissePage() {
           <div className="bg-card border border-border rounded-lg p-4">
             <h2 className="flex items-center gap-2 font-semibold text-foreground mb-3">
               <Gift className="w-4 h-4" />
-              Compte fidélité
+              {t("caisse.loyalty_account")}
             </h2>
 
             {selectedClient ? (
@@ -540,7 +542,7 @@ export default function CaissePage() {
                     </p>
                     <p className="text-xs text-muted-foreground">{selectedClient.email}</p>
                   </div>
-                  <Button variant="ghost" size="icon-sm" onClick={clearClient} aria-label="Retirer le client">
+                  <Button variant="ghost" size="icon-sm" onClick={clearClient} aria-label={t("caisse.remove_customer")}>
                     <X className="w-4 h-4" />
                   </Button>
                 </div>
@@ -548,7 +550,7 @@ export default function CaissePage() {
                   <div className="mt-2 flex items-center gap-2 text-sm">
                     <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 text-emerald-600 px-2 py-0.5 text-xs font-medium">
                       <Gift className="w-3 h-3" />
-                      {clientLoyalty.total_points} points
+                      {t("caisse.points", { n: clientLoyalty.total_points })}
                     </span>
                   </div>
                 )}
@@ -560,7 +562,7 @@ export default function CaissePage() {
                   <Input
                     value={clientQuery}
                     onChange={(e) => setClientQuery(e.target.value)}
-                    placeholder="Rechercher un client (nom, email)…"
+                    placeholder={t("caisse.client_search_placeholder")}
                     className="pl-9"
                   />
                   {filteredClients.length > 0 && (
@@ -583,11 +585,9 @@ export default function CaissePage() {
                 </div>
                 <Button variant="outline" className="w-full" onClick={() => setShowNewClient(true)}>
                   <UserPlus className="w-4 h-4" />
-                  Nouveau compte fidélité
+                  {t("caisse.new_loyalty_account")}
                 </Button>
-                <p className="text-xs text-muted-foreground text-center">
-                  Sans sélection, la vente est enregistrée comme « client de passage ».
-                </p>
+                <p className="text-xs text-muted-foreground text-center">{t("caisse.walkin_note")}</p>
               </div>
             )}
           </div>
@@ -596,12 +596,12 @@ export default function CaissePage() {
           <div className="bg-card border border-border rounded-lg p-4 space-y-4">
             <h2 className="flex items-center gap-2 font-semibold text-foreground">
               <CreditCard className="w-4 h-4" />
-              Encaissement
+              {t("caisse.checkout")}
             </h2>
 
             {/* Mode de paiement */}
             <div>
-              <p className="text-sm font-medium text-foreground mb-2">Mode de paiement</p>
+              <p className="text-sm font-medium text-foreground mb-2">{t("caisse.payment_method")}</p>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
@@ -613,7 +613,7 @@ export default function CaissePage() {
                   }`}
                 >
                   <CreditCard className="w-5 h-5" />
-                  <span className="text-sm font-medium">Carte</span>
+                  <span className="text-sm font-medium">{t("caisse.card")}</span>
                 </button>
                 <button
                   type="button"
@@ -625,7 +625,7 @@ export default function CaissePage() {
                   }`}
                 >
                   <Banknote className="w-5 h-5" />
-                  <span className="text-sm font-medium">Espèces</span>
+                  <span className="text-sm font-medium">{t("caisse.cash")}</span>
                 </button>
               </div>
 
@@ -633,7 +633,7 @@ export default function CaissePage() {
               {paymentMethod === "cash" && (
                 <div className="mt-3 rounded-lg border border-border bg-muted/30 p-3 space-y-2">
                   <label className="flex items-center justify-between gap-2 text-sm">
-                    <span className="text-muted-foreground whitespace-nowrap">Montant reçu</span>
+                    <span className="text-muted-foreground whitespace-nowrap">{t("caisse.amount_received")}</span>
                     <span className="relative">
                       <Input
                         type="number"
@@ -654,12 +654,12 @@ export default function CaissePage() {
                     const diff = received - discountedTotal;
                     return diff >= 0 ? (
                       <div className="flex items-center justify-between text-base font-semibold text-emerald-600">
-                        <span>À rendre</span>
+                        <span>{t("caisse.change_due")}</span>
                         <span className="tabular-nums">{EUR.format(diff)}</span>
                       </div>
                     ) : (
                       <div className="flex items-center justify-between text-sm font-medium text-amber-600">
-                        <span>Manque</span>
+                        <span>{t("caisse.missing")}</span>
                         <span className="tabular-nums">{EUR.format(-diff)}</span>
                       </div>
                     );
@@ -681,7 +681,7 @@ export default function CaissePage() {
                       onClick={() => setCashReceived(discountedTotal.toFixed(2))}
                       className="rounded-md border border-border px-2 py-0.5 text-xs hover:bg-muted transition-colors"
                     >
-                      Appoint
+                      {t("caisse.exact")}
                     </button>
                   </div>
                 </div>
@@ -691,13 +691,13 @@ export default function CaissePage() {
             {/* Promotions */}
             <div>
               <p className="flex items-center gap-2 text-sm font-medium text-foreground mb-2">
-                Promotions
+                {t("caisse.promotions")}
                 {checkingPromos && <Loader2 className="w-3.5 h-3.5 animate-spin text-muted-foreground" />}
               </p>
               {cart.length === 0 ? (
-                <p className="text-xs text-muted-foreground">Ajoutez des articles pour voir les promotions.</p>
+                <p className="text-xs text-muted-foreground">{t("caisse.add_items_for_promos")}</p>
               ) : applicable.length === 0 ? (
-                <p className="text-xs text-muted-foreground">Aucune promotion applicable à ce panier.</p>
+                <p className="text-xs text-muted-foreground">{t("caisse.no_promos")}</p>
               ) : (
                 <div className="space-y-1.5">
                   {applicable.map((d) => (
@@ -726,7 +726,7 @@ export default function CaissePage() {
 
             {/* Ticket de caisse */}
             <div>
-              <p className="text-sm font-medium text-foreground mb-2">Ticket de caisse</p>
+              <p className="text-sm font-medium text-foreground mb-2">{t("caisse.receipt")}</p>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
@@ -735,7 +735,7 @@ export default function CaissePage() {
                   className="h-4 w-4 accent-primary"
                 />
                 <Receipt className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm text-foreground">Envoyer le ticket par email</span>
+                <span className="text-sm text-foreground">{t("caisse.send_receipt_email")}</span>
               </label>
               {wantReceipt && (
                 <div className="mt-2">
@@ -743,11 +743,11 @@ export default function CaissePage() {
                     type="email"
                     value={receiptEmail}
                     onChange={(e) => setReceiptEmail(e.target.value)}
-                    placeholder="email@client.fr"
+                    placeholder={t("caisse.email_placeholder")}
                     className={!emailOk && receiptEmail ? "border-destructive" : ""}
                   />
                   {selectedClient && receiptEmail === selectedClient.email && (
-                    <p className="mt-1 text-xs text-muted-foreground">Email du compte fidélité.</p>
+                    <p className="mt-1 text-xs text-muted-foreground">{t("caisse.loyalty_email_note")}</p>
                   )}
                 </div>
               )}
@@ -756,17 +756,17 @@ export default function CaissePage() {
             {/* Totaux */}
             <div className="border-t border-border pt-3 space-y-1">
               <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <span>Sous-total ({totalItems})</span>
+                <span>{t("caisse.subtotal")} ({totalItems})</span>
                 <span className="tabular-nums">{EUR.format(total)}</span>
               </div>
               {selectedSaving > 0 && (
                 <div className="flex items-center justify-between text-sm text-emerald-600">
-                  <span>Remises</span>
+                  <span>{t("caisse.discounts")}</span>
                   <span className="tabular-nums">-{EUR.format(selectedSaving)}</span>
                 </div>
               )}
               <div className="flex items-center justify-between text-2xl font-bold text-foreground">
-                <span>À payer</span>
+                <span>{t("caisse.to_pay")}</span>
                 <span className="tabular-nums">{EUR.format(discountedTotal)}</span>
               </div>
             </div>
@@ -774,15 +774,13 @@ export default function CaissePage() {
             <Button size="lg" className="w-full h-12 text-base" disabled={!canValidate} onClick={handleValidate}>
               {checkingOut ? (
                 <>
-                  <Loader2 className="w-5 h-5 animate-spin" /> Traitement…
+                  <Loader2 className="w-5 h-5 animate-spin" /> {t("caisse.processing")}
                 </>
               ) : (
-                `Valider la commande${cart.length > 0 ? ` · ${EUR.format(discountedTotal)}` : ""}`
+                `${t("caisse.validate_order")}${cart.length > 0 ? ` · ${EUR.format(discountedTotal)}` : ""}`
               )}
             </Button>
-            <p className="text-xs text-muted-foreground text-center">
-              Montant final calculé par la caisse au tarif de vente.
-            </p>
+            <p className="text-xs text-muted-foreground text-center">{t("caisse.final_amount_note")}</p>
           </div>
         </div>
       </div>
@@ -791,15 +789,13 @@ export default function CaissePage() {
       <Dialog open={showNewClient} onOpenChange={setShowNewClient}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Nouveau compte fidélité</DialogTitle>
-            <DialogDescription>
-              Créez un client pour le rattacher à la vente et cumuler des points.
-            </DialogDescription>
+            <DialogTitle>{t("caisse.new_loyalty_account")}</DialogTitle>
+            <DialogDescription>{t("caisse.new_client_desc")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-3 py-2">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-sm font-medium text-foreground">Prénom</label>
+                <label className="text-sm font-medium text-foreground">{t("caisse.firstname")}</label>
                 <Input
                   value={newClient.firstname}
                   onChange={(e) => setNewClient((p) => ({ ...p, firstname: e.target.value }))}
@@ -807,7 +803,7 @@ export default function CaissePage() {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-foreground">Nom</label>
+                <label className="text-sm font-medium text-foreground">{t("caisse.lastname")}</label>
                 <Input
                   value={newClient.lastname}
                   onChange={(e) => setNewClient((p) => ({ ...p, lastname: e.target.value }))}
@@ -816,7 +812,7 @@ export default function CaissePage() {
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium text-foreground">Email</label>
+              <label className="text-sm font-medium text-foreground">{t("caisse.email")}</label>
               <Input
                 type="email"
                 value={newClient.email}
@@ -825,7 +821,7 @@ export default function CaissePage() {
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-foreground">Mot de passe</label>
+              <label className="text-sm font-medium text-foreground">{t("caisse.password")}</label>
               <Input
                 type="password"
                 value={newClient.password}
@@ -836,10 +832,10 @@ export default function CaissePage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowNewClient(false)} disabled={creatingClient}>
-              Annuler
+              {t("caisse.cancel")}
             </Button>
             <Button onClick={handleCreateClient} disabled={creatingClient}>
-              {creatingClient ? "Création…" : "Créer le compte"}
+              {creatingClient ? t("caisse.creating") : t("caisse.create_account")}
             </Button>
           </DialogFooter>
         </DialogContent>
