@@ -1,9 +1,38 @@
-function getAiServiceUrl(): string {
-  const hostname = window.location.hostname;
-  if (hostname === "localhost" || hostname === "127.0.0.1") {
-    return import.meta.env.VITE_AI_SERVICE_URL ?? "http://localhost:8001";
+function getBackendUrl(): string {
+  return import.meta.env.VITE_API_URL ?? "http://localhost:8090";
+}
+
+function resolveCommerceId(): string | null {
+  const cached = localStorage.getItem("commerce_id");
+  if (cached) return cached;
+  // Fallback: parse directly from JWT
+  try {
+    const token = localStorage.getItem("auth_token");
+    if (!token) return null;
+    const decoded = JSON.parse(atob(token.split(".")[1]));
+    const id = decoded.commerce_id;
+    if (id) {
+      const str = String(id);
+      localStorage.setItem("commerce_id", str);
+      return str;
+    }
+  } catch {
+    // ignore malformed JWT
   }
-  return import.meta.env.VITE_AI_SERVICE_URL ?? "https://ai.stock-s.fr";
+  return null;
+}
+
+function getCommercePrefix(): string {
+  const id = resolveCommerceId();
+  if (!id) throw new Error("commerce_id manquant — veuillez vous reconnecter.");
+  return `/api/${id}`;
+}
+
+function getAuthHeaders(): Record<string, string> {
+  const token = localStorage.getItem("auth_token");
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  return headers;
 }
 
 export interface StreamCallbacks {
@@ -13,39 +42,39 @@ export interface StreamCallbacks {
   onError?: (msg: string) => void;
 }
 
-function parseHistory(
-  messages: { role: string; content: string }[]
-): { role: string; content: string }[] {
-  return messages.map((m) => ({
-    role: m.role === "bot" ? "assistant" : m.role,
-    content: m.content,
-  }));
-}
-
 export const chatBackendService = {
+  async createSession(): Promise<string> {
+    const prefix = getCommercePrefix();
+    const url = `${getBackendUrl()}${prefix}/chat/sessions`;
+    console.debug("[chat] createSession →", url);
+    const resp = await fetch(url, { method: "POST", headers: getAuthHeaders(), body: JSON.stringify({}) });
+    console.debug("[chat] createSession status:", resp.status);
+    if (!resp.ok) {
+      const body = await resp.text().catch(() => "");
+      console.error("[chat] createSession error body:", body);
+      throw new Error(`Failed to create session: HTTP ${resp.status} — ${body}`);
+    }
+    const json = await resp.json();
+    console.debug("[chat] session_id:", json.data?.session_id);
+    return json.data.session_id as string;
+  },
+
   async streamTurn(
     userMessage: string,
-    history: { role: string; content: string }[],
     sessionId: string,
     callbacks: StreamCallbacks
   ): Promise<void> {
-    const jwt = localStorage.getItem("auth_token") ?? "";
-    const userId = parseInt(localStorage.getItem("commerce_id") ?? "0", 10);
-
-    const response = await fetch(`${getAiServiceUrl()}/chat/turn/stream`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        user_message: userMessage,
-        history: parseHistory(history),
-        user_jwt: jwt,
-        user_id: userId,
-        session_id: sessionId,
-      }),
-    });
+    const response = await fetch(
+      `${getBackendUrl()}${getCommercePrefix()}/chat/sessions/${sessionId}/messages/stream`,
+      {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ content: userMessage }),
+      }
+    );
 
     if (!response.ok || !response.body) {
-      throw new Error(`AI service error: HTTP ${response.status}`);
+      throw new Error(`Chat error: HTTP ${response.status}`);
     }
 
     const reader = response.body.getReader();
@@ -85,19 +114,13 @@ export const chatBackendService = {
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-
       buffer += decoder.decode(value, { stream: true });
-
-      // SSE events are separated by double newline
       const blocks = buffer.split("\n\n");
       buffer = blocks.pop() ?? "";
-
       for (const block of blocks) {
         if (block.trim()) processBlock(block);
       }
     }
-
-    // Process any remaining content
     if (buffer.trim()) processBlock(buffer);
   },
 };
