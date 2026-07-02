@@ -39,6 +39,7 @@
             "engagement": "Engagement"
         },
         "dashboard": "Tableau de bord",
+        "caisse": "Caisse",
         "inventory": "Inventaire",
         "orders": "Commandes",
         "insights": "Analyses",

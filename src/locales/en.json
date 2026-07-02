@@ -39,6 +39,7 @@
             "engagement": "Engagement"
         },
         "dashboard": "Dashboard",
+        "caisse": "Checkout",
         "inventory": "Inventory",
         "orders": "Orders",
         "insights": "Insights",

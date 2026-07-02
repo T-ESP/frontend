@@ -43,6 +43,7 @@ export const API_ENDPOINTS = {
     create: '/orders',
     update: (id: number) => `/orders/${id}`,
     delete: (id: number) => `/orders/${id}`,
+    receipt: (id: number) => `/orders/${id}/receipt`,
   },
   sales: {
     totalRevenue: '/sales/total',
