@@ -40,7 +40,7 @@ export default function AIAssistantPage() {
   >(initialMessagesData);
   const [composer, setComposer] = useState("");
   const [isSending, setIsSending] = useState(false);
-  const sessionIdRef = useRef(crypto.randomUUID());
+  const sessionIdRef = useRef<string | null>(null);
 
   const [renameTargetId, setRenameTargetId] = useState<string | null>(null);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
@@ -101,8 +101,6 @@ export default function AIAssistantPage() {
 
     setIsSending(true);
 
-    const history = messagesByThread[activeThreadId] ?? [];
-
     const userMsg: ChatMessage = {
       id: makeId("m"),
       role: "user",
@@ -146,9 +144,11 @@ export default function AIAssistantPage() {
     };
 
     try {
+      if (!sessionIdRef.current) {
+        sessionIdRef.current = await chatBackendService.createSession();
+      }
       await chatBackendService.streamTurn(
         text,
-        history.map((m) => ({ role: m.role, content: m.content })),
         sessionIdRef.current,
         {
           onStatus: updateLoading,
