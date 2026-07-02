@@ -57,6 +57,7 @@ export const API_ENDPOINTS = {
   },
   kpis: {
     topFlop: '/kpis/top-flop',
+    forecast: '/kpis/forecast',
   },
   loyalty: {
     getConfig: '/loyalty/config',
