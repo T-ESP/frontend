@@ -1,5 +1,5 @@
 import type { SidebarItemType, SidebarSectionType } from "@/ui/components/layouts/Sidebar/Sidebar.types";
-import { Bell, Box, BarChart2, ChartLine, Gift, LayoutDashboard, List, LogOut, Package, Settings, ShoppingCartIcon, Tag } from "lucide-react";
+import { Bell, Box, BarChart2, ChartLine, Gift, LayoutDashboard, List, LogOut, Settings, ShoppingCartIcon, Tag } from "lucide-react";
 
 export const sections: SidebarSectionType[] = [
   {
