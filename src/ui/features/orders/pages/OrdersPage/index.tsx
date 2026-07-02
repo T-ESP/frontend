@@ -17,12 +17,12 @@ import {
   ChevronRight,
   FileDown,
   Plus,
+  Calendar,
 } from 'lucide-react';
 import { AddOrderModal } from '@/ui/features/orders/components/AddOrderModal';
 import { EditOrderModal } from '@/ui/features/orders/components/EditOrderModal';
 import { DeleteOrderModal } from '@/ui/features/orders/components/DeleteOrderModal';
 import { ViewOrderModal } from '@/ui/features/orders/components/ViewOrderModal';
-import { OrderStats } from '@/ui/features/orders/components/OrderStats';
 import { useToast } from '@/ui/components/common/Toast';
 import { useTranslation } from 'react-i18next';
 import { useExportInvoice } from '@/ui/features/orders/hooks/useExportInvoice';
@@ -36,6 +36,32 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+
+type DatePreset = 'all' | 'today' | 'yesterday' | '7d' | '30d' | '90d' | 'month' | 'year' | 'custom';
+
+function getDateRange(preset: DatePreset, customFrom: string, customUntil: string): { from: Date | null; until: Date | null } {
+  const now = new Date();
+  const startOfDay = (d: Date) => { d.setHours(0, 0, 0, 0); return d; };
+
+  switch (preset) {
+    case 'all': return { from: null, until: null };
+    case 'today': return { from: startOfDay(new Date()), until: new Date() };
+    case 'yesterday': {
+      const y = new Date(); y.setDate(y.getDate() - 1);
+      return { from: startOfDay(new Date(y)), until: new Date(y.setHours(23, 59, 59, 999)) };
+    }
+    case '7d': { const d = new Date(); d.setDate(d.getDate() - 7); return { from: startOfDay(d), until: now }; }
+    case '30d': { const d = new Date(); d.setDate(d.getDate() - 30); return { from: startOfDay(d), until: now }; }
+    case '90d': { const d = new Date(); d.setDate(d.getDate() - 90); return { from: startOfDay(d), until: now }; }
+    case 'month': { const d = new Date(now.getFullYear(), now.getMonth(), 1); return { from: d, until: now }; }
+    case 'year': { const d = new Date(now.getFullYear(), 0, 1); return { from: d, until: now }; }
+    case 'custom': return {
+      from: customFrom ? new Date(customFrom) : null,
+      until: customUntil ? new Date(new Date(customUntil).setHours(23, 59, 59, 999)) : null,
+    };
+    default: return { from: null, until: null };
+  }
+}
 
 const formatAmount = (amount: number) =>
   new Intl.NumberFormat('fr-FR', {
@@ -88,6 +114,9 @@ export default function OrdersPage() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [amountRange, setAmountRange] = useState<{ min: number; max: number }>({ min: 0, max: 10000 });
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [datePreset, setDatePreset] = useState<DatePreset>('all');
+  const [customFrom, setCustomFrom] = useState('');
+  const [customUntil, setCustomUntil] = useState('');
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(25);
@@ -146,6 +175,10 @@ export default function OrdersPage() {
 
     filtered = filtered.filter((o) => o.amount >= amountRange.min && o.amount <= amountRange.max);
 
+    const { from, until } = getDateRange(datePreset, customFrom, customUntil);
+    if (from) filtered = filtered.filter((o) => new Date(o.order_date) >= from);
+    if (until) filtered = filtered.filter((o) => new Date(o.order_date) <= until);
+
     filtered.sort((a, b) => {
       let comparison = 0;
       switch (sortBy) {
@@ -166,7 +199,7 @@ export default function OrdersPage() {
     });
 
     return filtered;
-  }, [orders, selectedStatus, searchQuery, sortBy, sortOrder, amountRange]);
+  }, [orders, selectedStatus, searchQuery, sortBy, sortOrder, amountRange, datePreset, customFrom, customUntil]);
 
   const totalPages = Math.ceil(filteredAndSortedOrders.length / itemsPerPage);
   const paginatedOrders = useMemo(() => {
@@ -176,18 +209,22 @@ export default function OrdersPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedStatus, searchQuery, amountRange]);
+  }, [selectedStatus, searchQuery, amountRange, datePreset, customFrom, customUntil]);
 
   const activeFiltersCount = [
     selectedStatus !== 'All Status',
     searchQuery !== '',
     amountRange.min > 0 || amountRange.max < 10000,
+    datePreset !== 'all',
   ].filter(Boolean).length;
 
   const clearAllFilters = () => {
     setSelectedStatus('All Status');
     setSearchQuery('');
     setAmountRange({ min: 0, max: 10000 });
+    setDatePreset('all');
+    setCustomFrom('');
+    setCustomUntil('');
   };
 
   const headerActions = (
@@ -201,7 +238,7 @@ export default function OrdersPage() {
       </button>
       <button
         onClick={() => setShowAddModal(true)}
-        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-gray-900 border border-gray-900 rounded-lg hover:bg-gray-800 transition-colors"
+        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-primary-foreground bg-primary border border-primary rounded-lg hover:bg-primary/90 transition-colors"
       >
         <Plus className="w-4 h-4" />
         {t('orders.new_order')}
@@ -214,7 +251,7 @@ export default function OrdersPage() {
       <PageLayout title={t('orders.title')} subtitle={t('orders.subtitle', { count: 0 })}>
         <div className="flex items-center justify-center py-24">
           <div className="text-center text-muted-foreground">
-            <Loader2 className="w-6 h-6 mx-auto mb-3 text-purple-600 animate-spin" />
+            <Loader2 className="w-6 h-6 mx-auto mb-3 text-primary animate-spin" />
             <div className="text-sm font-medium text-muted-foreground">{t('orders.loading')}</div>
             <p className="mt-1 text-xs text-muted-foreground">{t('orders.fetching')}</p>
           </div>
@@ -233,7 +270,7 @@ export default function OrdersPage() {
             <p className="text-sm text-muted-foreground">{error}</p>
             <button
               onClick={loadOrders}
-              className="flex items-center gap-2 px-4 py-2 mx-auto mt-4 text-sm font-medium text-white transition-colors bg-gray-900 rounded-lg hover:bg-gray-800"
+              className="flex items-center gap-2 px-4 py-2 mx-auto mt-4 text-sm font-medium text-primary-foreground transition-colors bg-primary rounded-lg hover:bg-primary/90"
             >
               <RefreshCw size={14} />
               {t('orders.retry')}
@@ -255,8 +292,6 @@ export default function OrdersPage() {
         }
         actions={headerActions}
       >
-        <OrderStats orders={orders} />
-
         {/* Filters card */}
         <div className="bg-card border border-border rounded-lg">
           <div className="flex items-center justify-between px-6 py-4 border-b border-border">
@@ -279,7 +314,66 @@ export default function OrdersPage() {
             </div>
           </div>
 
-          <div className="px-6 py-4">
+          <div className="px-6 py-4 space-y-4">
+            {/* Date filter row */}
+            <div className="space-y-2">
+              <label className="ml-1 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                <Calendar className="w-3.5 h-3.5" />
+                {t('orders.filters.date_period', 'Période')}
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {(['all', 'today', 'yesterday', '7d', '30d', '90d', 'month', 'year', 'custom'] as DatePreset[]).map((preset) => {
+                  const labels: Record<DatePreset, string> = {
+                    all: t('orders.filters.date_all', 'Toutes'),
+                    today: t('orders.filters.date_today', "Aujourd'hui"),
+                    yesterday: t('orders.filters.date_yesterday', 'Hier'),
+                    '7d': t('orders.filters.date_7d', '7 jours'),
+                    '30d': t('orders.filters.date_30d', '30 jours'),
+                    '90d': t('orders.filters.date_90d', '90 jours'),
+                    month: t('orders.filters.date_month', 'Ce mois'),
+                    year: t('orders.filters.date_year', 'Cette année'),
+                    custom: t('orders.filters.date_custom', 'Personnalisé'),
+                  };
+                  return (
+                    <button
+                      key={preset}
+                      onClick={() => setDatePreset(preset)}
+                      className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors ${
+                        datePreset === preset
+                          ? 'bg-primary text-primary-foreground border-primary'
+                          : 'bg-card text-muted-foreground border-border hover:bg-muted'
+                      }`}
+                    >
+                      {labels[preset]}
+                    </button>
+                  );
+                })}
+              </div>
+              {datePreset === 'custom' && (
+                <div className="flex items-center gap-3 pt-1">
+                  <div className="space-y-1">
+                    <label className="ml-1 text-xs font-medium text-muted-foreground">{t('orders.filters.date_from', 'Du')}</label>
+                    <Input
+                      type="date"
+                      value={customFrom}
+                      onChange={(e) => setCustomFrom(e.target.value)}
+                      className="h-9 w-40"
+                    />
+                  </div>
+                  <span className="text-muted-foreground mt-5">—</span>
+                  <div className="space-y-1">
+                    <label className="ml-1 text-xs font-medium text-muted-foreground">{t('orders.filters.date_until', 'Au')}</label>
+                    <Input
+                      type="date"
+                      value={customUntil}
+                      onChange={(e) => setCustomUntil(e.target.value)}
+                      className="h-9 w-40"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
             <div className="grid items-end grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-6">
               <div className="space-y-1.5 lg:col-span-2">
                 <label className="ml-1 text-xs font-medium text-muted-foreground">
@@ -312,7 +406,7 @@ export default function OrdersPage() {
                 <select
                   value={selectedStatus}
                   onChange={(e) => setSelectedStatus(e.target.value)}
-                  className="w-full px-3 py-2 text-sm font-medium bg-card border border-border rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 transition-shadow"
+                  className="w-full px-3 py-2 text-sm font-medium bg-card border border-border rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-shadow"
                 >
                   <option value="All Status">{t('orders.filters.all_status')}</option>
                   <option value="Pending">{t('orders.filters.pending')}</option>
@@ -330,7 +424,7 @@ export default function OrdersPage() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full px-3 py-2 text-sm font-medium bg-card border border-border rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 transition-shadow"
+                  className="w-full px-3 py-2 text-sm font-medium bg-card border border-border rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-shadow"
                 >
                   <option value="date">{t('orders.filters.sort_date')}</option>
                   <option value="amount">{t('orders.filters.sort_amount')}</option>
@@ -358,7 +452,7 @@ export default function OrdersPage() {
                     onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
                     className={`flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium border rounded-lg transition-colors ${
                       showAdvancedFilters
-                        ? 'text-purple-700 bg-purple-50 border-purple-200'
+                        ? 'text-primary bg-accent border-primary/30'
                         : 'text-muted-foreground bg-card border-border hover:bg-muted'
                     }`}
                   >
@@ -508,7 +602,7 @@ export default function OrdersPage() {
                     setItemsPerPage(Number(e.target.value));
                     setCurrentPage(1);
                   }}
-                  className="px-2 py-1 text-xs bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500"
+                  className="px-2 py-1 text-xs bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
                 >
                   <option value={10}>10 {t('orders.pagination.per_page')}</option>
                   <option value={25}>25 {t('orders.pagination.per_page')}</option>
@@ -539,7 +633,7 @@ export default function OrdersPage() {
                       onClick={() => setCurrentPage(pageNum)}
                       className={`min-w-[32px] h-8 px-2 text-xs font-medium rounded-md transition-colors ${
                         currentPage === pageNum
-                          ? 'text-white bg-gray-900 border border-gray-900'
+                          ? 'text-primary-foreground bg-primary border border-primary'
                           : 'text-muted-foreground bg-card border border-border hover:bg-muted'
                       }`}
                     >

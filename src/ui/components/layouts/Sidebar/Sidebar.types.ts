@@ -11,3 +11,11 @@ export type SidebarSectionType = {
   label?: string;
   items: SidebarItemType[];
 };
+
+export type SidebarItemProps = SidebarItemType & {
+  isOpen: boolean;
+};
+
+export type SidebarSectionProps = SidebarSectionType & {
+  isOpen: boolean;
+};

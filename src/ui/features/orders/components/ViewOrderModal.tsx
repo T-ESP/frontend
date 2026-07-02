@@ -70,7 +70,7 @@ export function ViewOrderModal({ order, onClose }: ViewOrderModalProps) {
       <div className="bg-card w-full max-w-2xl border border-border rounded-lg shadow-xl max-h-[90vh] flex flex-col overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-full bg-purple-50 text-purple-600">
+            <div className="flex items-center justify-center w-9 h-9 rounded-full bg-accent text-primary">
               <ShoppingCart size={18} />
             </div>
             <div>
@@ -147,7 +147,7 @@ export function ViewOrderModal({ order, onClose }: ViewOrderModalProps) {
 
             {loading ? (
               <div className="flex items-center justify-center py-10 text-muted-foreground border border-border rounded-lg bg-gray-50/50">
-                <Loader2 className="w-4 h-4 mr-2 text-purple-600 animate-spin" />
+                <Loader2 className="w-4 h-4 mr-2 text-primary animate-spin" />
                 <span className="text-sm">{t('orders.view_modal.loading_items')}</span>
               </div>
             ) : error ? (
@@ -225,7 +225,7 @@ export function ViewOrderModal({ order, onClose }: ViewOrderModalProps) {
         <div className="flex justify-end px-6 py-4 border-t border-border bg-gray-50/50">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-white transition-colors bg-purple-600 border border-purple-600 rounded-lg hover:bg-purple-700"
+            className="px-4 py-2 text-sm font-medium text-primary-foreground transition-colors bg-primary border border-primary rounded-lg hover:bg-primary/90"
           >
             {t('orders.view_modal.close_btn')}
           </button>

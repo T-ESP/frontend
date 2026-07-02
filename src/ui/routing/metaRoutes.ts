@@ -76,6 +76,15 @@ export const ROUTES: Record<string, RouteMeta> = {
     roles: ['admin', 'manager'],
     title: 'StockS - Insights',
   },
+  PREDICTIONS: {
+    path: '/predictions',
+    label: 'Predictions',
+    page: 'Predictions',
+    layout: 'app',
+    restricted: true,
+    roles: ['admin', 'manager'],
+    title: 'StockS - Prédictions IA',
+  },
   SALES: {
     path: '/sales',
     label: 'Sales',
@@ -111,6 +120,15 @@ export const ROUTES: Record<string, RouteMeta> = {
     restricted: true,
     roles: ['admin', 'manager'],
     title: 'StockS - Orders',
+  },
+  ORDER_KPIS: {
+    path: '/orders/kpis',
+    label: 'Order KPIs',
+    page: 'OrderKPIs',
+    layout: 'app',
+    restricted: true,
+    roles: ['admin', 'manager'],
+    title: 'StockS - Statistiques commandes',
   },
   TEAM: {
     path: '/team',

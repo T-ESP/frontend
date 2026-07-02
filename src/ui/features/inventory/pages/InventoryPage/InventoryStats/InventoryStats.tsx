@@ -1,11 +1,8 @@
 import { useMemo } from 'react';
 import type { InventoryItem } from '@/ui/features/inventory/types';
 import { useTranslation } from 'react-i18next';
-import {
-  KpiStatCard,
-  bucketByDay,
-  topNDistribution,
-} from '@/ui/components/common/KpiStatCard/KpiStatCard';
+import { StatCard, CompositionBar, CategoryBars, ShareBar } from '@/ui/components/common/SnapshotStat/SnapshotStat';
+import { SNAPSHOT_COLORS } from '@/ui/components/common/SnapshotStat/colors';
 
 interface InventoryStatsProps {
   products: InventoryItem[];
@@ -25,79 +22,81 @@ export function InventoryStats({ products }: InventoryStatsProps) {
     return { total, inStock, lowStock, outOfStock, totalValue };
   }, [products]);
 
+  // Top catégories par valeur de stock (prix × quantité) — vraie répartition, pas une tendance.
+  const topCategories = useMemo(() => {
+    const byCategory = new Map<string, number>();
+    for (const p of products) {
+      const key = p.category?.trim() || t('inventory.stats.uncategorized', 'Sans catégorie');
+      byCategory.set(key, (byCategory.get(key) ?? 0) + parsePrice(p.price) * p.piece);
+    }
+    return [...byCategory.entries()]
+      .map(([label, value]) => ({ label, value }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 4);
+  }, [products, t]);
+
   const formatCurrency = (v: number) =>
-    new Intl.NumberFormat('fr-FR', {
-      style: 'currency',
-      currency: 'EUR',
-      maximumFractionDigits: 0,
-    }).format(v);
-
-  // Distribution: top 7 stock levels
-  const stockSeries = useMemo(
-    () => topNDistribution(products, (p) => p.piece, 7),
-    [products],
-  );
-
-  // Distribution: top 7 product values (price × stock)
-  const valueSeries = useMemo(
-    () => topNDistribution(products, (p) => parsePrice(p.price) * p.piece, 7),
-    [products],
-  );
-
-  // Time series for low stock items added recently (lastUpdated)
-  const lowStockSeries = useMemo(
-    () =>
-      bucketByDay(
-        products.filter((p) => p.status === 'Low Stock'),
-        (p) => p.lastUpdated,
-        (slice) => slice.length,
-        7,
-      ),
-    [products],
-  );
-
-  // Time series for out of stock items
-  const outStockSeries = useMemo(
-    () =>
-      bucketByDay(
-        products.filter((p) => p.status === 'Out of Stock'),
-        (p) => p.lastUpdated,
-        (slice) => slice.length,
-        7,
-      ),
-    [products],
-  );
+    new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(v);
+  const formatCompact = (v: number) =>
+    new Intl.NumberFormat('fr-FR', { notation: 'compact', style: 'currency', currency: 'EUR', maximumFractionDigits: 1 }).format(v);
 
   return (
     <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2 lg:grid-cols-4">
-      <KpiStatCard
+      <StatCard
         title={t('inventory.stats.total_products', 'Total produits')}
         value={stats.total.toString()}
         description={t('inventory.stats.in_catalog', 'au catalogue')}
-        chartData={stockSeries}
-        chartType="bar"
-      />
-      <KpiStatCard
+      >
+        <CompositionBar
+          segments={[
+            { label: t('inventory.stats.in_stock', 'En stock'), count: stats.inStock, color: SNAPSHOT_COLORS.success },
+            { label: t('inventory.stats.low_stock', 'Stock faible'), count: stats.lowStock, color: SNAPSHOT_COLORS.warning },
+            { label: t('inventory.stats.out_of_stock', 'Rupture'), count: stats.outOfStock, color: SNAPSHOT_COLORS.error },
+          ]}
+        />
+      </StatCard>
+
+      <StatCard
         title={t('inventory.stats.inventory_value', 'Valeur du stock')}
         value={formatCurrency(stats.totalValue)}
         description={t('inventory.stats.total_value', 'valeur totale')}
-        chartData={valueSeries}
-        chartType="line"
-      />
-      <KpiStatCard
+      >
+        {topCategories.length > 0 && (
+          <CategoryBars
+            title={t('inventory.stats.top_categories', 'Top catégories par valeur')}
+            rows={topCategories}
+            formatValue={formatCompact}
+          />
+        )}
+      </StatCard>
+
+      <StatCard
         title={t('inventory.stats.low_stock', 'Stock faible')}
         value={stats.lowStock.toString()}
         description={t('inventory.stats.products_to_watch', 'produits à surveiller')}
-        chartData={lowStockSeries}
-        chartType="bar"
-      />
-      <KpiStatCard
+      >
+        <ShareBar
+          fraction={stats.total > 0 ? stats.lowStock / stats.total : 0}
+          color={SNAPSHOT_COLORS.warning}
+          label={t('inventory.stats.of_catalog', {
+            pct: stats.total > 0 ? Math.round((stats.lowStock / stats.total) * 100) : 0,
+          })}
+        />
+      </StatCard>
+
+      <StatCard
         title={t('inventory.stats.out_of_stock', 'Ruptures')}
         value={stats.outOfStock.toString()}
         description={t('inventory.stats.products_out', 'produits indisponibles')}
-        chartData={outStockSeries}
-        chartType="bar"
-      />
+      >
+        <ShareBar
+          fraction={stats.total > 0 ? stats.outOfStock / stats.total : 0}
+          color={SNAPSHOT_COLORS.error}
+          label={t('inventory.stats.of_catalog', {
+            pct: stats.total > 0 ? Math.round((stats.outOfStock / stats.total) * 100) : 0,
+          })}
+        />
+      </StatCard>
     </div>
   );
 }

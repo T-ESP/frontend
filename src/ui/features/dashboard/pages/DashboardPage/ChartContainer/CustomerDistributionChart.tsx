@@ -45,9 +45,9 @@ export function CustomerDistributionChart({ data, rangeLabel }: Props) {
             <Tooltip
               // @ts-ignore
               formatter={(value: number) => [`${value}%`, t("common.percentage")]}
-              contentStyle={{ borderRadius: 6, border: "1px solid #1b2640", background: "#0d1424", fontSize: 12 }}
-              labelStyle={{ color: "#f1f5f9" }}
-              itemStyle={{ color: "#cbd5e1" }}
+              contentStyle={{ borderRadius: 6, border: "1px solid var(--border)", background: "var(--card)", fontSize: 12 }}
+              labelStyle={{ color: "var(--foreground)" }}
+              itemStyle={{ color: "var(--muted-foreground)" }}
             />
           </PieChart>
         </ResponsiveContainer>

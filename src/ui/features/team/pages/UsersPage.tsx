@@ -11,8 +11,30 @@ import { AddUserModal } from "@/ui/features/users/components/AddUserModal";
 import { EditUserModal } from "@/ui/features/users/components/EditUserModal";
 import { DeleteUserModal } from "@/ui/features/users/components/DeleteUserModal";
 import PageLayout from "@/ui/components/layouts/PageLayout";
-import { KpiStatCard, bucketByDay } from "@/ui/components/common/KpiStatCard/KpiStatCard";
+import { StatCard, CompositionBar, ShareBar } from "@/ui/components/common/SnapshotStat/SnapshotStat";
+import { SNAPSHOT_COLORS } from "@/ui/components/common/SnapshotStat/colors";
 import { Input } from "@/components/ui/input";
+
+// ─── Order status: labels & colours (snapshot mini-viz) ──────────────────────
+const ORDER_STATUS_FR: Record<string, string> = {
+  pending: "En attente",
+  confirmed: "Confirmée",
+  shipped: "Expédiée",
+  delivered: "Livrée",
+  cancelled: "Annulée",
+};
+const ORDER_STATUS_COLOR: Record<string, string> = {
+  pending: "var(--color-warning)",
+  confirmed: "#3b82f6",
+  shipped: "#8b5cf6",
+  delivered: "var(--color-success)",
+  cancelled: "var(--color-error)",
+};
+const statusLabel = (s: string) => ORDER_STATUS_FR[s.toLowerCase()] ?? s;
+const statusColor = (s: string) => ORDER_STATUS_COLOR[s.toLowerCase()] ?? "var(--color-primary)";
+
+const eur = (v: number) =>
+  new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(v);
 
 // ─── Helper: compute initials colour ─────────────────────────────────────────
 function getAvatarGradient(id: number) {
@@ -43,6 +65,20 @@ function UserProfilePanel({
 }) {
   const userOrders = orders.filter((o) => o.user_id === user.id);
   const totalSpent = userOrders.reduce((s, o) => s + o.amount, 0);
+  const orderCount = userOrders.length;
+  const avgBasket = orderCount > 0 ? totalSpent / orderCount : 0;
+  const deliveredCount = userOrders.filter((o) => o.status.toLowerCase() === "delivered").length;
+  const cancelledCount = userOrders.filter((o) => o.status.toLowerCase() === "cancelled").length;
+  const deliveryRate = orderCount > 0 ? Math.round((deliveredCount / orderCount) * 100) : 0;
+  const lastOrderDate = userOrders
+    .map((o) => o.order_date)
+    .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0];
+  const statusCounts = userOrders.reduce<Record<string, number>>((acc, o) => {
+    const k = o.status.toLowerCase();
+    acc[k] = (acc[k] ?? 0) + 1;
+    return acc;
+  }, {});
+
   const gradient = getAvatarGradient(user.id);
   const initials = `${user.firstname[0] ?? ""}${user.lastname[0] ?? ""}`.toUpperCase();
 
@@ -75,17 +111,41 @@ function UserProfilePanel({
           </div>
         </div>
 
-        {/* Stats row */}
+        {/* Client KPIs */}
         <div className="grid grid-cols-2 border-b border-border">
-          <div className="p-5 border-r border-border">
+          <div className="p-5 border-r border-b border-border">
             <p className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-wider">Commandes</p>
-            <p className="text-2xl font-black text-foreground mt-1">{userOrders.length}</p>
+            <p className="text-2xl font-black text-foreground mt-1">{orderCount}</p>
           </div>
-          <div className="p-5">
+          <div className="p-5 border-b border-border">
             <p className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-wider">Total dépensé</p>
             <p className="text-2xl font-black text-foreground mt-1">{formatCurrency(totalSpent)}</p>
           </div>
+          <div className="p-5 border-r border-border">
+            <p className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-wider">Panier moyen</p>
+            <p className="text-2xl font-black text-foreground mt-1">{formatCurrency(avgBasket)}</p>
+          </div>
+          <div className="p-5">
+            <p className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-wider">Taux de livraison</p>
+            <p className="text-2xl font-black text-foreground mt-1">{deliveryRate}%</p>
+            <p className="text-[11px] text-muted-foreground/70 mt-0.5">
+              {deliveredCount} livrée{deliveredCount !== 1 ? "s" : ""}
+              {cancelledCount > 0 ? ` · ${cancelledCount} annulée${cancelledCount !== 1 ? "s" : ""}` : ""}
+            </p>
+          </div>
         </div>
+
+        {/* Order status composition */}
+        {orderCount > 0 && (
+          <div className="px-6 py-4 border-b border-border">
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">Répartition des statuts</p>
+            <CompositionBar
+              segments={["pending", "confirmed", "shipped", "delivered", "cancelled"]
+                .map((s) => ({ label: statusLabel(s), count: statusCounts[s] ?? 0, color: statusColor(s) }))
+                .filter((seg) => seg.count > 0)}
+            />
+          </div>
+        )}
 
         {/* Contact info */}
         <div className="p-6 space-y-4">
@@ -115,8 +175,8 @@ function UserProfilePanel({
             <div className="flex items-center gap-3 text-sm">
               <FiCalendar className="w-4 h-4 text-muted-foreground/70 flex-shrink-0" />
               <div>
-                <p className="text-xs text-muted-foreground/70">Dernière modification</p>
-                <p className="font-medium text-foreground">{formatDate(user.updated_at)}</p>
+                <p className="text-xs text-muted-foreground/70">Dernière commande</p>
+                <p className="font-medium text-foreground">{formatDate(lastOrderDate)}</p>
               </div>
             </div>
           </div>
@@ -133,28 +193,27 @@ function UserProfilePanel({
             </div>
           ) : (
             <div className="space-y-2 max-h-56 overflow-y-auto">
-              {userOrders.slice(0, 8).map((o) => {
-                const statusColors: Record<string, string> = {
-                  pending: "bg-amber-500/15 text-amber-700 dark:text-amber-300",
-                  confirmed: "bg-blue-500/15 text-blue-700 dark:text-blue-300",
-                  shipped: "bg-purple-100 text-purple-700",
-                  delivered: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
-                  cancelled: "bg-rose-500/15 text-rose-700 dark:text-rose-300",
-                };
-                const sc = statusColors[o.status.toLowerCase()] ?? "bg-muted text-muted-foreground";
-                return (
+              {userOrders
+                .slice()
+                .sort((a, b) => new Date(b.order_date).getTime() - new Date(a.order_date).getTime())
+                .slice(0, 8)
+                .map((o) => (
                   <div key={o.id} className="flex items-center justify-between p-2.5 rounded-lg bg-muted text-sm">
                     <div>
                       <p className="font-medium text-foreground">#{o.id}</p>
                       <p className="text-xs text-muted-foreground/70">{new Date(o.order_date).toLocaleDateString("fr-FR")}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${sc}`}>{o.status}</span>
+                      <span
+                        className="inline-flex items-center gap-1.5 px-2 py-0.5 text-xs font-semibold rounded-full border border-border bg-card"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: statusColor(o.status) }} />
+                        {statusLabel(o.status)}
+                      </span>
                       <span className="font-bold text-foreground">{formatCurrency(o.amount)}</span>
                     </div>
                   </div>
-                );
-              })}
+                ))}
               {userOrders.length > 8 && (
                 <p className="text-xs text-center text-muted-foreground/70 pt-1">+ {userOrders.length - 8} autres commandes</p>
               )}
@@ -211,7 +270,7 @@ export default function UsersPage() {
       ]);
       if (usersData.status === "fulfilled") setUsers(usersData.value);
       if (ordersData.status === "fulfilled") setOrders(ordersData.value);
-    } catch (err) {
+    } catch {
       setError("Erreur lors du chargement des utilisateurs.");
     } finally {
       setLoading(false);
@@ -244,6 +303,26 @@ export default function UsersPage() {
     return map;
   }, [orders]);
 
+  // Snapshot metrics for the KPI band (composition / proportions, no fake trends).
+  const kpi = useMemo(() => {
+    const total = users.length;
+    const active = users.filter((u) => (u.status ?? "active") === "active").length;
+    const inactive = total - active;
+    const withOrders = users.filter((u) => (orderCountByUser[u.id] ?? 0) > 0).length;
+    const revenue = orders.reduce((s, o) => s + o.amount, 0);
+    const deliveredRevenue = orders
+      .filter((o) => o.status.toLowerCase() === "delivered")
+      .reduce((s, o) => s + o.amount, 0);
+    const statusCounts = orders.reduce<Record<string, number>>((acc, o) => {
+      const k = o.status.toLowerCase();
+      acc[k] = (acc[k] ?? 0) + 1;
+      return acc;
+    }, {});
+    return { total, active, inactive, withOrders, revenue, deliveredRevenue, statusCounts };
+  }, [users, orders, orderCountByUser]);
+
+  const ORDER_STATUS_ORDER = ["pending", "confirmed", "shipped", "delivered", "cancelled"];
+
   const openEdit = (u: User) => { setSelectedUser(u); setProfileUser(null); setShowEditModal(true); };
   const openDelete = (u: User) => { setSelectedUser(u); setProfileUser(null); setShowDeleteModal(true); };
 
@@ -258,39 +337,56 @@ export default function UsersPage() {
     >
       {/* Stats row */}
       <div className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2 lg:grid-cols-4">
-        <KpiStatCard
+        <StatCard
           title="Total utilisateurs"
-          value={users.length.toString()}
+          value={kpi.total.toString()}
           description="enregistrés"
-          chartData={bucketByDay(users, (u) => u.created_at, (slice) => slice.length, 7)}
-          chartType="bar"
-        />
-        <KpiStatCard
-          title="Actifs"
-          value={users.filter((u) => (u.status ?? "active") === "active").length.toString()}
-          description="comptes actifs"
-          chartData={bucketByDay(
-            users.filter((u) => (u.status ?? "active") === "active"),
-            (u) => u.created_at,
-            (slice) => slice.length,
-            7,
-          )}
-          chartType="line"
-        />
-        <KpiStatCard
-          title="Avec commandes"
-          value={users.filter((u) => (orderCountByUser[u.id] ?? 0) > 0).length.toString()}
-          description="utilisateurs actifs"
-          chartData={bucketByDay(orders, (o) => o.order_date, (slice) => new Set(slice.map((o) => o.user_id)).size, 7)}
-          chartType="bar"
-        />
-        <KpiStatCard
+        >
+          <CompositionBar
+            segments={[
+              { label: "Actifs", count: kpi.active, color: SNAPSHOT_COLORS.success },
+              { label: "Inactifs", count: kpi.inactive, color: SNAPSHOT_COLORS.error },
+            ]}
+          />
+        </StatCard>
+
+        <StatCard
+          title="Clients avec commandes"
+          value={kpi.withOrders.toString()}
+          description="ont déjà commandé"
+        >
+          <ShareBar
+            fraction={kpi.total > 0 ? kpi.withOrders / kpi.total : 0}
+            color={SNAPSHOT_COLORS.brand}
+            label={`${kpi.total > 0 ? Math.round((kpi.withOrders / kpi.total) * 100) : 0} % des utilisateurs`}
+          />
+        </StatCard>
+
+        <StatCard
           title="Total commandes"
           value={orders.length.toString()}
-          description="commandes totales"
-          chartData={bucketByDay(orders, (o) => o.order_date, (slice) => slice.length, 7)}
-          chartType="line"
-        />
+          description="toutes commandes"
+        >
+          <CompositionBar
+            segments={ORDER_STATUS_ORDER.map((s) => ({
+              label: statusLabel(s),
+              count: kpi.statusCounts[s] ?? 0,
+              color: statusColor(s),
+            }))}
+          />
+        </StatCard>
+
+        <StatCard
+          title="Chiffre d'affaires"
+          value={eur(kpi.revenue)}
+          description="commandes cumulées"
+        >
+          <ShareBar
+            fraction={kpi.revenue > 0 ? kpi.deliveredRevenue / kpi.revenue : 0}
+            color={SNAPSHOT_COLORS.success}
+            label={`${kpi.revenue > 0 ? Math.round((kpi.deliveredRevenue / kpi.revenue) * 100) : 0} % livré`}
+          />
+        </StatCard>
       </div>
 
       {/* Controls */}
@@ -314,7 +410,7 @@ export default function UsersPage() {
             </div>
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as any)}
+              onChange={(e) => setStatusFilter(e.target.value as "all" | "active" | "inactive")}
               className="px-3 py-2.5 text-sm bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
               <option value="all">Tous les statuts</option>

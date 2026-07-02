@@ -80,13 +80,16 @@ export function LoginForm() {
   };
 
   return (
-    <form className="space-y-5" onSubmit={handleSubmit}>
-
+  <form className="space-y-5" onSubmit={handleSubmit}>
       {/* Email */}
       <div className="space-y-1.5">
-        <Label htmlFor="email" className="text-sm font-semibold text-muted-foreground">
+        <label
+          htmlFor="email"
+          className="block text-[0.65rem] font-semibold uppercase tracking-[0.08em]"
+          style={{ color: "#9ca3af" }}
+        >
           Adresse e-mail
-        </Label>
+        </label>
         <Input
           id="email"
           name="email"
@@ -95,20 +98,28 @@ export function LoginForm() {
           placeholder="vous@exemple.com"
           value={formValues.email}
           onChange={handleInputChange}
-          className="h-10 text-foreground placeholder:text-muted-foreground/70 border-border focus-visible:ring-[#6366f1]/40"
           required
+          style={{
+            height: 42, borderRadius: 12, border: "1.5px solid #e5e7eb",
+            background: "#fafafa", fontSize: "0.8rem",
+          }}
+          className="text-gray-900 focus:border-[#a855f7] focus:shadow-[0_0_0_3px_rgba(168,85,247,0.1)] focus:bg-white placeholder:text-gray-300"
         />
       </div>
 
-      {/* Password */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
-          <Label htmlFor="password" className="text-sm font-semibold text-muted-foreground">
+          <label
+            htmlFor="password"
+            className="block text-[0.65rem] font-semibold uppercase tracking-[0.08em]"
+            style={{ color: "#9ca3af" }}
+          >
             Mot de passe
-          </Label>
+          </label>
           <a
             href="#"
-            className="text-xs text-muted-foreground/70 hover:text-[#6366f1] transition-colors font-medium"
+            className="text-[0.65rem] font-semibold"
+            style={{ color: "#c4b5fd" }}
           >
             Mot de passe oublié ?
           </a>
@@ -120,8 +131,12 @@ export function LoginForm() {
           placeholder="••••••••"
           value={formValues.password}
           onChange={handleInputChange}
-          className="h-10 text-foreground placeholder:text-muted-foreground/70 border-border focus-visible:ring-[#6366f1]/40"
           required
+          style={{
+            height: 42, borderRadius: 12, border: "1.5px solid #e5e7eb",
+            background: "#fafafa", fontSize: "0.8rem",
+          }}
+          className="text-gray-900 focus:border-[#a855f7] focus:shadow-[0_0_0_3px_rgba(168,85,247,0.1)] focus:bg-white placeholder:text-gray-300"
         />
       </div>
 
@@ -133,10 +148,12 @@ export function LoginForm() {
           onCheckedChange={(checked) =>
             setFormValues((prev) => ({ ...prev, remember: !!checked }))
           }
+          className="data-[state=checked]:bg-[#a855f7] data-[state=checked]:border-[#a855f7]"
         />
         <Label
           htmlFor="remember"
-          className="text-sm font-normal text-muted-foreground cursor-pointer"
+          className="text-[0.72rem] font-normal cursor-pointer"
+          style={{ color: "#6b7280" }}
         >
           Se souvenir de moi
         </Label>
@@ -144,11 +161,9 @@ export function LoginForm() {
 
       {/* Feedback */}
       {feedback && (
-        <p
-          className={`text-sm font-medium ${
-            status === "error" ? "text-red-600 dark:text-red-400" : "text-emerald-600 dark:text-emerald-400"
-          }`}
-        >
+        <p className={`text-sm font-medium ${
+          status === "error" ? "text-red-500" : "text-emerald-500"
+        }`}>
           {feedback}
         </p>
       )}
@@ -156,12 +171,17 @@ export function LoginForm() {
       {/* Submit */}
       <Button
         type="submit"
-        className="w-full h-10 font-semibold mt-1"
-        style={{ backgroundColor: "#6366f1" }}
         disabled={status === "loading"}
+        className="w-full h-11 font-bold text-white border-none"
+        style={{
+          borderRadius: 12,
+          background: "linear-gradient(135deg, #8b5cf6, #a855f7)",
+          fontSize: "0.8rem",
+        }}
       >
         {status === "loading" ? "Connexion en cours…" : "Se connecter"}
       </Button>
+
     </form>
   );
 }

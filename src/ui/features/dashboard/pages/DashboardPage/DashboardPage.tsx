@@ -58,9 +58,16 @@ export default function DashboardPage() {
     try {
       setLoading(true);
 
+      const MS_DAY = 86_400_000;
       const endDate = new Date();
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - dateRange);
+
+      // Période précédente de même longueur, juste avant la période courante,
+      // pour calculer la croissance du CA côté client (l'endpoint /sales/evolution
+      // ne renvoie qu'une série temporelle, pas le pourcentage d'évolution).
+      const prevEndDate = new Date(startDate.getTime() - MS_DAY);
+      const prevStartDate = new Date(prevEndDate.getTime() - dateRange * MS_DAY);
 
       const formatDate = (date: Date) => date.toISOString().split("T")[0];
 
@@ -68,25 +75,41 @@ export default function DashboardPage() {
         start_date: formatDate(startDate),
         end_date: formatDate(endDate),
       };
+      const previousPeriod = {
+        start_date: formatDate(prevStartDate),
+        end_date: formatDate(prevEndDate),
+      };
 
       // Fetch all data in parallel, including order stats for accurate count
-      const [ordersData, productsData, usersData, revenueData, evolutionData, statsData] =
+      const [ordersData, productsData, usersData, revenueData, prevRevenueData, statsData] =
         await Promise.allSettled([
           orderService.getAll(),
           productService.getAll(),
           userService.getAll(),
           salesService.getTotalRevenue(period),
-          salesService.getEvolution(period),
+          salesService.getTotalRevenue(previousPeriod),
           orderService.getStats(),
         ]);
 
       if (ordersData.status === "fulfilled") setOrders(ordersData.value);
       if (productsData.status === "fulfilled") setProducts(productsData.value);
       if (usersData.status === "fulfilled") setUsers(usersData.value);
-      if (revenueData.status === "fulfilled")
-        setTotalRevenue(revenueData.value.total_revenue);
-      if (evolutionData.status === "fulfilled")
-        setEvolution(evolutionData.value.evolution_percentage);
+
+      const currentRevenue =
+        revenueData.status === "fulfilled" ? revenueData.value.total_revenue : 0;
+      if (revenueData.status === "fulfilled") setTotalRevenue(currentRevenue);
+
+      // Croissance = (courant - précédent) / précédent × 100 (aligné sur le backend).
+      if (revenueData.status === "fulfilled" && prevRevenueData.status === "fulfilled") {
+        const previousRevenue = prevRevenueData.value.total_revenue;
+        const growth =
+          Math.abs(previousRevenue) < 1e-9
+            ? currentRevenue > 1e-9
+              ? 100
+              : 0
+            : ((currentRevenue - previousRevenue) / previousRevenue) * 100;
+        setEvolution(growth);
+      }
       // Use stats total_orders for accurate count (avoids pagination discrepancy)
       if (statsData.status === "fulfilled")
         setTotalOrderCount(statsData.value.total_orders);

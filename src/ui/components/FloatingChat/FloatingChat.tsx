@@ -20,7 +20,7 @@ export function FloatingChat() {
   const [messagesByThread, setMessagesByThread] = useState<Record<string, ChatMessage[]>>(messagesData);
   const [composer, setComposer] = useState("");
   const [isSending, setIsSending] = useState(false);
-  const sessionIdRef = useRef(crypto.randomUUID());
+  const sessionIdRef = useRef<string | null>(null);
 
   const activeMessages: ChatMessage[] = messagesByThread[activeThreadId] ?? [];
 
@@ -29,8 +29,6 @@ export function FloatingChat() {
     if (!text || !activeThreadId || isSending) return;
 
     setIsSending(true);
-
-    const history = messagesByThread[activeThreadId] ?? [];
 
     const userMsg: ChatMessage = {
       id: `m-${Date.now()}`,
@@ -68,9 +66,11 @@ export function FloatingChat() {
     };
 
     try {
+      if (!sessionIdRef.current) {
+        sessionIdRef.current = await chatBackendService.createSession();
+      }
       await chatBackendService.streamTurn(
         text,
-        history.map((m) => ({ role: m.role, content: m.content })),
         sessionIdRef.current,
         {
           onStatus: updateLoading,
