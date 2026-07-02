@@ -87,6 +87,7 @@
       "total_value": "total value",
       "out_of_stock": "Out of Stock",
       "products_out": "unavailable products",
+      "stock_coverage": "breakdown by stock level",
       "suppliers_total": "Suppliers",
       "registered": "registered",
       "suppliers_with_phone": "Reachable Suppliers",

@@ -87,6 +87,7 @@
       "total_value": "valeur totale",
       "out_of_stock": "Ruptures",
       "products_out": "produits indisponibles",
+      "stock_coverage": "répartition par niveau de stock",
       "suppliers_total": "Fournisseurs",
       "registered": "référencés",
       "suppliers_with_phone": "Fournisseurs joignables",
