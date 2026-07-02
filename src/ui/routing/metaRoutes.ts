@@ -39,6 +39,15 @@ export const ROUTES: Record<string, RouteMeta> = {
     layout: 'app',
     title: 'StockS - Utilisateurs',
   },
+  CAISSE: {
+    path: '/caisse',
+    label: 'Caisse',
+    page: 'Caisse',
+    layout: 'app',
+    restricted: true,
+    roles: ['admin', 'manager'],
+    title: 'StockS - Caisse',
+  },
   INVENTORY: {
     path: '/inventory',
     label: 'Inventory',

@@ -51,4 +51,12 @@ export const orderService = {
   async delete(id: number): Promise<void> {
     await apiClient.delete<ApiResponse<void>>(API_ENDPOINTS.orders.delete(id));
   },
+
+  async sendReceipt(id: number, email: string): Promise<string> {
+    const response = await apiClient.post<ApiResponse<string>>(
+      API_ENDPOINTS.orders.receipt(id),
+      { email }
+    );
+    return response.data;
+  },
 };

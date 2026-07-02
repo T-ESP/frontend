@@ -40,6 +40,7 @@ export interface CreateOrderDto {
   status: string;
   line_items: CreateLineItemDto[];
   discount_ids?: number[];
+  payment_method?: string;
 }
 
 export interface UpdateOrderDto {
