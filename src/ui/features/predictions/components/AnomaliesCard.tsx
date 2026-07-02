@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TrendingDown, TrendingUp } from 'lucide-react';
 import type { PriceAnomaly, SalesAnomaly } from '@/domain/models/AiPredictions';
 import { PredictionCard, PredictionEmpty } from './PredictionCard';
@@ -11,6 +12,7 @@ interface AnomaliesCardProps {
 
 /** Anomalies détectées par l'IA sur les prix et les volumes de vente. */
 export function AnomaliesCard({ priceAnomalies, salesAnomalies }: AnomaliesCardProps) {
+  const { t } = useTranslation();
   const prices = useMemo(
     () =>
       [...priceAnomalies]
@@ -31,15 +33,15 @@ export function AnomaliesCard({ priceAnomalies, salesAnomalies }: AnomaliesCardP
   const empty = prices.length === 0 && sales.length === 0;
 
   return (
-    <PredictionCard title="Anomalies détectées" subtitle="Écarts inhabituels sur les prix et les ventes">
+    <PredictionCard title={t('predictions.anomalies.title')} subtitle={t('predictions.anomalies.subtitle')}>
       {empty ? (
-        <PredictionEmpty message="Aucune anomalie détectée" />
+        <PredictionEmpty message={t('predictions.anomalies.empty')} />
       ) : (
         <div className="space-y-5">
           {prices.length > 0 && (
             <div>
               <h4 className="mb-2 text-xs font-semibold tracking-wide uppercase text-muted-foreground">
-                Prix
+                {t('predictions.anomalies.prices')}
               </h4>
               <div className="space-y-2">
                 {prices.map((a) => {
@@ -49,7 +51,7 @@ export function AnomaliesCard({ priceAnomalies, salesAnomalies }: AnomaliesCardP
                       <span className="truncate text-foreground">{a.product_name}</span>
                       <span className="flex items-center gap-1.5 shrink-0 tabular-nums text-muted-foreground">
                         {formatCurrency(a.current_price)}
-                        <span className="text-[11px]">(att. {formatCurrency(a.expected_price)})</span>
+                        <span className="text-[11px]">({t('predictions.anomalies.expected', { value: formatCurrency(a.expected_price) })})</span>
                         {up ? (
                           <TrendingUp className="w-3.5 h-3.5 text-rose-500" />
                         ) : (
@@ -65,7 +67,7 @@ export function AnomaliesCard({ priceAnomalies, salesAnomalies }: AnomaliesCardP
           {sales.length > 0 && (
             <div>
               <h4 className="mb-2 text-xs font-semibold tracking-wide uppercase text-muted-foreground">
-                Ventes
+                {t('predictions.anomalies.sales')}
               </h4>
               <div className="space-y-2">
                 {sales.map((a) => {
@@ -75,7 +77,7 @@ export function AnomaliesCard({ priceAnomalies, salesAnomalies }: AnomaliesCardP
                       <span className="truncate text-foreground">{a.product_name}</span>
                       <span className="flex items-center gap-1.5 shrink-0 tabular-nums text-muted-foreground">
                         {formatNumber(a.sales_volume)}
-                        <span className="text-[11px]">(att. {formatNumber(a.expected_sales)})</span>
+                        <span className="text-[11px]">({t('predictions.anomalies.expected', { value: formatNumber(a.expected_sales) })})</span>
                         {up ? (
                           <TrendingUp className="w-3.5 h-3.5 text-emerald-500" />
                         ) : (

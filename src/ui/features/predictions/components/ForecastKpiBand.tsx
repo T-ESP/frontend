@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { KpiStatCard } from '@/ui/components/common/KpiStatCard/KpiStatCard';
 import type { ForecastKpis } from '@/infrastructure/api/services/globalKpisService';
 import { formatCurrency } from './predictionsHelpers';
@@ -11,35 +12,36 @@ interface ForecastKpiBandProps {
  * Le CA prévu est une extrapolation linéaire du CA récent côté API.
  */
 export function ForecastKpiBand({ forecast }: ForecastKpiBandProps) {
+  const { t } = useTranslation();
   const monthly = forecast.forecasted_revenue_next_month ?? 0;
   const quarterly = forecast.forecasted_revenue_next_3_months ?? 0;
 
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
       <KpiStatCard
-        title="CA prévu (30 j)"
+        title={t('predictions.forecast.ca_30_title')}
         value={formatCurrency(monthly)}
-        description="Prochain mois"
-        infoTooltip="Chiffre d'affaires projeté sur 30 jours par extrapolation linéaire du CA récent."
+        description={t('predictions.forecast.ca_30_desc')}
+        infoTooltip={t('predictions.forecast.ca_30_info')}
       />
       <KpiStatCard
-        title="CA prévu (90 j)"
+        title={t('predictions.forecast.ca_90_title')}
         value={formatCurrency(quarterly)}
-        description="Prochain trimestre"
-        infoTooltip="Chiffre d'affaires projeté sur 90 jours par extrapolation linéaire du CA récent."
+        description={t('predictions.forecast.ca_90_desc')}
+        infoTooltip={t('predictions.forecast.ca_90_info')}
       />
       <KpiStatCard
-        title="Trésorerie réappro"
+        title={t('predictions.forecast.cash_title')}
         value={formatCurrency(forecast.cash_needed_for_restocks)}
-        description="Réappros en attente"
-        infoTooltip="Montant total nécessaire pour honorer les réapprovisionnements en attente."
+        description={t('predictions.forecast.cash_desc')}
+        infoTooltip={t('predictions.forecast.cash_info')}
       />
       <KpiStatCard
-        title="Ruptures prévues"
+        title={t('predictions.forecast.stockouts_title')}
         value={forecast.predicted_stockouts_count.toString()}
-        description={`${forecast.optimization_opportunities_count} opportunités d'optimisation`}
+        description={t('predictions.forecast.stockouts_desc', { n: forecast.optimization_opportunities_count })}
         trend={forecast.predicted_stockouts_count > 0 ? 'down' : 'up'}
-        infoTooltip="Nombre de produits dont la couverture de stock est inférieure à 7 jours."
+        infoTooltip={t('predictions.forecast.stockouts_info')}
       />
     </div>
   );

@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Order } from '@/domain/models/Order';
 import type { User } from '@/domain/models/User';
 import { StatsCard, StatsEmpty } from './StatsCard';
@@ -11,6 +12,7 @@ interface TopClientsProps {
 
 /** Classement des meilleurs clients par chiffre d'affaires sur la période. */
 export function TopClients({ orders, users }: TopClientsProps) {
+  const { t } = useTranslation();
   const rows = useMemo(() => {
     const byUser = new Map<number, { revenue: number; count: number }>();
     orders.forEach((o) => {
@@ -23,12 +25,12 @@ export function TopClients({ orders, users }: TopClientsProps) {
     return [...byUser.entries()]
       .map(([userId, agg]) => {
         const u = userMap.get(userId);
-        const name = u ? `${u.firstname ?? ''} ${u.lastname ?? ''}`.trim() || u.email : `Client #${userId}`;
+        const name = u ? `${u.firstname ?? ''} ${u.lastname ?? ''}`.trim() || u.email : t('orders.stats.top_clients.client_num', { id: userId });
         return { userId, name, ...agg };
       })
       .sort((a, b) => b.revenue - a.revenue)
       .slice(0, 8);
-  }, [orders, users]);
+  }, [orders, users, t]);
 
   const maxRevenue = Math.max(1, ...rows.map((r) => r.revenue));
 
@@ -42,9 +44,9 @@ export function TopClients({ orders, users }: TopClientsProps) {
       .toUpperCase();
 
   return (
-    <StatsCard title="Meilleurs clients" subtitle="Par chiffre d'affaires sur la période">
+    <StatsCard title={t('orders.stats.top_clients.title')} subtitle={t('orders.stats.top_clients.subtitle')}>
       {rows.length === 0 ? (
-        <StatsEmpty message="Aucune commande sur la période" />
+        <StatsEmpty message={t('orders.stats.top_clients.empty')} />
       ) : (
         <div className="space-y-3">
           {rows.map((r, i) => (
@@ -69,7 +71,7 @@ export function TopClients({ orders, users }: TopClientsProps) {
                       style={{ width: `${(r.revenue / maxRevenue) * 100}%` }}
                     />
                   </div>
-                  <span className="text-xs text-muted-foreground shrink-0">{r.count} cmd</span>
+                  <span className="text-xs text-muted-foreground shrink-0">{t('orders.stats.top_clients.cmd', { count: r.count })}</span>
                 </div>
               </div>
             </div>

@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Legend,
   PolarAngleAxis,
@@ -18,21 +19,22 @@ interface SupplierScoresChartProps {
 }
 
 const DIMENSIONS = [
-  { key: 'delivery_score', label: 'Livraison' },
-  { key: 'quality_score', label: 'Qualité' },
-  { key: 'lead_time_score', label: 'Délai' },
-  { key: 'fulfillment_score', label: 'Exécution' },
+  { key: 'delivery_score', labelKey: 'predictions.suppliers.delivery' },
+  { key: 'quality_score', labelKey: 'predictions.suppliers.quality' },
+  { key: 'lead_time_score', labelKey: 'predictions.suppliers.lead_time' },
+  { key: 'fulfillment_score', labelKey: 'predictions.suppliers.fulfillment' },
 ] as const;
 
 /** Comparaison radar des meilleurs fournisseurs sur leurs 4 dimensions de score. */
 export function SupplierScoresChart({ scores }: SupplierScoresChartProps) {
+  const { t } = useTranslation();
   const { data, suppliers } = useMemo(() => {
     const top = [...scores]
       .sort((a, b) => toNumber(b.overall_score) - toNumber(a.overall_score))
       .slice(0, 5);
 
     const rows = DIMENSIONS.map((dim) => {
-      const row: Record<string, string | number> = { dimension: dim.label };
+      const row: Record<string, string | number> = { dimension: t(dim.labelKey) };
       for (const s of top) {
         row[s.supplier_name] = toNumber(s[dim.key]);
       }
@@ -40,15 +42,15 @@ export function SupplierScoresChart({ scores }: SupplierScoresChartProps) {
     });
 
     return { data: rows, suppliers: top.map((s) => s.supplier_name) };
-  }, [scores]);
+  }, [scores, t]);
 
   return (
     <PredictionCard
-      title="Scores fournisseurs"
-      subtitle="Top 5 fournisseurs · livraison, qualité, délai, exécution"
+      title={t('predictions.suppliers.title')}
+      subtitle={t('predictions.suppliers.subtitle')}
     >
       {suppliers.length === 0 ? (
-        <PredictionEmpty message="Aucun score fournisseur disponible" />
+        <PredictionEmpty message={t('predictions.suppliers.empty')} />
       ) : (
         <div style={{ height: 340 }}>
           <ResponsiveContainer width="100%" height="100%">

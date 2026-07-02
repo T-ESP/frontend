@@ -190,13 +190,6 @@ export const STATUS_COLORS: Record<OrderStatus, string> = {
   cancelled: 'var(--color-error)',
 };
 
-export const STATUS_LABELS: Record<OrderStatus, string> = {
-  pending: 'En attente',
-  confirmed: 'Confirmée',
-  shipped: 'Expédiée',
-  delivered: 'Livrée',
-  cancelled: 'Annulée',
-};
 
 export const normalizeStatus = (s: string): OrderStatus | null => {
   const v = s.toLowerCase() as OrderStatus;

@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import {
   FiPlus, FiRefreshCw, FiEdit2, FiTrash2, FiX, FiCheck,
   FiTag, FiToggleLeft, FiToggleRight, FiAlertTriangle,
@@ -13,20 +15,25 @@ import PageLayout from '@/ui/components/layouts/PageLayout';
 
 const fmt = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
 
-function triggerLabel(d: Discount, products: Product[]): string {
+function triggerLabel(t: TFunction, d: Discount, products: Product[]): string {
   switch (d.trigger_type) {
     case 'product': {
       const p = products.find((x) => x.id === d.trigger_product_id);
-      return p ? `Produit : ${p.name}` : `Produit #${d.trigger_product_id}`;
+      return p
+        ? t('promotions.trigger.product', { name: p.name })
+        : t('promotions.trigger.product_ref', { id: d.trigger_product_id });
     }
     case 'total_amount':
-      return `Montant ≥ ${fmt.format(d.trigger_min_amount ?? 0)}`;
+      return t('promotions.trigger.amount', { amount: fmt.format(d.trigger_min_amount ?? 0) });
     case 'quantity':
       if (d.trigger_product_id) {
         const p = products.find((x) => x.id === d.trigger_product_id);
-        return `Qté ${p ? p.name : `#${d.trigger_product_id}`} ≥ ${d.trigger_min_qty}`;
+        return t('promotions.trigger.qty_product', {
+          name: p ? p.name : `#${d.trigger_product_id}`,
+          qty: d.trigger_min_qty,
+        });
       }
-      return `Qté totale ≥ ${d.trigger_min_qty}`;
+      return t('promotions.trigger.qty_total', { qty: d.trigger_min_qty });
   }
 }
 
@@ -35,22 +42,22 @@ function actionLabel(d: Discount): string {
   return `-${d.action_value}%`;
 }
 
-function scopeLabel(d: Discount, products: Product[]): string {
-  if (d.scope === 'global') return 'Sur le total';
+function scopeLabel(t: TFunction, d: Discount, products: Product[]): string {
+  if (d.scope === 'global') return t('promotions.scope.global');
   if (d.scope_product_id) {
     const p = products.find((x) => x.id === d.scope_product_id);
-    return `Sur ${p ? p.name : `#${d.scope_product_id}`}`;
+    return t('promotions.scope.product', { name: p ? p.name : `#${d.scope_product_id}` });
   }
-  return 'Par produit';
+  return t('promotions.scope.per_product');
 }
 
-function validityLabel(d: Discount): string {
+function validityLabel(t: TFunction, d: Discount): string {
   const from = d.valid_from ? new Date(d.valid_from).toLocaleDateString('fr-FR') : null;
   const until = d.valid_until ? new Date(d.valid_until).toLocaleDateString('fr-FR') : null;
-  if (from && until) return `${from} → ${until}`;
-  if (from) return `Depuis ${from}`;
-  if (until) return `Jusqu'au ${until}`;
-  return 'Illimitée';
+  if (from && until) return t('promotions.validity.range', { from, until });
+  if (from) return t('promotions.validity.from', { from });
+  if (until) return t('promotions.validity.until', { until });
+  return t('promotions.validity.unlimited');
 }
 
 function isExpired(d: Discount): boolean {
@@ -83,6 +90,7 @@ const BLANK: CreateDiscountDto = {
 };
 
 function DiscountModal({ initial, products, onClose, onSaved }: DiscountModalProps) {
+  const { t } = useTranslation();
   const isEdit = !!initial;
   const [form, setForm] = useState<CreateDiscountDto>(
     initial
@@ -111,8 +119,8 @@ function DiscountModal({ initial, products, onClose, onSaved }: DiscountModalPro
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name.trim()) { setError('Le nom est requis.'); return; }
-    if (!form.action_value || form.action_value <= 0) { setError('La valeur doit être > 0.'); return; }
+    if (!form.name.trim()) { setError(t('promotions.modal.err_name')); return; }
+    if (!form.action_value || form.action_value <= 0) { setError(t('promotions.modal.err_value')); return; }
 
     setSaving(true);
     setError(null);
@@ -139,7 +147,7 @@ function DiscountModal({ initial, products, onClose, onSaved }: DiscountModalPro
       }
       onSaved();
     } catch {
-      setError('Erreur lors de la sauvegarde.');
+      setError(t('promotions.modal.err_save'));
     } finally {
       setSaving(false);
     }
@@ -154,7 +162,7 @@ function DiscountModal({ initial, products, onClose, onSaved }: DiscountModalPro
       <div className="relative bg-card rounded-lg shadow-2xl w-full max-w-xl max-h-[90vh] flex flex-col overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <p className="text-[15px] font-semibold text-foreground">
-            {isEdit ? 'Modifier la remise' : 'Nouvelle remise'}
+            {isEdit ? t('promotions.modal.edit_title') : t('promotions.modal.new_title')}
           </p>
           <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground/70 hover:text-muted-foreground transition-colors">
             <FiX className="w-4 h-4" />
@@ -171,39 +179,39 @@ function DiscountModal({ initial, products, onClose, onSaved }: DiscountModalPro
 
           {/* Name */}
           <div>
-            <label className={labelCls}>Nom *</label>
-            <input className={inputCls} value={form.name} onChange={(e) => set('name', e.target.value)} placeholder="Ex: Promo été 2025" />
+            <label className={labelCls}>{t('promotions.modal.name_label')}</label>
+            <input className={inputCls} value={form.name} onChange={(e) => set('name', e.target.value)} placeholder={t('promotions.modal.name_placeholder')} />
           </div>
 
           {/* Trigger section */}
           <fieldset className="space-y-3 p-4 bg-muted/40 rounded-xl border border-border">
-            <legend className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wide px-1">Déclencheur</legend>
+            <legend className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wide px-1">{t('promotions.modal.trigger_legend')}</legend>
 
             <div>
-              <label className={labelCls}>Type</label>
+              <label className={labelCls}>{t('promotions.modal.type')}</label>
               <select
                 className={inputCls}
                 value={form.trigger_type}
                 onChange={(e) => set('trigger_type', e.target.value as DiscountTrigger)}
                 disabled={isEdit}
               >
-                <option value="total_amount">Montant total ≥ seuil</option>
-                <option value="quantity">Quantité ≥ seuil</option>
-                <option value="product">Produit spécifique présent</option>
+                <option value="total_amount">{t('promotions.modal.trigger_amount')}</option>
+                <option value="quantity">{t('promotions.modal.trigger_qty')}</option>
+                <option value="product">{t('promotions.modal.trigger_product')}</option>
               </select>
-              {isEdit && <p className="text-[11px] text-muted-foreground/70 mt-1">Le type de déclencheur ne peut pas être modifié.</p>}
+              {isEdit && <p className="text-[11px] text-muted-foreground/70 mt-1">{t('promotions.modal.trigger_locked')}</p>}
             </div>
 
             {(form.trigger_type === 'product' || form.trigger_type === 'quantity') && (
               <div>
-                <label className={labelCls}>Produit concerné (optionnel pour quantité totale)</label>
+                <label className={labelCls}>{t('promotions.modal.product_concerned')}</label>
                 <select
                   className={inputCls}
                   value={form.trigger_product_id ?? ''}
                   onChange={(e) => set('trigger_product_id', e.target.value ? Number(e.target.value) : null)}
                   disabled={isEdit}
                 >
-                  <option value="">— Tous les produits —</option>
+                  <option value="">{t('promotions.modal.all_products')}</option>
                   {products.map((p) => (
                     <option key={p.id} value={p.id}>{p.name}</option>
                   ))}
@@ -213,26 +221,26 @@ function DiscountModal({ initial, products, onClose, onSaved }: DiscountModalPro
 
             {form.trigger_type === 'total_amount' && (
               <div>
-                <label className={labelCls}>Montant minimum (€) *</label>
+                <label className={labelCls}>{t('promotions.modal.min_amount')}</label>
                 <input
                   type="number" min={0} step={0.01} className={inputCls}
                   value={form.trigger_min_amount ?? ''}
                   onChange={(e) => set('trigger_min_amount', e.target.value ? Number(e.target.value) : null)}
                   disabled={isEdit}
-                  placeholder="Ex: 100"
+                  placeholder={t('promotions.modal.min_amount_ph')}
                 />
               </div>
             )}
 
             {form.trigger_type === 'quantity' && (
               <div>
-                <label className={labelCls}>Quantité minimum *</label>
+                <label className={labelCls}>{t('promotions.modal.min_qty')}</label>
                 <input
                   type="number" min={1} step={1} className={inputCls}
                   value={form.trigger_min_qty ?? ''}
                   onChange={(e) => set('trigger_min_qty', e.target.value ? Number(e.target.value) : null)}
                   disabled={isEdit}
-                  placeholder="Ex: 10"
+                  placeholder={t('promotions.modal.min_qty_ph')}
                 />
               </div>
             )}
@@ -240,23 +248,23 @@ function DiscountModal({ initial, products, onClose, onSaved }: DiscountModalPro
 
           {/* Action section */}
           <fieldset className="space-y-3 p-4 bg-muted/40 rounded-xl border border-border">
-            <legend className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wide px-1">Action</legend>
+            <legend className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wide px-1">{t('promotions.modal.action_legend')}</legend>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className={labelCls}>Type de remise</label>
+                <label className={labelCls}>{t('promotions.modal.discount_type')}</label>
                 <select
                   className={inputCls}
                   value={form.action_type}
                   onChange={(e) => set('action_type', e.target.value as DiscountAction)}
                   disabled={isEdit}
                 >
-                  <option value="percentage">Pourcentage (%)</option>
-                  <option value="fixed_eur">Montant fixe (€)</option>
+                  <option value="percentage">{t('promotions.modal.opt_percentage')}</option>
+                  <option value="fixed_eur">{t('promotions.modal.opt_fixed')}</option>
                 </select>
               </div>
               <div>
-                <label className={labelCls}>Valeur *</label>
+                <label className={labelCls}>{t('promotions.modal.value')}</label>
                 <div className="relative">
                   <input
                     type="number" min={0.01} step={0.01} className={`${inputCls} pr-8`}
@@ -272,28 +280,28 @@ function DiscountModal({ initial, products, onClose, onSaved }: DiscountModalPro
             </div>
 
             <div>
-              <label className={labelCls}>Portée</label>
+              <label className={labelCls}>{t('promotions.modal.scope')}</label>
               <select
                 className={inputCls}
                 value={form.scope}
                 onChange={(e) => set('scope', e.target.value as DiscountScope)}
                 disabled={isEdit}
               >
-                <option value="global">Sur le total de la commande</option>
-                <option value="per_product">Sur un produit spécifique</option>
+                <option value="global">{t('promotions.modal.scope_global')}</option>
+                <option value="per_product">{t('promotions.modal.scope_product')}</option>
               </select>
             </div>
 
             {form.scope === 'per_product' && (
               <div>
-                <label className={labelCls}>Produit ciblé</label>
+                <label className={labelCls}>{t('promotions.modal.target_product')}</label>
                 <select
                   className={inputCls}
                   value={form.scope_product_id ?? ''}
                   onChange={(e) => set('scope_product_id', e.target.value ? Number(e.target.value) : null)}
                   disabled={isEdit}
                 >
-                  <option value="">— Produit du déclencheur —</option>
+                  <option value="">{t('promotions.modal.trigger_product_default')}</option>
                   {products.map((p) => (
                     <option key={p.id} value={p.id}>{p.name}</option>
                   ))}
@@ -304,23 +312,23 @@ function DiscountModal({ initial, products, onClose, onSaved }: DiscountModalPro
 
           {/* Options */}
           <fieldset className="space-y-3 p-4 bg-muted/40 rounded-xl border border-border">
-            <legend className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wide px-1">Options</legend>
+            <legend className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wide px-1">{t('promotions.modal.options_legend')}</legend>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className={labelCls}>Valide du</label>
+                <label className={labelCls}>{t('promotions.modal.valid_from')}</label>
                 <input type="date" className={inputCls} value={form.valid_from ?? ''} onChange={(e) => set('valid_from', e.target.value || null)} />
               </div>
               <div>
-                <label className={labelCls}>Valide jusqu'au</label>
+                <label className={labelCls}>{t('promotions.modal.valid_until')}</label>
                 <input type="date" className={inputCls} value={form.valid_until ?? ''} onChange={(e) => set('valid_until', e.target.value || null)} />
               </div>
             </div>
 
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-[13px] font-semibold text-foreground">Cumulable</p>
-                <p className="text-[12px] text-muted-foreground">Se combine avec d'autres remises cumulables</p>
+                <p className="text-[13px] font-semibold text-foreground">{t('promotions.modal.cumulative')}</p>
+                <p className="text-[12px] text-muted-foreground">{t('promotions.modal.cumulative_hint')}</p>
               </div>
               <button type="button" onClick={() => set('cumulative', !form.cumulative)} className="text-primary">
                 {form.cumulative ? <FiToggleRight className="w-7 h-7" /> : <FiToggleLeft className="w-7 h-7 text-muted-foreground/50" />}
@@ -329,8 +337,8 @@ function DiscountModal({ initial, products, onClose, onSaved }: DiscountModalPro
 
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-[13px] font-semibold text-foreground">Active</p>
-                <p className="text-[12px] text-muted-foreground">La remise est disponible pour les nouvelles commandes</p>
+                <p className="text-[13px] font-semibold text-foreground">{t('promotions.modal.active')}</p>
+                <p className="text-[12px] text-muted-foreground">{t('promotions.modal.active_hint')}</p>
               </div>
               <button type="button" onClick={() => set('is_active', !form.is_active)} className="text-primary">
                 {form.is_active ? <FiToggleRight className="w-7 h-7" /> : <FiToggleLeft className="w-7 h-7 text-muted-foreground/50" />}
@@ -341,7 +349,7 @@ function DiscountModal({ initial, products, onClose, onSaved }: DiscountModalPro
 
         <div className="flex justify-end gap-2 px-6 py-4 border-t border-border">
           <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium text-muted-foreground bg-muted border border-border rounded-xl hover:bg-muted/80 transition-colors">
-            Annuler
+            {t('common.cancel')}
           </button>
           <button
             onClick={handleSubmit as unknown as React.MouseEventHandler}
@@ -349,7 +357,7 @@ function DiscountModal({ initial, products, onClose, onSaved }: DiscountModalPro
             className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-40"
           >
             {saving ? <FiRefreshCw className="w-4 h-4 animate-spin" /> : <FiCheck className="w-4 h-4" />}
-            {saving ? 'Enregistrement…' : 'Enregistrer'}
+            {saving ? t('promotions.modal.saving') : t('promotions.modal.save')}
           </button>
         </div>
       </div>
@@ -360,6 +368,7 @@ function DiscountModal({ initial, products, onClose, onSaved }: DiscountModalPro
 // ── Delete modal ──────────────────────────────────────────────────────────────
 
 function DeleteModal({ discount, onClose, onDeleted }: { discount: Discount; onClose: () => void; onDeleted: () => void }) {
+  const { t } = useTranslation();
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -369,7 +378,7 @@ function DeleteModal({ discount, onClose, onDeleted }: { discount: Discount; onC
       await discountService.delete(discount.id);
       onDeleted();
     } catch {
-      setError('Impossible de supprimer cette remise.');
+      setError(t('promotions.delete.error'));
       setDeleting(false);
     }
   };
@@ -378,21 +387,21 @@ function DeleteModal({ discount, onClose, onDeleted }: { discount: Discount; onC
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
       <div className="relative bg-card rounded-lg shadow-2xl w-full max-w-sm p-6 space-y-4">
-        <p className="text-[15px] font-semibold text-foreground">Supprimer la remise</p>
+        <p className="text-[15px] font-semibold text-foreground">{t('promotions.delete.title')}</p>
         <p className="text-[13px] text-muted-foreground">
-          Êtes-vous sûr de vouloir supprimer <strong>« {discount.name} »</strong> ? Les commandes existantes ne sont pas affectées.
+          {t('promotions.delete.confirm', { name: discount.name })}
         </p>
         {error && <p className="text-[12px] text-red-600 dark:text-red-400">{error}</p>}
         <div className="flex justify-end gap-2">
           <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-muted-foreground bg-muted border border-border rounded-xl hover:bg-muted/80 transition-colors">
-            Annuler
+            {t('common.cancel')}
           </button>
           <button
             onClick={handleDelete}
             disabled={deleting}
             className="px-4 py-2 text-sm font-medium bg-destructive text-destructive-foreground rounded-xl hover:bg-destructive/90 transition-colors disabled:opacity-40"
           >
-            {deleting ? 'Suppression…' : 'Supprimer'}
+            {deleting ? t('promotions.delete.deleting') : t('promotions.delete.delete')}
           </button>
         </div>
       </div>
@@ -403,16 +412,18 @@ function DeleteModal({ discount, onClose, onDeleted }: { discount: Discount; onC
 // ── Status badge ──────────────────────────────────────────────────────────────
 
 function StatusBadge({ discount }: { discount: Discount }) {
+  const { t } = useTranslation();
   if (!discount.is_active)
-    return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-muted-foreground">Inactive</span>;
+    return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-muted-foreground">{t('promotions.status.inactive')}</span>;
   if (isExpired(discount))
-    return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-500/15 text-amber-700 dark:text-amber-400">Expirée</span>;
-  return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">Active</span>;
+    return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-500/15 text-amber-700 dark:text-amber-400">{t('promotions.status.expired')}</span>;
+  return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">{t('promotions.status.active')}</span>;
 }
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 export default function PromotionsPage() {
+  const { t } = useTranslation();
   const [discounts, setDiscounts] = useState<Discount[]>([]);
   const [products, setProducts]   = useState<Product[]>([]);
   const [loading, setLoading]     = useState(true);
@@ -463,7 +474,7 @@ export default function PromotionsPage() {
         ) {
           setBackendUnavailable(true);
         } else {
-          setError(msg || 'Impossible de charger les remises.');
+          setError(msg || t('promotions.load_error'));
         }
         setDiscounts([]);
       })
@@ -491,8 +502,8 @@ export default function PromotionsPage() {
   return (
     <>
       <PageLayout
-        title="Promotions & Remises"
-        subtitle="Gérez les règles de remise appliquées aux commandes"
+        title={t('promotions.title')}
+        subtitle={t('promotions.subtitle')}
         actions={
           <div className="flex items-center gap-2">
             <button
@@ -501,22 +512,21 @@ export default function PromotionsPage() {
               className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-xl hover:bg-muted transition-colors disabled:opacity-50"
             >
               <FiRefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-              Actualiser
+              {t('common.refresh')}
             </button>
             <button
               onClick={() => setCreating(true)}
               className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors"
             >
               <FiPlus className="w-4 h-4" />
-              Nouvelle remise
+              {t('promotions.new_discount')}
             </button>
           </div>
         }
       >
         {backendUnavailable && (
           <div className="px-4 py-3 text-sm text-muted-foreground bg-muted border border-border rounded-xl">
-            Backend non disponible — la migration V005 doit être appliquée sur la base tenant et le serveur redémarré.
-            Vous pouvez créer des remises dès que le backend est à jour.
+            {t('promotions.backend_unavailable')}
           </div>
         )}
 
@@ -529,15 +539,15 @@ export default function PromotionsPage() {
         {/* Stats */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
           <div className="p-6 bg-card border border-border rounded-lg">
-            <p className="text-[13px] font-medium text-muted-foreground">Remises actives</p>
+            <p className="text-[13px] font-medium text-muted-foreground">{t('promotions.stats.active')}</p>
             <p className="mt-3 text-3xl font-bold text-foreground tabular-nums">{loading ? '—' : active}</p>
           </div>
           <div className="p-6 bg-card border border-border rounded-lg">
-            <p className="text-[13px] font-medium text-muted-foreground">Expirées</p>
+            <p className="text-[13px] font-medium text-muted-foreground">{t('promotions.stats.expired')}</p>
             <p className="mt-3 text-3xl font-bold text-foreground tabular-nums">{loading ? '—' : expired}</p>
           </div>
           <div className="p-6 bg-card border border-border rounded-lg">
-            <p className="text-[13px] font-medium text-muted-foreground">Inactives</p>
+            <p className="text-[13px] font-medium text-muted-foreground">{t('promotions.stats.inactive')}</p>
             <p className="mt-3 text-3xl font-bold text-foreground tabular-nums">{loading ? '—' : inactive}</p>
           </div>
         </div>
@@ -545,43 +555,43 @@ export default function PromotionsPage() {
         {/* Table */}
         <div className="bg-card border border-border rounded-lg overflow-hidden">
           <div className="px-6 py-4 border-b border-border">
-            <h2 className="text-[15px] font-semibold text-foreground">Toutes les remises</h2>
+            <h2 className="text-[15px] font-semibold text-foreground">{t('promotions.table.title')}</h2>
             <p className="text-[13px] text-muted-foreground mt-0.5">
-              {loading ? 'Chargement…' : `${discounts.length} remise${discounts.length > 1 ? 's' : ''}`}
+              {loading ? t('promotions.loading') : t('promotions.table.count', { count: discounts.length })}
             </p>
           </div>
 
           {loading ? (
-            <div className="flex items-center justify-center py-16 text-muted-foreground/70 text-sm">Chargement…</div>
+            <div className="flex items-center justify-center py-16 text-muted-foreground/70 text-sm">{t('promotions.loading')}</div>
           ) : discounts.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-muted-foreground/70 gap-3">
               <FiTag className="w-8 h-8" />
-              <p className="text-sm">Aucune remise configurée. Créez la première !</p>
+              <p className="text-sm">{t('promotions.table.empty')}</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-muted/40">
-                    <th className="px-4 py-3 text-left text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">Nom</th>
-                    <th className="px-4 py-3 text-left text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">Déclencheur</th>
-                    <th className="px-4 py-3 text-left text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">Action</th>
-                    <th className="px-4 py-3 text-left text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">Portée</th>
-                    <th className="px-4 py-3 text-left text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">Validité</th>
-                    <th className="px-4 py-3 text-center text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">Utilisations</th>
-                    <th className="px-4 py-3 text-center text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">Cumul</th>
-                    <th className="px-4 py-3 text-center text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">Statut</th>
-                    <th className="px-4 py-3 text-right text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">Actions</th>
+                    <th className="px-4 py-3 text-left text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">{t('promotions.table.name')}</th>
+                    <th className="px-4 py-3 text-left text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">{t('promotions.table.trigger')}</th>
+                    <th className="px-4 py-3 text-left text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">{t('promotions.table.action')}</th>
+                    <th className="px-4 py-3 text-left text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">{t('promotions.table.scope')}</th>
+                    <th className="px-4 py-3 text-left text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">{t('promotions.table.validity')}</th>
+                    <th className="px-4 py-3 text-center text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">{t('promotions.table.usage')}</th>
+                    <th className="px-4 py-3 text-center text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">{t('promotions.table.cumul')}</th>
+                    <th className="px-4 py-3 text-center text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">{t('promotions.table.status')}</th>
+                    <th className="px-4 py-3 text-right text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">{t('promotions.table.actions')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
                   {discounts.map((d) => (
                     <tr key={d.id} className="hover:bg-muted/30 transition-colors">
                       <td className="px-4 py-3 font-medium text-foreground">{d.name}</td>
-                      <td className="px-4 py-3 text-muted-foreground">{triggerLabel(d, products)}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{triggerLabel(t, d, products)}</td>
                       <td className="px-4 py-3 font-semibold text-primary">{actionLabel(d)}</td>
-                      <td className="px-4 py-3 text-muted-foreground">{scopeLabel(d, products)}</td>
-                      <td className="px-4 py-3 text-muted-foreground text-[12px]">{validityLabel(d)}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{scopeLabel(t, d, products)}</td>
+                      <td className="px-4 py-3 text-muted-foreground text-[12px]">{validityLabel(t, d)}</td>
                       <td className="px-4 py-3 text-center">
                         <button
                           onClick={() => openOrdersPanel(d)}
@@ -590,18 +600,18 @@ export default function PromotionsPage() {
                               ? 'bg-primary/10 text-primary hover:bg-primary/20'
                               : 'bg-muted text-muted-foreground/50 cursor-default'
                           }`}
-                          title={d.usage_count > 0 ? 'Voir les commandes' : 'Jamais utilisée'}
+                          title={d.usage_count > 0 ? t('promotions.table.usage_used') : t('promotions.table.usage_never')}
                         >
                           {d.usage_count}
                         </button>
                       </td>
                       <td className="px-4 py-3 text-center">
                         {d.cumulative
-                          ? <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" title="Cumulable" />
-                          : <span className="inline-block w-2 h-2 rounded-full bg-muted-foreground/30" title="Non cumulable" />}
+                          ? <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" title={t('promotions.table.cumul_yes')} />
+                          : <span className="inline-block w-2 h-2 rounded-full bg-muted-foreground/30" title={t('promotions.table.cumul_no')} />}
                       </td>
                       <td className="px-4 py-3 text-center">
-                        <button onClick={() => handleToggle(d)} title="Basculer l'état">
+                        <button onClick={() => handleToggle(d)} title={t('promotions.table.toggle')}>
                           <StatusBadge discount={d} />
                         </button>
                       </td>
@@ -610,14 +620,14 @@ export default function PromotionsPage() {
                           <button
                             onClick={() => setEditing(d)}
                             className="p-1.5 rounded-lg text-muted-foreground/70 hover:text-primary hover:bg-primary/10 transition-colors"
-                            title="Modifier"
+                            title={t('promotions.table.edit')}
                           >
                             <FiEdit2 className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => setDeleting(d)}
                             className="p-1.5 rounded-lg text-muted-foreground/70 hover:text-destructive hover:bg-destructive/10 transition-colors"
-                            title="Supprimer"
+                            title={t('promotions.table.delete')}
                           >
                             <FiTrash2 className="w-3.5 h-3.5" />
                           </button>
@@ -655,8 +665,8 @@ export default function PromotionsPage() {
           <div className="relative bg-card rounded-lg shadow-2xl w-full max-w-lg max-h-[80vh] flex flex-col overflow-hidden">
             <div className="flex items-center justify-between px-6 py-4 border-b border-border">
               <div>
-                <p className="text-[15px] font-semibold text-foreground">Commandes — {viewingOrders.name}</p>
-                <p className="text-[12px] text-muted-foreground mt-0.5">{viewingOrders.usage_count} utilisation{viewingOrders.usage_count > 1 ? 's' : ''}</p>
+                <p className="text-[15px] font-semibold text-foreground">{t('promotions.orders.title', { name: viewingOrders.name })}</p>
+                <p className="text-[12px] text-muted-foreground mt-0.5">{t('promotions.orders.usage', { count: viewingOrders.usage_count })}</p>
               </div>
               <button onClick={() => setViewingOrders(null)} className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground/70 hover:text-muted-foreground transition-colors">
                 <FiX className="w-4 h-4" />
@@ -664,17 +674,17 @@ export default function PromotionsPage() {
             </div>
             <div className="flex-1 overflow-y-auto">
               {loadingOrders ? (
-                <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">Chargement…</div>
+                <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">{t('promotions.loading')}</div>
               ) : discountOrders.length === 0 ? (
-                <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">Aucune commande trouvée.</div>
+                <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">{t('promotions.orders.empty')}</div>
               ) : (
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border bg-muted/40">
-                      <th className="px-4 py-3 text-left text-[11px] font-semibold text-muted-foreground uppercase">Commande</th>
-                      <th className="px-4 py-3 text-left text-[11px] font-semibold text-muted-foreground uppercase">Date</th>
-                      <th className="px-4 py-3 text-right text-[11px] font-semibold text-muted-foreground uppercase">Économie</th>
-                      <th className="px-4 py-3 text-right text-[11px] font-semibold text-muted-foreground uppercase">Total</th>
+                      <th className="px-4 py-3 text-left text-[11px] font-semibold text-muted-foreground uppercase">{t('promotions.orders.col_order')}</th>
+                      <th className="px-4 py-3 text-left text-[11px] font-semibold text-muted-foreground uppercase">{t('promotions.orders.col_date')}</th>
+                      <th className="px-4 py-3 text-right text-[11px] font-semibold text-muted-foreground uppercase">{t('promotions.orders.col_saving')}</th>
+                      <th className="px-4 py-3 text-right text-[11px] font-semibold text-muted-foreground uppercase">{t('promotions.orders.col_total')}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">

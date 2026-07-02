@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { UrgentRestock } from '@/domain/models/AiPredictions';
 import { PredictionCard, PredictionEmpty } from './PredictionCard';
-import { URGENCY_BADGE, URGENCY_LABEL, URGENCY_RANK, formatNumber } from './predictionsHelpers';
+import { URGENCY_BADGE, URGENCY_RANK, formatNumber } from './predictionsHelpers';
 
 interface UrgentRestocksCardProps {
   restocks: UrgentRestock[];
@@ -9,6 +10,7 @@ interface UrgentRestocksCardProps {
 
 /** Produits à réapprovisionner en priorité selon les prévisions de demande. */
 export function UrgentRestocksCard({ restocks }: UrgentRestocksCardProps) {
+  const { t } = useTranslation();
   const rows = useMemo(
     () =>
       [...restocks]
@@ -23,11 +25,11 @@ export function UrgentRestocksCard({ restocks }: UrgentRestocksCardProps) {
 
   return (
     <PredictionCard
-      title="Réapprovisionnements prioritaires"
-      subtitle="Produits à risque de rupture selon la demande prévue"
+      title={t('predictions.restocks.title')}
+      subtitle={t('predictions.restocks.subtitle')}
     >
       {rows.length === 0 ? (
-        <PredictionEmpty message="Aucun réapprovisionnement urgent" />
+        <PredictionEmpty message={t('predictions.restocks.empty')} />
       ) : (
         <div className="space-y-2">
           {rows.map((r) => (
@@ -38,23 +40,24 @@ export function UrgentRestocksCard({ restocks }: UrgentRestocksCardProps) {
               <div className="min-w-0">
                 <div className="text-sm font-medium truncate text-foreground">{r.product_name}</div>
                 <div className="text-[11px] text-muted-foreground">
-                  Stock {r.current_stock} → cible {r.recommended_stock} · commander{' '}
+                  {t('predictions.restocks.stock')} {r.current_stock} → {t('predictions.restocks.target')}{' '}
+                  {r.recommended_stock} · {t('predictions.restocks.order')}{' '}
                   <span className="font-medium text-foreground">{r.reorder_quantity}</span>
                 </div>
               </div>
               <div className="flex items-center gap-3 shrink-0">
                 <div className="text-right">
                   <div className="text-sm font-semibold tabular-nums text-foreground">
-                    {r.days_until_stockout} j
+                    {t('predictions.restocks.days', { d: r.days_until_stockout })}
                   </div>
                   <div className="text-[11px] text-muted-foreground">
-                    {formatNumber(r.avg_daily_demand)}/j
+                    {t('predictions.restocks.per_day', { value: formatNumber(r.avg_daily_demand) })}
                   </div>
                 </div>
                 <span
                   className={`inline-flex items-center px-2 py-0.5 text-[11px] font-medium rounded-full border ${URGENCY_BADGE[r.urgency]}`}
                 >
-                  {URGENCY_LABEL[r.urgency]}
+                  {t(`predictions.urgency.${r.urgency}`)}
                 </span>
               </div>
             </div>

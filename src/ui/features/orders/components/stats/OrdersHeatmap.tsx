@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Order } from '@/domain/models/Order';
 import { StatsCard, StatsEmpty } from './StatsCard';
 
@@ -6,7 +7,7 @@ interface OrdersHeatmapProps {
   orders: Order[];
 }
 
-const WEEKDAYS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+const WEEKDAY_KEYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const;
 const SLOTS = [
   { label: '0–4h', from: 0 },
   { label: '4–8h', from: 4 },
@@ -18,8 +19,9 @@ const SLOTS = [
 
 /** Heatmap jour de semaine × créneau horaire : repère les pics de commande. */
 export function OrdersHeatmap({ orders }: OrdersHeatmapProps) {
+  const { t } = useTranslation();
   const { grid, max, peak } = useMemo(() => {
-    const g: number[][] = WEEKDAYS.map(() => SLOTS.map(() => 0));
+    const g: number[][] = WEEKDAY_KEYS.map(() => SLOTS.map(() => 0));
     orders.forEach((o) => {
       const d = new Date(o.order_date);
       const wd = (d.getDay() + 6) % 7; // lundi = 0
@@ -46,13 +48,17 @@ export function OrdersHeatmap({ orders }: OrdersHeatmapProps) {
 
   const peakLabel =
     peak.wd >= 0 && peak.n > 0
-      ? `Pic : ${WEEKDAYS[peak.wd]} ${SLOTS[peak.slot].label} (${peak.n})`
-      : 'Répartition jour × créneau';
+      ? t('orders.stats.heatmap.peak', {
+          day: t(`orders.stats.weekdays.${WEEKDAY_KEYS[peak.wd]}`),
+          slot: SLOTS[peak.slot].label,
+          n: peak.n,
+        })
+      : t('orders.stats.heatmap.fallback');
 
   return (
-    <StatsCard title="Quand les clients commandent" subtitle={peakLabel}>
+    <StatsCard title={t('orders.stats.heatmap.title')} subtitle={peakLabel}>
       {orders.length === 0 ? (
-        <StatsEmpty message="Aucune commande sur la période" />
+        <StatsEmpty message={t('orders.stats.heatmap.empty')} />
       ) : (
         <div className="overflow-x-auto">
           <div className="min-w-[420px]">
@@ -63,21 +69,24 @@ export function OrdersHeatmap({ orders }: OrdersHeatmapProps) {
                   {s.label}
                 </div>
               ))}
-              {WEEKDAYS.map((wd, wi) => (
-                <FragmentRow key={wd} label={wd}>
-                  {SLOTS.map((s, si) => (
-                    <div key={si} className="p-0.5">
-                      <div
-                        className="flex items-center justify-center h-9 rounded-md text-[11px] font-medium tabular-nums text-foreground/80"
-                        style={{ backgroundColor: cellColor(grid[wi][si]) }}
-                        title={`${wd} ${s.label} : ${grid[wi][si]} commande(s)`}
-                      >
-                        {grid[wi][si] || ''}
+              {WEEKDAY_KEYS.map((wdKey, wi) => {
+                const wd = t(`orders.stats.weekdays.${wdKey}`);
+                return (
+                  <FragmentRow key={wdKey} label={wd}>
+                    {SLOTS.map((s, si) => (
+                      <div key={si} className="p-0.5">
+                        <div
+                          className="flex items-center justify-center h-9 rounded-md text-[11px] font-medium tabular-nums text-foreground/80"
+                          style={{ backgroundColor: cellColor(grid[wi][si]) }}
+                          title={t('orders.stats.heatmap.cell', { day: wd, slot: s.label, n: grid[wi][si] })}
+                        >
+                          {grid[wi][si] || ''}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </FragmentRow>
-              ))}
+                    ))}
+                  </FragmentRow>
+                );
+              })}
             </div>
           </div>
         </div>

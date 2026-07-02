@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
 import type { PriceSuggestion } from '@/domain/models/AiPredictions';
 import { PredictionCard, PredictionEmpty } from './PredictionCard';
@@ -10,6 +11,7 @@ interface PriceSuggestionsCardProps {
 
 /** Suggestions d'ajustement tarifaire issues du modèle de pricing. */
 export function PriceSuggestionsCard({ suggestions }: PriceSuggestionsCardProps) {
+  const { t } = useTranslation();
   const rows = useMemo(
     () =>
       [...suggestions]
@@ -26,11 +28,11 @@ export function PriceSuggestionsCard({ suggestions }: PriceSuggestionsCardProps)
 
   return (
     <PredictionCard
-      title="Suggestions de prix"
-      subtitle="Ajustements tarifaires recommandés par l'IA"
+      title={t('predictions.price.title')}
+      subtitle={t('predictions.price.subtitle')}
     >
       {rows.length === 0 ? (
-        <PredictionEmpty message="Aucune suggestion de prix" />
+        <PredictionEmpty message={t('predictions.price.empty')} />
       ) : (
         <div className="space-y-2">
           {rows.map((s) => {
@@ -50,7 +52,9 @@ export function PriceSuggestionsCard({ suggestions }: PriceSuggestionsCardProps)
                       {formatCurrency(s.current)} → {formatCurrency(s.suggested)}
                     </div>
                     <div className="text-[11px] text-muted-foreground">
-                      Confiance {Math.round(toNumber(s.confidence) <= 1 ? toNumber(s.confidence) * 100 : toNumber(s.confidence))}%
+                      {t('predictions.price.confidence', {
+                        value: Math.round(toNumber(s.confidence) <= 1 ? toNumber(s.confidence) * 100 : toNumber(s.confidence)),
+                      })}
                     </div>
                   </div>
                   <span

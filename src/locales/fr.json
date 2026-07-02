@@ -185,6 +185,46 @@
       "class_a": "Classe A (Haute Valeur)",
       "class_b": "Classe B (Valeur Moyenne)",
       "class_c": "Classe C (Faible Valeur)"
+    },
+    "abc_short": {
+      "class_a": "Classe A",
+      "class_b": "Classe B",
+      "class_c": "Classe C"
+    },
+    "loading": "Chargement des analyses…",
+    "health_card": {
+      "title": "Santé des stocks",
+      "info": "Classifie chaque produit selon son niveau de stock : rupture (0 unité), faible (<10), sain (10-100), surstock (>100).",
+      "analyzed": "{{count}} produits analysés",
+      "detail": "Détail par catégorie",
+      "products": "{{value}} produits"
+    },
+    "abc_card": {
+      "title": "Analyse ABC",
+      "info": "Méthode Pareto : Classe A = 20% des produits générant ~80% de la valeur. Classe B = 30% intermédiaires. Classe C = 50% restants à faible valeur.",
+      "basis": "Basée sur la valeur (prix d'achat × stock)",
+      "detail": "Détail par classe",
+      "products": "produits",
+      "of_value": "de la valeur",
+      "note": "Concentrez vos efforts sur la Classe A pour maximiser l'impact sur la trésorerie.",
+      "tooltip": "{{value}} produits ({{pct}}%)"
+    },
+    "critical": {
+      "title": "Alertes critiques",
+      "info": "Produits dont le stock est inférieur à 15 unités, triés par prix décroissant. Ce sont les produits dont la rupture aurait le plus grand impact financier.",
+      "subtitle": "Articles de haute valeur presque épuisés — commandez dès maintenant",
+      "empty_title": "Aucun risque critique détecté",
+      "empty_desc": "Tous les produits sont en stock suffisant.",
+      "col_product": "Produit",
+      "col_category": "Catégorie",
+      "col_buy_price": "Prix d'achat",
+      "col_stock": "Stock restant",
+      "col_value": "Valeur à risque"
+    },
+    "urgency": {
+      "stockout": "Rupture",
+      "critical": "Critique",
+      "low": "Faible"
     }
   },
   "inventory": {
@@ -755,7 +795,395 @@
       "update_error": "Échec de la mise à jour"
     },
     "kpis_title": "Statistiques commandes",
-    "kpis_subtitle": "Vue d'ensemble des performances"
+    "kpis_subtitle": "Vue d'ensemble des performances",
+    "stats": {
+      "period": "Période",
+      "presets": { "7d": "7 jours", "30d": "30 jours", "90d": "90 jours", "12m": "12 mois" },
+      "vs_previous": "vs période précédente",
+      "pts": "pts",
+      "kpi": {
+        "revenue": "Chiffre d'affaires",
+        "revenue_info": "Somme des montants nets des commandes sur la période.",
+        "total": "Total commandes",
+        "avg": "Panier moyen",
+        "avg_info": "Chiffre d'affaires divisé par le nombre de commandes.",
+        "clients": "Clients uniques",
+        "clients_info": "Nombre de clients distincts ayant commandé sur la période.",
+        "delivery_rate": "Taux de livraison",
+        "delivery_info": "Part des commandes au statut « livrée ».",
+        "cancel_rate": "Taux d'annulation",
+        "cancel_info": "Part des commandes au statut « annulée ».",
+        "discount": "Remises accordées",
+        "discount_info": "Montant total des remises appliquées sur la période.",
+        "discount_rate": "Taux de remise moyen",
+        "discount_rate_info": "Remises rapportées au chiffre d'affaires brut (net + remises)."
+      },
+      "evolution": {
+        "title": "Évolution des commandes",
+        "subtitle": "Chiffre d'affaires et volume par {{grain}}",
+        "empty": "Aucune commande sur la période sélectionnée",
+        "revenue": "Chiffre d'affaires",
+        "orders": "Commandes",
+        "orders_count": "{{count}} commande(s)"
+      },
+      "grain": { "day": "jour", "week": "semaine", "month": "mois" },
+      "status_breakdown": { "title": "Répartition par statut", "subtitle": "Cycle de vie des commandes", "empty": "Aucune commande sur la période" },
+      "distribution": {
+        "title": "Distribution des paniers",
+        "median": "Médiane : {{value}}",
+        "subtitle": "Répartition par tranche de montant",
+        "empty": "Aucune commande sur la période",
+        "orders_count": "{{count}} commande(s)"
+      },
+      "client_type": {
+        "title": "Panier moyen par type de client",
+        "subtitle": "Nouveaux clients vs clients fidèles",
+        "unavailable": "Donnée indisponible",
+        "empty": "Aucune donnée sur la période",
+        "new": "Nouveaux",
+        "loyal": "Fidèles"
+      },
+      "heatmap": {
+        "title": "Quand les clients commandent",
+        "peak": "Pic : {{day}} {{slot}} ({{n}})",
+        "fallback": "Répartition jour × créneau",
+        "empty": "Aucune commande sur la période",
+        "cell": "{{day}} {{slot}} : {{n}} commande(s)"
+      },
+      "weekdays": { "mon": "Lun", "tue": "Mar", "wed": "Mer", "thu": "Jeu", "fri": "Ven", "sat": "Sam", "sun": "Dim" },
+      "top_products": {
+        "title": "Top produits commandés",
+        "subtitle": "Classement sur la période",
+        "unavailable": "Donnée indisponible",
+        "empty": "Aucun produit sur la période",
+        "volume": "Volume",
+        "revenue": "CA",
+        "units": "{{value}} u."
+      },
+      "top_clients": {
+        "title": "Meilleurs clients",
+        "subtitle": "Par chiffre d'affaires sur la période",
+        "empty": "Aucune commande sur la période",
+        "client_num": "Client #{{id}}",
+        "cmd": "{{count}} cmd"
+      }
+    }
+  },
+  "alerts": {
+    "title": "Alertes & Prévisions IA",
+    "subtitle": "Suivez les alertes générées par les modèles IA et anticipez les besoins.",
+    "summary": { "critical": "Critiques", "high": "Hautes", "untreated": "Non traitées", "total": "Total alertes" },
+    "tabs": { "alerts": "Alertes", "predictions": "Prévisions IA" },
+    "status": { "new": "Nouveau", "acknowledged": "Pris en compte", "in_progress": "En cours", "resolved": "Résolu", "dismissed": "Ignoré" },
+    "severity": { "critical": "Critique", "high": "Haute", "medium": "Moyenne", "low": "Faible" },
+    "filters": {
+      "search": "Rechercher par produit ou message...",
+      "all_severities": "Toutes les sévérités",
+      "all_statuses": "Tous les statuts"
+    },
+    "bulk": { "acknowledge": "Marquer comme lu ({{count}})", "resolve": "Résoudre ({{count}})" },
+    "table": {
+      "product": "Produit", "message": "Message", "source": "Source IA",
+      "severity": "Sévérité", "status": "Statut", "date": "Date",
+      "empty": "Aucune alerte trouvée"
+    },
+    "footer_one": "{{count}} alerte",
+    "footer_other": "{{count}} alertes",
+    "selected_one": " — {{count}} sélectionnée",
+    "selected_other": " — {{count}} sélectionnées",
+    "history": {
+      "title": "Historique des alertes",
+      "subtitle_one": "{{name}} — {{count}} alerte",
+      "subtitle_other": "{{name}} — {{count}} alertes",
+      "most_recent": "Plus récente"
+    },
+    "view_in_inventory": "Voir dans l'inventaire",
+    "predictions": {
+      "restocks": {
+        "title": "Réapprovisionnements urgents",
+        "subtitle": "Prédictions de rupture de stock imminente",
+        "product": "Produit", "current_stock": "Stock actuel", "recommended": "Stock recommandé",
+        "to_order": "À commander", "demand_day": "Demande / jour", "days_left": "Jours restants", "urgency": "Urgence",
+        "empty": "Aucun réapprovisionnement urgent"
+      },
+      "price": {
+        "title": "Anomalies de prix",
+        "subtitle": "Prix détectés hors de la plage normale",
+        "product": "Produit", "current_price": "Prix actuel", "expected_price": "Prix attendu",
+        "gap": "Écart", "score": "Score anomalie",
+        "empty": "Aucune anomalie de prix détectée"
+      },
+      "sales": {
+        "title": "Anomalies de ventes",
+        "subtitle": "Volumes de ventes inhabituels détectés par l'IA",
+        "product": "Produit", "observed": "Volume observé", "expected": "Volume attendu",
+        "gap": "Écart", "score": "Score anomalie",
+        "empty": "Aucune anomalie de ventes détectée"
+      }
+    }
+  },
+  "promotions": {
+    "title": "Promotions & Remises",
+    "subtitle": "Gérez les règles de remise appliquées aux commandes",
+    "new_discount": "Nouvelle remise",
+    "backend_unavailable": "Backend non disponible — la migration V005 doit être appliquée sur la base tenant et le serveur redémarré. Vous pouvez créer des remises dès que le backend est à jour.",
+    "load_error": "Impossible de charger les remises.",
+    "loading": "Chargement…",
+    "stats": {
+      "active": "Remises actives",
+      "expired": "Expirées",
+      "inactive": "Inactives"
+    },
+    "status": {
+      "active": "Active",
+      "expired": "Expirée",
+      "inactive": "Inactive"
+    },
+    "trigger": {
+      "product": "Produit : {{name}}",
+      "product_ref": "Produit #{{id}}",
+      "amount": "Montant ≥ {{amount}}",
+      "qty_product": "Qté {{name}} ≥ {{qty}}",
+      "qty_total": "Qté totale ≥ {{qty}}"
+    },
+    "scope": {
+      "global": "Sur le total",
+      "product": "Sur {{name}}",
+      "per_product": "Par produit"
+    },
+    "validity": {
+      "range": "{{from}} → {{until}}",
+      "from": "Depuis {{from}}",
+      "until": "Jusqu'au {{until}}",
+      "unlimited": "Illimitée"
+    },
+    "table": {
+      "title": "Toutes les remises",
+      "count_one": "{{count}} remise",
+      "count_other": "{{count}} remises",
+      "empty": "Aucune remise configurée. Créez la première !",
+      "name": "Nom",
+      "trigger": "Déclencheur",
+      "action": "Action",
+      "scope": "Portée",
+      "validity": "Validité",
+      "usage": "Utilisations",
+      "cumul": "Cumul",
+      "status": "Statut",
+      "actions": "Actions",
+      "usage_used": "Voir les commandes",
+      "usage_never": "Jamais utilisée",
+      "cumul_yes": "Cumulable",
+      "cumul_no": "Non cumulable",
+      "toggle": "Basculer l'état",
+      "edit": "Modifier",
+      "delete": "Supprimer"
+    },
+    "modal": {
+      "edit_title": "Modifier la remise",
+      "new_title": "Nouvelle remise",
+      "name_label": "Nom *",
+      "name_placeholder": "Ex: Promo été 2025",
+      "err_name": "Le nom est requis.",
+      "err_value": "La valeur doit être > 0.",
+      "err_save": "Erreur lors de la sauvegarde.",
+      "trigger_legend": "Déclencheur",
+      "type": "Type",
+      "trigger_amount": "Montant total ≥ seuil",
+      "trigger_qty": "Quantité ≥ seuil",
+      "trigger_product": "Produit spécifique présent",
+      "trigger_locked": "Le type de déclencheur ne peut pas être modifié.",
+      "product_concerned": "Produit concerné (optionnel pour quantité totale)",
+      "all_products": "— Tous les produits —",
+      "min_amount": "Montant minimum (€) *",
+      "min_amount_ph": "Ex: 100",
+      "min_qty": "Quantité minimum *",
+      "min_qty_ph": "Ex: 10",
+      "action_legend": "Action",
+      "discount_type": "Type de remise",
+      "opt_percentage": "Pourcentage (%)",
+      "opt_fixed": "Montant fixe (€)",
+      "value": "Valeur *",
+      "scope": "Portée",
+      "scope_global": "Sur le total de la commande",
+      "scope_product": "Sur un produit spécifique",
+      "target_product": "Produit ciblé",
+      "trigger_product_default": "— Produit du déclencheur —",
+      "options_legend": "Options",
+      "valid_from": "Valide du",
+      "valid_until": "Valide jusqu'au",
+      "cumulative": "Cumulable",
+      "cumulative_hint": "Se combine avec d'autres remises cumulables",
+      "active": "Active",
+      "active_hint": "La remise est disponible pour les nouvelles commandes",
+      "saving": "Enregistrement…",
+      "save": "Enregistrer"
+    },
+    "delete": {
+      "title": "Supprimer la remise",
+      "confirm": "Êtes-vous sûr de vouloir supprimer « {{name}} » ? Les commandes existantes ne sont pas affectées.",
+      "error": "Impossible de supprimer cette remise.",
+      "deleting": "Suppression…",
+      "delete": "Supprimer"
+    },
+    "orders": {
+      "title": "Commandes — {{name}}",
+      "usage_one": "{{count}} utilisation",
+      "usage_other": "{{count}} utilisations",
+      "empty": "Aucune commande trouvée.",
+      "col_order": "Commande",
+      "col_date": "Date",
+      "col_saving": "Économie",
+      "col_total": "Total"
+    }
+  },
+  "loyalty": {
+    "title": "Programme de fidélité",
+    "subtitle": "Configurez les règles d'attribution et gérez les points des utilisateurs",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "saved": "Enregistré ✓",
+    "save_error": "Échec de l'enregistrement. Veuillez réessayer.",
+    "backend_unavailable": "Backend non disponible — valeurs par défaut affichées. La configuration sera créée lors du premier enregistrement.",
+    "load_error": "Erreur lors du chargement de la configuration.",
+    "loading": "Chargement…",
+    "cards": {
+      "euros_per_point": "Euros par point",
+      "euros_per_point_hint": "Soit {{value}} pt par euro dépensé",
+      "points_required": "Points pour remise",
+      "points_required_hint": "Soit {{value}} € dépensés",
+      "discount": "Remise accordée",
+      "discount_hint": "À la prochaine commande du client",
+      "per_pt": "€ / pt",
+      "pts": "pts"
+    },
+    "form": {
+      "title": "Modifier la configuration",
+      "subtitle": "Les modifications s'appliquent aux nouvelles commandes uniquement",
+      "euros_per_point": "Euros par point",
+      "euros_per_point_hint": "1 point = {{euros}} € dépensés ({{rate}} pt/€)",
+      "points_required": "Points requis pour remise",
+      "points_required_hint": "Seuil de déclenchement de la remise",
+      "discount_percent": "Pourcentage de remise",
+      "discount_percent_hint": "Remise appliquée à la prochaine commande"
+    },
+    "how": {
+      "title": "Comment ça fonctionne",
+      "subtitle": "Simulation avec une commande type de {{amount}} €",
+      "step1_title": "Achat → Points gagnés",
+      "step1_text": "À chaque commande, le client gagne automatiquement :",
+      "step2_title": "Accumulation",
+      "step2_text": "Le client doit atteindre {{points}} pts pour déclencher une remise.",
+      "step2_orders_one": " Avec des commandes à {{amount}} €, il y arrivera en {{count}} commande.",
+      "step2_orders_other": " Avec des commandes à {{amount}} €, il y arrivera en {{count}} commandes.",
+      "step3_title": "Remise appliquée",
+      "step3_text": "Dès le seuil atteint, le client reçoit {{percent}} % de remise sur sa prochaine commande. Les points sont réinitialisés."
+    },
+    "users": {
+      "title": "Utilisateurs",
+      "subtitle_one": "{{count}} utilisateur — cliquez pour voir et modifier les points",
+      "subtitle_other": "{{count}} utilisateurs — cliquez pour voir et modifier les points",
+      "loading": "Chargement des utilisateurs…",
+      "search_placeholder": "Rechercher par nom ou email…",
+      "no_results": "Aucun résultat pour cette recherche.",
+      "no_users": "Aucun utilisateur trouvé.",
+      "view_points": "Voir les points",
+      "results_one": "{{count}} résultat pour « {{query}} »",
+      "results_other": "{{count}} résultats pour « {{query}} »"
+    },
+    "modal": {
+      "current_points": "Points actuels",
+      "load_error": "Impossible de charger les points de cet utilisateur.",
+      "adjust": "Ajuster les points",
+      "points_placeholder": "ex: +50 ou -20",
+      "reason_placeholder": "Raison (optionnel)",
+      "adjust_error": "Échec de l'ajustement. Veuillez réessayer.",
+      "adjusting": "Ajustement…",
+      "adjusted": "Ajusté ✓",
+      "add_pts": "Ajouter {{n}} pts",
+      "remove_pts": "Retirer {{n}} pts",
+      "apply": "Appliquer l'ajustement",
+      "history": "Historique ({{n}})",
+      "order_ref": "Commande #{{id}}",
+      "manual_adjust": "Ajustement manuel",
+      "no_transactions": "Aucune transaction pour cet utilisateur."
+    }
+  },
+  "predictions": {
+    "title": "Prédictions IA",
+    "subtitle": "Prévisions de CA, de demande et recommandations du moteur IA",
+    "loading": "Chargement des prédictions…",
+    "load_error": "Impossible de charger les prédictions.",
+    "error_title": "Erreur",
+    "retry": "Réessayer",
+    "forecast": {
+      "ca_30_title": "CA prévu (30 j)",
+      "ca_30_desc": "Prochain mois",
+      "ca_30_info": "Chiffre d'affaires projeté sur 30 jours par extrapolation linéaire du CA récent.",
+      "ca_90_title": "CA prévu (90 j)",
+      "ca_90_desc": "Prochain trimestre",
+      "ca_90_info": "Chiffre d'affaires projeté sur 90 jours par extrapolation linéaire du CA récent.",
+      "cash_title": "Trésorerie réappro",
+      "cash_desc": "Réappros en attente",
+      "cash_info": "Montant total nécessaire pour honorer les réapprovisionnements en attente.",
+      "stockouts_title": "Ruptures prévues",
+      "stockouts_desc": "{{n}} opportunités d'optimisation",
+      "stockouts_info": "Nombre de produits dont la couverture de stock est inférieure à 7 jours."
+    },
+    "demand": {
+      "title": "Prévisions de demande",
+      "subtitle": "Top 12 produits par demande prévue (modèle Prophet)",
+      "empty": "Aucune prévision de demande disponible",
+      "tooltip_demand": "Demande prévue : {{value}} u.",
+      "tooltip_urgency": "Urgence : {{label}}"
+    },
+    "classification": {
+      "title": "Classification ABC / XYZ",
+      "subtitle": "Répartition de {{n}} produits par valeur et régularité de la demande",
+      "empty": "Aucune classification disponible",
+      "footer": "Lignes : contribution au chiffre d'affaires · Colonnes : prévisibilité de la demande. Les produits AX sont prioritaires (fort CA, demande stable).",
+      "abc": { "A": "Fort CA", "B": "CA moyen", "C": "Faible CA" },
+      "xyz": { "X": "Demande stable", "Y": "Demande variable", "Z": "Demande erratique" }
+    },
+    "suppliers": {
+      "title": "Scores fournisseurs",
+      "subtitle": "Top 5 fournisseurs · livraison, qualité, délai, exécution",
+      "empty": "Aucun score fournisseur disponible",
+      "delivery": "Livraison",
+      "quality": "Qualité",
+      "lead_time": "Délai",
+      "fulfillment": "Exécution"
+    },
+    "restocks": {
+      "title": "Réapprovisionnements prioritaires",
+      "subtitle": "Produits à risque de rupture selon la demande prévue",
+      "empty": "Aucun réapprovisionnement urgent",
+      "stock": "Stock",
+      "target": "cible",
+      "order": "commander",
+      "days": "{{d}} j",
+      "per_day": "{{value}}/j"
+    },
+    "price": {
+      "title": "Suggestions de prix",
+      "subtitle": "Ajustements tarifaires recommandés par l'IA",
+      "empty": "Aucune suggestion de prix",
+      "confidence": "Confiance {{value}}%"
+    },
+    "anomalies": {
+      "title": "Anomalies détectées",
+      "subtitle": "Écarts inhabituels sur les prix et les ventes",
+      "empty": "Aucune anomalie détectée",
+      "prices": "Prix",
+      "sales": "Ventes",
+      "expected": "att. {{value}}"
+    },
+    "urgency": {
+      "URGENT": "Urgent",
+      "HIGH": "Élevée",
+      "MEDIUM": "Moyenne",
+      "LOW": "Faible"
+    }
   },
   "sales": {
     "title": "Tableau de Bord Ventes",

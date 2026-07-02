@@ -33,13 +33,6 @@ export const URGENCY_HEX: Record<ForecastUrgency, string> = {
   LOW: '#818cf8', // indigo-400
 };
 
-export const URGENCY_LABEL: Record<ForecastUrgency, string> = {
-  URGENT: 'Urgent',
-  HIGH: 'Élevée',
-  MEDIUM: 'Moyenne',
-  LOW: 'Faible',
-};
-
 export const URGENCY_BADGE: Record<ForecastUrgency, string> = {
   URGENT: 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/30',
   HIGH: 'bg-orange-500/10 text-orange-700 dark:text-orange-300 border-orange-500/30',

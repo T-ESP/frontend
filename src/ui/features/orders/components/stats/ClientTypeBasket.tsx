@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { Loader2 } from 'lucide-react';
 import { salesService } from '@/infrastructure/api/services/salesService';
@@ -13,7 +14,8 @@ const COLORS = ['hsl(var(--brand-h) calc(var(--brand-s) + 8%) calc(var(--brand-l
 
 /** Panier moyen comparé entre nouveaux clients et clients fidèles (endpoint /sales). */
 export function ClientTypeBasket({ range }: ClientTypeBasketProps) {
-  const [data, setData] = useState<{ label: string; value: number }[] | null>(null);
+  const { t } = useTranslation();
+  const [data, setData] = useState<{ key: 'new' | 'loyal'; value: number }[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
 
@@ -26,8 +28,8 @@ export function ClientTypeBasket({ range }: ClientTypeBasketProps) {
       .then((res) => {
         if (cancelled) return;
         setData([
-          { label: 'Nouveaux', value: res.new_clients ?? 0 },
-          { label: 'Fidèles', value: res.loyal_clients ?? 0 },
+          { key: 'new', value: res.new_clients ?? 0 },
+          { key: 'loyal', value: res.loyal_clients ?? 0 },
         ]);
       })
       .catch(() => !cancelled && setFailed(true))
@@ -40,19 +42,20 @@ export function ClientTypeBasket({ range }: ClientTypeBasketProps) {
   const hasData = data && data.some((d) => d.value > 0);
 
   return (
-    <StatsCard title="Panier moyen par type de client" subtitle="Nouveaux clients vs clients fidèles">
+    <StatsCard title={t('orders.stats.client_type.title')} subtitle={t('orders.stats.client_type.subtitle')}>
       {loading ? (
         <div className="flex items-center justify-center h-[260px] text-muted-foreground">
           <Loader2 className="w-5 h-5 animate-spin" />
         </div>
       ) : failed || !hasData ? (
-        <StatsEmpty message={failed ? 'Donnée indisponible' : 'Aucune donnée sur la période'} />
+        <StatsEmpty message={failed ? t('orders.stats.client_type.unavailable') : t('orders.stats.client_type.empty')} />
       ) : (
         <ResponsiveContainer width="100%" height={260}>
           <BarChart data={data!} margin={{ top: 24, right: 8, left: 0, bottom: 8 }}>
             <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="var(--border)" />
             <XAxis
-              dataKey="label"
+              dataKey="key"
+              tickFormatter={(v) => t(`orders.stats.client_type.${v}`)}
               tickLine={false}
               axisLine={false}
               tickMargin={10}

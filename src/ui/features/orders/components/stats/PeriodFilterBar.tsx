@@ -1,4 +1,5 @@
 import { Calendar } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { DateRange, PeriodPresetId } from './statsHelpers';
 import { presetRange, toApiDate } from './statsHelpers';
 
@@ -8,15 +9,11 @@ interface PeriodFilterBarProps {
   onChange: (preset: PeriodPresetId, range: DateRange) => void;
 }
 
-const PRESETS: { id: Exclude<PeriodPresetId, 'custom'>; label: string }[] = [
-  { id: '7d', label: '7 jours' },
-  { id: '30d', label: '30 jours' },
-  { id: '90d', label: '90 jours' },
-  { id: '12m', label: '12 mois' },
-];
+const PRESET_IDS: Exclude<PeriodPresetId, 'custom'>[] = ['7d', '30d', '90d', '12m'];
 
 /** Barre de filtre de période : presets + plage personnalisée. Pilote toute la page. */
 export function PeriodFilterBar({ preset, range, onChange }: PeriodFilterBarProps) {
+  const { t } = useTranslation();
   const setCustomBound = (which: 'start' | 'end', value: string) => {
     if (!value) return;
     const next: DateRange = { ...range };
@@ -37,23 +34,23 @@ export function PeriodFilterBar({ preset, range, onChange }: PeriodFilterBarProp
     <div className="flex flex-wrap items-center gap-3 p-3 bg-card border border-border rounded-lg">
       <div className="flex items-center gap-1.5 text-muted-foreground">
         <Calendar className="w-4 h-4" />
-        <span className="text-sm font-medium">Période</span>
+        <span className="text-sm font-medium">{t('orders.stats.period')}</span>
       </div>
 
       <div className="flex flex-wrap gap-1">
-        {PRESETS.map((p) => {
-          const active = preset === p.id;
+        {PRESET_IDS.map((id) => {
+          const active = preset === id;
           return (
             <button
-              key={p.id}
-              onClick={() => onChange(p.id, presetRange(p.id))}
+              key={id}
+              onClick={() => onChange(id, presetRange(id))}
               className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
                 active
                   ? 'bg-primary text-primary-foreground'
                   : 'text-muted-foreground hover:bg-muted'
               }`}
             >
-              {p.label}
+              {t(`orders.stats.presets.${id}`)}
             </button>
           );
         })}

@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Order } from '@/domain/models/Order';
 import { KpiStatCard } from '@/ui/components/common/KpiStatCard/KpiStatCard';
 import {
@@ -30,6 +31,7 @@ const sumDiscount = (orders: Order[]) => orders.reduce((s, o) => s + discountOf(
 
 /** Bande de 8 indicateurs clés, recalculés sur la période sélectionnée. */
 export function OrderKpiBand({ allOrders, range }: OrderKpiBandProps) {
+  const { t } = useTranslation();
   const m = useMemo(() => {
     const curr = filterOrders(allOrders, range);
     const prev = filterOrders(allOrders, previousRange(range));
@@ -96,22 +98,23 @@ export function OrderKpiBand({ allOrders, range }: OrderKpiBandProps) {
     };
   }, [allOrders, range]);
 
-  const desc = 'vs période précédente';
+  const desc = t('orders.stats.vs_previous');
+  const pts = t('orders.stats.pts');
 
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
       <KpiStatCard
-        title="Chiffre d'affaires"
+        title={t('orders.stats.kpi.revenue')}
         value={formatCurrency(m.revenue)}
         change={formatPct(m.changes.revenue)}
         trend={m.changes.revenue >= 0 ? 'up' : 'down'}
         description={desc}
         chartData={m.series.revenue}
         chartType="line"
-        infoTooltip="Somme des montants nets des commandes sur la période."
+        infoTooltip={t('orders.stats.kpi.revenue_info')}
       />
       <KpiStatCard
-        title="Total commandes"
+        title={t('orders.stats.kpi.total')}
         value={m.total.toString()}
         change={formatPct(m.changes.total)}
         trend={m.changes.total >= 0 ? 'up' : 'down'}
@@ -120,48 +123,48 @@ export function OrderKpiBand({ allOrders, range }: OrderKpiBandProps) {
         chartType="bar"
       />
       <KpiStatCard
-        title="Panier moyen"
+        title={t('orders.stats.kpi.avg')}
         value={formatCurrency(m.avg)}
         change={formatPct(m.changes.avg)}
         trend={m.changes.avg >= 0 ? 'up' : 'down'}
         description={desc}
         chartData={m.series.avg}
         chartType="line"
-        infoTooltip="Chiffre d'affaires divisé par le nombre de commandes."
+        infoTooltip={t('orders.stats.kpi.avg_info')}
       />
       <KpiStatCard
-        title="Clients uniques"
+        title={t('orders.stats.kpi.clients')}
         value={m.clients.toString()}
         change={formatPct(m.changes.clients)}
         trend={m.changes.clients >= 0 ? 'up' : 'down'}
         description={desc}
         chartData={m.series.clients}
         chartType="bar"
-        infoTooltip="Nombre de clients distincts ayant commandé sur la période."
+        infoTooltip={t('orders.stats.kpi.clients_info')}
       />
       <KpiStatCard
-        title="Taux de livraison"
+        title={t('orders.stats.kpi.delivery_rate')}
         value={`${m.deliveryRate.toFixed(1)}%`}
-        change={`${formatPct(m.changes.delivery)} pts`}
+        change={`${formatPct(m.changes.delivery)} ${pts}`}
         trend={m.changes.delivery >= 0 ? 'up' : 'down'}
         description={desc}
         chartData={m.series.delivered}
         chartType="bar"
-        infoTooltip="Part des commandes au statut « livrée »."
+        infoTooltip={t('orders.stats.kpi.delivery_info')}
       />
       <KpiStatCard
-        title="Taux d'annulation"
+        title={t('orders.stats.kpi.cancel_rate')}
         value={`${m.cancelRate.toFixed(1)}%`}
-        change={`${formatPct(m.changes.cancel)} pts`}
+        change={`${formatPct(m.changes.cancel)} ${pts}`}
         // Une hausse des annulations est négative.
         trend={m.changes.cancel > 0 ? 'down' : 'up'}
         description={desc}
         chartData={m.series.cancelled}
         chartType="bar"
-        infoTooltip="Part des commandes au statut « annulée »."
+        infoTooltip={t('orders.stats.kpi.cancel_info')}
       />
       <KpiStatCard
-        title="Remises accordées"
+        title={t('orders.stats.kpi.discount')}
         value={formatCurrency(m.discount)}
         change={formatPct(m.changes.discount)}
         // Plus de remises = coût, donc tendance inversée.
@@ -169,17 +172,17 @@ export function OrderKpiBand({ allOrders, range }: OrderKpiBandProps) {
         description={desc}
         chartData={m.series.discount}
         chartType="line"
-        infoTooltip="Montant total des remises appliquées sur la période."
+        infoTooltip={t('orders.stats.kpi.discount_info')}
       />
       <KpiStatCard
-        title="Taux de remise moyen"
+        title={t('orders.stats.kpi.discount_rate')}
         value={`${m.discountRate.toFixed(1)}%`}
-        change={`${formatPct(m.changes.discountRate)} pts`}
+        change={`${formatPct(m.changes.discountRate)} ${pts}`}
         trend={m.changes.discountRate > 0 ? 'down' : 'up'}
         description={desc}
         chartData={m.series.discount}
         chartType="line"
-        infoTooltip="Remises rapportées au chiffre d'affaires brut (net + remises)."
+        infoTooltip={t('orders.stats.kpi.discount_rate_info')}
       />
     </div>
   );
