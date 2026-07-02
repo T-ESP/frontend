@@ -32,6 +32,21 @@
   "onboarding": {
     "replay": "Revoir le guide"
   },
+  "daily_recap": {
+    "greeting": "Bonjour {{name}}",
+    "greeting_generic": "Bonjour",
+    "title": "Votre journée d'hier",
+    "revenue": "Chiffre d'affaires",
+    "orders": "Commandes",
+    "avg_basket": "Panier moyen",
+    "new_clients": "Nouveaux clients",
+    "delivered": "{{count}} livrées",
+    "pending": "{{count}} en attente",
+    "stockouts": "{{count}} en rupture",
+    "no_activity": "Aucune activité enregistrée hier.",
+    "close": "Fermer",
+    "go_dashboard": "Voir le tableau de bord"
+  },
   "sidebar": {
     "sections": {
       "overview": "Pilotage",
@@ -1244,6 +1259,15 @@
   "profile": {
     "title": "Mon Profil",
     "subtitle": "Gérez vos informations personnelles et vos paramètres de compte.",
+    "preferences": {
+      "title": "Préférences",
+      "daily_recap_label": "Récap quotidien",
+      "daily_recap_desc": "Fenêtre récapitulative de la veille à l'ouverture de l'application.",
+      "once_per_day": "Une fois par jour",
+      "every_open": "À chaque ouverture",
+      "saved_title": "Préférence enregistrée",
+      "saved_msg": "Vos préférences ont été mises à jour."
+    },
     "personal_info": {
       "title": "Informations personnelles",
       "firstname": "Prénom",

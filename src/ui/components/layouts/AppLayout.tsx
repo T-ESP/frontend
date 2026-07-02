@@ -7,6 +7,7 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { usePageTitle } from '@/ui/hooks/usePageTitle';
 import { FloatingChat } from '@/ui/components/FloatingChat/FloatingChat';
+import { DailyRecap } from '@/ui/components/DailyRecap/DailyRecap';
 
 type AppLayoutProps = {
   children?: ReactNode;
@@ -29,6 +30,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           </div>
         </SidebarInset>
         <FloatingChat />
+        <DailyRecap />
       </SidebarProvider>
     </TooltipProvider>
   );

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff, User, LogOut, KeyRound, Mail } from "lucide-react";
+import { Eye, EyeOff, User, LogOut, KeyRound, Mail, LayoutDashboard } from "lucide-react";
 import { useToast } from "@/ui/components/common/Toast";
 import { useAuth, clearAuthToken, getAuthToken } from "@/ui/features/auth/hooks/useAuth";
+import { useRecapFrequency, type RecapFrequency } from "@/ui/components/DailyRecap/recapPreference";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -53,7 +54,17 @@ export default function ProfilePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { addToast } = useToast();
-  const { isAuthenticated, firstname, lastname } = useAuth();
+  const { isAuthenticated, firstname, lastname, email } = useAuth();
+  const [recapFrequency, setRecapFrequency] = useRecapFrequency(email);
+
+  const handleRecapFrequency = (value: RecapFrequency) => {
+    setRecapFrequency(value);
+    addToast(
+      t("profile.preferences.saved_title", "Préférence enregistrée"),
+      t("profile.preferences.saved_msg", "Vos préférences ont été mises à jour."),
+      "success",
+    );
+  };
 
   const [emailForm, setEmailForm] = useState({ email: "", confirmEmail: "" });
   const [emailStatus, setEmailStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -152,6 +163,42 @@ export default function ProfilePage() {
           <div className="space-y-1.5">
             <Label>{t("profile.personal_info.lastname", "Nom")}</Label>
             <Input value={lastname ?? ""} disabled className="bg-muted text-muted-foreground" />
+          </div>
+        </div>
+      </div>
+
+      {/* Preferences */}
+      <div className="bg-card border border-border rounded-xl shadow-sm">
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-border">
+          <LayoutDashboard className="w-4 h-4 text-muted-foreground/70" />
+          <h2 className="text-base font-semibold text-foreground">{t("profile.preferences.title", "Préférences")}</h2>
+        </div>
+        <div className="p-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h4 className="font-semibold text-foreground">{t("profile.preferences.daily_recap_label", "Récap quotidien")}</h4>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {t("profile.preferences.daily_recap_desc", "Fenêtre récapitulative de la veille à l'ouverture de l'application.")}
+              </p>
+            </div>
+            <div className="inline-flex p-0.5 rounded-lg bg-muted shrink-0">
+              {(["once_per_day", "every_open"] as RecapFrequency[]).map((opt) => (
+                <button
+                  key={opt}
+                  type="button"
+                  onClick={() => handleRecapFrequency(opt)}
+                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                    recapFrequency === opt
+                      ? "bg-card text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {opt === "once_per_day"
+                    ? t("profile.preferences.once_per_day", "Une fois par jour")
+                    : t("profile.preferences.every_open", "À chaque ouverture")}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

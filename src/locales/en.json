@@ -32,6 +32,21 @@
   "onboarding": {
     "replay": "Replay the guide"
   },
+  "daily_recap": {
+    "greeting": "Hello {{name}}",
+    "greeting_generic": "Hello",
+    "title": "Your day yesterday",
+    "revenue": "Revenue",
+    "orders": "Orders",
+    "avg_basket": "Average basket",
+    "new_clients": "New clients",
+    "delivered": "{{count}} delivered",
+    "pending": "{{count}} pending",
+    "stockouts": "{{count}} out of stock",
+    "no_activity": "No activity recorded yesterday.",
+    "close": "Close",
+    "go_dashboard": "Go to dashboard"
+  },
   "sidebar": {
     "sections": {
       "overview": "Overview",
@@ -1259,6 +1274,15 @@
   "profile": {
     "title": "My Profile",
     "subtitle": "Manage your personal information and account settings.",
+    "preferences": {
+      "title": "Preferences",
+      "daily_recap_label": "Daily recap",
+      "daily_recap_desc": "Recap window of the previous day when opening the app.",
+      "once_per_day": "Once per day",
+      "every_open": "Every open",
+      "saved_title": "Preference saved",
+      "saved_msg": "Your preferences have been updated."
+    },
     "personal_info": {
       "title": "Personal Information",
       "firstname": "First Name",
