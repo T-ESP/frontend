@@ -52,6 +52,7 @@
     "loyalty": "Fidélité",
     "promotions": "Promotions",
     "alerts": "Alertes",
+    "users": "Utilisateurs",
     "team": "Équipe",
     "settings": "Paramètres",
     "logout": "Déconnexion",
@@ -238,7 +239,15 @@
       "in_stock": "En stock",
       "low_stock": "Stock faible",
       "out_of_stock": "Rupture de stock",
-      "total_products": "Produits Totaux"
+      "total_products": "Total produits",
+      "inventory_value": "Valeur du stock",
+      "in_catalog": "au catalogue",
+      "total_value": "valeur totale",
+      "products_to_watch": "produits à surveiller",
+      "products_out": "produits indisponibles",
+      "of_catalog": "{{pct}} % du catalogue",
+      "top_categories": "Top catégories par valeur",
+      "uncategorized": "Sans catégorie"
     },
     "table": {
       "product": "Produit",
