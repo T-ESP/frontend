@@ -130,6 +130,16 @@ export const ROUTES: Record<string, RouteMeta> = {
     roles: ['admin', 'manager'],
     title: 'StockS - Statistiques commandes',
   },
+  STAFF: {
+    path: '/staff',
+    label: 'Staff',
+    page: 'Staff',
+    layout: 'app',
+    restricted: true,
+    // Seul le compte commerce (patron) gère les employés, cohérent avec le backend.
+    roles: ['admin'],
+    title: 'StockS - Employés',
+  },
   TEAM: {
     path: '/team',
     label: 'Team',

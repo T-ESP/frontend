@@ -63,6 +63,9 @@ class ApiClient {
           localStorage.removeItem('auth_email');
           localStorage.removeItem('commerce_id');
           localStorage.removeItem('commerce_slug');
+          localStorage.removeItem('auth_role');
+          localStorage.removeItem('auth_role_raw');
+          localStorage.removeItem('auth_staff_id');
           window.location.href = '/login';
           throw new Error('Session expirée. Veuillez vous reconnecter.');
         }

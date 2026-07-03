@@ -26,6 +26,7 @@ export const PAGES = {
   Caisse: lazy(() => import("@/ui/features/caisse/pages/CaissePage")),
   OrderKPIs: lazy(() => import("@/ui/features/orders/pages/OrderKPIsPage")),
   Team: lazy(() => import("@/ui/features/team/pages/TeamPage")),
+  Staff: lazy(() => import("@/ui/features/staff/pages/StaffPage")),
   Settings: lazy(() => import("@/ui/features/settings/pages/SettingsPage")),
   Profile: lazy(() => import("@/ui/features/profile/pages/ProfilePage")),
   Loyalty: lazy(() => import("@/ui/features/loyalty/pages/LoyaltyPage")),

@@ -9,6 +9,7 @@ import { Input } from "@/ui/components/ui/input";
 import { Label } from "@/ui/components/ui/label";
 import { Checkbox } from "@/ui/components/ui/checkbox";
 import { PasswordInput } from "@/ui/components/common/PasswordInput/PasswordInput";
+import { getSubdomainSlug } from "@/lib/subdomain";
 
 const INITIAL_VALUES = {
   email: "",
@@ -38,9 +39,14 @@ export function LoginForm() {
     setFeedback(null);
     setStatus("loading");
 
+    // Sur un sous-domaine tenant (ex: tayna.stock-s.fr), le commerce est
+    // déjà déductible de l'URL — pas besoin de le redemander à l'employé.
+    const currentSlug = getSubdomainSlug();
+
     const payload: LoginRequest = {
       email: formValues.email,
       password: formValues.password,
+      commerceSlug: currentSlug ?? undefined,
     };
 
     try {
@@ -59,7 +65,9 @@ export function LoginForm() {
         window.location.hostname === "localhost" ||
         window.location.hostname === "127.0.0.1";
 
-      if (result.slug && baseDomain && !isLocalhost) {
+      // Redirige vers le sous-domaine du commerce uniquement si on n'y est
+      // pas déjà (cas du patron qui se connecte depuis le site principal).
+      if (result.slug && baseDomain && !isLocalhost && result.slug !== currentSlug) {
         const targetUrl = `https://${result.slug}.${baseDomain}/dashboard?token=${result.token}`;
         localStorage.removeItem("auth_token");
         localStorage.removeItem("auth_firstname");
@@ -67,6 +75,9 @@ export function LoginForm() {
         localStorage.removeItem("auth_email");
         localStorage.removeItem("commerce_id");
         localStorage.removeItem("commerce_slug");
+        localStorage.removeItem("auth_role");
+        localStorage.removeItem("auth_role_raw");
+        localStorage.removeItem("auth_staff_id");
         window.location.href = targetUrl;
       } else {
         navigate("/dashboard", { replace: true });

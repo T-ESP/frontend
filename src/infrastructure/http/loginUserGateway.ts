@@ -4,6 +4,7 @@ import type {
   LoginUserGateway,
 } from "@/application/usecases/LoginUser/LoginUser.types";
 import { getApiUrl } from "@/lib/api-url";
+import { storeAuthFromToken } from "@/ui/features/auth/hooks/useAuth";
 
 type RawLoginApiResponse = {
   success: boolean;
@@ -15,6 +16,14 @@ type RawLoginApiResponse = {
   message?: string;
 };
 
+type RawTenantVerifyResponse = {
+  success: boolean;
+  data?: {
+    id?: string;
+  };
+  message?: string;
+};
+
 export class HttpLoginUserGateway implements LoginUserGateway {
   private readonly baseUrl: string;
 
@@ -22,13 +31,32 @@ export class HttpLoginUserGateway implements LoginUserGateway {
     this.baseUrl = baseUrl;
   }
 
+  /** Résout le nom/slug d'une boutique en commerce_id via l'endpoint public. */
+  private async resolveCommerceId(slug: string): Promise<string> {
+    const response = await fetch(`${this.baseUrl}/tenants/verify/${encodeURIComponent(slug)}`);
+    const body = (await this.safeJson(response)) as RawTenantVerifyResponse | null;
+
+    if (!response.ok || !body?.success || !body.data?.id) {
+      throw new Error("Boutique introuvable. Vérifiez le nom saisi.");
+    }
+
+    return body.data.id;
+  }
+
   async login(payload: LoginRequest): Promise<LoginResponse> {
+    const commerceSlug = payload.commerceSlug?.trim();
+    const commerceId = commerceSlug ? await this.resolveCommerceId(commerceSlug) : undefined;
+
     const response = await fetch(`${this.baseUrl}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        email: payload.email,
+        password: payload.password,
+        commerce_id: commerceId,
+      }),
     });
 
     const body = (await this.safeJson(response)) as RawLoginApiResponse | null;
@@ -46,21 +74,16 @@ export class HttpLoginUserGateway implements LoginUserGateway {
     const firstname = body.data.firstname ?? "";
     const lastname = body.data.lastname ?? "";
 
-    localStorage.setItem('auth_token', token);
+    storeAuthFromToken(token, payload.email);
     localStorage.setItem('auth_firstname', firstname);
     localStorage.setItem('auth_lastname', lastname);
-    localStorage.setItem('auth_email', payload.email);
 
     let slug: string | undefined;
+    let role: string | undefined;
     try {
       const decoded = JSON.parse(atob(token.split('.')[1]));
-      if (decoded.commerce_id) {
-        localStorage.setItem('commerce_id', decoded.commerce_id);
-      }
-      if (decoded.slug) {
-        slug = decoded.slug;
-        localStorage.setItem('commerce_slug', decoded.slug);
-      }
+      slug = decoded.slug;
+      role = decoded.role;
     } catch {
       // JWT decode failed — skip
     }
@@ -71,6 +94,7 @@ export class HttpLoginUserGateway implements LoginUserGateway {
       firstname,
       lastname,
       slug,
+      role,
       message: body.message ?? "Login successful",
     };
   }

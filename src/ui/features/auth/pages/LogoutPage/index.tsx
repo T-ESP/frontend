@@ -2,17 +2,14 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/ui/components/common/Toast";
+import { clearAuthToken } from "@/ui/features/auth/hooks/useAuth";
 
 export default function LogoutPage() {
   const navigate = useNavigate();
   const { addToast } = useToast();
 
   useEffect(() => {
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('auth_firstname');
-    localStorage.removeItem('auth_lastname');
-    localStorage.removeItem('auth_email');
-    localStorage.removeItem('commerce_id');
+    clearAuthToken();
 
     addToast(
       "Déconnexion réussie",

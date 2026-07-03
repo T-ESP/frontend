@@ -6,6 +6,7 @@ export function createLoginUserUsecase(gateway: LoginUserGateway) {
     const payload: LoginRequest = {
       email: request.email.trim(),
       password: request.password,
+      commerceSlug: request.commerceSlug?.trim() || undefined,
     };
 
     // Nettoyer éventuellement un ancien token avant de se connecter

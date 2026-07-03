@@ -34,6 +34,13 @@ export const API_ENDPOINTS = {
     update: (id: number) => `/users/${id}`,
     delete: (id: number) => `/users/${id}`,
   },
+  staff: {
+    getAll: '/staff',
+    getById: (id: number) => `/staff/${id}`,
+    create: '/staff',
+    update: (id: number) => `/staff/${id}`,
+    delete: (id: number) => `/staff/${id}`,
+  },
   orders: {
     getAll: '/orders',
     getById: (id: number) => `/orders/${id}`,
