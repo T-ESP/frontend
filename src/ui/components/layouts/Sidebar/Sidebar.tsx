@@ -4,11 +4,32 @@ import { ChevronsUpDown, MoreVertical, User, LogOut } from "lucide-react";
 
 import { Logo } from "@/ui/components/common/Logo";
 import { sections, footerItems } from "@/ui/constants/sidebar/sidebarItem";
+import { ROUTES } from "@/ui/routing/metaRoutes";
+import type { SidebarSectionType } from "./Sidebar.types";
 
 const allDestinations = [
   ...sections.flatMap((section) => section.items.map((item) => item.to)),
   ...footerItems.map((item) => item.to),
 ];
+
+// path -> roles autorisés (undefined = accessible à tout utilisateur connecté)
+const ROLES_BY_PATH = new Map(
+  Object.values(ROUTES).map((route) => [route.path, route.roles]),
+);
+
+function isVisibleForRole(to: string, role: string): boolean {
+  const roles = ROLES_BY_PATH.get(to);
+  return !roles || roles.includes(role);
+}
+
+function filterSections(items: SidebarSectionType[], role: string): SidebarSectionType[] {
+  return items
+    .map((section) => ({
+      ...section,
+      items: section.items.filter((item) => isVisibleForRole(item.to, role)),
+    }))
+    .filter((section) => section.items.length > 0);
+}
 import { useAuth } from "@/ui/features/auth/hooks/useAuth";
 import {
   Sidebar as SidebarRoot,
@@ -136,6 +157,10 @@ function UserMenu() {
 export function Sidebar() {
   const { t } = useTranslation();
   const { toggleSidebar } = useSidebar();
+  const { role } = useAuth();
+
+  const visibleSections = filterSections(sections, role);
+  const visibleFooterItems = footerItems.filter((item) => isVisibleForRole(item.to, role));
 
   return (
     <SidebarRoot collapsible="icon">
@@ -154,7 +179,7 @@ export function Sidebar() {
       </SidebarHeader>
 
       <SidebarContent data-tour="nav">
-        {sections.map((section, index) => (
+        {visibleSections.map((section, index) => (
           <SidebarGroup key={section.label ?? index}>
             {section.label && (
               <SidebarGroupLabel>{t(section.label)}</SidebarGroupLabel>
@@ -171,9 +196,9 @@ export function Sidebar() {
       </SidebarContent>
 
       <SidebarFooter>
-        {footerItems.length > 0 && (
+        {visibleFooterItems.length > 0 && (
           <SidebarMenu>
-            {footerItems.map((item) => (
+            {visibleFooterItems.map((item) => (
               <NavItem key={item.to} item={item} />
             ))}
           </SidebarMenu>

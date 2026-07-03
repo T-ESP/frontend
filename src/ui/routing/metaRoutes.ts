@@ -127,7 +127,7 @@ export const ROUTES: Record<string, RouteMeta> = {
     page: 'OrderKPIs',
     layout: 'app',
     restricted: true,
-    roles: ['admin', 'manager'],
+    roles: ['admin'],
     title: 'StockS - Statistiques commandes',
   },
   STAFF: {
@@ -164,7 +164,7 @@ export const ROUTES: Record<string, RouteMeta> = {
     page: 'Loyalty',
     layout: 'app',
     restricted: true,
-    roles: ['admin', 'manager'],
+    roles: ['admin'],
     title: 'StockS - Loyalty Program',
   },
   PROMOTIONS: {
