@@ -75,7 +75,7 @@ export function Footer() {
           <div className="lg:col-span-4">
             <Link to="/" className="flex items-center gap-2 text-[15px] font-semibold tracking-tight text-[var(--lp-text)]">
               <img src={logoMark} alt="" className="h-8 w-auto" />
-              Stock<span style={{ color: ACCENT }}>S</span>
+              <span>Stock<span style={{ color: ACCENT }}>S</span></span>
             </Link>
             <p className="mt-4 max-w-xs text-[14px] leading-[1.6]" style={{ color: TEXT_2 }}>
               L'intelligence des stocks par l'IA : prévisions, alertes et réappro pour ton commerce.

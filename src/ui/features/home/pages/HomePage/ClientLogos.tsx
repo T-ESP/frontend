@@ -51,8 +51,9 @@ function LogoTrack({ ariaHidden = false }: { ariaHidden?: boolean }) {
             draggable={false}
             className={`${logo.className} w-auto select-none opacity-75`}
             style={{
-              // Force le SVG (quelle que soit sa couleur) en blanc pur.
-              filter: "brightness(0) invert(1)",
+              // Force le SVG en monochrome, theme-aware : NOIR en clair,
+              // BLANC en sombre (cf. --lp-logo-filter dans index.css).
+              filter: "var(--lp-logo-filter)",
             }}
           />
         </li>

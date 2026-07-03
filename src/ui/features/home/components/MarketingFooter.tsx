@@ -107,7 +107,7 @@ export function MarketingFooter() {
         <div className="grid gap-10 lg:grid-cols-12">
           {/* Marque + réseaux */}
           <div className="lg:col-span-4">
-            <Link to="/" className="flex items-center gap-2 font-bold tracking-tight text-foreground">
+            <Link to="/" className="flex items-center gap-0 font-bold tracking-tight text-foreground">
               <span className="flex items-center justify-center w-7 h-7 rounded-md bg-primary text-primary-foreground">
                 <Boxes className="w-4 h-4" />
               </span>

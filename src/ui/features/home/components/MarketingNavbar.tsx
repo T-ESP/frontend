@@ -66,8 +66,8 @@ export function MarketingNavbar() {
     >
       <div className="mx-auto flex max-w-[1180px] items-center justify-between px-6 py-4 sm:px-8">
         <Link to="/" className="flex items-center gap-2 text-[15px] font-semibold tracking-tight text-[var(--lp-text)]">
-          <img src={logoMark} alt="" className="h-8 w-auto" />
-          Stock<span style={{ color: NAV_ACCENT }}>S</span>
+          <img src={logoMark} alt="" className="h-10 w-auto" />
+          <span>Stock<span style={{ color: NAV_ACCENT }}>S</span></span>
         </Link>
 
         <nav className="items-center hidden gap-8 md:flex">

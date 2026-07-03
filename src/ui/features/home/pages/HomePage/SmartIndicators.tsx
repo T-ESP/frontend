@@ -328,10 +328,7 @@ export function SmartIndicators() {
       <div className="relative mx-auto max-w-[1180px] px-6 sm:px-8">
         {/* En-tête centré */}
         <div className="mx-auto max-w-[760px] text-center">
-          <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: ACCENT_2 }}>
-            Propulsé par l'IA
-          </p>
-          <h2 className="mt-4 text-balance text-4xl font-bold leading-[1.1] tracking-tight text-[var(--lp-text)] sm:text-5xl">
+          <h2 className="text-balance text-4xl font-bold leading-[1.1] tracking-tight text-[var(--lp-text)] sm:text-5xl">
             Vois les problèmes
             <br />
             avant qu'ils arrivent

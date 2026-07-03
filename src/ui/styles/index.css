@@ -292,18 +292,19 @@ html, body, #root {
    * Bordure/glow/grid en triplet RGB → l'alpha est réinjecté à l'usage :
    *   rgba(var(--lp-border))  ·  rgba(var(--lp-glow), 0.3)  ·  rgba(var(--lp-grid), 0.17)
    */
-  --lp-bg:      #faf8ff;            /* fond de page */
-  --lp-bg-rgb:  250, 248, 255;     /* idem en rgb (navbar translucide) */
-  --lp-bg-2:    #f1ecfb;           /* fond de section alternée */
+  --lp-bg:      #f6f6fb;            /* fond de page (cool off-white, wash violet réduit) */
+  --lp-bg-rgb:  246, 246, 251;     /* idem en rgb (navbar translucide) */
+  --lp-bg-2:    #eceaf4;           /* fond de section alternée (gris-lavande discret) */
   --lp-card:    #ffffff;           /* fond des cartes / mockup */
-  --lp-border:  17, 12, 40, 0.08;  /* bordures « glass » */
-  --lp-glass:   17, 12, 40, 0.03;  /* remplissage « glass » translucide */
+  --lp-border:  17, 12, 40, 0.12;  /* bordures « glass » (plus franches → cartes détachées) */
+  --lp-glass:   17, 12, 40, 0.04;  /* remplissage « glass » translucide */
   --lp-text:    #14101f;           /* texte principal */
-  --lp-text-2:  #5b5670;           /* texte secondaire */
+  --lp-text-2:  #544f66;           /* texte secondaire (un peu plus profond) */
   --lp-accent:  #7c3aed;           /* violet d'accent (contraste sur clair) */
   --lp-accent-rgb: 124, 58, 237;   /* idem en rgb (fonds accent translucides) */
   --lp-glow:    139, 92, 246;      /* rgb du halo (alpha à l'usage) */
   --lp-grid:    17, 12, 40;        /* rgb des lignes de grille */
+  --lp-logo-filter: brightness(0); /* logos clients → NOIRS sur fond clair */
 }
 
 /* ── Mode SOMBRE "Terminal" (navy + emerald) ───────────────── */
@@ -363,6 +364,7 @@ html, body, #root {
   --lp-accent-rgb: 168, 85, 247;
   --lp-glow:    139, 92, 246;
   --lp-grid:    255, 255, 255;
+  --lp-logo-filter: brightness(0) invert(1); /* logos clients → BLANCS sur fond sombre */
 }
 
 @layer base {

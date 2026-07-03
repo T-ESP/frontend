@@ -1,9 +1,17 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring, useReducedMotion } from "framer-motion";
+import { useRef, useEffect, useState, useCallback, type ReactNode } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useReducedMotion,
+  useMotionValue,
+  type MotionValue,
+} from "framer-motion";
+import { TrendingUp, Bell, Zap } from "lucide-react";
 import { ClientLogos } from "./ClientLogos";
 import { HorizonSection } from "./HorizonSection";
 import { Features2Col } from "./Features2Col";
-import { AuroraSection } from "./AuroraSection";
 import { SmartIndicators } from "./SmartIndicators";
 import { HowItWorks } from "./HowItWorks";
 import { TableExperience } from "./TableExperience";
@@ -107,205 +115,303 @@ function AppMockup() {
   );
 }
 
-/* Révélation 3D du dashboard PILOTÉE PAR LE SCROLL (réintégrée de l'ancien
- * Hero) : à mesure qu'il entre dans le viewport, le mockup se redresse
- * (incliné → à plat), monte légèrement, grandit et s'éclaircit.
- * Réglages : l'angle de départ (18deg), le scale (0.92) et l'opacité (0.4).
- * Respecte prefers-reduced-motion (rendu statique). */
-function ScrollRevealDashboard() {
+/* --- Carte 3D : inclinaison au survol souris + reflet qui suit le curseur ---
+ * Reprise du hero de Kae (TiltCard) : la carte s'incline légèrement vers la
+ * souris (rotateX/rotateY lissés par spring) et un reflet blanc balaie sa
+ * surface horizontalement en suivant le curseur. */
+function TiltCard({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
+  const rX = useMotionValue(0);
+  const rY = useMotionValue(0);
+  const gX = useMotionValue(50);
+  const srX = useSpring(rX, { stiffness: 80, damping: 18 });
+  const srY = useSpring(rY, { stiffness: 80, damping: 18 });
+  const sgX = useSpring(gX, { stiffness: 80, damping: 18 });
+  const glare = useTransform(
+    sgX,
+    (v) => `radial-gradient(ellipse 85% 42% at ${v}% 18%, rgba(255,255,255,0.10) 0%, transparent 55%)`,
+  );
 
-  // Progress 0 → 1 pendant que le mockup remonte du bas du viewport vers le centre.
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "center center"],
-  });
-  const p = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.0004 });
-  const rotateX = useTransform(p, [0, 1], [18, 0]);
-  const scale = useTransform(p, [0, 1], [0.92, 1]);
-  const y = useTransform(p, [0, 1], [40, 0]);
-  const opacity = useTransform(p, [0, 0.55], [0.4, 1]);
-
-  if (reduce) {
-    return (
-      <div className="relative z-10">
-        <AppMockup />
-      </div>
-    );
-  }
+  const onMove = useCallback(
+    (e: React.MouseEvent) => {
+      const r = ref.current?.getBoundingClientRect();
+      if (!r) return;
+      const cx = (e.clientX - r.left) / r.width - 0.5;
+      const cy = (e.clientY - r.top) / r.height - 0.5;
+      rX.set(-cy * 5);
+      rY.set(cx * 5);
+      gX.set((cx + 0.5) * 100);
+    },
+    [rX, rY, gX],
+  );
+  const onLeave = useCallback(() => {
+    rX.set(0);
+    rY.set(0);
+    gX.set(50);
+  }, [rX, rY, gX]);
 
   return (
-    // `perspective` sur le parent pour que rotateX donne un vrai effet 3D.
-    <div ref={ref} className="relative z-10" style={{ perspective: 1500 }}>
-      <motion.div
-        style={{ rotateX, scale, y, opacity, transformOrigin: "center top", willChange: "transform, opacity" }}
+    <motion.div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      style={{ rotateX: srX, rotateY: srY, transformStyle: "preserve-3d", willChange: "transform" }}
+      className="relative w-full"
+    >
+      {children}
+      {/* Reflet blanc qui balaie la carte en suivant le curseur. */}
+      <motion.div style={{ background: glare }} className="pointer-events-none absolute inset-0 z-10 rounded-xl" />
+    </motion.div>
+  );
+}
+
+/* --- Pin d'annotation « flottant » au-dessus du dashboard ------------------
+ * Pastille colorée + halo qui pulse en boucle + étiquette glass. Positionné
+ * en % (top/left) relativement au conteneur du mockup. */
+function AnnotationPin({
+  top,
+  left,
+  icon,
+  label,
+  delay,
+  color,
+}: {
+  top: string;
+  left: string;
+  icon: ReactNode;
+  label: string;
+  delay: number;
+  color: string;
+}) {
+  return (
+    <div className="absolute z-20 flex items-center gap-2" style={{ top, left }}>
+      <div className="relative shrink-0">
+        <div className="h-2.5 w-2.5 rounded-full" style={{ background: color, boxShadow: `0 0 0 3px ${color}30` }} />
+        <motion.div
+          className="absolute inset-0 rounded-full"
+          animate={{ scale: [1, 2.4], opacity: [0.5, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut", delay }}
+          style={{ background: color }}
+        />
+      </div>
+      <div
+        className="flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-[11px] font-bold backdrop-blur-md"
+        style={{
+          background: "rgba(10,6,26,0.78)",
+          border: `1px solid ${color}28`,
+          color: "#fff",
+          boxShadow: "0 4px 16px rgba(0,0,0,0.35)",
+        }}
       >
+        <span style={{ color }}>{icon}</span>
+        {label}
+      </div>
+    </div>
+  );
+}
+
+/* Pins posés sur le mockup (top/left en % du conteneur du dashboard). */
+const PINS = [
+  { top: "12%", left: "3%", icon: <TrendingUp size={12} />, label: "Prévisions IA", delay: 0.2, color: "#a855f7" },
+  { top: "27%", left: "71%", icon: <Bell size={12} />, label: "Alerte rupture", delay: 0.5, color: "#f59e0b" },
+  { top: "55%", left: "12%", icon: <Zap size={12} />, label: "Réappro auto", delay: 0.8, color: "#8b5cf6" },
+] as const;
+
+/* Bloc titre + sous-titre + CTA (réutilisé dans le rendu animé ET statique). */
+function HeroHeadline() {
+  return (
+    <div className="mx-auto flex max-w-[820px] flex-col items-center text-center">
+      {/* Titre — très gros, blanc, tracking serré */}
+      <h1 className="text-balance text-5xl font-bold leading-[1.05] tracking-tight text-[var(--lp-text)] sm:text-6xl lg:text-7xl">
+        Votre stock, piloté par l'IA
+      </h1>
+
+      {/* Sous-titre — 1-2 lignes, gris clair, largeur contenue */}
+      <p className="mt-6 max-w-[600px] text-pretty text-base leading-[1.6] sm:text-lg" style={{ color: HERO_TEXT_2 }}>
+        Anticipez la demande, évitez les ruptures et le surstock. StockS transforme vos données de vente en
+        décisions claires.
+      </p>
+
+      {/* Bloc CTA — input + bouton collés dans un conteneur glass arrondi.
+          pointer-events-auto : reste cliquable même si le calque titre est
+          globalement transparent aux événements (pour laisser le dashboard
+          en dessous réagir à la souris). */}
+      <form
+        className="pointer-events-auto mt-9 flex w-full max-w-[440px] items-center gap-2 rounded-full p-1.5 backdrop-blur-md"
+        style={{ background: "rgba(var(--lp-glass))", border: `1px solid ${HERO_BORDER}` }}
+        onSubmit={(e) => e.preventDefault()}
+      >
+        <input
+          type="email"
+          required
+          placeholder="Votre email"
+          aria-label="Votre adresse email"
+          className="min-w-0 flex-1 rounded-full bg-transparent px-4 py-2.5 text-sm text-[var(--lp-text)] placeholder:text-neutral-500 focus:outline-none focus-visible:outline-none focus-visible:ring-2"
+          style={{ ["--tw-ring-color" as string]: HERO_ACCENT }}
+        />
+        <button
+          type="submit"
+          className="shrink-0 rounded-full px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+          style={{
+            background: HERO_ACCENT,
+            ["--tw-ring-color" as string]: HERO_ACCENT,
+            ["--tw-ring-offset-color" as string]: HERO_BG,
+          }}
+        >
+          Commencer
+        </button>
+      </form>
+
+      {/* Réassurance */}
+      <p className="mt-4 text-xs" style={{ color: HERO_TEXT_2 }}>
+        Sans carte bancaire · Essai gratuit 14 jours
+      </p>
+    </div>
+  );
+}
+
+/* Quadrillage en perspective (fond haut du hero). */
+function HeroGrid() {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-x-0 top-0 h-[260px] overflow-hidden"
+      style={{
+        maskImage: "radial-gradient(ellipse 70% 100% at 50% 0%, black 20%, transparent 65%)",
+        WebkitMaskImage: "radial-gradient(ellipse 70% 100% at 50% 0%, black 20%, transparent 65%)",
+      }}
+    >
+      <div
+        className="absolute left-1/2 top-0 h-[900px] w-[180%] -translate-x-1/2"
+        style={{
+          transform: "perspective(700px) rotateX(62deg)",
+          transformOrigin: "50% 0%",
+          backgroundImage:
+            "linear-gradient(rgba(var(--lp-grid),0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--lp-grid),0.08) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
+        }}
+      />
+    </div>
+  );
+}
+
+/* Le dashboard (mockup + glow + tilt souris + pins), sans le pilotage scroll. */
+function HeroDashboard({ glowOp, pinsOp }: { glowOp?: MotionValue<number>; pinsOp?: MotionValue<number> }) {
+  return (
+    <div className="relative mx-auto w-full max-w-[940px]">
+      {/* Glow violet qui apparaît quand le dashboard vient se poser. */}
+      <motion.div aria-hidden style={glowOp ? { opacity: glowOp } : undefined} className="pointer-events-none absolute -inset-24 -z-10">
+        <div
+          className="h-full w-full rounded-full blur-[90px]"
+          style={{ background: `radial-gradient(ellipse at 50% 45%, rgba(${HERO_GLOW},0.42) 0%, transparent 65%)` }}
+        />
+      </motion.div>
+
+      <TiltCard>
         <AppMockup />
+      </TiltCard>
+
+      {/* Pins flottants (apparaissent en fin de reveal via pinsOp). */}
+      <motion.div style={pinsOp ? { opacity: pinsOp } : undefined} className="pointer-events-none absolute inset-0">
+        {PINS.map((p) => (
+          <AnnotationPin key={p.label} {...p} />
+        ))}
       </motion.div>
     </div>
   );
 }
 
+/* ============================================================
+ * HERO — reveal « scroll-jacké » repris du hero de Kae :
+ * la section est TALL (h-[260vh]) et son contenu est STICKY. Pendant qu'on
+ * la traverse, le TITRE s'efface + remonte, et le DASHBOARD glisse depuis la
+ * droite (x) en se redressant du 3D (rotateY/X/Z) → vient se poser à plat,
+ * grandit, s'éclaircit ; puis le glow + les pins apparaissent.
+ * S'ajoute le tilt 3D + reflet qui suit la souris (TiltCard).
+ * prefers-reduced-motion → rendu statique classique (pas de scroll-jack).
+ * ============================================================ */
 function Hero() {
-  return (
-    <section
-      className="relative isolate overflow-hidden"
-      style={{ backgroundColor: HERO_BG }}
-    >
-      {/* Quadrillage en perspective au-dessus du titre.
-          - Le plan est incliné via `perspective() rotateX()` → les lignes
-            s'évasent vers le bas et convergent vers le haut.
-          - Réglages :
-              · espacement des cases  → backgroundSize (60px)
-              · intensité des lignes  → alpha des rgba (0.08)
-              · inclinaison/évasement → perspective (700px) + rotateX (62deg)
-              · hauteur de la zone     → h-[460px] du conteneur
-          - Le maskImage fait disparaître la grille en fondu sur les bords. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-[260px] overflow-hidden"
-        style={{
-          // Fondu vertical : la grille s'éteint en bas (avant le titre).
-          maskImage:
-            "radial-gradient(ellipse 70% 100% at 50% 0%, black 20%, transparent 65%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse 70% 100% at 50% 0%, black 20%, transparent 65%)",
-        }}
-      >
-        <div
-          className="absolute left-1/2 top-0 h-[900px] w-[180%] -translate-x-1/2"
-          style={{
-            transform: "perspective(700px) rotateX(62deg)",
-            transformOrigin: "50% 0%",
-            backgroundImage:
-              "linear-gradient(rgba(var(--lp-grid),0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--lp-grid),0.08) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-          }}
-        />
-      </div>
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
 
-      {/* pt-* réserve l'espace du futur header sticky (à ajuster une fois posé). */}
-      <div className="relative mx-auto max-w-[1180px] px-6 pb-0 pt-32 sm:px-8 sm:pt-40">
-        <div className="mx-auto flex max-w-[820px] flex-col items-center text-center">
-          {/* Titre — très gros, blanc, tracking serré */}
-          <h1 className="text-balance text-5xl font-bold leading-[1.05] tracking-tight text-[var(--lp-text)] sm:text-6xl lg:text-7xl">
-            {/* [TITRE À REMPLIR] */}
-            Votre stock, piloté par l'IA
-          </h1>
+  // Amplitudes réduites sur mobile — réactif au resize.
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener?.("change", update);
+    return () => mq.removeEventListener?.("change", update);
+  }, []);
 
-          {/* Sous-titre — 1-2 lignes, gris clair, largeur contenue */}
-          <p
-            className="mt-6 max-w-[600px] text-pretty text-base leading-[1.6] sm:text-lg"
-            style={{ color: HERO_TEXT_2 }}
-          >
-            {/* [SOUS-TITRE À REMPLIR] */}
-            Anticipez la demande, évitez les ruptures et le surstock. StockS
-            transforme vos données de vente en décisions claires.
-          </p>
+  // Progression 0 → 1 sur TOUTE la hauteur (tall) de la section.
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
+  const smooth = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.0001 });
 
-          {/* Bloc CTA — input + bouton collés dans un conteneur glass arrondi */}
-          <form
-            className="mt-9 flex w-full max-w-[440px] items-center gap-2 rounded-full p-1.5 backdrop-blur-md"
-            style={{
-              background: "rgba(var(--lp-glass))",
-              border: `1px solid ${HERO_BORDER}`,
-            }}
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <input
-              type="email"
-              required
-              placeholder="Votre email"
-              aria-label="Votre adresse email"
-              className="min-w-0 flex-1 rounded-full bg-transparent px-4 py-2.5 text-sm text-[var(--lp-text)] placeholder:text-neutral-500 focus:outline-none focus-visible:outline-none focus-visible:ring-2"
-              style={{ ["--tw-ring-color" as string]: HERO_ACCENT }}
-            />
-            <button
-              type="submit"
-              className="shrink-0 rounded-full px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-              style={{
-                background: HERO_ACCENT,
-                // Anneau de focus clavier visible (offset = couleur du fond)
-                ["--tw-ring-color" as string]: HERO_ACCENT,
-                ["--tw-ring-offset-color" as string]: HERO_BG,
-              }}
-            >
-              Commencer
-            </button>
-          </form>
+  // LAYER 1 — le titre s'efface et remonte légèrement.
+  const hlOp = useTransform(smooth, [0.08, 0.36], [1, 0]);
+  const hlY = useTransform(smooth, [0, 0.36], ["0%", "-14%"]);
+  const hlScale = useTransform(smooth, [0, 0.36], [1, 0.92]);
 
-          {/* Réassurance */}
-          <p className="mt-4 text-xs" style={{ color: HERO_TEXT_2 }}>
-            Sans carte bancaire · Essai gratuit 14 jours
-          </p>
-        </div>
+  // LAYER 2 — le dashboard glisse depuis la droite et se redresse du 3D.
+  const imgX = useTransform(smooth, [0, 0.48], [isMobile ? "12%" : "42%", "0%"]);
+  const imgRotY = useTransform(smooth, [0, 0.48], [isMobile ? -15 : -32, 0]);
+  const imgRotX = useTransform(smooth, [0, 0.48], [isMobile ? 10 : 14, 0]);
+  const imgRotZ = useTransform(smooth, [0, 0.48], [isMobile ? -2 : -4, 0]);
+  const imgScale = useTransform(smooth, [0, 0.48], [isMobile ? 1.05 : 1.12, 1]);
+  const imgOpacity = useTransform(smooth, [0, 0.42], [0.35, 1]);
+  const glowOp = useTransform(smooth, [0.25, 0.7], [0, 1]);
+  const pinsOp = useTransform(smooth, [0.5, 0.62], [0, 1]);
 
-        {/* ====== Décor du bas : même système que le haut, centré sur le
-                dashboard. Tout est anchoré sur ce wrapper `relative`. ====== */}
-        <div className="relative mt-12">
-          {/* 1) Grille en perspective (sol "horizon"), DERRIÈRE le glow : la
-                lumière la recouvre au centre et elle réapparaît sur les côtés,
-                donc elle se fond naturellement dans le halo (pas de coupe).
-                Le fondu vertical (maskImage) dissout le haut (convergence) et
-                le bas. Réglages :
-                  · où elle commence/finit → -top-* et h-* du conteneur
-                  · douceur du fondu       → les stops du linear-gradient
-                  · évasement              → rotateX(62deg)/perspective(520px)
-                  · densité / intensité    → backgroundSize / alpha */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 -top-24 h-[520px] overflow-hidden"
-            style={{
-              // Double fondu COMBINÉ (intersection) : vertical (haut/bas) ET
-              // horizontal (gauche/droite) → plus aucune arête coupée, les
-              // côtés se dissolvent en douceur.
-              maskImage:
-                "linear-gradient(to bottom, transparent 0%, black 35%, black 70%, transparent 100%), linear-gradient(to right, transparent 0%, black 14%, black 86%, transparent 100%)",
-              WebkitMaskImage:
-                "linear-gradient(to bottom, transparent 0%, black 35%, black 70%, transparent 100%), linear-gradient(to right, transparent 0%, black 14%, black 86%, transparent 100%)",
-              maskComposite: "intersect",
-              WebkitMaskComposite: "source-in",
-            }}
-          >
-            <div
-              className="absolute left-1/2 top-0 h-[1000px] w-[320%] -translate-x-1/2"
-              style={{
-                transform: "perspective(520px) rotateX(62deg)",
-                transformOrigin: "50% 0%",
-                backgroundImage:
-                  "linear-gradient(rgba(var(--lp-grid),0.17) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--lp-grid),0.17) 1px, transparent 1px)",
-                backgroundSize: "66px 66px",
-              }}
-            />
+  // Rendu statique (accessibilité) : titre puis dashboard, sans scroll-jack.
+  if (reduce) {
+    return (
+      <section className="relative isolate overflow-hidden" style={{ backgroundColor: HERO_BG }}>
+        <HeroGrid />
+        <div className="relative mx-auto max-w-[1180px] px-6 pb-24 pt-32 sm:px-8 sm:pt-40">
+          <HeroHeadline />
+          <div className="relative mt-16">
+            <HeroDashboard />
           </div>
-
-          {/* 2) Radial PUISSANT : centré sur le BORD HAUT du dashboard. C'est
-                LUI qui déborde sur les côtés (ellipse plus large que le
-                dashboard) et descend en s'éteignant vers le tiers supérieur.
-                - Largeur du débordement latéral → w-[2500px]
-                - Hauteur d'extinction (où ça s'arrête en bas) → h-[520px] */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute left-1/2 top-0 h-[520px] w-[2500px] max-w-[230vw] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[90px]"
-            style={{
-              background: `radial-gradient(closest-side, rgba(${HERO_GLOW}, 1) 0%, rgba(${HERO_GLOW}, 0.48) 36%, rgba(${HERO_GLOW}, 0.19) 62%, transparent 84%)`,
-            }}
-          />
-          {/* 2bis) Cœur ardent : spot quasi blanc surimposé, calé lui aussi sur
-                le bord haut du dashboard. Baisser l'alpha si trop fort. */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute left-1/2 top-0 h-[220px] w-[440px] max-w-[90vw] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[70px]"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(216,180,254,0.95) 0%, rgba(168,85,247,0.6) 40%, transparent 70%)",
-            }}
-          />
-
-          {/* Dashboard mockup — révélation 3D au scroll (z-10), au-dessus du halo. */}
-          <ScrollRevealDashboard />
         </div>
+      </section>
+    );
+  }
+
+  return (
+    <section ref={sectionRef} className="relative" style={{ backgroundColor: HERO_BG, height: isMobile ? "210vh" : "260vh" }}>
+      {/* Fenêtre STICKY : le contenu reste figé à l'écran pendant qu'on scrolle
+          à travers la hauteur de la section (c'est ce qui « scroll-jacke »). */}
+      <div className="sticky top-0 h-screen overflow-hidden isolate">
+        <HeroGrid />
+
+        {/* LAYER 1 — titre (pointer-events-none pour laisser passer la souris
+            vers le dashboard ; seul le CTA re-active les events). */}
+        <motion.div
+          style={{ opacity: hlOp, y: hlY, scale: hlScale }}
+          className="pointer-events-none absolute inset-x-0 top-0 z-20 mx-auto flex max-w-[1180px] flex-col items-center px-6 pt-28 sm:px-8 sm:pt-32"
+        >
+          <HeroHeadline />
+        </motion.div>
+
+        {/* LAYER 2 — dashboard qui glisse depuis la droite et se redresse. */}
+        <motion.div
+          style={{
+            x: imgX,
+            rotateX: imgRotX,
+            rotateY: imgRotY,
+            rotateZ: imgRotZ,
+            scale: imgScale,
+            opacity: imgOpacity,
+            transformStyle: "preserve-3d",
+            perspective: "1600px",
+            willChange: "transform, opacity",
+          }}
+          className="absolute inset-x-0 bottom-[-8%] z-10 mx-auto flex w-full max-w-[1080px] justify-center px-6 sm:bottom-[-6%] sm:px-8"
+        >
+          <HeroDashboard glowOp={glowOp} pinsOp={pinsOp} />
+        </motion.div>
       </div>
     </section>
   );
@@ -318,7 +424,6 @@ export default function HomePage() {
       <ClientLogos />
       <HorizonSection />
       <Features2Col />
-      <AuroraSection />
       <SmartIndicators />
       <HowItWorks />
       <TableExperience />

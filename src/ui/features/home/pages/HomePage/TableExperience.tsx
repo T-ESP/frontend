@@ -1,4 +1,6 @@
 import { ArrowUp, ArrowDown } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { Reveal } from "./landingMotion";
 
 /* ============================================================
@@ -7,9 +9,15 @@ import { Reveal } from "./landingMotion";
  * en HTML/CSS (pas une image), dans un conteneur glass avec fausse
  * barre de navigateur. Glow violet diffus derrière le tableau.
  *
+ * ✨ ANIMATION (comme le feed « Analyse de tes ventes en cours ») :
+ *   une nouvelle ligne s'ajoute en haut toutes les STEP_MS, poussant
+ *   les autres d'un cran vers le bas ; la plus ancienne sort par le
+ *   bas dans le fondu. En-tête fixe, fenêtre masquée haut/bas.
+ *
  * ⚙️ Pour éditer les données : tableau ROWS ci-dessous.
  *    - trend > 0 → flèche ↑ (hausse) ; < 0 → flèche ↓ (baisse)
  *    - status : "ok" | "order" | "soon" (couleur du badge gérée par STATUS)
+ *    - cadence du feed → STEP_MS ; lignes visibles → VISIBLE
  * ============================================================ */
 const SECTION_BG = "var(--lp-bg)";
 const PANEL_BG = "var(--lp-card)"; // = fond du mockup hero
@@ -25,7 +33,7 @@ const STATUS: Record<Status, { label: string; cls: string }> = {
   soon: { label: "Rupture proche", cls: "border-amber-400/20 bg-amber-400/10 text-amber-600 dark:text-amber-300" },
 };
 
-/* Données fictives crédibles (commerce alimentaire). */
+/* Données fictives crédibles (commerce alimentaire). Le feed boucle dessus. */
 const ROWS: {
   name: string;
   sold: number;
@@ -42,6 +50,96 @@ const ROWS: {
   { name: "Jus d'orange 1L", sold: 51, forecast: -3, trend: -1, stock: 88, status: "ok" },
   { name: "Beurre doux 250g", sold: 64, forecast: 7, trend: 1, stock: 19, status: "order" },
 ];
+
+/* Colonnes partagées entre l'en-tête et les lignes (alignement garanti). */
+const GRID_COLS = "minmax(0,1fr) 120px 120px 90px 140px";
+const COLS = ["Produit", "Vendus/sem.", "Prévision", "Stock", "Statut"] as const;
+
+/* Feed : une nouvelle ligne s'ajoute en haut toutes les STEP_MS. */
+const ROW_H = 52; // hauteur d'une ligne en px
+const VISIBLE = 6; // lignes visibles dans la fenêtre
+const STEP_MS = 2000; // intervalle d'ajout (1 ligne / 2 s)
+
+/* Fondu de la fenêtre (haut + bas) — comme le feed d'analyse. */
+const WINDOW_FADE =
+  "linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%)";
+
+/* --- Une ligne de tableau (cellules) ------------------------------------- */
+function RowCells({ r }: { r: (typeof ROWS)[number] }) {
+  const up = r.trend >= 0;
+  const s = STATUS[r.status];
+  return (
+    <div
+      className="grid items-center gap-3 px-5 text-sm"
+      style={{ gridTemplateColumns: GRID_COLS, height: ROW_H, borderBottom: `1px solid ${BORDER}` }}
+    >
+      <span className="truncate font-medium text-[var(--lp-text)]">{r.name}</span>
+      <span className="text-right font-mono tabular-nums" style={{ color: TEXT_2 }}>
+        {r.sold}
+      </span>
+      <span className="text-right">
+        <span
+          className={`inline-flex items-center gap-1 font-mono tabular-nums ${up ? "text-emerald-600 dark:text-emerald-300" : "text-rose-600 dark:text-rose-300"}`}
+        >
+          {up ? <ArrowUp className="h-3.5 w-3.5" /> : <ArrowDown className="h-3.5 w-3.5" />}
+          {Math.abs(r.forecast)}%
+        </span>
+      </span>
+      <span className="text-right font-mono tabular-nums text-[var(--lp-text)]">{r.stock}</span>
+      <span className="flex justify-end">
+        <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-medium ${s.cls}`}>
+          {s.label}
+        </span>
+      </span>
+    </div>
+  );
+}
+
+/* --- Feed produits : une ligne s'ajoute en haut, les autres descendent ----
+ * Même principe que <AnalysisFeed/> (Features2Col) : à chaque tick on préfixe
+ * la ligne suivante du cycle ROWS ; framer anime la descente (layout) et
+ * l'apparition (fade). Figé si l'utilisateur réduit les animations. */
+function ProductsFeed() {
+  const reduce = useReducedMotion();
+  const [rows, setRows] = useState(() =>
+    Array.from({ length: VISIBLE }, (_, i) => ({ id: i, ...ROWS[i % ROWS.length] })),
+  );
+
+  useEffect(() => {
+    if (reduce) return; // animations réduites → liste figée
+    let next = VISIBLE; // prochain index source ET id unique
+    const timer = setInterval(() => {
+      setRows((prev) => {
+        const row = { id: next, ...ROWS[next % ROWS.length] };
+        next += 1;
+        return [row, ...prev].slice(0, VISIBLE + 1); // garde 1 ligne sortante
+      });
+    }, STEP_MS);
+    return () => clearInterval(timer);
+  }, [reduce]);
+
+  return (
+    <div
+      className="relative overflow-hidden"
+      style={{ height: ROW_H * VISIBLE, maskImage: WINDOW_FADE, WebkitMaskImage: WINDOW_FADE }}
+    >
+      <AnimatePresence initial={false}>
+        {rows.map((row) => (
+          <motion.div
+            key={row.id}
+            layout
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <RowCells r={row} />
+          </motion.div>
+        ))}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 export function TableExperience() {
   return (
@@ -83,60 +181,28 @@ export function TableExperience() {
               </div>
             </div>
 
-            {/* Tableau (scroll horizontal sur très petit écran). */}
+            {/* Tableau animé (scroll horizontal sur très petit écran). */}
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[640px] border-collapse text-left text-sm">
-                <thead>
-                  <tr style={{ borderBottom: `1px solid ${BORDER}` }}>
-                    {["Produit", "Vendus/sem.", "Prévision", "Stock", "Statut"].map((h, i) => (
-                      <th
-                        key={h}
-                        className={`px-5 py-3.5 text-[12px] font-semibold uppercase tracking-wider ${i > 0 ? "text-right" : ""} ${i === 4 ? "text-right" : ""}`}
-                        style={{ color: TEXT_2 }}
-                      >
-                        {h}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {ROWS.map((r, i) => {
-                    const up = r.trend >= 0;
-                    const s = STATUS[r.status];
-                    return (
-                      <tr
-                        key={r.name}
-                        style={{
-                          // Lignes alternées (zébrage très léger).
-                          background: i % 2 ? "rgba(255,255,255,0.015)" : "transparent",
-                          borderBottom: i < ROWS.length - 1 ? `1px solid ${BORDER}` : "none",
-                        }}
-                      >
-                        <td className="px-5 py-3.5 font-medium text-[var(--lp-text)]">{r.name}</td>
-                        <td className="px-5 py-3.5 text-right font-mono tabular-nums" style={{ color: TEXT_2 }}>
-                          {r.sold}
-                        </td>
-                        <td className="px-5 py-3.5 text-right">
-                          <span
-                            className={`inline-flex items-center gap-1 font-mono tabular-nums ${up ? "text-emerald-600 dark:text-emerald-300" : "text-rose-600 dark:text-rose-300"}`}
-                          >
-                            {up ? <ArrowUp className="h-3.5 w-3.5" /> : <ArrowDown className="h-3.5 w-3.5" />}
-                            {Math.abs(r.forecast)}%
-                          </span>
-                        </td>
-                        <td className="px-5 py-3.5 text-right font-mono tabular-nums text-[var(--lp-text)]">{r.stock}</td>
-                        <td className="px-5 py-3.5 text-right">
-                          <span
-                            className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-medium ${s.cls}`}
-                          >
-                            {s.label}
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+              <div className="min-w-[640px]">
+                {/* En-tête FIXE (aligné sur les lignes via GRID_COLS). */}
+                <div
+                  className="grid gap-3 px-5 py-3.5"
+                  style={{ gridTemplateColumns: GRID_COLS, borderBottom: `1px solid ${BORDER}` }}
+                >
+                  {COLS.map((h, i) => (
+                    <span
+                      key={h}
+                      className={`text-[12px] font-semibold uppercase tracking-wider ${i > 0 ? "text-right" : ""}`}
+                      style={{ color: TEXT_2 }}
+                    >
+                      {h}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Corps : feed animé (nouvelle ligne en haut, décalage vers le bas). */}
+                <ProductsFeed />
+              </div>
             </div>
           </div>
         </Reveal>

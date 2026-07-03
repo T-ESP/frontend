@@ -118,7 +118,6 @@ export function HorizonSection() {
       <Reveal className="relative z-10 mx-auto max-w-[760px] px-6 text-center sm:px-8">
         <h2
           className="text-balance text-4xl font-bold leading-[1.1] tracking-tight text-[var(--lp-text)] sm:text-5xl"
-          style={{ textShadow: `0 2px 16px rgba(0,0,0,0.55), 0 0 40px rgba(${GLOW}, 0.35)` }}
         >
           {/* [TITRE À REMPLIR] */}
           Plus rapide. Plus malin.
