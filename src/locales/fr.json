@@ -1,124 +1,4 @@
 {
-    "common": {
-        "edit": "Modifier",
-        "export": "Exporter",
-        "actions": "Actions",
-        "cancel": "Annuler",
-        "save": "Enregistrer",
-        "delete": "Supprimer",
-        "confirm": "Confirmer",
-        "creating": "Création...",
-        "updating": "Mise à jour...",
-        "deleting": "Suppression...",
-        "refresh": "Actualiser",
-        "view_details": "Voir les détails",
-        "sold": "vendus",
-        "units": "unités",
-        "of": "sur",
-        "date_range": {
-            "last_7_days": "7 derniers jours",
-            "last_30_days": "30 derniers jours",
-            "last_90_days": "90 derniers jours",
-            "last_year": "Dernière année",
-            "all_time": "Toute la période"
-        },
-        "all_time": "Tout le temps",
-        "total_active": "Total actifs",
-        "others": "Autres",
-        "percentage": "Pourcentage",
-        "collapse_sidebar": "Réduire la barre latérale",
-        "expand_sidebar": "Développer la barre latérale"
-    },
-    "onboarding": {
-        "replay": "Revoir le guide"
-    },
-    "caisse": {
-        "title": "Caisse",
-        "subtitle": "Scannez les articles, gérez le panier et encaissez vos ventes",
-        "scanner_ready": "Scannette prête",
-        "scan_placeholder": "Scannez un code-barres ou recherchez un produit…",
-        "add": "Ajouter",
-        "scan_hint": "Astuce : le lecteur code-barres ajoute automatiquement l'article au panier.",
-        "cart": "Panier",
-        "items_count_one": "{{count}} article",
-        "items_count_other": "{{count}} articles",
-        "clear": "Vider",
-        "empty_cart": "Aucun article. Scannez un produit pour commencer.",
-        "per_unit": "/ u",
-        "stock_label": "stock : {{n}}",
-        "decrease": "Diminuer",
-        "increase": "Augmenter",
-        "remove": "Retirer",
-        "remove_customer": "Retirer le client",
-        "loyalty_account": "Compte fidélité",
-        "points": "{{n}} points",
-        "client_search_placeholder": "Rechercher un client (nom, email)…",
-        "new_loyalty_account": "Nouveau compte fidélité",
-        "walkin_note": "Sans sélection, la vente est enregistrée comme « client de passage ».",
-        "checkout": "Encaissement",
-        "payment_method": "Mode de paiement",
-        "card": "Carte",
-        "cash": "Espèces",
-        "amount_received": "Montant reçu",
-        "change_due": "À rendre",
-        "missing": "Manque",
-        "exact": "Appoint",
-        "promotions": "Promotions",
-        "add_items_for_promos": "Ajoutez des articles pour voir les promotions.",
-        "no_promos": "Aucune promotion applicable à ce panier.",
-        "receipt": "Ticket de caisse",
-        "send_receipt_email": "Envoyer le ticket par email",
-        "email_placeholder": "email@client.fr",
-        "loyalty_email_note": "Email du compte fidélité.",
-        "subtotal": "Sous-total",
-        "discounts": "Remises",
-        "to_pay": "À payer",
-        "validate_order": "Valider la commande",
-        "processing": "Traitement…",
-        "final_amount_note": "Montant final calculé par la caisse au tarif de vente.",
-        "new_client_desc": "Créez un client pour le rattacher à la vente et cumuler des points.",
-        "firstname": "Prénom",
-        "lastname": "Nom",
-        "email": "Email",
-        "password": "Mot de passe",
-        "cancel": "Annuler",
-        "create_account": "Créer le compte",
-        "creating": "Création…",
-        "toast": {
-            "product_added": "Produit ajouté",
-            "product_not_found": "Produit introuvable",
-            "ref_absent": "Référence « {{ref}} » absente du catalogue",
-            "error": "Erreur",
-            "cannot_add_product": "Impossible d'ajouter ce produit",
-            "required_fields": "Champs requis",
-            "fill_all_fields": "Renseignez tous les champs du compte fidélité",
-            "account_created": "Compte fidélité créé",
-            "create_failed": "Création impossible",
-            "create_error": "Erreur lors de la création du compte",
-            "choose_payment_title": "Mode de paiement",
-            "choose_payment_desc": "Choisissez Carte ou Espèces",
-            "no_client_title": "Aucun client disponible",
-            "no_client_desc": "Créez au moins un compte client avant d'encaisser",
-            "sale_done": "Vente encaissée ✓",
-            "order_summary": "Commande #{{id}} — {{amount}}",
-            "discount_suffix": " · remise {{amount}}",
-            "points_suffix": " · +{{n}} pts fidélité",
-            "receipt_sent": "Ticket envoyé",
-            "receipt_not_sent": "Ticket non envoyé",
-            "email_send_failed": "Échec de l'envoi de l'email",
-            "checkout_failed": "Échec de l'encaissement",
-            "check_stock": "Vérifiez le stock et réessayez"
-        }
-    },
-    "sidebar": {
-        "sections": {
-            "overview": "Pilotage",
-            "operations": "Activité",
-            "engagement": "Engagement"
-        },
-        "dashboard": "Tableau de bord",
-        "caisse": "Caisse",
-        "inventory": "Inventaire",
   "common": {
     "edit": "Modifier",
     "export": "Exporter",
@@ -152,20 +32,83 @@
   "onboarding": {
     "replay": "Revoir le guide"
   },
-  "daily_recap": {
-    "greeting": "Bonjour {{name}}",
-    "greeting_generic": "Bonjour",
-    "title": "Votre journée d'hier",
-    "revenue": "Chiffre d'affaires",
-    "orders": "Commandes",
-    "avg_basket": "Panier moyen",
-    "new_clients": "Nouveaux clients",
-    "delivered": "{{count}} livrées",
-    "pending": "{{count}} en attente",
-    "stockouts": "{{count}} en rupture",
-    "no_activity": "Aucune activité enregistrée hier.",
-    "close": "Fermer",
-    "go_dashboard": "Voir le tableau de bord"
+  "caisse": {
+    "title": "Caisse",
+    "subtitle": "Scannez les articles, gérez le panier et encaissez vos ventes",
+    "scanner_ready": "Scannette prête",
+    "scan_placeholder": "Scannez un code-barres ou recherchez un produit…",
+    "add": "Ajouter",
+    "scan_hint": "Astuce : le lecteur code-barres ajoute automatiquement l'article au panier.",
+    "cart": "Panier",
+    "items_count_one": "{{count}} article",
+    "items_count_other": "{{count}} articles",
+    "clear": "Vider",
+    "empty_cart": "Aucun article. Scannez un produit pour commencer.",
+    "per_unit": "/ u",
+    "stock_label": "stock : {{n}}",
+    "decrease": "Diminuer",
+    "increase": "Augmenter",
+    "remove": "Retirer",
+    "remove_customer": "Retirer le client",
+    "loyalty_account": "Compte fidélité",
+    "points": "{{n}} points",
+    "client_search_placeholder": "Rechercher un client (nom, email)…",
+    "new_loyalty_account": "Nouveau compte fidélité",
+    "walkin_note": "Sans sélection, la vente est enregistrée comme « client de passage ».",
+    "checkout": "Encaissement",
+    "payment_method": "Mode de paiement",
+    "card": "Carte",
+    "cash": "Espèces",
+    "amount_received": "Montant reçu",
+    "change_due": "À rendre",
+    "missing": "Manque",
+    "exact": "Appoint",
+    "promotions": "Promotions",
+    "add_items_for_promos": "Ajoutez des articles pour voir les promotions.",
+    "no_promos": "Aucune promotion applicable à ce panier.",
+    "receipt": "Ticket de caisse",
+    "send_receipt_email": "Envoyer le ticket par email",
+    "email_placeholder": "email@client.fr",
+    "loyalty_email_note": "Email du compte fidélité.",
+    "subtotal": "Sous-total",
+    "discounts": "Remises",
+    "to_pay": "À payer",
+    "validate_order": "Valider la commande",
+    "processing": "Traitement…",
+    "final_amount_note": "Montant final calculé par la caisse au tarif de vente.",
+    "new_client_desc": "Créez un client pour le rattacher à la vente et cumuler des points.",
+    "firstname": "Prénom",
+    "lastname": "Nom",
+    "email": "Email",
+    "password": "Mot de passe",
+    "cancel": "Annuler",
+    "create_account": "Créer le compte",
+    "creating": "Création…",
+    "toast": {
+      "product_added": "Produit ajouté",
+      "product_not_found": "Produit introuvable",
+      "ref_absent": "Référence « {{ref}} » absente du catalogue",
+      "error": "Erreur",
+      "cannot_add_product": "Impossible d'ajouter ce produit",
+      "required_fields": "Champs requis",
+      "fill_all_fields": "Renseignez tous les champs du compte fidélité",
+      "account_created": "Compte fidélité créé",
+      "create_failed": "Création impossible",
+      "create_error": "Erreur lors de la création du compte",
+      "choose_payment_title": "Mode de paiement",
+      "choose_payment_desc": "Choisissez Carte ou Espèces",
+      "no_client_title": "Aucun client disponible",
+      "no_client_desc": "Créez au moins un compte client avant d'encaisser",
+      "sale_done": "Vente encaissée ✓",
+      "order_summary": "Commande #{{id}} — {{amount}}",
+      "discount_suffix": " · remise {{amount}}",
+      "points_suffix": " · +{{n}} pts fidélité",
+      "receipt_sent": "Ticket envoyé",
+      "receipt_not_sent": "Ticket non envoyé",
+      "email_send_failed": "Échec de l'envoi de l'email",
+      "checkout_failed": "Échec de l'encaissement",
+      "check_stock": "Vérifiez le stock et réessayez"
+    }
   },
   "sidebar": {
     "sections": {
@@ -175,10 +118,10 @@
       "orders": "Commandes"
     },
     "dashboard": "Tableau de bord",
+    "caisse": "Caisse",
     "inventory": "Inventaire",
     "orders": "Commandes",
     "insights": "Analyses",
-    "predictions": "Prédictions IA",
     "sales": "Ventes",
     "pricing": "Abonnement",
     "pricing_news": "Prix & Actualités",
@@ -187,11 +130,12 @@
     "loyalty": "Fidélité",
     "promotions": "Promotions",
     "alerts": "Alertes",
-    "users": "Utilisateurs",
     "team": "Équipe",
     "settings": "Paramètres",
     "logout": "Déconnexion",
     "profile": "Profil",
+    "predictions": "Prédictions IA",
+    "users": "Utilisateurs",
     "orders_list": "Liste des commandes",
     "orders_kpis": "Statistiques"
   },
@@ -222,11 +166,11 @@
       "total_value": "valeur totale",
       "out_of_stock": "Ruptures",
       "products_out": "produits indisponibles",
-      "stock_coverage": "répartition par niveau de stock",
       "suppliers_total": "Fournisseurs",
       "registered": "référencés",
       "suppliers_with_phone": "Fournisseurs joignables",
-      "with_phone": "avec téléphone"
+      "with_phone": "avec téléphone",
+      "stock_coverage": "répartition par niveau de stock"
     },
     "kpi_edit": {
       "title": "Personnaliser les KPIs",
@@ -943,7 +887,12 @@
     "kpis_subtitle": "Vue d'ensemble des performances",
     "stats": {
       "period": "Période",
-      "presets": { "7d": "7 jours", "30d": "30 jours", "90d": "90 jours", "12m": "12 mois" },
+      "presets": {
+        "7d": "7 jours",
+        "30d": "30 jours",
+        "90d": "90 jours",
+        "12m": "12 mois"
+      },
       "vs_previous": "vs période précédente",
       "pts": "pts",
       "kpi": {
@@ -971,8 +920,16 @@
         "orders": "Commandes",
         "orders_count": "{{count}} commande(s)"
       },
-      "grain": { "day": "jour", "week": "semaine", "month": "mois" },
-      "status_breakdown": { "title": "Répartition par statut", "subtitle": "Cycle de vie des commandes", "empty": "Aucune commande sur la période" },
+      "grain": {
+        "day": "jour",
+        "week": "semaine",
+        "month": "mois"
+      },
+      "status_breakdown": {
+        "title": "Répartition par statut",
+        "subtitle": "Cycle de vie des commandes",
+        "empty": "Aucune commande sur la période"
+      },
       "distribution": {
         "title": "Distribution des paniers",
         "median": "Médiane : {{value}}",
@@ -995,7 +952,15 @@
         "empty": "Aucune commande sur la période",
         "cell": "{{day}} {{slot}} : {{n}} commande(s)"
       },
-      "weekdays": { "mon": "Lun", "tue": "Mar", "wed": "Mer", "thu": "Jeu", "fri": "Ven", "sat": "Sam", "sun": "Dim" },
+      "weekdays": {
+        "mon": "Lun",
+        "tue": "Mar",
+        "wed": "Mer",
+        "thu": "Jeu",
+        "fri": "Ven",
+        "sat": "Sam",
+        "sun": "Dim"
+      },
       "top_products": {
         "title": "Top produits commandés",
         "subtitle": "Classement sur la période",
@@ -1014,22 +979,192 @@
       }
     }
   },
+  "sales": {
+    "title": "Tableau de Bord Ventes",
+    "subtitle": "Aperçu des performances et analyses des 30 derniers jours",
+    "refresh": "Actualiser",
+    "top_products": "Produits les plus performants",
+    "by_category": "Ventes par Catégorie",
+    "uncategorized": "Non catégorisé",
+    "charts": {
+      "revenue_trend": "Tendance des revenus",
+      "daily_revenue_30d": "Revenus quotidiens sur les 30 derniers jours",
+      "revenue": "Revenu"
+    },
+    "table": {
+      "product": "Nom Produit",
+      "units": "Unités Vendues",
+      "revenue": "Revenu",
+      "performance": "Performance"
+    },
+    "stats": {
+      "total_revenue": "Revenu Total",
+      "total_orders": "Commandes totales",
+      "avg_basket": "Panier Moyen",
+      "revenue_growth": "Croissance Revenu",
+      "last_30_days": "30 derniers jours",
+      "trend": "Tendance"
+    }
+  },
+  "suppliers": {
+    "title": "Gestion Fournisseurs",
+    "total": "Total Fournisseurs",
+    "active": "Actifs",
+    "with_phone": "Avec Téléphone",
+    "locations": "Emplacements",
+    "search_placeholder": "Rechercher par nom, email...",
+    "add": "Ajouter Fournisseur",
+    "no_suppliers": "Aucun fournisseur trouvé",
+    "try_adjusting": "Essayez d'ajuster votre recherche",
+    "get_started": "Ajoutez un fournisseur pour commencer",
+    "table": {
+      "name": "Nom",
+      "email": "Email",
+      "phone": "Téléphone",
+      "address": "Adresse",
+      "actions": "Actions"
+    }
+  },
+  "profile": {
+    "title": "Mon Profil",
+    "subtitle": "Gérez vos informations personnelles et vos paramètres de compte.",
+    "personal_info": {
+      "title": "Informations personnelles",
+      "firstname": "Prénom",
+      "lastname": "Nom",
+      "phone": "Téléphone"
+    },
+    "email": {
+      "title": "Changer l'adresse email",
+      "new_email_label": "Nouvelle adresse email",
+      "new_email_placeholder": "nouveau@example.com",
+      "confirm_email_label": "Confirmer l'adresse email",
+      "confirm_email_placeholder": "nouveau@example.com",
+      "updating": "Mise à jour...",
+      "update_btn": "Mettre à jour l'email"
+    },
+    "password": {
+      "title": "Changer le mot de passe",
+      "current_label": "Mot de passe actuel",
+      "current_placeholder": "••••••••",
+      "new_label": "Nouveau mot de passe",
+      "new_placeholder": "••••••••",
+      "confirm_label": "Confirmer le nouveau mot de passe",
+      "confirm_placeholder": "••••••••",
+      "updating": "Mise à jour...",
+      "update_btn": "Mettre à jour le mot de passe"
+    },
+    "security": {
+      "title": "Sécurité et session",
+      "session_token": "Token en session",
+      "yes": "Oui",
+      "no": "Non",
+      "logout_btn": "Se déconnecter"
+    },
+    "toasts": {
+      "error_title": "Erreur",
+      "email_mismatch": "Les adresses email ne correspondent pas.",
+      "email_success_title": "Email mis à jour",
+      "email_success_msg": "Votre adresse email a été modifiée avec succès.",
+      "password_mismatch": "Les mots de passe ne correspondent pas.",
+      "password_length": "Le mot de passe doit contenir au moins 8 caractères.",
+      "password_success_title": "Mot de passe mis à jour",
+      "password_success_msg": "Votre mot de passe a été modifié avec succès.",
+      "logout_title": "Déconnexion",
+      "logout_msg": "Vous avez été déconnecté avec succès.",
+      "fetch_error": "Impossible de charger votre profil.",
+      "info_success_title": "Profil mis à jour",
+      "info_success_msg": "Vos informations personnelles ont été modifiées avec succès.",
+      "update_error": "Échec de la mise à jour du profil.",
+      "email_error": "Échec du changement d'email."
+    },
+    "preferences": {
+      "title": "Préférences",
+      "daily_recap_label": "Récap quotidien",
+      "daily_recap_desc": "Fenêtre récapitulative de la veille à l'ouverture de l'application.",
+      "once_per_day": "Une fois par jour",
+      "every_open": "À chaque ouverture",
+      "saved_title": "Préférence enregistrée",
+      "saved_msg": "Vos préférences ont été mises à jour."
+    }
+  },
+  "ai_assistant": {
+    "title": "Assistant IA",
+    "subtitle": "Posez vos questions sur le stock, les ventes et les commandes.",
+    "online": "En ligne",
+    "conversations": "Conversations",
+    "no_conversations": "Aucune conversation",
+    "new_chat": "Nouveau",
+    "rename": "Renommer",
+    "delete": "Supprimer",
+    "delete_title": "Supprimer la conversation ?",
+    "delete_description": "« {{title}} » sera supprimée définitivement. Cette action est irréversible.",
+    "delete_description_generic": "Cette action est irréversible.",
+    "rename_prompt": "Renommer la conversation :",
+    "new_conversation_title": "Nouvelle conversation",
+    "start_question": "Posez une question...",
+    "analyzing": "Analyse en cours...",
+    "error_msg": "Désolé, je rencontre des difficultés pour accéder aux services.",
+    "placeholder": "Posez une question sur votre stock ou vos ventes...",
+    "send": "Envoyer"
+  },
+  "daily_recap": {
+    "greeting": "Bonjour {{name}}",
+    "greeting_generic": "Bonjour",
+    "title": "Votre journée d'hier",
+    "revenue": "Chiffre d'affaires",
+    "orders": "Commandes",
+    "avg_basket": "Panier moyen",
+    "new_clients": "Nouveaux clients",
+    "delivered": "{{count}} livrées",
+    "pending": "{{count}} en attente",
+    "stockouts": "{{count}} en rupture",
+    "no_activity": "Aucune activité enregistrée hier.",
+    "close": "Fermer",
+    "go_dashboard": "Voir le tableau de bord"
+  },
   "alerts": {
     "title": "Alertes & Prévisions IA",
     "subtitle": "Suivez les alertes générées par les modèles IA et anticipez les besoins.",
-    "summary": { "critical": "Critiques", "high": "Hautes", "untreated": "Non traitées", "total": "Total alertes" },
-    "tabs": { "alerts": "Alertes", "predictions": "Prévisions IA" },
-    "status": { "new": "Nouveau", "acknowledged": "Pris en compte", "in_progress": "En cours", "resolved": "Résolu", "dismissed": "Ignoré" },
-    "severity": { "critical": "Critique", "high": "Haute", "medium": "Moyenne", "low": "Faible" },
+    "summary": {
+      "critical": "Critiques",
+      "high": "Hautes",
+      "untreated": "Non traitées",
+      "total": "Total alertes"
+    },
+    "tabs": {
+      "alerts": "Alertes",
+      "predictions": "Prévisions IA"
+    },
+    "status": {
+      "new": "Nouveau",
+      "acknowledged": "Pris en compte",
+      "in_progress": "En cours",
+      "resolved": "Résolu",
+      "dismissed": "Ignoré"
+    },
+    "severity": {
+      "critical": "Critique",
+      "high": "Haute",
+      "medium": "Moyenne",
+      "low": "Faible"
+    },
     "filters": {
       "search": "Rechercher par produit ou message...",
       "all_severities": "Toutes les sévérités",
       "all_statuses": "Tous les statuts"
     },
-    "bulk": { "acknowledge": "Marquer comme lu ({{count}})", "resolve": "Résoudre ({{count}})" },
+    "bulk": {
+      "acknowledge": "Marquer comme lu ({{count}})",
+      "resolve": "Résoudre ({{count}})"
+    },
     "table": {
-      "product": "Produit", "message": "Message", "source": "Source IA",
-      "severity": "Sévérité", "status": "Statut", "date": "Date",
+      "product": "Produit",
+      "message": "Message",
+      "source": "Source IA",
+      "severity": "Sévérité",
+      "status": "Statut",
+      "date": "Date",
       "empty": "Aucune alerte trouvée"
     },
     "footer_one": "{{count}} alerte",
@@ -1047,22 +1182,33 @@
       "restocks": {
         "title": "Réapprovisionnements urgents",
         "subtitle": "Prédictions de rupture de stock imminente",
-        "product": "Produit", "current_stock": "Stock actuel", "recommended": "Stock recommandé",
-        "to_order": "À commander", "demand_day": "Demande / jour", "days_left": "Jours restants", "urgency": "Urgence",
+        "product": "Produit",
+        "current_stock": "Stock actuel",
+        "recommended": "Stock recommandé",
+        "to_order": "À commander",
+        "demand_day": "Demande / jour",
+        "days_left": "Jours restants",
+        "urgency": "Urgence",
         "empty": "Aucun réapprovisionnement urgent"
       },
       "price": {
         "title": "Anomalies de prix",
         "subtitle": "Prix détectés hors de la plage normale",
-        "product": "Produit", "current_price": "Prix actuel", "expected_price": "Prix attendu",
-        "gap": "Écart", "score": "Score anomalie",
+        "product": "Produit",
+        "current_price": "Prix actuel",
+        "expected_price": "Prix attendu",
+        "gap": "Écart",
+        "score": "Score anomalie",
         "empty": "Aucune anomalie de prix détectée"
       },
       "sales": {
         "title": "Anomalies de ventes",
         "subtitle": "Volumes de ventes inhabituels détectés par l'IA",
-        "product": "Produit", "observed": "Volume observé", "expected": "Volume attendu",
-        "gap": "Écart", "score": "Score anomalie",
+        "product": "Produit",
+        "observed": "Volume observé",
+        "expected": "Volume attendu",
+        "gap": "Écart",
+        "score": "Score anomalie",
         "empty": "Aucune anomalie de ventes détectée"
       }
     }
@@ -1287,8 +1433,16 @@
       "subtitle": "Répartition de {{n}} produits par valeur et régularité de la demande",
       "empty": "Aucune classification disponible",
       "footer": "Lignes : contribution au chiffre d'affaires · Colonnes : prévisibilité de la demande. Les produits AX sont prioritaires (fort CA, demande stable).",
-      "abc": { "A": "Fort CA", "B": "CA moyen", "C": "Faible CA" },
-      "xyz": { "X": "Demande stable", "Y": "Demande variable", "Z": "Demande erratique" }
+      "abc": {
+        "A": "Fort CA",
+        "B": "CA moyen",
+        "C": "Faible CA"
+      },
+      "xyz": {
+        "X": "Demande stable",
+        "Y": "Demande variable",
+        "Z": "Demande erratique"
+      }
     },
     "suppliers": {
       "title": "Scores fournisseurs",
@@ -1329,135 +1483,5 @@
       "MEDIUM": "Moyenne",
       "LOW": "Faible"
     }
-  },
-  "sales": {
-    "title": "Tableau de Bord Ventes",
-    "subtitle": "Aperçu des performances et analyses des 30 derniers jours",
-    "refresh": "Actualiser",
-    "top_products": "Produits les plus performants",
-    "by_category": "Ventes par Catégorie",
-    "uncategorized": "Non catégorisé",
-    "charts": {
-      "revenue_trend": "Tendance des revenus",
-      "daily_revenue_30d": "Revenus quotidiens sur les 30 derniers jours",
-      "revenue": "Revenu"
-    },
-    "table": {
-      "product": "Nom Produit",
-      "units": "Unités Vendues",
-      "revenue": "Revenu",
-      "performance": "Performance"
-    },
-    "stats": {
-      "total_revenue": "Revenu Total",
-      "total_orders": "Commandes totales",
-      "avg_basket": "Panier Moyen",
-      "revenue_growth": "Croissance Revenu",
-      "last_30_days": "30 derniers jours",
-      "trend": "Tendance"
-    }
-  },
-  "suppliers": {
-    "title": "Gestion Fournisseurs",
-    "total": "Total Fournisseurs",
-    "active": "Actifs",
-    "with_phone": "Avec Téléphone",
-    "locations": "Emplacements",
-    "search_placeholder": "Rechercher par nom, email...",
-    "add": "Ajouter Fournisseur",
-    "no_suppliers": "Aucun fournisseur trouvé",
-    "try_adjusting": "Essayez d'ajuster votre recherche",
-    "get_started": "Ajoutez un fournisseur pour commencer",
-    "table": {
-      "name": "Nom",
-      "email": "Email",
-      "phone": "Téléphone",
-      "address": "Adresse",
-      "actions": "Actions"
-    }
-  },
-  "profile": {
-    "title": "Mon Profil",
-    "subtitle": "Gérez vos informations personnelles et vos paramètres de compte.",
-    "preferences": {
-      "title": "Préférences",
-      "daily_recap_label": "Récap quotidien",
-      "daily_recap_desc": "Fenêtre récapitulative de la veille à l'ouverture de l'application.",
-      "once_per_day": "Une fois par jour",
-      "every_open": "À chaque ouverture",
-      "saved_title": "Préférence enregistrée",
-      "saved_msg": "Vos préférences ont été mises à jour."
-    },
-    "personal_info": {
-      "title": "Informations personnelles",
-      "firstname": "Prénom",
-      "lastname": "Nom",
-      "phone": "Téléphone"
-    },
-    "email": {
-      "title": "Changer l'adresse email",
-      "new_email_label": "Nouvelle adresse email",
-      "new_email_placeholder": "nouveau@example.com",
-      "confirm_email_label": "Confirmer l'adresse email",
-      "confirm_email_placeholder": "nouveau@example.com",
-      "updating": "Mise à jour...",
-      "update_btn": "Mettre à jour l'email"
-    },
-    "password": {
-      "title": "Changer le mot de passe",
-      "current_label": "Mot de passe actuel",
-      "current_placeholder": "••••••••",
-      "new_label": "Nouveau mot de passe",
-      "new_placeholder": "••••••••",
-      "confirm_label": "Confirmer le nouveau mot de passe",
-      "confirm_placeholder": "••••••••",
-      "updating": "Mise à jour...",
-      "update_btn": "Mettre à jour le mot de passe"
-    },
-    "security": {
-      "title": "Sécurité et session",
-      "session_token": "Token en session",
-      "yes": "Oui",
-      "no": "Non",
-      "logout_btn": "Se déconnecter"
-    },
-    "toasts": {
-      "error_title": "Erreur",
-      "email_mismatch": "Les adresses email ne correspondent pas.",
-      "email_success_title": "Email mis à jour",
-      "email_success_msg": "Votre adresse email a été modifiée avec succès.",
-      "password_mismatch": "Les mots de passe ne correspondent pas.",
-      "password_length": "Le mot de passe doit contenir au moins 8 caractères.",
-      "password_success_title": "Mot de passe mis à jour",
-      "password_success_msg": "Votre mot de passe a été modifié avec succès.",
-      "logout_title": "Déconnexion",
-      "logout_msg": "Vous avez été déconnecté avec succès.",
-      "fetch_error": "Impossible de charger votre profil.",
-      "info_success_title": "Profil mis à jour",
-      "info_success_msg": "Vos informations personnelles ont été modifiées avec succès.",
-      "update_error": "Échec de la mise à jour du profil.",
-      "email_error": "Échec du changement d'email."
-    }
-  },
-  "ai_assistant": {
-    "title": "Assistant IA",
-    "subtitle": "Posez vos questions sur le stock, les ventes et les commandes.",
-    "online": "En ligne",
-    "conversations": "Conversations",
-    "no_conversations": "Aucune conversation",
-    "new_chat": "Nouveau",
-    "rename": "Renommer",
-    "delete": "Supprimer",
-    "delete_title": "Supprimer la conversation ?",
-    "delete_description": "« {{title}} » sera supprimée définitivement. Cette action est irréversible.",
-    "delete_description_generic": "Cette action est irréversible.",
-    "rename_prompt": "Renommer la conversation :",
-    "new_conversation_title": "Nouvelle conversation",
-    "start_question": "Posez une question...",
-    "analyzing": "Analyse en cours...",
-    "error_msg": "Désolé, je rencontre des difficultés pour accéder aux services.",
-    "placeholder": "Posez une question sur votre stock ou vos ventes...",
-    "send": "Envoyer"
   }
-}
 }
