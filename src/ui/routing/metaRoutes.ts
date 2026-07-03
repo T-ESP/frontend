@@ -82,7 +82,7 @@ export const ROUTES: Record<string, RouteMeta> = {
     page: 'Predictions',
     layout: 'app',
     restricted: true,
-    roles: ['admin', 'manager'],
+    roles: ['admin'],
     title: 'StockS - Prédictions IA',
   },
   SALES: {
