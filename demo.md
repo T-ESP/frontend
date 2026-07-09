@@ -160,10 +160,10 @@ Aucun. Pas de clic, pas de réseau, pas de donnée. Si le backend est tombé, pe
 2. **Le récap quotidien.** Il s'ouvre seul. Premier effet, gratuit. Affiche « Bonjour [prénom] », « Votre journée d'hier », 4 tuiles (CA, commandes, panier moyen, nouveaux clients) avec badges de croissance vs avant-veille, et une ligne livrées / en attente / ruptures.
 3. **Le dashboard.** On y arrive par le bouton **« Voir le tableau de bord »** du récap, pas par le menu.
 
-### ⚠️ Piège : ne pas scroller le dashboard
+### Ne pas scroller le dashboard
 
-Le dashboard contient un **AlertsWidget** alimenté par la même table `notifications` que `/alerts`. **L'alerte café préparée le matin y sera déjà visible.** Scroller = griller la révélation de l'acte 4 quatre minutes trop tôt.
-→ **Rester en haut du dashboard.**
+Le dashboard contient un **AlertsWidget** qui lit `alertService.getAll()` et `aiPredictionsService.getUrgentRestocks()` — les deux sources du batch, donc **vides**. Scroller ne révèle rien de compromettant, mais affiche un encart d'alertes désert.
+→ **Rester en haut du dashboard.** De toute façon on n'a qu'une minute.
 
 ### Script
 

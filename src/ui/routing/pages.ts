@@ -17,7 +17,6 @@ export const PAGES = {
   Inventory: lazy(() => import("@/ui/features/inventory/pages/InventoryPage")),
   ProductKPIs: lazy(() => import("@/ui/features/inventory/pages/ProductKPIsPage/ProductKPIsPage")),
   Insights: lazy(() => import("@/ui/features/insights/pages/InsightsPage")),
-  Predictions: lazy(() => import("@/ui/features/predictions/pages/PredictionsPage")),
   Sales: lazy(() => import("@/ui/features/sales/pages/SalesPage")),
   Clients: lazy(() => import("@/ui/features/clients/pages/ClientsPage")),
   PricingNewsAlerts: lazy(() => import("@/ui/features/pricing/pages/PricingNewsAlertsPage")),
