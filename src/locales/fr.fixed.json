@@ -1,0 +1,1487 @@
+{
+  "common": {
+    "edit": "Modifier",
+    "export": "Exporter",
+    "actions": "Actions",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "confirm": "Confirmer",
+    "creating": "Création...",
+    "updating": "Mise à jour...",
+    "deleting": "Suppression...",
+    "refresh": "Actualiser",
+    "view_details": "Voir les détails",
+    "sold": "vendus",
+    "units": "unités",
+    "of": "sur",
+    "date_range": {
+      "last_7_days": "7 derniers jours",
+      "last_30_days": "30 derniers jours",
+      "last_90_days": "90 derniers jours",
+      "last_year": "Dernière année",
+      "all_time": "Toute la période"
+    },
+    "all_time": "Tout le temps",
+    "total_active": "Total actifs",
+    "others": "Autres",
+    "percentage": "Pourcentage",
+    "collapse_sidebar": "Réduire la barre latérale",
+    "expand_sidebar": "Développer la barre latérale"
+  },
+  "onboarding": {
+    "replay": "Revoir le guide"
+  },
+  "caisse": {
+    "title": "Caisse",
+    "subtitle": "Scannez les articles, gérez le panier et encaissez vos ventes",
+    "scanner_ready": "Scannette prête",
+    "scan_placeholder": "Scannez un code-barres ou recherchez un produit…",
+    "add": "Ajouter",
+    "scan_hint": "Astuce : le lecteur code-barres ajoute automatiquement l'article au panier.",
+    "cart": "Panier",
+    "items_count_one": "{{count}} article",
+    "items_count_other": "{{count}} articles",
+    "clear": "Vider",
+    "empty_cart": "Aucun article. Scannez un produit pour commencer.",
+    "per_unit": "/ u",
+    "stock_label": "stock : {{n}}",
+    "decrease": "Diminuer",
+    "increase": "Augmenter",
+    "remove": "Retirer",
+    "remove_customer": "Retirer le client",
+    "loyalty_account": "Compte fidélité",
+    "points": "{{n}} points",
+    "client_search_placeholder": "Rechercher un client (nom, email)…",
+    "new_loyalty_account": "Nouveau compte fidélité",
+    "walkin_note": "Sans sélection, la vente est enregistrée comme « client de passage ».",
+    "checkout": "Encaissement",
+    "payment_method": "Mode de paiement",
+    "card": "Carte",
+    "cash": "Espèces",
+    "amount_received": "Montant reçu",
+    "change_due": "À rendre",
+    "missing": "Manque",
+    "exact": "Appoint",
+    "promotions": "Promotions",
+    "add_items_for_promos": "Ajoutez des articles pour voir les promotions.",
+    "no_promos": "Aucune promotion applicable à ce panier.",
+    "receipt": "Ticket de caisse",
+    "send_receipt_email": "Envoyer le ticket par email",
+    "email_placeholder": "email@client.fr",
+    "loyalty_email_note": "Email du compte fidélité.",
+    "subtotal": "Sous-total",
+    "discounts": "Remises",
+    "to_pay": "À payer",
+    "validate_order": "Valider la commande",
+    "processing": "Traitement…",
+    "final_amount_note": "Montant final calculé par la caisse au tarif de vente.",
+    "new_client_desc": "Créez un client pour le rattacher à la vente et cumuler des points.",
+    "firstname": "Prénom",
+    "lastname": "Nom",
+    "email": "Email",
+    "password": "Mot de passe",
+    "cancel": "Annuler",
+    "create_account": "Créer le compte",
+    "creating": "Création…",
+    "toast": {
+      "product_added": "Produit ajouté",
+      "product_not_found": "Produit introuvable",
+      "ref_absent": "Référence « {{ref}} » absente du catalogue",
+      "error": "Erreur",
+      "cannot_add_product": "Impossible d'ajouter ce produit",
+      "required_fields": "Champs requis",
+      "fill_all_fields": "Renseignez tous les champs du compte fidélité",
+      "account_created": "Compte fidélité créé",
+      "create_failed": "Création impossible",
+      "create_error": "Erreur lors de la création du compte",
+      "choose_payment_title": "Mode de paiement",
+      "choose_payment_desc": "Choisissez Carte ou Espèces",
+      "no_client_title": "Aucun client disponible",
+      "no_client_desc": "Créez au moins un compte client avant d'encaisser",
+      "sale_done": "Vente encaissée ✓",
+      "order_summary": "Commande #{{id}} — {{amount}}",
+      "discount_suffix": " · remise {{amount}}",
+      "points_suffix": " · +{{n}} pts fidélité",
+      "receipt_sent": "Ticket envoyé",
+      "receipt_not_sent": "Ticket non envoyé",
+      "email_send_failed": "Échec de l'envoi de l'email",
+      "checkout_failed": "Échec de l'encaissement",
+      "check_stock": "Vérifiez le stock et réessayez"
+    }
+  },
+  "sidebar": {
+    "sections": {
+      "overview": "Pilotage",
+      "operations": "Activité",
+      "engagement": "Engagement",
+      "orders": "Commandes"
+    },
+    "dashboard": "Tableau de bord",
+    "inventory": "Inventaire",
+    "orders": "Commandes",
+    "insights": "Analyses",
+    "predictions": "Prédictions IA",
+    "sales": "Ventes",
+    "pricing": "Abonnement",
+    "pricing_news": "Prix & Actualités",
+    "suppliers": "Fournisseurs",
+    "ai_assistant": "Assistant IA",
+    "loyalty": "Fidélité",
+    "promotions": "Promotions",
+    "alerts": "Alertes",
+    "users": "Utilisateurs",
+    "team": "Équipe",
+    "settings": "Paramètres",
+    "logout": "Déconnexion",
+    "profile": "Profil",
+    "orders_list": "Liste des commandes",
+    "orders_kpis": "Statistiques",
+    "caisse": "Caisse"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "subtitle": "Suivez les performances de votre entreprise en temps réel",
+    "export": {
+      "title": "Export du tableau de bord",
+      "metric": "Métrique",
+      "value": "Valeur"
+    },
+    "kpi": {
+      "total_revenue": "Revenu Total",
+      "revenue_evolution": "Évolution du Revenu",
+      "revenue_growth": "Croissance du CA",
+      "avg_order_value": "Panier moyen",
+      "total_orders": "Commandes totales",
+      "delivered_orders": "Commandes livrées",
+      "total_products": "Produits Totaux",
+      "total_users": "Utilisateurs Totaux",
+      "low_stock": "Produits en stock faible",
+      "low_stock_alert": "Alerte Stock Faible",
+      "high": "Élevé",
+      "normal": "Normal",
+      "products_low_units": "Produits < 10 unités",
+      "in_catalog": "au catalogue",
+      "inventory_value": "Valeur du stock",
+      "total_value": "valeur totale",
+      "out_of_stock": "Ruptures",
+      "products_out": "produits indisponibles",
+      "stock_coverage": "répartition par niveau de stock",
+      "suppliers_total": "Fournisseurs",
+      "registered": "référencés",
+      "suppliers_with_phone": "Fournisseurs joignables",
+      "with_phone": "avec téléphone"
+    },
+    "kpi_edit": {
+      "title": "Personnaliser les KPIs",
+      "subtitle": "Choisis les indicateurs à afficher",
+      "empty_hint": "Au moins un KPI doit rester affiché.",
+      "categories": {
+        "sales": "Ventes & revenus",
+        "orders": "Commandes",
+        "inventory": "Stock & inventaire",
+        "suppliers": "Fournisseurs",
+        "team": "Équipe"
+      }
+    },
+    "flop_products": {
+      "title": "Produits les moins performants",
+      "subtitle": "Produits avec les plus faibles ventes ou profits",
+      "by_sales": "Ventes",
+      "by_profit": "Profit"
+    },
+    "top_products": {
+      "title": "Produits Performants",
+      "subtitle": "Produits avec le plus de stock",
+      "sort_by": "Trier par",
+      "stock": "Quantité Stock",
+      "value": "Valeur Totale",
+      "name": "Nom Produit",
+      "no_products": "Aucun produit trouvé",
+      "stock_label": "Stock",
+      "value_label": "Valeur",
+      "name_label": "Nom",
+      "stock_value": "Valeur stock",
+      "product": "Produit",
+      "units_sold": "Stock",
+      "rating": "Note",
+      "total_value": "Valeur totale",
+      "status_col": "Statut",
+      "high_demand": "Forte demande",
+      "low_stock_status": "Stock faible",
+      "rows": "{{count}} ligne(s)"
+    },
+    "charts": {
+      "revenue_title": "Analyse des Revenus",
+      "revenue_subtitle": "Suivez vos tendances de revenus et profits",
+      "range": {
+        "last_12": "12 derniers mois",
+        "last_6": "6 derniers mois",
+        "last_3": "3 derniers mois"
+      },
+      "customer_title": "Distribution Clients",
+      "customer_subtitle": "Nouveaux vs récurrents",
+      "new_customers": "Nouveaux Clients",
+      "returning_customers": "Récurrents",
+      "revenue": "Revenu",
+      "profit": "Profit",
+      "latest_payments": "Derniers paiements",
+      "email": "Email",
+      "amount": "Montant",
+      "status": "Statut",
+      "no_payments": "Aucun paiement trouvé.",
+      "rows_selected": "0 sur {{count}} ligne(s) sélectionnée(s)."
+    }
+  },
+  "inventory": {
+    "title": "Inventaire",
+    "subtitle": "Gérez votre stock, vos produits et leur disponibilité.",
+    "add_product": "Ajouter un produit",
+    "management": "Gestion de l'inventaire",
+    "products_count": "{{val}} produits",
+    "filtered_count": "{{filtered}} sur {{total}} produits",
+    "stats": {
+      "in_stock": "En stock",
+      "low_stock": "Stock faible",
+      "out_of_stock": "Rupture de stock",
+      "total_products": "Total produits",
+      "inventory_value": "Valeur du stock",
+      "in_catalog": "au catalogue",
+      "total_value": "valeur totale",
+      "products_to_watch": "produits à surveiller",
+      "products_out": "produits indisponibles",
+      "of_catalog": "{{pct}} % du catalogue",
+      "top_categories": "Top catégories par valeur",
+      "uncategorized": "Sans catégorie"
+    },
+    "table": {
+      "product": "Produit",
+      "category": "Catégorie",
+      "price": "Prix",
+      "stock": "Stock",
+      "status": "Statut",
+      "no_products_title": "Aucun produit trouvé",
+      "no_products_desc": "Essayez d'ajuster vos filtres ou votre recherche.",
+      "showing_range": "Affichage de {{start}} à {{end}} sur {{total}} produits",
+      "per_page": "par page",
+      "first": "Premier",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "last": "Dernier"
+    },
+    "card": {
+      "sku": "Référence",
+      "updated_at": "Mis à jour le",
+      "view_kpis": "Voir les KPIs",
+      "edit_product": "Modifier le produit",
+      "delete_product": "Supprimer le produit",
+      "decrease_stock": "Diminuer le stock",
+      "increase_stock": "Augmenter le stock"
+    },
+    "header": {
+      "clear_filters": "Effacer {{quantity}} filtres",
+      "refresh": "Actualiser",
+      "search_label": "Rechercher",
+      "search_placeholder": "Filtrer par nom ou SKU...",
+      "category_label": "Catégorie",
+      "status_label": "Statut",
+      "sort_label": "Trier par",
+      "order_label": "Ordre"
+    },
+    "filters": {
+      "title": "Filtres",
+      "advanced": "Filtres avancés",
+      "reset": "Réinitialiser",
+      "price_range": "Fourchette de prix (€)",
+      "stock_range": "Quantité en stock",
+      "min": "Min",
+      "max": "Max",
+      "all_categories": "Toutes les catégories",
+      "all_status": "Tous les statuts"
+    },
+    "status": {
+      "in_stock": "En stock",
+      "low_stock": "Stock faible",
+      "out_of_stock": "Rupture de stock"
+    },
+    "sort": {
+      "label": "Trier par",
+      "name": "Nom",
+      "price": "Prix",
+      "stock": "Stock",
+      "category": "Catégorie",
+      "updated": "Mis à jour",
+      "asc": "Croissant",
+      "desc": "Décroissant",
+      "a_z": "A-Z",
+      "z_a": "Z-A"
+    },
+    "form": {
+      "product_name": "Nom du produit",
+      "reference": "Référence (SKU)",
+      "category": "Catégorie",
+      "stock_quantity": "Quantité en stock",
+      "buying_price": "Prix d'achat (€)",
+      "supplier_id": "ID Fournisseur",
+      "create_submit": "Créer le produit",
+      "update_submit": "Mettre à jour",
+      "delete_submit": "Supprimer le produit",
+      "error": {
+        "numbers": "Veuillez vous assurer que tous les champs numériques sont valides."
+      }
+    },
+    "add_modal": {
+      "title": "Créer un nouveau produit"
+    },
+    "edit_modal": {
+      "title": "Modification : {{name}}",
+      "subtitle": "Mise à jour produit ID: {{id}}"
+    },
+    "delete_modal": {
+      "title": "Supprimer le produit",
+      "message": "Êtes-vous sûr de vouloir supprimer {{name}} ? Cette action est irréversible."
+    },
+    "kpi_modal": {
+      "tabs": {
+        "overview": "Aperçu",
+        "pricing": "Prix",
+        "stock": "Stock",
+        "sales": "Ventes",
+        "profitability": "Rentabilité",
+        "restock": "Réappro",
+        "predictions": "Prédictions",
+        "classification": "Scoring",
+        "comparative": "Marché"
+      },
+      "tab_desc": {
+        "overview": "Résumé des indicateurs",
+        "pricing": "Marges & historique",
+        "stock": "Niveaux & disponibilité",
+        "sales": "Vélocité & rotation",
+        "profitability": "ROI & contribution",
+        "restock": "Chaîne logistique",
+        "predictions": "Prévisions IA",
+        "classification": "ABC & Rang",
+        "comparative": "Analyse concurrentielle"
+      },
+      "sections": {
+        "overview": "Aperçu des performances",
+        "overview_desc": "Instantané de la santé du produit",
+        "pricing": "Stratégie de prix",
+        "pricing_desc": "Analyse des coûts et marges",
+        "stock": "Santé de l'inventaire",
+        "stock_desc": "Niveaux de stock et disponibilité",
+        "sales": "Performance des ventes",
+        "sales_desc": "Vélocité et tendances de la demande",
+        "profitability": "Performance financière",
+        "profitability_desc": "ROI, marges et contribution",
+        "restock": "Analyse de réapprovisionnement",
+        "restock_desc": "Recommandations logistiques",
+        "predictions": "Prédictions IA",
+        "predictions_desc": "Prévisions et conseils intelligents",
+        "classification": "Scoring produit",
+        "classification_desc": "Classification ABC et Matrice",
+        "comparative": "Position sur le marché",
+        "comparative_desc": "Analyse comparative et benchmarking"
+      },
+      "info": {
+        "aria_label": "Plus d’informations",
+        "best_practice": "Bonne pratique",
+        "overview": {
+          "what": "Vue d’ensemble de la santé du produit : score global, marge, stock et rotation regroupés pour repérer en un coup d’œil ce qui va bien ou nécessite une action.",
+          "tip": "Commencez toujours par cet aperçu. Un score global sous 50 ou une alerte de rupture indique le produit à traiter en priorité."
+        },
+        "pricing": {
+          "what": "Suivi du prix de vente, du prix d’achat et du taux de marge, avec l’historique de leur évolution dans le temps.",
+          "tip": "Visez une marge stable et positive. Si le prix d’achat grimpe sans répercussion sur le prix de vente, ajustez vos tarifs pour préserver la marge."
+        },
+        "stock": {
+          "what": "Niveau de stock actuel, stock de sécurité recommandé et historique des ruptures pour évaluer la disponibilité du produit.",
+          "tip": "Maintenez le stock au-dessus du seuil de sécurité. Un taux de rupture élevé fait perdre des ventes : déclenchez un réappro avant d’atteindre ce seuil."
+        },
+        "sales": {
+          "what": "Mesure la vitesse d’écoulement du produit : taux de rotation, vélocité des ventes par jour et tendance de la demande.",
+          "tip": "Une rotation élevée et croissante est saine. Une rotation faible signale un sur-stockage : réduisez les commandes ou lancez une promotion."
+        },
+        "profitability": {
+          "what": "Performance financière du produit : ROI, profit total, profit moyen par vente et contribution au chiffre d’affaires global.",
+          "tip": "Concentrez vos efforts sur les produits à fort ROI et forte contribution. Un profit faible malgré un bon volume peut justifier de revoir le prix ou le fournisseur."
+        },
+        "restock": {
+          "what": "Analyse de la chaîne d’approvisionnement : fréquence et coût des réappros, délais de livraison et taux de réception.",
+          "tip": "Surveillez les délais de livraison pour calibrer le stock de sécurité. Des délais longs ou irréguliers imposent une marge de stock plus large."
+        },
+        "predictions": {
+          "what": "Prévisions générées par l’IA : statut d’alerte, date estimée de rupture, jours de couverture et quantité optimale à recommander.",
+          "tip": "Passez commande lorsque le stock atteint le point de réapprovisionnement suggéré, en respectant la quantité optimale pour éviter rupture et sur-stock."
+        },
+        "predictions_metrics": {
+          "alert_status": "Niveau d’urgence déduit du stock actuel et du rythme de vente : « OK » (stock confortable), « Stock faible » (sous le point de réappro) ou « Rupture » (stock épuisé ou imminent).",
+          "days_coverage": "Nombre de jours pendant lesquels le stock actuel couvre la demande, au rythme de vente moyen. Calcul : stock actuel ÷ ventes moyennes par jour.",
+          "stockout_date": "Date estimée d’épuisement du stock si le rythme de vente actuel se maintient. Elle correspond à aujourd’hui + le nombre de jours de couverture.",
+          "optimal_qty": "Quantité conseillée à commander pour reconstituer un stock optimal (couvrir la demande jusqu’à la prochaine livraison) sans surstock.",
+          "reorder_point": "Seuil de déclenchement : passez commande dès que le stock descend à ce niveau, afin d’être livré avant la rupture compte tenu du délai fournisseur."
+        },
+        "classification": {
+          "what": "Classement du produit : classe ABC (importance) et scores de popularité, rentabilité et fiabilité sur 100.",
+          "tip": "Donnez la priorité aux produits de classe A : ils pèsent le plus dans votre activité et méritent le suivi le plus étroit."
+        },
+        "comparative": {
+          "what": "Positionnement du produit face à sa catégorie et à son fournisseur : performance relative, rang et part de marché.",
+          "tip": "Un produit nettement sous la moyenne de sa catégorie doit être analysé : prix, visibilité ou qualité peuvent être en cause."
+        }
+      },
+      "metrics": {
+        "abc_class": "Classe ABC",
+        "above_avg": "Supérieur moyenne catégorie",
+        "ai_active": "Modèle IA Actif",
+        "alert_status": "Statut Alerte",
+        "availability": "Disponibilité",
+        "avg_cost": "Coût Moy.",
+        "avg_delay": "Délai Moy.",
+        "avg_delay_label": "Délai Moy.",
+        "avg_duration": "Durée Moyenne",
+        "avg_per_order": "Moyenne par Commande",
+        "avg_profit_sale": "Profit Moyen/Vente",
+        "avg_qty_label": "Quantité Moy.",
+        "avg_quantity": "Quantité Moy.",
+        "avg_storage": "Stockage Moyen",
+        "based_on_forecast": "Basé sur prévisions",
+        "below_avg": "Inférieur moyenne catégorie",
+        "buying": "Achat",
+        "buying_price": "Prix d'Achat",
+        "category_rank": "Rang Catégorie",
+        "competitive_position": "Position Concurrentielle",
+        "contribution": "Analyse Contribution",
+        "coverage_analysis": "Analyse Couverture",
+        "current_coverage": "Couverture stock actuelle",
+        "current_model": "Modèle prédiction actuel",
+        "current_status": "Statut Actuel",
+        "current_stock": "Stock Actuel",
+        "days_coverage": "Jours Couverture",
+        "every": "Tous les",
+        "frequency": "Fréquence",
+        "global_score": "Score Global",
+        "historical_rate": "Taux Historique",
+        "in_hand": "En Main",
+        "margin": "Marge",
+        "margin_rate": "Taux de Marge",
+        "market_pos_label": "Position marché",
+        "market_share": "Part de Marché",
+        "no_price_history": "Aucun historique de prix",
+        "occurrences": "Occurrences",
+        "optimal_qty": "Quantité Optimale",
+        "optimal_strategy": "Stratégie Optimale",
+        "perf_vs_avg": "Performance vs Moyenne",
+        "perf_vs_category": "Performance vs Catégorie",
+        "perf_vs_supplier": "Performance vs Fournisseur",
+        "price_evolution": "Évolution des Prix",
+        "price_evolution_title": "Évolution des Prix",
+        "price_history_empty": "Les changements de prix apparaîtront ici",
+        "profit_metrics": "Métriques Profit",
+        "profit_share": "Part Profit",
+        "rank_prefix": "Position",
+        "rank_suffix": "dans la catégorie",
+        "reception_rate": "Taux Réception",
+        "reorder_point": "Point de Commande",
+        "reorder_qty": "Qté à Commander",
+        "reorder_recs": "Recomm. Commande",
+        "restock_count": "Nombre Réappr.",
+        "restock_count_label": "Nombre Réappr.",
+        "revenue": "Revenu",
+        "revenue_percent": "Part Revenu",
+        "revenue_share": "Part Revenu",
+        "roi": "ROI",
+        "rotation_analysis": "Analyse Rotation",
+        "rotation_desc": "Vitesse mouvement stock",
+        "safety_level": "Niveau Sécurité",
+        "sales_trend": "Tendance Ventes",
+        "sales_velocity": "Vitesse de Vente",
+        "score_breakdown": "Détail du Score",
+        "score_popularity": "Popularité",
+        "score_profitability": "Rentabilité",
+        "score_reliability": "Fiabilité",
+        "selling": "Vente",
+        "selling_price": "Prix de Vente",
+        "status": "Statut",
+        "stockout_analysis": "Analyse Rupture",
+        "stockout_date": "Date Rupture",
+        "strategy_desc": "Basé sur historique et supply chain",
+        "supply_chain": "Métriques Supply Chain",
+        "total_cost": "Coût Total",
+        "total_profit": "Profit Total",
+        "total_restocks": "Total Réappr.",
+        "total_sold": "Total Vendu",
+        "trigger_threshold": "Seuil déclenchement",
+        "turnover_rate": "Taux de Rotation",
+        "vs_category_avg": "vs Moy. Catégorie",
+        "vs_category": "vs Moy. Catégorie",
+        "vs_supplier": "Perf. vs Fournisseur"
+      },
+      "trends": {
+        "inc": "+Croiss",
+        "dec": "-Décr",
+        "stable": "Stable"
+      },
+      "labels": {
+        "per_day": "par jour",
+        "orders": "commandes",
+        "days": "jours",
+        "times": "fois",
+        "performance": "Performance",
+        "revenue_share": "Part Revenu",
+        "profit_share": "Part Profit"
+      },
+      "ai_recommendation": "Recommandation IA",
+      "analytics": "Analytique",
+      "loading_insights": "Analyse en cours...",
+      "failed_load": "Échec du chargement des KPIs.",
+      "status_values": {
+        "critical": "Critique",
+        "stockout": "Rupture",
+        "below": "Inférieur",
+        "warning": "Attention",
+        "low": "Faible",
+        "average": "Moyen",
+        "optimal": "Optimal",
+        "good": "Bon",
+        "fast": "Rapide",
+        "above": "Supérieur",
+        "excess": "Excès",
+        "high": "Élevé",
+        "overstock": "Surstock",
+        "star": "Star"
+      }
+    }
+  },
+  "daily_recap": {
+    "greeting": "Bonjour {{name}}",
+    "greeting_generic": "Bonjour",
+    "title": "Votre journée d'hier",
+    "revenue": "Chiffre d'affaires",
+    "orders": "Commandes",
+    "avg_basket": "Panier moyen",
+    "new_clients": "Nouveaux clients",
+    "delivered": "{{count}} livrées",
+    "pending": "{{count}} en attente",
+    "stockouts": "{{count}} en rupture",
+    "no_activity": "Aucune activité enregistrée hier.",
+    "close": "Fermer",
+    "go_dashboard": "Voir le tableau de bord"
+  },
+  "insights": {
+    "title": "Intelligence des Stocks",
+    "subtitle": "Optimisation des stocks, surveillance de la santé et prédiction des risques",
+    "kpi": {
+      "inventory_value": "Valeur de l'Inventaire",
+      "turnover_rate": "Rotation des Stocks",
+      "stockout_risk": "Risque de Rupture",
+      "overstock_alerts": "Alertes de Surstock"
+    },
+    "charts": {
+      "health_title": "État de Santé des Stocks",
+      "health_subtitle": "Distribution des niveaux d'inventaire",
+      "abc_title": "Classification ABC",
+      "abc_subtitle": "Analyse de Pareto (Règle des 80/20)",
+      "abc_description": "Classe A : Produits vitaux générant 80% des revenus."
+    },
+    "risks": {
+      "title": "Alertes Critiques",
+      "subtitle": "Articles de grande valeur presque épuisés",
+      "remaining": "{{count}} restants",
+      "order_now": "Commander maintenant",
+      "view_plan": "Voir le Plan de Réapprovisionnement complet"
+    },
+    "status": {
+      "stockout": "Rupture de Stock",
+      "low": "Stock Faible",
+      "healthy": "En Bonne Santé",
+      "overstock": "Surstock"
+    },
+    "abc": {
+      "class_a": "Classe A (Haute Valeur)",
+      "class_b": "Classe B (Valeur Moyenne)",
+      "class_c": "Classe C (Faible Valeur)"
+    },
+    "abc_short": {
+      "class_a": "Classe A",
+      "class_b": "Classe B",
+      "class_c": "Classe C"
+    },
+    "loading": "Chargement des analyses…",
+    "health_card": {
+      "title": "Santé des stocks",
+      "info": "Classifie chaque produit selon son niveau de stock : rupture (0 unité), faible (<10), sain (10-100), surstock (>100).",
+      "analyzed": "{{count}} produits analysés",
+      "detail": "Détail par catégorie",
+      "products": "{{value}} produits"
+    },
+    "abc_card": {
+      "title": "Analyse ABC",
+      "info": "Méthode Pareto : Classe A = 20% des produits générant ~80% de la valeur. Classe B = 30% intermédiaires. Classe C = 50% restants à faible valeur.",
+      "basis": "Basée sur la valeur (prix d'achat × stock)",
+      "detail": "Détail par classe",
+      "products": "produits",
+      "of_value": "de la valeur",
+      "note": "Concentrez vos efforts sur la Classe A pour maximiser l'impact sur la trésorerie.",
+      "tooltip": "{{value}} produits ({{pct}}%)"
+    },
+    "critical": {
+      "title": "Alertes critiques",
+      "info": "Produits dont le stock est inférieur à 15 unités, triés par prix décroissant. Ce sont les produits dont la rupture aurait le plus grand impact financier.",
+      "subtitle": "Articles de haute valeur presque épuisés — commandez dès maintenant",
+      "empty_title": "Aucun risque critique détecté",
+      "empty_desc": "Tous les produits sont en stock suffisant.",
+      "col_product": "Produit",
+      "col_category": "Catégorie",
+      "col_buy_price": "Prix d'achat",
+      "col_stock": "Stock restant",
+      "col_value": "Valeur à risque"
+    },
+    "urgency": {
+      "stockout": "Rupture",
+      "critical": "Critique",
+      "low": "Faible"
+    }
+  },
+  "pricing": {
+    "title": "Plans d'abonnement",
+    "subtitle": "Choisissez le plan idéal pour votre commerce",
+    "billing": {
+      "monthly": "Mensuel",
+      "yearly": "Annuel"
+    },
+    "most_popular": "Le plus populaire",
+    "cta": {
+      "start_trial": "Essai gratuit",
+      "get_started": "Commencer",
+      "contact_sales": "Contacter les ventes"
+    },
+    "tiers": {
+      "starter": "Démarrage",
+      "starter_desc": "Parfait pour les supérettes.",
+      "professional": "Professionnel",
+      "professional_desc": "Pour les supermarchés en croissance.",
+      "enterprise": "Entreprise",
+      "enterprise_desc": "Contrôle total pour les grands réseaux."
+    },
+    "features": {
+      "products_1k": "Jusqu'à 1 000 produits",
+      "products_50k": "Jusqu'à 50 000 produits",
+      "products_unlimited": "Produits illimités",
+      "dashboard_basic": "Tableau de bord basique",
+      "analytics_advanced": "Analytique avancée & KPIs",
+      "users_1": "1 compte utilisateur",
+      "users_5": "5 comptes utilisateurs",
+      "users_unlimited": "Utilisateurs illimités",
+      "support_email": "Support Email",
+      "support_priority": "Support Prioritaire",
+      "support_phone": "Support Téléphonique 24/7",
+      "backups_manual": "Sauvegardes manuelles",
+      "backups_daily": "Sauvegardes automatiques quotidiennes",
+      "predictions_ai": "Prédictions IA",
+      "predictions_stock": "Prévisions de stock IA",
+      "models_custom": "Modèles IA personnalisés",
+      "integration_supplier": "Intégration API Fournisseur",
+      "multi_store": "Gestion multi-magasins",
+      "multi_store_sync": "Synchro Multi-Magasins",
+      "erp_custom": "Intégrations ERP personnalisées",
+      "account_manager": "Gestionnaire de compte dédié",
+      "on_premise": "Option de déploiement sur site"
+    },
+    "faq": {
+      "title": "Questions Fréquentes",
+      "upgrade": {
+        "q": "Puis-je changer de plan ?",
+        "a": "Oui, vous pouvez changer de plan à tout moment. Le prix sera calculé au prorata."
+      },
+      "setup_fee": {
+        "q": "Y a-t-il des frais d'installation ?",
+        "a": "Non, pas de frais cachés. Vous ne payez que l'abonnement."
+      }
+    }
+  },
+  "team": {
+    "users": {
+      "title": "Gestion des utilisateurs",
+      "count": "{{count}} utilisateurs",
+      "add": "Ajouter un utilisateur",
+      "search_placeholder": "Rechercher par nom ou email...",
+      "role": "Rôle",
+      "status": "Statut"
+    },
+    "filters": {
+      "all_roles": "Tous les rôles",
+      "all_status": "Tous les statuts"
+    },
+    "roles": {
+      "admin": "Admin",
+      "manager": "Manager",
+      "employee": "Employé"
+    },
+    "status": {
+      "active": "Actif",
+      "inactive": "Inactif"
+    },
+    "members": {
+      "title": "Gestion de l'équipe",
+      "total": "Membres au total",
+      "active_label": "Actifs",
+      "inactive_label": "Inactifs",
+      "with_phone": "Avec téléphone",
+      "search_placeholder": "Rechercher par nom, email, téléphone...",
+      "add": "Ajouter un membre",
+      "loading": "Chargement de l'équipe...",
+      "error_title": "Erreur",
+      "retry": "Réessayer",
+      "no_members": "Aucun membre trouvé",
+      "try_adjusting": "Essayez d'ajuster votre recherche",
+      "get_started": "Ajoutez un membre pour commencer",
+      "refresh": "Actualiser",
+      "export": "Exporter",
+      "table": {
+        "id": "ID",
+        "name": "Nom",
+        "email": "Email",
+        "phone": "Téléphone",
+        "status": "Statut",
+        "actions": "Actions"
+      },
+      "pagination": {
+        "show": "Afficher",
+        "per_page": "par page",
+        "of": "sur",
+        "first": "Premier",
+        "previous": "Précédent",
+        "next": "Suivant",
+        "last": "Dernier",
+        "page": "Page"
+      }
+    }
+  },
+  "orders": {
+    "title": "Commandes",
+    "subtitle": "{{count}} commandes au total",
+    "orders_label": "commandes",
+    "new_order": "Nouvelle commande",
+    "list_title": "Liste des commandes",
+    "clear_filters": "Effacer {{count}} filtre(s)",
+    "filters": {
+      "all_status": "Tous les statuts",
+      "pending": "⏳ En attente",
+      "confirmed": "✓ Confirmée",
+      "shipped": "📦 Expédiée",
+      "delivered": "✅ Livrée",
+      "cancelled": "❌ Annulée",
+      "sort_date": "Trier : Date",
+      "sort_amount": "Trier : Montant",
+      "sort_status": "Trier : Statut",
+      "sort_user": "Trier : Utilisateur",
+      "asc": "↑ A-Z",
+      "desc": "↓ Z-A",
+      "btn": "Filtres",
+      "advanced": "Filtres avancés",
+      "reset": "Réinitialiser",
+      "amount_range": "Montants (€)",
+      "min": "Min",
+      "max": "Max",
+      "search": "Recherche par ID commande, utilisateur ou statut...",
+      "date_period": "Période",
+      "date_all": "Toutes",
+      "date_today": "Aujourd'hui",
+      "date_yesterday": "Hier",
+      "date_7d": "7 jours",
+      "date_30d": "30 jours",
+      "date_90d": "90 jours",
+      "date_month": "Ce mois",
+      "date_year": "Cette année",
+      "date_custom": "Personnalisé",
+      "date_from": "Du",
+      "date_until": "Au"
+    },
+    "table": {
+      "id": "ID COMMANDE",
+      "user": "UTILISATEUR",
+      "date": "DATE",
+      "status": "STATUT",
+      "amount": "MONTANT",
+      "actions": "ACTIONS",
+      "no_orders": "Aucune commande trouvée"
+    },
+    "pagination": {
+      "showing": "Affichage de {{start}} à {{end}} sur {{total}} commandes",
+      "per_page": "par page",
+      "first": "Premier",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "last": "Dernier"
+    },
+    "status": {
+      "pending": "En attente",
+      "confirmed": "Confirmée",
+      "shipped": "Expédiée",
+      "delivered": "Livrée",
+      "cancelled": "Annulée"
+    },
+    "loading": "Chargement des commandes...",
+    "fetching": "Récupération des données depuis le serveur.",
+    "load_error": "Erreur de connexion à l'API.",
+    "load_error_toast": "Impossible de charger les commandes",
+    "load_retry_hint": "Vérifiez votre connexion et réessayez.",
+    "error_title": "Erreur",
+    "retry": "Réessayer",
+    "user_label": "Utilisateur",
+    "delete_modal": {
+      "title": "Supprimer la commande",
+      "confirm_msg": "Êtes-vous sûr de vouloir supprimer cette commande ?",
+      "warning": "Cette action est irréversible et supprimera également tous les articles de la commande.",
+      "id_label": "ID",
+      "user_label": "Utilisateur",
+      "date_label": "Date",
+      "status_label": "Statut",
+      "amount_label": "Montant",
+      "deleting": "Suppression...",
+      "delete_btn": "Supprimer",
+      "deleted_toast": "Commande supprimée",
+      "deleted_toast_msg": "La commande #{{id}} a été supprimée avec succès.",
+      "delete_error_toast": "Erreur lors de la suppression"
+    },
+    "view_modal": {
+      "title": "Détails de la commande #{{id}}",
+      "user_label": "Utilisateur",
+      "date_label": "Date",
+      "status_label": "Statut",
+      "amount_label": "Montant total",
+      "items_title": "Articles de la commande",
+      "loading_items": "Chargement des articles...",
+      "no_items": "Aucun article dans cette commande",
+      "col_product": "Produit ID",
+      "col_qty": "Quantité",
+      "col_total": "Total ligne",
+      "total_label": "Total :",
+      "created_at": "Créé le",
+      "updated_at": "Modifié le",
+      "close_btn": "Fermer",
+      "product_label": "Produit"
+    },
+    "add_modal": {
+      "title": "Créer une commande",
+      "loading_data": "Chargement des données...",
+      "user_label": "Utilisateur *",
+      "select_user": "Sélectionner un utilisateur",
+      "status_label": "Statut *",
+      "items_label": "Articles de la commande *",
+      "add_item": "Ajouter",
+      "select_product": "Sélectionner un produit",
+      "quantity_placeholder": "Qté",
+      "delete_item": "Supprimer cet article",
+      "cancel": "Annuler",
+      "creating": "Création...",
+      "submit": "Créer la commande",
+      "created_toast": "Commande créée",
+      "created_msg": "La commande a été créée avec succès.",
+      "create_error": "Échec de création de la commande",
+      "user_error": "Veuillez sélectionner un utilisateur.",
+      "product_error": "Veuillez sélectionner un produit pour chaque ligne.",
+      "quantity_error": "La quantité doit être supérieure à zéro."
+    },
+    "edit_modal": {
+      "title": "Modifier la commande #{{id}}",
+      "user_label": "Utilisateur :",
+      "date_label": "Date :",
+      "amount_label": "Montant :",
+      "status_label": "Statut *",
+      "cancel": "Annuler",
+      "updating": "Mise à jour...",
+      "submit": "Enregistrer",
+      "updated_toast": "Commande mise à jour",
+      "updated_msg": "La commande #{{id}} a été modifiée avec succès.",
+      "update_error": "Échec de la mise à jour"
+    },
+    "kpis_title": "Statistiques commandes",
+    "kpis_subtitle": "Vue d'ensemble des performances",
+    "stats": {
+      "period": "Période",
+      "presets": {
+        "7d": "7 jours",
+        "30d": "30 jours",
+        "90d": "90 jours",
+        "12m": "12 mois"
+      },
+      "vs_previous": "vs période précédente",
+      "pts": "pts",
+      "kpi": {
+        "revenue": "Chiffre d'affaires",
+        "revenue_info": "Somme des montants nets des commandes sur la période.",
+        "total": "Total commandes",
+        "avg": "Panier moyen",
+        "avg_info": "Chiffre d'affaires divisé par le nombre de commandes.",
+        "clients": "Clients uniques",
+        "clients_info": "Nombre de clients distincts ayant commandé sur la période.",
+        "delivery_rate": "Taux de livraison",
+        "delivery_info": "Part des commandes au statut « livrée ».",
+        "cancel_rate": "Taux d'annulation",
+        "cancel_info": "Part des commandes au statut « annulée ».",
+        "discount": "Remises accordées",
+        "discount_info": "Montant total des remises appliquées sur la période.",
+        "discount_rate": "Taux de remise moyen",
+        "discount_rate_info": "Remises rapportées au chiffre d'affaires brut (net + remises)."
+      },
+      "evolution": {
+        "title": "Évolution des commandes",
+        "subtitle": "Chiffre d'affaires et volume par {{grain}}",
+        "empty": "Aucune commande sur la période sélectionnée",
+        "revenue": "Chiffre d'affaires",
+        "orders": "Commandes",
+        "orders_count": "{{count}} commande(s)"
+      },
+      "grain": {
+        "day": "jour",
+        "week": "semaine",
+        "month": "mois"
+      },
+      "status_breakdown": {
+        "title": "Répartition par statut",
+        "subtitle": "Cycle de vie des commandes",
+        "empty": "Aucune commande sur la période"
+      },
+      "distribution": {
+        "title": "Distribution des paniers",
+        "median": "Médiane : {{value}}",
+        "subtitle": "Répartition par tranche de montant",
+        "empty": "Aucune commande sur la période",
+        "orders_count": "{{count}} commande(s)"
+      },
+      "client_type": {
+        "title": "Panier moyen par type de client",
+        "subtitle": "Nouveaux clients vs clients fidèles",
+        "unavailable": "Donnée indisponible",
+        "empty": "Aucune donnée sur la période",
+        "new": "Nouveaux",
+        "loyal": "Fidèles"
+      },
+      "heatmap": {
+        "title": "Quand les clients commandent",
+        "peak": "Pic : {{day}} {{slot}} ({{n}})",
+        "fallback": "Répartition jour × créneau",
+        "empty": "Aucune commande sur la période",
+        "cell": "{{day}} {{slot}} : {{n}} commande(s)"
+      },
+      "weekdays": {
+        "mon": "Lun",
+        "tue": "Mar",
+        "wed": "Mer",
+        "thu": "Jeu",
+        "fri": "Ven",
+        "sat": "Sam",
+        "sun": "Dim"
+      },
+      "top_products": {
+        "title": "Top produits commandés",
+        "subtitle": "Classement sur la période",
+        "unavailable": "Donnée indisponible",
+        "empty": "Aucun produit sur la période",
+        "volume": "Volume",
+        "revenue": "CA",
+        "units": "{{value}} u."
+      },
+      "top_clients": {
+        "title": "Meilleurs clients",
+        "subtitle": "Par chiffre d'affaires sur la période",
+        "empty": "Aucune commande sur la période",
+        "client_num": "Client #{{id}}",
+        "cmd": "{{count}} cmd"
+      }
+    }
+  },
+  "alerts": {
+    "title": "Alertes & Prévisions IA",
+    "subtitle": "Suivez les alertes générées par les modèles IA et anticipez les besoins.",
+    "summary": {
+      "critical": "Critiques",
+      "high": "Hautes",
+      "untreated": "Non traitées",
+      "total": "Total alertes"
+    },
+    "tabs": {
+      "alerts": "Alertes",
+      "predictions": "Prévisions IA"
+    },
+    "status": {
+      "new": "Nouveau",
+      "acknowledged": "Pris en compte",
+      "in_progress": "En cours",
+      "resolved": "Résolu",
+      "dismissed": "Ignoré"
+    },
+    "severity": {
+      "critical": "Critique",
+      "high": "Haute",
+      "medium": "Moyenne",
+      "low": "Faible"
+    },
+    "filters": {
+      "search": "Rechercher par produit ou message...",
+      "all_severities": "Toutes les sévérités",
+      "all_statuses": "Tous les statuts"
+    },
+    "bulk": {
+      "acknowledge": "Marquer comme lu ({{count}})",
+      "resolve": "Résoudre ({{count}})"
+    },
+    "table": {
+      "product": "Produit",
+      "message": "Message",
+      "source": "Source IA",
+      "severity": "Sévérité",
+      "status": "Statut",
+      "date": "Date",
+      "empty": "Aucune alerte trouvée"
+    },
+    "footer_one": "{{count}} alerte",
+    "footer_other": "{{count}} alertes",
+    "selected_one": " — {{count}} sélectionnée",
+    "selected_other": " — {{count}} sélectionnées",
+    "history": {
+      "title": "Historique des alertes",
+      "subtitle_one": "{{name}} — {{count}} alerte",
+      "subtitle_other": "{{name}} — {{count}} alertes",
+      "most_recent": "Plus récente"
+    },
+    "view_in_inventory": "Voir dans l'inventaire",
+    "predictions": {
+      "restocks": {
+        "title": "Réapprovisionnements urgents",
+        "subtitle": "Prédictions de rupture de stock imminente",
+        "product": "Produit",
+        "current_stock": "Stock actuel",
+        "recommended": "Stock recommandé",
+        "to_order": "À commander",
+        "demand_day": "Demande / jour",
+        "days_left": "Jours restants",
+        "urgency": "Urgence",
+        "empty": "Aucun réapprovisionnement urgent"
+      },
+      "price": {
+        "title": "Anomalies de prix",
+        "subtitle": "Prix détectés hors de la plage normale",
+        "product": "Produit",
+        "current_price": "Prix actuel",
+        "expected_price": "Prix attendu",
+        "gap": "Écart",
+        "score": "Score anomalie",
+        "empty": "Aucune anomalie de prix détectée"
+      },
+      "sales": {
+        "title": "Anomalies de ventes",
+        "subtitle": "Volumes de ventes inhabituels détectés par l'IA",
+        "product": "Produit",
+        "observed": "Volume observé",
+        "expected": "Volume attendu",
+        "gap": "Écart",
+        "score": "Score anomalie",
+        "empty": "Aucune anomalie de ventes détectée"
+      }
+    }
+  },
+  "promotions": {
+    "title": "Promotions & Remises",
+    "subtitle": "Gérez les règles de remise appliquées aux commandes",
+    "new_discount": "Nouvelle remise",
+    "backend_unavailable": "Backend non disponible — la migration V005 doit être appliquée sur la base tenant et le serveur redémarré. Vous pouvez créer des remises dès que le backend est à jour.",
+    "load_error": "Impossible de charger les remises.",
+    "loading": "Chargement…",
+    "stats": {
+      "active": "Remises actives",
+      "expired": "Expirées",
+      "inactive": "Inactives"
+    },
+    "status": {
+      "active": "Active",
+      "expired": "Expirée",
+      "inactive": "Inactive"
+    },
+    "trigger": {
+      "product": "Produit : {{name}}",
+      "product_ref": "Produit #{{id}}",
+      "amount": "Montant ≥ {{amount}}",
+      "qty_product": "Qté {{name}} ≥ {{qty}}",
+      "qty_total": "Qté totale ≥ {{qty}}"
+    },
+    "scope": {
+      "global": "Sur le total",
+      "product": "Sur {{name}}",
+      "per_product": "Par produit"
+    },
+    "validity": {
+      "range": "{{from}} → {{until}}",
+      "from": "Depuis {{from}}",
+      "until": "Jusqu'au {{until}}",
+      "unlimited": "Illimitée"
+    },
+    "table": {
+      "title": "Toutes les remises",
+      "count_one": "{{count}} remise",
+      "count_other": "{{count}} remises",
+      "empty": "Aucune remise configurée. Créez la première !",
+      "name": "Nom",
+      "trigger": "Déclencheur",
+      "action": "Action",
+      "scope": "Portée",
+      "validity": "Validité",
+      "usage": "Utilisations",
+      "cumul": "Cumul",
+      "status": "Statut",
+      "actions": "Actions",
+      "usage_used": "Voir les commandes",
+      "usage_never": "Jamais utilisée",
+      "cumul_yes": "Cumulable",
+      "cumul_no": "Non cumulable",
+      "toggle": "Basculer l'état",
+      "edit": "Modifier",
+      "delete": "Supprimer"
+    },
+    "modal": {
+      "edit_title": "Modifier la remise",
+      "new_title": "Nouvelle remise",
+      "name_label": "Nom *",
+      "name_placeholder": "Ex: Promo été 2025",
+      "err_name": "Le nom est requis.",
+      "err_value": "La valeur doit être > 0.",
+      "err_save": "Erreur lors de la sauvegarde.",
+      "trigger_legend": "Déclencheur",
+      "type": "Type",
+      "trigger_amount": "Montant total ≥ seuil",
+      "trigger_qty": "Quantité ≥ seuil",
+      "trigger_product": "Produit spécifique présent",
+      "trigger_locked": "Le type de déclencheur ne peut pas être modifié.",
+      "product_concerned": "Produit concerné (optionnel pour quantité totale)",
+      "all_products": "— Tous les produits —",
+      "min_amount": "Montant minimum (€) *",
+      "min_amount_ph": "Ex: 100",
+      "min_qty": "Quantité minimum *",
+      "min_qty_ph": "Ex: 10",
+      "action_legend": "Action",
+      "discount_type": "Type de remise",
+      "opt_percentage": "Pourcentage (%)",
+      "opt_fixed": "Montant fixe (€)",
+      "value": "Valeur *",
+      "scope": "Portée",
+      "scope_global": "Sur le total de la commande",
+      "scope_product": "Sur un produit spécifique",
+      "target_product": "Produit ciblé",
+      "trigger_product_default": "— Produit du déclencheur —",
+      "options_legend": "Options",
+      "valid_from": "Valide du",
+      "valid_until": "Valide jusqu'au",
+      "cumulative": "Cumulable",
+      "cumulative_hint": "Se combine avec d'autres remises cumulables",
+      "active": "Active",
+      "active_hint": "La remise est disponible pour les nouvelles commandes",
+      "saving": "Enregistrement…",
+      "save": "Enregistrer"
+    },
+    "delete": {
+      "title": "Supprimer la remise",
+      "confirm": "Êtes-vous sûr de vouloir supprimer « {{name}} » ? Les commandes existantes ne sont pas affectées.",
+      "error": "Impossible de supprimer cette remise.",
+      "deleting": "Suppression…",
+      "delete": "Supprimer"
+    },
+    "orders": {
+      "title": "Commandes — {{name}}",
+      "usage_one": "{{count}} utilisation",
+      "usage_other": "{{count}} utilisations",
+      "empty": "Aucune commande trouvée.",
+      "col_order": "Commande",
+      "col_date": "Date",
+      "col_saving": "Économie",
+      "col_total": "Total"
+    }
+  },
+  "loyalty": {
+    "title": "Programme de fidélité",
+    "subtitle": "Configurez les règles d'attribution et gérez les points des utilisateurs",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "saved": "Enregistré ✓",
+    "save_error": "Échec de l'enregistrement. Veuillez réessayer.",
+    "backend_unavailable": "Backend non disponible — valeurs par défaut affichées. La configuration sera créée lors du premier enregistrement.",
+    "load_error": "Erreur lors du chargement de la configuration.",
+    "loading": "Chargement…",
+    "cards": {
+      "euros_per_point": "Euros par point",
+      "euros_per_point_hint": "Soit {{value}} pt par euro dépensé",
+      "points_required": "Points pour remise",
+      "points_required_hint": "Soit {{value}} € dépensés",
+      "discount": "Remise accordée",
+      "discount_hint": "À la prochaine commande du client",
+      "per_pt": "€ / pt",
+      "pts": "pts"
+    },
+    "form": {
+      "title": "Modifier la configuration",
+      "subtitle": "Les modifications s'appliquent aux nouvelles commandes uniquement",
+      "euros_per_point": "Euros par point",
+      "euros_per_point_hint": "1 point = {{euros}} € dépensés ({{rate}} pt/€)",
+      "points_required": "Points requis pour remise",
+      "points_required_hint": "Seuil de déclenchement de la remise",
+      "discount_percent": "Pourcentage de remise",
+      "discount_percent_hint": "Remise appliquée à la prochaine commande"
+    },
+    "how": {
+      "title": "Comment ça fonctionne",
+      "subtitle": "Simulation avec une commande type de {{amount}} €",
+      "step1_title": "Achat → Points gagnés",
+      "step1_text": "À chaque commande, le client gagne automatiquement :",
+      "step2_title": "Accumulation",
+      "step2_text": "Le client doit atteindre {{points}} pts pour déclencher une remise.",
+      "step2_orders_one": " Avec des commandes à {{amount}} €, il y arrivera en {{count}} commande.",
+      "step2_orders_other": " Avec des commandes à {{amount}} €, il y arrivera en {{count}} commandes.",
+      "step3_title": "Remise appliquée",
+      "step3_text": "Dès le seuil atteint, le client reçoit {{percent}} % de remise sur sa prochaine commande. Les points sont réinitialisés."
+    },
+    "users": {
+      "title": "Utilisateurs",
+      "subtitle_one": "{{count}} utilisateur — cliquez pour voir et modifier les points",
+      "subtitle_other": "{{count}} utilisateurs — cliquez pour voir et modifier les points",
+      "loading": "Chargement des utilisateurs…",
+      "search_placeholder": "Rechercher par nom ou email…",
+      "no_results": "Aucun résultat pour cette recherche.",
+      "no_users": "Aucun utilisateur trouvé.",
+      "view_points": "Voir les points",
+      "results_one": "{{count}} résultat pour « {{query}} »",
+      "results_other": "{{count}} résultats pour « {{query}} »"
+    },
+    "modal": {
+      "current_points": "Points actuels",
+      "load_error": "Impossible de charger les points de cet utilisateur.",
+      "adjust": "Ajuster les points",
+      "points_placeholder": "ex: +50 ou -20",
+      "reason_placeholder": "Raison (optionnel)",
+      "adjust_error": "Échec de l'ajustement. Veuillez réessayer.",
+      "adjusting": "Ajustement…",
+      "adjusted": "Ajusté ✓",
+      "add_pts": "Ajouter {{n}} pts",
+      "remove_pts": "Retirer {{n}} pts",
+      "apply": "Appliquer l'ajustement",
+      "history": "Historique ({{n}})",
+      "order_ref": "Commande #{{id}}",
+      "manual_adjust": "Ajustement manuel",
+      "no_transactions": "Aucune transaction pour cet utilisateur."
+    }
+  },
+  "predictions": {
+    "title": "Prédictions IA",
+    "subtitle": "Prévisions de CA, de demande et recommandations du moteur IA",
+    "loading": "Chargement des prédictions…",
+    "load_error": "Impossible de charger les prédictions.",
+    "error_title": "Erreur",
+    "retry": "Réessayer",
+    "forecast": {
+      "ca_30_title": "CA prévu (30 j)",
+      "ca_30_desc": "Prochain mois",
+      "ca_30_info": "Chiffre d'affaires projeté sur 30 jours par extrapolation linéaire du CA récent.",
+      "ca_90_title": "CA prévu (90 j)",
+      "ca_90_desc": "Prochain trimestre",
+      "ca_90_info": "Chiffre d'affaires projeté sur 90 jours par extrapolation linéaire du CA récent.",
+      "cash_title": "Trésorerie réappro",
+      "cash_desc": "Réappros en attente",
+      "cash_info": "Montant total nécessaire pour honorer les réapprovisionnements en attente.",
+      "stockouts_title": "Ruptures prévues",
+      "stockouts_desc": "{{n}} opportunités d'optimisation",
+      "stockouts_info": "Nombre de produits dont la couverture de stock est inférieure à 7 jours."
+    },
+    "demand": {
+      "title": "Prévisions de demande",
+      "subtitle": "Top 12 produits par demande prévue (modèle Prophet)",
+      "empty": "Aucune prévision de demande disponible",
+      "tooltip_demand": "Demande prévue : {{value}} u.",
+      "tooltip_urgency": "Urgence : {{label}}"
+    },
+    "classification": {
+      "title": "Classification ABC / XYZ",
+      "subtitle": "Répartition de {{n}} produits par valeur et régularité de la demande",
+      "empty": "Aucune classification disponible",
+      "footer": "Lignes : contribution au chiffre d'affaires · Colonnes : prévisibilité de la demande. Les produits AX sont prioritaires (fort CA, demande stable).",
+      "abc": {
+        "A": "Fort CA",
+        "B": "CA moyen",
+        "C": "Faible CA"
+      },
+      "xyz": {
+        "X": "Demande stable",
+        "Y": "Demande variable",
+        "Z": "Demande erratique"
+      }
+    },
+    "suppliers": {
+      "title": "Scores fournisseurs",
+      "subtitle": "Top 5 fournisseurs · livraison, qualité, délai, exécution",
+      "empty": "Aucun score fournisseur disponible",
+      "delivery": "Livraison",
+      "quality": "Qualité",
+      "lead_time": "Délai",
+      "fulfillment": "Exécution"
+    },
+    "restocks": {
+      "title": "Réapprovisionnements prioritaires",
+      "subtitle": "Produits à risque de rupture selon la demande prévue",
+      "empty": "Aucun réapprovisionnement urgent",
+      "stock": "Stock",
+      "target": "cible",
+      "order": "commander",
+      "days": "{{d}} j",
+      "per_day": "{{value}}/j"
+    },
+    "price": {
+      "title": "Suggestions de prix",
+      "subtitle": "Ajustements tarifaires recommandés par l'IA",
+      "empty": "Aucune suggestion de prix",
+      "confidence": "Confiance {{value}}%"
+    },
+    "anomalies": {
+      "title": "Anomalies détectées",
+      "subtitle": "Écarts inhabituels sur les prix et les ventes",
+      "empty": "Aucune anomalie détectée",
+      "prices": "Prix",
+      "sales": "Ventes",
+      "expected": "att. {{value}}"
+    },
+    "urgency": {
+      "URGENT": "Urgent",
+      "HIGH": "Élevée",
+      "MEDIUM": "Moyenne",
+      "LOW": "Faible"
+    }
+  },
+  "sales": {
+    "title": "Tableau de Bord Ventes",
+    "subtitle": "Aperçu des performances et analyses des 30 derniers jours",
+    "refresh": "Actualiser",
+    "top_products": "Produits les plus performants",
+    "by_category": "Ventes par Catégorie",
+    "uncategorized": "Non catégorisé",
+    "charts": {
+      "revenue_trend": "Tendance des revenus",
+      "daily_revenue_30d": "Revenus quotidiens sur les 30 derniers jours",
+      "revenue": "Revenu"
+    },
+    "table": {
+      "product": "Nom Produit",
+      "units": "Unités Vendues",
+      "revenue": "Revenu",
+      "performance": "Performance"
+    },
+    "stats": {
+      "total_revenue": "Revenu Total",
+      "total_orders": "Commandes totales",
+      "avg_basket": "Panier Moyen",
+      "revenue_growth": "Croissance Revenu",
+      "last_30_days": "30 derniers jours",
+      "trend": "Tendance"
+    }
+  },
+  "suppliers": {
+    "title": "Gestion Fournisseurs",
+    "total": "Total Fournisseurs",
+    "active": "Actifs",
+    "with_phone": "Avec Téléphone",
+    "locations": "Emplacements",
+    "search_placeholder": "Rechercher par nom, email...",
+    "add": "Ajouter Fournisseur",
+    "no_suppliers": "Aucun fournisseur trouvé",
+    "try_adjusting": "Essayez d'ajuster votre recherche",
+    "get_started": "Ajoutez un fournisseur pour commencer",
+    "table": {
+      "name": "Nom",
+      "email": "Email",
+      "phone": "Téléphone",
+      "address": "Adresse",
+      "actions": "Actions"
+    }
+  },
+  "profile": {
+    "title": "Mon Profil",
+    "subtitle": "Gérez vos informations personnelles et vos paramètres de compte.",
+    "preferences": {
+      "title": "Préférences",
+      "daily_recap_label": "Récap quotidien",
+      "daily_recap_desc": "Fenêtre récapitulative de la veille à l'ouverture de l'application.",
+      "once_per_day": "Une fois par jour",
+      "every_open": "À chaque ouverture",
+      "saved_title": "Préférence enregistrée",
+      "saved_msg": "Vos préférences ont été mises à jour."
+    },
+    "personal_info": {
+      "title": "Informations personnelles",
+      "firstname": "Prénom",
+      "lastname": "Nom",
+      "phone": "Téléphone"
+    },
+    "email": {
+      "title": "Changer l'adresse email",
+      "new_email_label": "Nouvelle adresse email",
+      "new_email_placeholder": "nouveau@example.com",
+      "confirm_email_label": "Confirmer l'adresse email",
+      "confirm_email_placeholder": "nouveau@example.com",
+      "updating": "Mise à jour...",
+      "update_btn": "Mettre à jour l'email"
+    },
+    "password": {
+      "title": "Changer le mot de passe",
+      "current_label": "Mot de passe actuel",
+      "current_placeholder": "••••••••",
+      "new_label": "Nouveau mot de passe",
+      "new_placeholder": "••••••••",
+      "confirm_label": "Confirmer le nouveau mot de passe",
+      "confirm_placeholder": "••••••••",
+      "updating": "Mise à jour...",
+      "update_btn": "Mettre à jour le mot de passe"
+    },
+    "security": {
+      "title": "Sécurité et session",
+      "session_token": "Token en session",
+      "yes": "Oui",
+      "no": "Non",
+      "logout_btn": "Se déconnecter"
+    },
+    "toasts": {
+      "error_title": "Erreur",
+      "email_mismatch": "Les adresses email ne correspondent pas.",
+      "email_success_title": "Email mis à jour",
+      "email_success_msg": "Votre adresse email a été modifiée avec succès.",
+      "password_mismatch": "Les mots de passe ne correspondent pas.",
+      "password_length": "Le mot de passe doit contenir au moins 8 caractères.",
+      "password_success_title": "Mot de passe mis à jour",
+      "password_success_msg": "Votre mot de passe a été modifié avec succès.",
+      "logout_title": "Déconnexion",
+      "logout_msg": "Vous avez été déconnecté avec succès.",
+      "fetch_error": "Impossible de charger votre profil.",
+      "info_success_title": "Profil mis à jour",
+      "info_success_msg": "Vos informations personnelles ont été modifiées avec succès.",
+      "update_error": "Échec de la mise à jour du profil.",
+      "email_error": "Échec du changement d'email."
+    }
+  },
+  "ai_assistant": {
+    "title": "Assistant IA",
+    "subtitle": "Posez vos questions sur le stock, les ventes et les commandes.",
+    "online": "En ligne",
+    "conversations": "Conversations",
+    "no_conversations": "Aucune conversation",
+    "new_chat": "Nouveau",
+    "rename": "Renommer",
+    "delete": "Supprimer",
+    "delete_title": "Supprimer la conversation ?",
+    "delete_description": "« {{title}} » sera supprimée définitivement. Cette action est irréversible.",
+    "delete_description_generic": "Cette action est irréversible.",
+    "rename_prompt": "Renommer la conversation :",
+    "new_conversation_title": "Nouvelle conversation",
+    "start_question": "Posez une question...",
+    "analyzing": "Analyse en cours...",
+    "error_msg": "Désolé, je rencontre des difficultés pour accéder aux services.",
+    "placeholder": "Posez une question sur votre stock ou vos ventes...",
+    "send": "Envoyer"
+  }
+}

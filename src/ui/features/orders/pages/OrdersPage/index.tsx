@@ -1,6 +1,7 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { orderService } from '@/infrastructure/api/services/orderService';
-import type { Order } from '@/domain/models/Order';
+import type { Order, OrderQueryParams, OrderSortBy, OrderSortOrder } from '@/domain/models/Order';
+import { useDebouncedValue } from '@/ui/hooks/useDebouncedValue';
 import PageLayout from '@/ui/components/layouts/PageLayout';
 import {
   Edit,
@@ -93,6 +94,10 @@ const STATUS_DOT: Record<string, string> = {
 const getStatusDot = (status: string) =>
   STATUS_DOT[status.toLowerCase()] ?? 'bg-muted-foreground';
 
+/** Bornes par défaut du filtre de montant : hors filtre, on ne les envoie pas au serveur. */
+const AMOUNT_MIN_DEFAULT = 0;
+const AMOUNT_MAX_DEFAULT = 10000;
+
 export default function OrdersPage() {
   const { t, i18n } = useTranslation();
   const currentLocale = i18n.language || 'fr-FR';
@@ -121,24 +126,107 @@ export default function OrdersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(25);
 
-  useEffect(() => {
-    loadOrders();
-  }, []);
+  // Nombre de commandes correspondant aux filtres, renvoyé par le serveur.
+  const [totalCount, setTotalCount] = useState(0);
+  // Nombre total de commandes en base, tous filtres confondus.
+  const [grandTotal, setGrandTotal] = useState<number | null>(null);
 
-  const loadOrders = async () => {
+  // La recherche et les montants se saisissent au clavier : on attend une pause
+  // avant d'interroger le serveur.
+  const debouncedSearch = useDebouncedValue(searchQuery);
+  const debouncedAmountRange = useDebouncedValue(amountRange);
+
+  const activeFiltersCount = [
+    selectedStatus !== 'All Status',
+    searchQuery !== '',
+    amountRange.min > AMOUNT_MIN_DEFAULT || amountRange.max < AMOUNT_MAX_DEFAULT,
+    datePreset !== 'all',
+  ].filter(Boolean).length;
+
+  const queryParams = useMemo((): OrderQueryParams => {
+    const { from, until } = getDateRange(datePreset, customFrom, customUntil);
+    const { min, max } = debouncedAmountRange;
+
+    return {
+      limit: itemsPerPage,
+      offset: (currentPage - 1) * itemsPerPage,
+      status: selectedStatus === 'All Status' ? undefined : selectedStatus.toLowerCase(),
+      search: debouncedSearch.trim() || undefined,
+      // Les bornes par défaut valent « pas de filtre » : les envoyer masquerait
+      // les commandes au-delà de 10 000 €.
+      min_amount: min > AMOUNT_MIN_DEFAULT ? min : undefined,
+      max_amount: max < AMOUNT_MAX_DEFAULT ? max : undefined,
+      date_from: from?.toISOString(),
+      date_until: until?.toISOString(),
+      sort_by: sortBy as OrderSortBy,
+      sort_order: sortOrder as OrderSortOrder,
+    };
+  }, [
+    itemsPerPage,
+    currentPage,
+    selectedStatus,
+    debouncedSearch,
+    debouncedAmountRange,
+    datePreset,
+    customFrom,
+    customUntil,
+    sortBy,
+    sortOrder,
+  ]);
+
+  // Identifie la requête en cours : une réponse plus lente d'un filtre déjà abandonné
+  // ne doit pas écraser le résultat courant.
+  const latestRequestId = useRef(0);
+
+  const loadOrders = useCallback(async () => {
+    const requestId = ++latestRequestId.current;
     setLoading(true);
     setError(null);
     try {
-      const data = await orderService.getAll();
-      setOrders(data);
+      const page = await orderService.getPage(queryParams);
+      if (requestId !== latestRequestId.current) return;
+      setOrders(page.items);
+      setTotalCount(page.total);
     } catch (err) {
+      if (requestId !== latestRequestId.current) return;
       setError(t('orders.load_error'));
       addToast(t('orders.load_error_toast'), t('orders.load_retry_hint'), 'error');
       console.error('Error loading orders:', err);
     } finally {
-      setLoading(false);
+      if (requestId === latestRequestId.current) setLoading(false);
     }
-  };
+  }, [queryParams, t, addToast]);
+
+  useEffect(() => {
+    loadOrders();
+  }, [loadOrders]);
+
+  // Le total global sert à afficher « X sur Y » quand des filtres sont actifs ;
+  // il ne dépend d'aucun filtre et se recharge seulement après une modification.
+  const loadGrandTotal = useCallback(async () => {
+    try {
+      const stats = await orderService.getStats();
+      setGrandTotal(stats.total_orders);
+    } catch (err) {
+      console.error('Error loading order stats:', err);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadGrandTotal();
+  }, [loadGrandTotal]);
+
+  const totalPages = Math.max(1, Math.ceil(totalCount / itemsPerPage));
+
+  // Après une suppression, la page courante peut se retrouver au-delà de la dernière.
+  useEffect(() => {
+    if (currentPage > totalPages) setCurrentPage(totalPages);
+  }, [currentPage, totalPages]);
+
+  const reload = useCallback(() => {
+    loadOrders();
+    loadGrandTotal();
+  }, [loadOrders, loadGrandTotal]);
 
   const handleOpenModal = (type: 'view' | 'edit' | 'delete', order: Order) => {
     setSelectedOrder(order);
@@ -153,75 +241,18 @@ export default function OrdersPage() {
     if (type === 'delete') setShowDeleteModal(false);
     if (type === 'view') setShowViewModal(false);
     if (type !== 'add') setSelectedOrder(null);
-    if (shouldReload) loadOrders();
+    if (shouldReload) reload();
   };
 
-  const filteredAndSortedOrders = useMemo(() => {
-    let filtered = [...orders];
-
-    if (selectedStatus !== 'All Status') {
-      filtered = filtered.filter((o) => o.status.toLowerCase() === selectedStatus.toLowerCase());
-    }
-
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (o) =>
-          o.id.toString().includes(query) ||
-          o.user_id.toString().includes(query) ||
-          o.status.toLowerCase().includes(query),
-      );
-    }
-
-    filtered = filtered.filter((o) => o.amount >= amountRange.min && o.amount <= amountRange.max);
-
-    const { from, until } = getDateRange(datePreset, customFrom, customUntil);
-    if (from) filtered = filtered.filter((o) => new Date(o.order_date) >= from);
-    if (until) filtered = filtered.filter((o) => new Date(o.order_date) <= until);
-
-    filtered.sort((a, b) => {
-      let comparison = 0;
-      switch (sortBy) {
-        case 'date':
-          comparison = new Date(a.order_date).getTime() - new Date(b.order_date).getTime();
-          break;
-        case 'amount':
-          comparison = a.amount - b.amount;
-          break;
-        case 'status':
-          comparison = a.status.localeCompare(b.status);
-          break;
-        case 'user':
-          comparison = a.user_id - b.user_id;
-          break;
-      }
-      return sortOrder === 'asc' ? comparison : -comparison;
-    });
-
-    return filtered;
-  }, [orders, selectedStatus, searchQuery, sortBy, sortOrder, amountRange, datePreset, customFrom, customUntil]);
-
-  const totalPages = Math.ceil(filteredAndSortedOrders.length / itemsPerPage);
-  const paginatedOrders = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return filteredAndSortedOrders.slice(startIndex, startIndex + itemsPerPage);
-  }, [filteredAndSortedOrders, currentPage, itemsPerPage]);
-
+  // Changer un filtre ou un tri invalide la position courante : on repart de la page 1.
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedStatus, searchQuery, amountRange, datePreset, customFrom, customUntil]);
-
-  const activeFiltersCount = [
-    selectedStatus !== 'All Status',
-    searchQuery !== '',
-    amountRange.min > 0 || amountRange.max < 10000,
-    datePreset !== 'all',
-  ].filter(Boolean).length;
+  }, [selectedStatus, debouncedSearch, debouncedAmountRange, datePreset, customFrom, customUntil, sortBy, sortOrder]);
 
   const clearAllFilters = () => {
     setSelectedStatus('All Status');
     setSearchQuery('');
-    setAmountRange({ min: 0, max: 10000 });
+    setAmountRange({ min: AMOUNT_MIN_DEFAULT, max: AMOUNT_MAX_DEFAULT });
     setDatePreset('all');
     setCustomFrom('');
     setCustomUntil('');
@@ -230,7 +261,7 @@ export default function OrdersPage() {
   const headerActions = (
     <div className="flex items-center gap-2">
       <button
-        onClick={loadOrders}
+        onClick={reload}
         className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-lg hover:bg-muted transition-colors"
       >
         <RefreshCw className="w-4 h-4" />
@@ -269,7 +300,7 @@ export default function OrdersPage() {
             <h2 className="mb-1 text-base font-semibold text-foreground">{t('orders.error_title')}</h2>
             <p className="text-sm text-muted-foreground">{error}</p>
             <button
-              onClick={loadOrders}
+              onClick={reload}
               className="flex items-center gap-2 px-4 py-2 mx-auto mt-4 text-sm font-medium text-primary-foreground transition-colors bg-primary rounded-lg hover:bg-primary/90"
             >
               <RefreshCw size={14} />
@@ -286,9 +317,9 @@ export default function OrdersPage() {
       <PageLayout
         title={t('orders.title')}
         subtitle={
-          filteredAndSortedOrders.length === orders.length
-            ? t('orders.subtitle', { count: orders.length })
-            : `${filteredAndSortedOrders.length} ${t('common.of')} ${orders.length} ${t('orders.orders_label')}`
+          activeFiltersCount === 0 || grandTotal === null
+            ? t('orders.subtitle', { count: totalCount })
+            : `${totalCount} ${t('common.of')} ${grandTotal} ${t('orders.orders_label')}`
         }
         actions={headerActions}
       >
@@ -298,9 +329,9 @@ export default function OrdersPage() {
             <div className="flex items-center gap-3">
               <h3 className="text-base font-semibold text-foreground">{t('orders.list_title')}</h3>
               <span className="text-sm text-muted-foreground">
-                {filteredAndSortedOrders.length === orders.length
-                  ? `${orders.length.toLocaleString()} ${t('orders.orders_label')}`
-                  : `${filteredAndSortedOrders.length.toLocaleString()} ${t('common.of')} ${orders.length.toLocaleString()} ${t('orders.orders_label')}`}
+                {activeFiltersCount === 0 || grandTotal === null
+                  ? `${totalCount.toLocaleString()} ${t('orders.orders_label')}`
+                  : `${totalCount.toLocaleString()} ${t('common.of')} ${grandTotal.toLocaleString()} ${t('orders.orders_label')}`}
               </span>
               {activeFiltersCount > 0 && (
                 <button
@@ -518,19 +549,19 @@ export default function OrdersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paginatedOrders.length === 0 ? (
+              {orders.length === 0 ? (
                 <TableRow className="hover:bg-transparent">
                   <TableCell colSpan={6} className="h-32 px-6 text-center text-muted-foreground">
                     <ShoppingCart className="mx-auto mb-2 size-8 text-muted-foreground/50" />
                     <p className="text-sm">
-                      {orders.length === 0
+                      {activeFiltersCount === 0
                         ? t('orders.table.no_orders')
                         : t('inventory.table.no_products_desc')}
                     </p>
                   </TableCell>
                 </TableRow>
               ) : (
-                paginatedOrders.map((order) => (
+                orders.map((order) => (
                   <TableRow key={order.id}>
                     <TableCell className="px-6 py-4 font-medium">#{order.id}</TableCell>
                     <TableCell className="px-6 py-4 text-muted-foreground">
@@ -586,14 +617,14 @@ export default function OrdersPage() {
             </TableBody>
           </Table>
 
-          {filteredAndSortedOrders.length > 0 && (
+          {totalCount > 0 && (
             <div className="flex flex-col gap-3 px-6 py-4 border-t border-border sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3">
                 <span className="text-xs text-muted-foreground">
                   {t('orders.pagination.showing', {
                     start: (currentPage - 1) * itemsPerPage + 1,
-                    end: Math.min(currentPage * itemsPerPage, filteredAndSortedOrders.length),
-                    total: filteredAndSortedOrders.length,
+                    end: Math.min(currentPage * itemsPerPage, totalCount),
+                    total: totalCount,
                   })}
                 </span>
                 <select
@@ -644,7 +675,7 @@ export default function OrdersPage() {
 
                 <button
                   onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
-                  disabled={currentPage === totalPages}
+                  disabled={currentPage >= totalPages}
                   className="flex items-center justify-center w-8 h-8 text-muted-foreground bg-card border border-border rounded-md hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronRight className="w-4 h-4" />
