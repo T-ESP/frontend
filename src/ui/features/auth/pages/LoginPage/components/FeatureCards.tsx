@@ -128,9 +128,9 @@ function TotalSalesCard() {
   let offset = 0;
   const segs = (
     [
-      { label: "Alcool", pct: 0.45, color: PURPLE },
-      { label: "Care",   pct: 0.35, color: ACCENT },
-      { label: "Snack",  pct: 0.20, color: LIGHT  },
+      { label: "Boissons", pct: 0.45, color: PURPLE },
+      { label: "Care",     pct: 0.35, color: ACCENT },
+      { label: "Snack",    pct: 0.20, color: LIGHT  },
     ] as { label: string; pct: number; color: string }[]
   ).map(s => {
     const dash = s.pct * C;
@@ -184,7 +184,7 @@ function TotalSalesCard() {
 // ─── Card 5 · Inventory Alerts ── 345px ──────────────────────────────────────
 function InventoryCard() {
   const items = [
-    { name: "Vodka Premium 70cl",   stock: 2,  status: "critical" },
+    { name: "Café en grains 1kg",   stock: 2,  status: "critical" },
     { name: "Pringles Original",    stock: 1,  status: "critical" },
     { name: "Red Bull 25cl × 24",   stock: 8,  status: "warning"  },
     { name: "Coca-Cola 33cl × 24",  stock: 47, status: "ok"       },
@@ -274,8 +274,8 @@ function VisitorsCard() {
 // ─── Card 7 · Top Products ── 345px ──────────────────────────────────────────
 function TopProductsCard() {
   const products = [
-    { name: "Heineken 33cl",   revenue: "€ 1,240", pct: 0.88, fade: false },
-    { name: "Marlboro Red",    revenue: "€ 980",   pct: 0.70, fade: false },
+    { name: "Evian 50cl",      revenue: "€ 1,240", pct: 0.88, fade: false },
+    { name: "Café Latte 25cl", revenue: "€ 980",   pct: 0.70, fade: false },
     { name: "Red Bull 25cl",   revenue: "€ 761",   pct: 0.55, fade: false },
     { name: "Lay's Nature 45g",revenue: "€ 430",   pct: 0.31, fade: true  },
   ];
