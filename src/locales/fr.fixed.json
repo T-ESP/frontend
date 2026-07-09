@@ -118,10 +118,10 @@
       "orders": "Commandes"
     },
     "dashboard": "Tableau de bord",
-    "caisse": "Caisse",
     "inventory": "Inventaire",
     "orders": "Commandes",
     "insights": "Analyses",
+    "predictions": "Prédictions IA",
     "sales": "Ventes",
     "pricing": "Abonnement",
     "pricing_news": "Prix & Actualités",
@@ -130,14 +130,14 @@
     "loyalty": "Fidélité",
     "promotions": "Promotions",
     "alerts": "Alertes",
+    "users": "Utilisateurs",
     "team": "Équipe",
     "settings": "Paramètres",
     "logout": "Déconnexion",
     "profile": "Profil",
-    "predictions": "Prédictions IA",
-    "users": "Utilisateurs",
     "orders_list": "Liste des commandes",
-    "orders_kpis": "Statistiques"
+    "orders_kpis": "Statistiques",
+    "caisse": "Caisse"
   },
   "dashboard": {
     "title": "Tableau de bord",
@@ -166,11 +166,11 @@
       "total_value": "valeur totale",
       "out_of_stock": "Ruptures",
       "products_out": "produits indisponibles",
+      "stock_coverage": "répartition par niveau de stock",
       "suppliers_total": "Fournisseurs",
       "registered": "référencés",
       "suppliers_with_phone": "Fournisseurs joignables",
-      "with_phone": "avec téléphone",
-      "stock_coverage": "répartition par niveau de stock"
+      "with_phone": "avec téléphone"
     },
     "kpi_edit": {
       "title": "Personnaliser les KPIs",
@@ -231,81 +231,6 @@
       "status": "Statut",
       "no_payments": "Aucun paiement trouvé.",
       "rows_selected": "0 sur {{count}} ligne(s) sélectionnée(s)."
-    }
-  },
-  "insights": {
-    "title": "Intelligence des Stocks",
-    "subtitle": "Optimisation des stocks, surveillance de la santé et prédiction des risques",
-    "kpi": {
-      "inventory_value": "Valeur de l'Inventaire",
-      "turnover_rate": "Rotation des Stocks",
-      "stockout_risk": "Risque de Rupture",
-      "overstock_alerts": "Alertes de Surstock"
-    },
-    "charts": {
-      "health_title": "État de Santé des Stocks",
-      "health_subtitle": "Distribution des niveaux d'inventaire",
-      "abc_title": "Classification ABC",
-      "abc_subtitle": "Analyse de Pareto (Règle des 80/20)",
-      "abc_description": "Classe A : Produits vitaux générant 80% des revenus."
-    },
-    "risks": {
-      "title": "Alertes Critiques",
-      "subtitle": "Articles de grande valeur presque épuisés",
-      "remaining": "{{count}} restants",
-      "order_now": "Commander maintenant",
-      "view_plan": "Voir le Plan de Réapprovisionnement complet"
-    },
-    "status": {
-      "stockout": "Rupture de Stock",
-      "low": "Stock Faible",
-      "healthy": "En Bonne Santé",
-      "overstock": "Surstock"
-    },
-    "abc": {
-      "class_a": "Classe A (Haute Valeur)",
-      "class_b": "Classe B (Valeur Moyenne)",
-      "class_c": "Classe C (Faible Valeur)"
-    },
-    "abc_short": {
-      "class_a": "Classe A",
-      "class_b": "Classe B",
-      "class_c": "Classe C"
-    },
-    "loading": "Chargement des analyses…",
-    "health_card": {
-      "title": "Santé des stocks",
-      "info": "Classifie chaque produit selon son niveau de stock : rupture (0 unité), faible (<10), sain (10-100), surstock (>100).",
-      "analyzed": "{{count}} produits analysés",
-      "detail": "Détail par catégorie",
-      "products": "{{value}} produits"
-    },
-    "abc_card": {
-      "title": "Analyse ABC",
-      "info": "Méthode Pareto : Classe A = 20% des produits générant ~80% de la valeur. Classe B = 30% intermédiaires. Classe C = 50% restants à faible valeur.",
-      "basis": "Basée sur la valeur (prix d'achat × stock)",
-      "detail": "Détail par classe",
-      "products": "produits",
-      "of_value": "de la valeur",
-      "note": "Concentrez vos efforts sur la Classe A pour maximiser l'impact sur la trésorerie.",
-      "tooltip": "{{value}} produits ({{pct}}%)"
-    },
-    "critical": {
-      "title": "Alertes critiques",
-      "info": "Produits dont le stock est inférieur à 15 unités, triés par prix décroissant. Ce sont les produits dont la rupture aurait le plus grand impact financier.",
-      "subtitle": "Articles de haute valeur presque épuisés — commandez dès maintenant",
-      "empty_title": "Aucun risque critique détecté",
-      "empty_desc": "Tous les produits sont en stock suffisant.",
-      "col_product": "Produit",
-      "col_category": "Catégorie",
-      "col_buy_price": "Prix d'achat",
-      "col_stock": "Stock restant",
-      "col_value": "Valeur à risque"
-    },
-    "urgency": {
-      "stockout": "Rupture",
-      "critical": "Critique",
-      "low": "Faible"
     }
   },
   "inventory": {
@@ -627,6 +552,96 @@
         "overstock": "Surstock",
         "star": "Star"
       }
+    }
+  },
+  "daily_recap": {
+    "greeting": "Bonjour {{name}}",
+    "greeting_generic": "Bonjour",
+    "title": "Votre journée d'hier",
+    "revenue": "Chiffre d'affaires",
+    "orders": "Commandes",
+    "avg_basket": "Panier moyen",
+    "new_clients": "Nouveaux clients",
+    "delivered": "{{count}} livrées",
+    "pending": "{{count}} en attente",
+    "stockouts": "{{count}} en rupture",
+    "no_activity": "Aucune activité enregistrée hier.",
+    "close": "Fermer",
+    "go_dashboard": "Voir le tableau de bord"
+  },
+  "insights": {
+    "title": "Intelligence des Stocks",
+    "subtitle": "Optimisation des stocks, surveillance de la santé et prédiction des risques",
+    "kpi": {
+      "inventory_value": "Valeur de l'Inventaire",
+      "turnover_rate": "Rotation des Stocks",
+      "stockout_risk": "Risque de Rupture",
+      "overstock_alerts": "Alertes de Surstock"
+    },
+    "charts": {
+      "health_title": "État de Santé des Stocks",
+      "health_subtitle": "Distribution des niveaux d'inventaire",
+      "abc_title": "Classification ABC",
+      "abc_subtitle": "Analyse de Pareto (Règle des 80/20)",
+      "abc_description": "Classe A : Produits vitaux générant 80% des revenus."
+    },
+    "risks": {
+      "title": "Alertes Critiques",
+      "subtitle": "Articles de grande valeur presque épuisés",
+      "remaining": "{{count}} restants",
+      "order_now": "Commander maintenant",
+      "view_plan": "Voir le Plan de Réapprovisionnement complet"
+    },
+    "status": {
+      "stockout": "Rupture de Stock",
+      "low": "Stock Faible",
+      "healthy": "En Bonne Santé",
+      "overstock": "Surstock"
+    },
+    "abc": {
+      "class_a": "Classe A (Haute Valeur)",
+      "class_b": "Classe B (Valeur Moyenne)",
+      "class_c": "Classe C (Faible Valeur)"
+    },
+    "abc_short": {
+      "class_a": "Classe A",
+      "class_b": "Classe B",
+      "class_c": "Classe C"
+    },
+    "loading": "Chargement des analyses…",
+    "health_card": {
+      "title": "Santé des stocks",
+      "info": "Classifie chaque produit selon son niveau de stock : rupture (0 unité), faible (<10), sain (10-100), surstock (>100).",
+      "analyzed": "{{count}} produits analysés",
+      "detail": "Détail par catégorie",
+      "products": "{{value}} produits"
+    },
+    "abc_card": {
+      "title": "Analyse ABC",
+      "info": "Méthode Pareto : Classe A = 20% des produits générant ~80% de la valeur. Classe B = 30% intermédiaires. Classe C = 50% restants à faible valeur.",
+      "basis": "Basée sur la valeur (prix d'achat × stock)",
+      "detail": "Détail par classe",
+      "products": "produits",
+      "of_value": "de la valeur",
+      "note": "Concentrez vos efforts sur la Classe A pour maximiser l'impact sur la trésorerie.",
+      "tooltip": "{{value}} produits ({{pct}}%)"
+    },
+    "critical": {
+      "title": "Alertes critiques",
+      "info": "Produits dont le stock est inférieur à 15 unités, triés par prix décroissant. Ce sont les produits dont la rupture aurait le plus grand impact financier.",
+      "subtitle": "Articles de haute valeur presque épuisés — commandez dès maintenant",
+      "empty_title": "Aucun risque critique détecté",
+      "empty_desc": "Tous les produits sont en stock suffisant.",
+      "col_product": "Produit",
+      "col_category": "Catégorie",
+      "col_buy_price": "Prix d'achat",
+      "col_stock": "Stock restant",
+      "col_value": "Valeur à risque"
+    },
+    "urgency": {
+      "stockout": "Rupture",
+      "critical": "Critique",
+      "low": "Faible"
     }
   },
   "pricing": {
@@ -978,150 +993,6 @@
         "cmd": "{{count}} cmd"
       }
     }
-  },
-  "sales": {
-    "title": "Tableau de Bord Ventes",
-    "subtitle": "Aperçu & analyses des performances",
-    "refresh": "Actualiser",
-    "top_products": "Produits les plus performants",
-    "by_category": "Ventes par Catégorie",
-    "uncategorized": "Non catégorisé",
-    "charts": {
-      "revenue_trend": "Tendance des revenus",
-      "daily_revenue_30d": "Revenus quotidiens sur les 30 derniers jours",
-      "revenue": "Revenu"
-    },
-    "table": {
-      "product": "Nom Produit",
-      "units": "Unités Vendues",
-      "revenue": "Revenu",
-      "performance": "Performance"
-    },
-    "stats": {
-      "total_revenue": "Revenu Total",
-      "total_orders": "Commandes totales",
-      "avg_basket": "Panier Moyen",
-      "revenue_growth": "Croissance Revenu",
-      "last_30_days": "30 derniers jours",
-      "trend": "Tendance"
-    }
-  },
-  "suppliers": {
-    "title": "Gestion Fournisseurs",
-    "total": "Total Fournisseurs",
-    "active": "Actifs",
-    "with_phone": "Avec Téléphone",
-    "locations": "Emplacements",
-    "search_placeholder": "Rechercher par nom, email...",
-    "add": "Ajouter Fournisseur",
-    "no_suppliers": "Aucun fournisseur trouvé",
-    "try_adjusting": "Essayez d'ajuster votre recherche",
-    "get_started": "Ajoutez un fournisseur pour commencer",
-    "table": {
-      "name": "Nom",
-      "email": "Email",
-      "phone": "Téléphone",
-      "address": "Adresse",
-      "actions": "Actions"
-    }
-  },
-  "profile": {
-    "title": "Mon Profil",
-    "subtitle": "Gérez vos informations personnelles et vos paramètres de compte.",
-    "personal_info": {
-      "title": "Informations personnelles",
-      "firstname": "Prénom",
-      "lastname": "Nom",
-      "phone": "Téléphone"
-    },
-    "email": {
-      "title": "Changer l'adresse email",
-      "new_email_label": "Nouvelle adresse email",
-      "new_email_placeholder": "nouveau@example.com",
-      "confirm_email_label": "Confirmer l'adresse email",
-      "confirm_email_placeholder": "nouveau@example.com",
-      "updating": "Mise à jour...",
-      "update_btn": "Mettre à jour l'email"
-    },
-    "password": {
-      "title": "Changer le mot de passe",
-      "current_label": "Mot de passe actuel",
-      "current_placeholder": "••••••••",
-      "new_label": "Nouveau mot de passe",
-      "new_placeholder": "••••••••",
-      "confirm_label": "Confirmer le nouveau mot de passe",
-      "confirm_placeholder": "••••••••",
-      "updating": "Mise à jour...",
-      "update_btn": "Mettre à jour le mot de passe"
-    },
-    "security": {
-      "title": "Sécurité et session",
-      "session_token": "Token en session",
-      "yes": "Oui",
-      "no": "Non",
-      "logout_btn": "Se déconnecter"
-    },
-    "toasts": {
-      "error_title": "Erreur",
-      "email_mismatch": "Les adresses email ne correspondent pas.",
-      "email_success_title": "Email mis à jour",
-      "email_success_msg": "Votre adresse email a été modifiée avec succès.",
-      "password_mismatch": "Les mots de passe ne correspondent pas.",
-      "password_length": "Le mot de passe doit contenir au moins 8 caractères.",
-      "password_success_title": "Mot de passe mis à jour",
-      "password_success_msg": "Votre mot de passe a été modifié avec succès.",
-      "logout_title": "Déconnexion",
-      "logout_msg": "Vous avez été déconnecté avec succès.",
-      "fetch_error": "Impossible de charger votre profil.",
-      "info_success_title": "Profil mis à jour",
-      "info_success_msg": "Vos informations personnelles ont été modifiées avec succès.",
-      "update_error": "Échec de la mise à jour du profil.",
-      "email_error": "Échec du changement d'email."
-    },
-    "preferences": {
-      "title": "Préférences",
-      "daily_recap_label": "Récap quotidien",
-      "daily_recap_desc": "Fenêtre récapitulative de la veille à l'ouverture de l'application.",
-      "once_per_day": "Une fois par jour",
-      "every_open": "À chaque ouverture",
-      "saved_title": "Préférence enregistrée",
-      "saved_msg": "Vos préférences ont été mises à jour."
-    }
-  },
-  "ai_assistant": {
-    "title": "Assistant IA",
-    "subtitle": "Posez vos questions sur le stock, les ventes et les commandes.",
-    "online": "En ligne",
-    "conversations": "Conversations",
-    "no_conversations": "Aucune conversation",
-    "new_chat": "Nouveau",
-    "rename": "Renommer",
-    "delete": "Supprimer",
-    "delete_title": "Supprimer la conversation ?",
-    "delete_description": "« {{title}} » sera supprimée définitivement. Cette action est irréversible.",
-    "delete_description_generic": "Cette action est irréversible.",
-    "rename_prompt": "Renommer la conversation :",
-    "new_conversation_title": "Nouvelle conversation",
-    "start_question": "Posez une question...",
-    "analyzing": "Analyse en cours...",
-    "error_msg": "Désolé, je rencontre des difficultés pour accéder aux services.",
-    "placeholder": "Posez une question sur votre stock ou vos ventes...",
-    "send": "Envoyer"
-  },
-  "daily_recap": {
-    "greeting": "Bonjour {{name}}",
-    "greeting_generic": "Bonjour",
-    "title": "Votre journée d'hier",
-    "revenue": "Chiffre d'affaires",
-    "orders": "Commandes",
-    "avg_basket": "Panier moyen",
-    "new_clients": "Nouveaux clients",
-    "delivered": "{{count}} livrées",
-    "pending": "{{count}} en attente",
-    "stockouts": "{{count}} en rupture",
-    "no_activity": "Aucune activité enregistrée hier.",
-    "close": "Fermer",
-    "go_dashboard": "Voir le tableau de bord"
   },
   "alerts": {
     "title": "Alertes & Prévisions IA",
@@ -1483,5 +1354,134 @@
       "MEDIUM": "Moyenne",
       "LOW": "Faible"
     }
+  },
+  "sales": {
+    "title": "Tableau de Bord Ventes",
+    "subtitle": "Aperçu & analyses des performances",
+    "refresh": "Actualiser",
+    "top_products": "Produits les plus performants",
+    "by_category": "Ventes par Catégorie",
+    "uncategorized": "Non catégorisé",
+    "charts": {
+      "revenue_trend": "Tendance des revenus",
+      "daily_revenue_30d": "Revenus quotidiens sur les 30 derniers jours",
+      "revenue": "Revenu"
+    },
+    "table": {
+      "product": "Nom Produit",
+      "units": "Unités Vendues",
+      "revenue": "Revenu",
+      "performance": "Performance"
+    },
+    "stats": {
+      "total_revenue": "Revenu Total",
+      "total_orders": "Commandes totales",
+      "avg_basket": "Panier Moyen",
+      "revenue_growth": "Croissance Revenu",
+      "last_30_days": "30 derniers jours",
+      "trend": "Tendance"
+    }
+  },
+  "suppliers": {
+    "title": "Gestion Fournisseurs",
+    "total": "Total Fournisseurs",
+    "active": "Actifs",
+    "with_phone": "Avec Téléphone",
+    "locations": "Emplacements",
+    "search_placeholder": "Rechercher par nom, email...",
+    "add": "Ajouter Fournisseur",
+    "no_suppliers": "Aucun fournisseur trouvé",
+    "try_adjusting": "Essayez d'ajuster votre recherche",
+    "get_started": "Ajoutez un fournisseur pour commencer",
+    "table": {
+      "name": "Nom",
+      "email": "Email",
+      "phone": "Téléphone",
+      "address": "Adresse",
+      "actions": "Actions"
+    }
+  },
+  "profile": {
+    "title": "Mon Profil",
+    "subtitle": "Gérez vos informations personnelles et vos paramètres de compte.",
+    "preferences": {
+      "title": "Préférences",
+      "daily_recap_label": "Récap quotidien",
+      "daily_recap_desc": "Fenêtre récapitulative de la veille à l'ouverture de l'application.",
+      "once_per_day": "Une fois par jour",
+      "every_open": "À chaque ouverture",
+      "saved_title": "Préférence enregistrée",
+      "saved_msg": "Vos préférences ont été mises à jour."
+    },
+    "personal_info": {
+      "title": "Informations personnelles",
+      "firstname": "Prénom",
+      "lastname": "Nom",
+      "phone": "Téléphone"
+    },
+    "email": {
+      "title": "Changer l'adresse email",
+      "new_email_label": "Nouvelle adresse email",
+      "new_email_placeholder": "nouveau@example.com",
+      "confirm_email_label": "Confirmer l'adresse email",
+      "confirm_email_placeholder": "nouveau@example.com",
+      "updating": "Mise à jour...",
+      "update_btn": "Mettre à jour l'email"
+    },
+    "password": {
+      "title": "Changer le mot de passe",
+      "current_label": "Mot de passe actuel",
+      "current_placeholder": "••••••••",
+      "new_label": "Nouveau mot de passe",
+      "new_placeholder": "••••••••",
+      "confirm_label": "Confirmer le nouveau mot de passe",
+      "confirm_placeholder": "••••••••",
+      "updating": "Mise à jour...",
+      "update_btn": "Mettre à jour le mot de passe"
+    },
+    "security": {
+      "title": "Sécurité et session",
+      "session_token": "Token en session",
+      "yes": "Oui",
+      "no": "Non",
+      "logout_btn": "Se déconnecter"
+    },
+    "toasts": {
+      "error_title": "Erreur",
+      "email_mismatch": "Les adresses email ne correspondent pas.",
+      "email_success_title": "Email mis à jour",
+      "email_success_msg": "Votre adresse email a été modifiée avec succès.",
+      "password_mismatch": "Les mots de passe ne correspondent pas.",
+      "password_length": "Le mot de passe doit contenir au moins 8 caractères.",
+      "password_success_title": "Mot de passe mis à jour",
+      "password_success_msg": "Votre mot de passe a été modifié avec succès.",
+      "logout_title": "Déconnexion",
+      "logout_msg": "Vous avez été déconnecté avec succès.",
+      "fetch_error": "Impossible de charger votre profil.",
+      "info_success_title": "Profil mis à jour",
+      "info_success_msg": "Vos informations personnelles ont été modifiées avec succès.",
+      "update_error": "Échec de la mise à jour du profil.",
+      "email_error": "Échec du changement d'email."
+    }
+  },
+  "ai_assistant": {
+    "title": "Assistant IA",
+    "subtitle": "Posez vos questions sur le stock, les ventes et les commandes.",
+    "online": "En ligne",
+    "conversations": "Conversations",
+    "no_conversations": "Aucune conversation",
+    "new_chat": "Nouveau",
+    "rename": "Renommer",
+    "delete": "Supprimer",
+    "delete_title": "Supprimer la conversation ?",
+    "delete_description": "« {{title}} » sera supprimée définitivement. Cette action est irréversible.",
+    "delete_description_generic": "Cette action est irréversible.",
+    "rename_prompt": "Renommer la conversation :",
+    "new_conversation_title": "Nouvelle conversation",
+    "start_question": "Posez une question...",
+    "analyzing": "Analyse en cours...",
+    "error_msg": "Désolé, je rencontre des difficultés pour accéder aux services.",
+    "placeholder": "Posez une question sur votre stock ou vos ventes...",
+    "send": "Envoyer"
   }
 }
