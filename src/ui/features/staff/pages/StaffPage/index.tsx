@@ -86,46 +86,46 @@ export default function StaffPage() {
     >
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-2">
-        <div className="bg-card rounded-xl border border-slate-100 p-6">
+        <div className="bg-card rounded-xl border border-border p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-600">Total</p>
-              <p className="text-2xl font-bold text-slate-900 mt-2">{stats.total}</p>
+              <p className="text-sm font-medium text-muted-foreground">Total</p>
+              <p className="text-2xl font-bold text-foreground mt-2">{stats.total}</p>
             </div>
-            <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center">
-              <UserCog className="text-blue-600" size={24} />
+            <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+              <UserCog className="text-muted-foreground" size={24} />
             </div>
           </div>
         </div>
-        <div className="bg-card rounded-xl border border-slate-100 p-6">
+        <div className="bg-card rounded-xl border border-border p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-600">Actifs</p>
-              <p className="text-2xl font-bold text-green-600 mt-2">{stats.active}</p>
+              <p className="text-sm font-medium text-muted-foreground">Actifs</p>
+              <p className="text-2xl font-bold text-emerald-500 mt-2">{stats.active}</p>
             </div>
-            <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center">
-              <UserCheck className="text-green-600" size={24} />
+            <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+              <UserCheck className="text-emerald-500" size={24} />
             </div>
           </div>
         </div>
-        <div className="bg-card rounded-xl border border-slate-100 p-6">
+        <div className="bg-card rounded-xl border border-border p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-600">Inactifs</p>
-              <p className="text-2xl font-bold text-slate-500 mt-2">{stats.inactive}</p>
+              <p className="text-sm font-medium text-muted-foreground">Inactifs</p>
+              <p className="text-2xl font-bold text-muted-foreground mt-2">{stats.inactive}</p>
             </div>
-            <div className="w-12 h-12 bg-slate-50 rounded-lg flex items-center justify-center">
-              <UserX className="text-slate-500" size={24} />
+            <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+              <UserX className="text-muted-foreground" size={24} />
             </div>
           </div>
         </div>
       </div>
 
       {/* Controls */}
-      <div className="bg-card rounded-xl border border-slate-100 p-6">
+      <div className="bg-card rounded-xl border border-border p-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="flex-1 max-w-md relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/70" size={20} />
             <Input
               type="text"
               value={searchQuery}
@@ -136,7 +136,7 @@ export default function StaffPage() {
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/70 hover:text-foreground"
               >
                 <X size={16} />
               </button>
@@ -145,7 +145,7 @@ export default function StaffPage() {
           <button
             onClick={loadStaff}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2.5 text-slate-700 bg-slate-50 border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2.5 text-muted-foreground bg-card border border-border rounded-lg hover:bg-muted hover:text-foreground transition-colors disabled:opacity-50"
           >
             <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
             Actualiser
@@ -154,7 +154,7 @@ export default function StaffPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-card rounded-xl border border-slate-100 overflow-hidden">
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <RefreshCw className="animate-spin text-muted-foreground/70" size={32} />
@@ -171,9 +171,9 @@ export default function StaffPage() {
           </div>
         ) : filteredStaff.length === 0 ? (
           <div className="text-center py-12">
-            <UserCog className="mx-auto text-slate-400 mb-4" size={48} />
-            <p className="text-slate-600 text-lg">Aucun employé</p>
-            <p className="text-slate-500 text-sm mt-2">
+            <UserCog className="mx-auto text-muted-foreground/70 mb-4" size={48} />
+            <p className="text-muted-foreground text-lg">Aucun employé</p>
+            <p className="text-muted-foreground/80 text-sm mt-2">
               {searchQuery ? 'Essaie une autre recherche.' : 'Ajoute ton premier employé pour lui donner accès au dashboard.'}
             </p>
           </div>
