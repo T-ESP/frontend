@@ -1357,7 +1357,7 @@
   },
   "sales": {
     "title": "Tableau de Bord Ventes",
-    "subtitle": "Aperçu des performances et analyses des 30 derniers jours",
+    "subtitle": "Aperçu & analyses des performances",
     "refresh": "Actualiser",
     "top_products": "Produits les plus performants",
     "by_category": "Ventes par Catégorie",
