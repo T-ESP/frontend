@@ -18,6 +18,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { ProductKpiLink } from "@/ui/components/common/ProductKpiLink";
+import PageLayout from "@/ui/components/layouts/PageLayout";
 
 const BRAND_PRIMARY = "hsl(var(--brand-h) var(--brand-s) var(--brand-l))";
 const BRAND_DARK = "hsl(var(--brand-h) var(--brand-s) calc(var(--brand-l) - 18%))";
@@ -167,31 +168,23 @@ export default function InsightsPage() {
   const formatCurrency = (val: number) =>
     new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(val);
 
+  const headerActions = (
+    <button
+      onClick={loadInsights}
+      disabled={loading}
+      className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-lg hover:bg-muted transition-colors disabled:opacity-50"
+    >
+      <FiRefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+      {t("common.refresh")}
+    </button>
+  );
+
   return (
-    <div className="min-h-screen pb-8">
-      <header className="sticky top-[5rem] z-30 mx-4 md:mx-8 mb-6 md:mb-8 rounded-lg border border-border bg-white/85 backdrop-blur-md shadow-sm">
-        <div className="flex flex-wrap items-start justify-between gap-4 px-5 md:px-6 py-4">
-          <div>
-            <h1 className="text-xl md:text-2xl font-bold text-foreground">
-              {t("insights.title")}
-            </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {t("insights.subtitle")}
-            </p>
-          </div>
-          <button
-            onClick={loadInsights}
-            disabled={loading}
-            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-xl hover:bg-muted transition-colors disabled:opacity-50"
-          >
-            <FiRefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-            {t("common.refresh")}
-          </button>
-        </div>
-      </header>
-
-      <div className="px-4 md:px-8 space-y-6">
-
+    <PageLayout
+      title={t("insights.title")}
+      subtitle={t("insights.subtitle")}
+      actions={headerActions}
+    >
         {loading && (
           <div className="flex items-center justify-center h-64 text-muted-foreground/70">
             <FiRefreshCw className="w-5 h-5 animate-spin mr-2" />
@@ -419,7 +412,6 @@ export default function InsightsPage() {
             </Card>
           </>
         )}
-      </div>
-    </div>
+    </PageLayout>
   );
 }

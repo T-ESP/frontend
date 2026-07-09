@@ -7,8 +7,16 @@ import type {
   CreateOrderDto,
   UpdateOrderDto,
   LineItem,
-  OrderStats
+  OrderStats,
+  OrderQueryParams,
+  PaginatedOrders
 } from '@/domain/models/Order';
+
+/** Doit rester <= au plafond MAX_LIMIT du backend (orders/services.rs). */
+const MAX_PAGE_SIZE = 1000;
+
+/** Garde-fou : 500 lots de 1000 = 500k commandes, bien au-delà du volume attendu. */
+const MAX_PAGES = 500;
 
 const toNumber = (value: unknown): number => {
   const parsed = Number(value);
@@ -34,10 +42,56 @@ const normalizeOrderWithItems = (order: OrderWithItems): OrderWithItems => ({
   line_items: (order.line_items ?? []).map(normalizeLineItem),
 });
 
+function buildQueryString(params: OrderQueryParams): string {
+  const search = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== null && value !== '') {
+      search.append(key, String(value));
+    }
+  }
+  const queryString = search.toString();
+  return queryString ? `?${queryString}` : '';
+}
+
 export const orderService = {
-  async getAll(): Promise<Order[]> {
-    const response = await apiClient.get<ApiResponse<Order[]>>(API_ENDPOINTS.orders.getAll);
-    return response.data.map(normalizeOrder);
+  /**
+   * Récupère une page de commandes filtrée et triée par le serveur,
+   * avec le nombre total de lignes correspondant aux filtres.
+   */
+  async getPage(params: OrderQueryParams = {}): Promise<PaginatedOrders> {
+    const response = await apiClient.get<ApiResponse<PaginatedOrders>>(
+      `${API_ENDPOINTS.orders.getAll}${buildQueryString(params)}`
+    );
+    return {
+      ...response.data,
+      items: response.data.items.map(normalizeOrder),
+    };
+  },
+
+  /**
+   * Récupère l'historique complet en parcourant les pages.
+   * Réservé aux écrans qui agrègent des statistiques sur toutes les commandes ;
+   * préférer `getPage` pour tout affichage de liste.
+   */
+  async getAll(params: OrderQueryParams = {}): Promise<Order[]> {
+    const orders: Order[] = [];
+
+    for (let page = 0; page < MAX_PAGES; page++) {
+      const { items, total } = await this.getPage({
+        ...params,
+        limit: MAX_PAGE_SIZE,
+        offset: page * MAX_PAGE_SIZE,
+      });
+
+      orders.push(...items);
+
+      // Un lot incomplet signifie qu'on a atteint la fin.
+      if (items.length < MAX_PAGE_SIZE || orders.length >= total) {
+        break;
+      }
+    }
+
+    return orders;
   },
 
   async getById(id: number): Promise<OrderWithItems> {
