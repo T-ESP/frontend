@@ -300,7 +300,7 @@ export default function ProductKPIsPage() {
                           </linearGradient>
                         </defs>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                        <XAxis dataKey="date" tick={{ fontSize: 12, fill: '#94a3b8' }} tickFormatter={(v) => new Date(v).toLocaleDateString()} axisLine={false} tickLine={false} />
+                        <XAxis dataKey="date" tick={{ fontSize: 12, fill: '#94a3b8' }} tickFormatter={(v) => new Date(v).toLocaleDateString(currentLang)} axisLine={false} tickLine={false} />
                         <YAxis tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
                         <Tooltip content={<CustomTooltip formatter={formatCurrency} />} />
                         {kpis.priceEvolution.selling_price_history.length > 0 && (
@@ -581,7 +581,7 @@ export default function ProductKPIsPage() {
                   </p>
                   <p className="text-base font-semibold text-foreground">
                     {kpis.predictionsAlerts.estimated_stockout_date
-                      ? new Date(kpis.predictionsAlerts.estimated_stockout_date).toLocaleDateString()
+                      ? new Date(kpis.predictionsAlerts.estimated_stockout_date).toLocaleDateString(currentLang)
                       : 'N/A'}
                   </p>
                 </div>
@@ -656,7 +656,7 @@ export default function ProductKPIsPage() {
                       <div key={metric}>
                         <div className="flex justify-between mb-2 text-sm">
                           <span className="text-foreground/80">{t(`inventory.kpi_modal.metrics.score_${metric.toLowerCase()}`)}</span>
-                          <span className="font-bold text-foreground">{val}/100</span>
+                          <span className="font-bold text-foreground">{formatInt(val)}/100</span>
                         </div>
                         <div className="w-full bg-muted rounded-full h-2.5">
                           <div className="h-full transition-all duration-1000 bg-primary rounded-full" style={{ width: `${val}%` }} />
