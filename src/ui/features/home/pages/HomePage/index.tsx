@@ -8,7 +8,6 @@ import {
   useMotionValue,
   type MotionValue,
 } from "framer-motion";
-import { TrendingUp, Bell, Zap } from "lucide-react";
 import { ClientLogos } from "./ClientLogos";
 import { HorizonSection } from "./HorizonSection";
 import { Features2Col } from "./Features2Col";
@@ -165,58 +164,6 @@ function TiltCard({ children }: { children: ReactNode }) {
   );
 }
 
-/* --- Pin d'annotation « flottant » au-dessus du dashboard ------------------
- * Pastille colorée + halo qui pulse en boucle + étiquette glass. Positionné
- * en % (top/left) relativement au conteneur du mockup. */
-function AnnotationPin({
-  top,
-  left,
-  icon,
-  label,
-  delay,
-  color,
-}: {
-  top: string;
-  left: string;
-  icon: ReactNode;
-  label: string;
-  delay: number;
-  color: string;
-}) {
-  return (
-    <div className="absolute z-20 flex items-center gap-2" style={{ top, left }}>
-      <div className="relative shrink-0">
-        <div className="h-2.5 w-2.5 rounded-full" style={{ background: color, boxShadow: `0 0 0 3px ${color}30` }} />
-        <motion.div
-          className="absolute inset-0 rounded-full"
-          animate={{ scale: [1, 2.4], opacity: [0.5, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut", delay }}
-          style={{ background: color }}
-        />
-      </div>
-      <div
-        className="flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-[11px] font-bold backdrop-blur-md"
-        style={{
-          background: "rgba(10,6,26,0.78)",
-          border: `1px solid ${color}28`,
-          color: "#fff",
-          boxShadow: "0 4px 16px rgba(0,0,0,0.35)",
-        }}
-      >
-        <span style={{ color }}>{icon}</span>
-        {label}
-      </div>
-    </div>
-  );
-}
-
-/* Pins posés sur le mockup (top/left en % du conteneur du dashboard). */
-const PINS = [
-  { top: "12%", left: "3%", icon: <TrendingUp size={12} />, label: "Prévisions IA", delay: 0.2, color: "#a855f7" },
-  { top: "27%", left: "71%", icon: <Bell size={12} />, label: "Alerte rupture", delay: 0.5, color: "#f59e0b" },
-  { top: "55%", left: "12%", icon: <Zap size={12} />, label: "Réappro auto", delay: 0.8, color: "#8b5cf6" },
-] as const;
-
 /* Bloc titre + sous-titre + CTA (réutilisé dans le rendu animé ET statique). */
 function HeroHeadline() {
   return (
@@ -296,7 +243,7 @@ function HeroGrid() {
 }
 
 /* Le dashboard (mockup + glow + tilt souris + pins), sans le pilotage scroll. */
-function HeroDashboard({ glowOp, pinsOp }: { glowOp?: MotionValue<number>; pinsOp?: MotionValue<number> }) {
+function HeroDashboard({ glowOp }: { glowOp?: MotionValue<number> }) {
   return (
     <div className="relative mx-auto w-full max-w-[940px]">
       {/* Glow violet qui apparaît quand le dashboard vient se poser. */}
@@ -310,13 +257,6 @@ function HeroDashboard({ glowOp, pinsOp }: { glowOp?: MotionValue<number>; pinsO
       <TiltCard>
         <AppMockup />
       </TiltCard>
-
-      {/* Pins flottants (apparaissent en fin de reveal via pinsOp). */}
-      <motion.div style={pinsOp ? { opacity: pinsOp } : undefined} className="pointer-events-none absolute inset-0">
-        {PINS.map((p) => (
-          <AnnotationPin key={p.label} {...p} />
-        ))}
-      </motion.div>
     </div>
   );
 }
@@ -362,7 +302,6 @@ function Hero() {
   const imgScale = useTransform(smooth, [0, 0.48], [isMobile ? 1.05 : 1.12, 1]);
   const imgOpacity = useTransform(smooth, [0, 0.42], [0.35, 1]);
   const glowOp = useTransform(smooth, [0.25, 0.7], [0, 1]);
-  const pinsOp = useTransform(smooth, [0.5, 0.62], [0, 1]);
 
   // Rendu statique (accessibilité) : titre puis dashboard, sans scroll-jack.
   if (reduce) {
@@ -410,7 +349,7 @@ function Hero() {
           }}
           className="absolute inset-x-0 bottom-[-8%] z-10 mx-auto flex w-full max-w-[1080px] justify-center px-6 sm:bottom-[-6%] sm:px-8"
         >
-          <HeroDashboard glowOp={glowOp} pinsOp={pinsOp} />
+          <HeroDashboard glowOp={glowOp} />
         </motion.div>
       </div>
     </section>
