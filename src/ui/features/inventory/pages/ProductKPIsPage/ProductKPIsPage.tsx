@@ -483,11 +483,11 @@ export default function ProductKPIsPage() {
           </section>
         )}
 
-        <hr className="border-border" />
-
-        {/* RESTOCK */}
-        {kpis.restock && (
-          <section>
+        {/* RESTOCK — sans réapprovisionnement enregistré, la section n'a que des N/A à montrer */}
+        {kpis.restock && kpis.restock.restock_count > 0 && (
+          <>
+            <hr className="border-border" />
+            <section>
             <SectionTitle icon={Truck} title={t('inventory.kpi_modal.sections.restock')} desc={t('inventory.kpi_modal.sections.restock_desc')} infoKey="restock" />
             <div className="grid grid-cols-1 gap-5 md:grid-cols-3 mb-6">
               <StatCard title={t('inventory.kpi_modal.metrics.restock_count_label')} value={kpis.restock.restock_count} icon={Truck} />
@@ -540,7 +540,8 @@ export default function ProductKPIsPage() {
                 </div>
               </div>
             </div>
-          </section>
+            </section>
+          </>
         )}
 
         <hr className="border-border" />
