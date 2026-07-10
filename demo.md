@@ -21,7 +21,7 @@ Tout ce qu'on montre est la conséquence de ce qu'on vient de montrer. Le prospe
 | 1. Le problème | 0:36 | Landing figée, la tablette en main | Le tableur est l'ennemi |
 | 2. La routine | 0:53 | Login → récap auto → dashboard | L'information vient à Sarah |
 | 3. Le geste | 1:33 | Scan, fidélité, promo auto, monnaie | Un geste, quatre actions |
-| 4. La conséquence | 0:48 | Inventory en rupture → Insights | Le système diagnostique |
+| 4. La prédiction confirmée | 1:05 | Inventory → Insights → Alerts | Le modèle avait prévu |
 | 5. La décision | 1:09 | KPI produit → assistant IA | La commande fournisseur est prête |
 | 6. Clôture | 0:33 | Retour à la tablette | Contrat rempli |
 
@@ -31,7 +31,7 @@ Ce sont les phrases de passage. Elles constituent la vraie trame — à apprendr
 
 1. **Routine → geste** : « Neuf heures. La première cliente entre. » *(passage au présent)*
 2. **Geste → conséquence** : « Cette tablette que je viens de vendre, c'était la dernière. Regardez. » *(la plus importante)*
-3. **Conséquence → décision** : « Sarah clique. Et le système lui dit quoi faire. »
+3. **Conséquence → décision** : « Le modèle avait raison. Alors, qu'est-ce qu'il conseille ? »
 4. **Décision → clôture** : reprendre la tablette en main. Le geste annonce la fin avant les mots.
 
 ### Modules traversés sans jamais faire le tour du propriétaire
@@ -44,7 +44,9 @@ Multi-magasin par sous-domaine · gestion des employés · export de facture PDF
 
 ### Pages à ne JAMAIS ouvrir
 
-`/clients` (données en dur, boutons morts) · `/settings` (maquette statique) · `/playground` (route non protégée) · **`/predictions` et `/alerts`** (voir ci-dessous : tables du batch vides).
+`/clients` (données en dur, boutons morts) · `/settings` (maquette statique) · `/playground` (route non protégée).
+
+`/predictions` a été **retirée du code** : ses six cartes ML s'affichaient, mais son bandeau de KPI n'est qu'une extrapolation linéaire (`global_kpis/services.rs:1231`). `/alerts`, elle, est bien alimentée par le batch et **fait partie de l'acte 4**.
 
 ---
 
@@ -87,25 +89,26 @@ Trois promotions se déclenchent à `Montant ≥ 0 €` et s'appliqueraient à n
 - **Caisse** : scan par code-barres, fidélité (points réels), promotions auto (`POST /discounts/check`), rendu de monnaie — tout est réel et branché.
 - **Insights** réagit en direct : donut et ABC recalculés côté navigateur à chaque chargement.
 
-### Pourquoi `/predictions` et `/alerts` sont hors démo
+### Le batch ML tourne, et il produit de vraies données
 
-**Les six cartes ML de `/predictions` sont vides, et c'est structurel.** Le forecaster ne retient un produit que s'il a été vendu sur **≥ 30 dates distinctes** sur 2 ans (`demand_forecaster.py:74-82`) :
+Logs du **10/07 à 02:00** : `Classification complete: A=73, B=29, C=16` · `Clustered 1391 products into 8 clusters` · `Demand forecast completed: 118 successful, 0 failed` · `Generated 118 price suggestions` · `All jobs completed: 7 successful, 0 failed`.
 
-```sql
-GROUP BY lor.product_id_lor
-HAVING COUNT(DISTINCT DATE(o.order_date_ord)) >= 30
-```
+Prophet s'entraîne réellement (`cmdstanpy - Chain [1] done processing`). `/alerts` affiche **174 alertes, dont 31 critiques**, et le produit 62 en fait partie.
 
-Aucun produit ne passe ce filtre → `demand_forecasts` reste vide → pas de notification → `/alerts` vide → pas de réappro urgent. Le batch tourne bien (`Dockerfile:27` lance `python main.py`, `main.py:94` démarre le scheduler, cron `0 2 * * *`), il ne trouve simplement **personne à qui parler**. Il se termine en succès avec « 0 successful, 0 failed ».
+Deux trous connus, à savoir si on demande : `SupplierScoringHandler - No suppliers found` (table fournisseurs vide) et `0 anomalies detected`.
 
-⚠️ **Le bandeau de KPI de `/predictions` n'est PAS de l'IA.** `global_kpis/services.rs:1231`, commentaire présent dans le code :
+⚠️ **Le bandeau de KPI de l'ancienne page `/predictions` n'était PAS de l'IA.** `global_kpis/services.rs:1231`, commentaire présent dans le code :
 
 ```rust
 // Prévisions (simple: extrapolation linéaire)
 let forecasted_revenue_next_month = Some(daily_revenue * 30.0);
 ```
 
-Les 25 228 € affichés = CA quotidien moyen × 30. Montrer cet écran en disant « moteur IA » devant quelqu'un qui peut ouvrir le fichier, c'est le pire scénario.
+Les 25 228 € affichés = CA quotidien moyen × 30. C'est pourquoi la page a été retirée : impossible de la montrer en disant « moteur IA » devant quelqu'un qui peut ouvrir le fichier.
+
+### Les messages d'alerte sont traduits à l'affichage
+
+Le service Python écrit ses messages **en anglais** et les stocke tels quels (`demand_forecast_handler.py:81`). Le front les retraduit au rendu via `src/ui/features/alerts/alertMessage.ts` — gabarits fixes, aucune réécriture de la base. Une chaîne inconnue est affichée telle quelle.
 
 ### Les autres pièges
 
@@ -305,19 +308,28 @@ Si un code-barres ne passe pas : **ne pas le rescanner trois fois.** Basculer im
 
 ---
 
-# ACTE 4 — La conséquence
+# ACTE 4 — La prédiction confirmée
 
-**Durée : 0:48 · 76 mots parlés (34 s) + navigation, chargements, silences (14 s)**
-**⏱ Cumul à la fin de l'acte 4 : 3:50**
+**Durée : 1:05 · 100 mots parlés (44 s) + navigation, chargements, silences (21 s)**
+**⏱ Cumul à la fin de l'acte 4 : 4:07**
 
-### Deux écrans, dans cet ordre : Inventory → Insights
+### Trois écrans, dans cet ordre : Inventory → Insights → Alerts
 
 | Écran | Rôle |
 |---|---|
 | **Inventory** | La **preuve en direct** — stock à zéro, on vient de le faire tomber |
 | **Insights** | Le **diagnostic** — voilà ce que cette rupture change |
+| **Alerts** | La **révélation** — le système l'avait annoncée à 2h du matin |
 
-Les deux réagissent immédiatement : le backend bascule le statut en `out_of_stock` à la vente, et Insights recalcule son donut et son ABC côté navigateur à chaque chargement. **Aucune dépendance au batch.**
+⚠️ **L'ordre n'est pas négociable.** `/alerts` n'affiche pas le stock courant, seulement le message figé du batch. C'est Inventory qui porte le zéro. Inverser, c'est perdre la preuve.
+
+### L'alerte existe — vérifié
+
+Le batch a tourné à **02:00:00** ce matin (`Demand forecast completed: 118 successful, 0 failed`) et a créé une notification `low_stock_warning` de sévérité `CRITICAL` pour le produit 62 :
+
+> **Noir equitable 85% Pérou** — « Rupture prévue dans ~4 jours. Commander 135 unités. »
+
+Le message est écrit en anglais dans le Python et stocké tel quel ; le front le **retraduit à l'affichage** (`src/ui/features/alerts/alertMessage.ts`). Sur `/alerts`, filtrer avec « Noir ».
 
 ### ⚠️ Piège Insights : ne JAMAIS dire que la tablette est en classe A
 
@@ -340,15 +352,29 @@ L'ABC d'Insights classe par **valeur immobilisée** = `buying_price × stock_qua
 > *(descendre sur le tableau des produits à risque)*
 >
 > Et en bas, les produits critiques. La tablette, en tête.
+>
+> *(Alerts — filtrer sur « Noir »)*
+>
+> Maintenant, regardez l'heure de cette alerte.
+>
+> *(pointer l'horodatage)*
+>
+> Deux heures du matin. Avant que j'ouvre la caisse. Le modèle avait prévu la rupture pour dans quatre jours.
+>
+> *(silence — 2 secondes)*
+>
+> Ce matin, une seule cliente a suffi.
 
 ### Notes de jeu
 
 - **La première phrase se dit la tablette à la main, avant de toucher la souris.** On ne l'a pas reposée depuis la caisse. C'est l'objet physique qui fait le lien. Le dire en cliquant, c'est en faire une légende de capture d'écran.
-- **« C'est du calcul. Immédiat, explicable, aucune boîte noire. »** Cette phrase protège : on dit explicitement qu'Insights n'est pas de l'IA, à un moment où personne ne le demande. Devant un examinateur qui connaît le code, c'est de la crédibilité gratuite — et ça rend l'acte 5 plus fort par contraste.
+- **« C'est du calcul. Immédiat, explicable, aucune boîte noire. »** Cette phrase protège : on dit explicitement qu'Insights n'est pas de l'IA, à un moment où personne ne le demande. Devant un examinateur qui connaît le code, c'est de la crédibilité gratuite — et ça rend le contraste avec l'alerte plus fort.
+- **Pointer l'horodatage, pas le message.** Ce que le public doit lire, c'est l'heure : 2h du matin, avant la vente.
+- **Le silence avant « Ce matin, une seule cliente a suffi. »** C'est la meilleure phrase des sept minutes : le modèle avait raison, la réalité va plus vite que les modèles, et Sarah était prévenue dans les deux cas. Ne pas l'enchaîner, ne pas la commenter.
 
 ### Charnière vers l'acte 5
 
-> « Sarah clique. Et le système lui dit quoi faire. »
+> « Le modèle avait raison. Alors, qu'est-ce qu'il conseille ? »
 
 *(On clique sur la tablette depuis le tableau des produits critiques — le lien `ProductKpiLink` existe déjà.)*
 
@@ -482,10 +508,10 @@ On rend le problème à l'interlocuteur au lieu de lui vendre une solution. Le s
 | 1. Le problème | 72 | 32 s | **0:36** | 0:36 |
 | 2. La routine | 82 | 36 s | **0:53** | 1:29 |
 | 3. Le geste | 118 | 52 s | **1:33** | 3:02 |
-| 4. La conséquence | 76 | 34 s | **0:48** | 3:50 |
-| 5. La décision | 80 | 36 s | **1:09** | 4:59 |
-| Clôture | 31 | 14 s | **0:33** | **5:32** |
-| **Total** | **459** | **3:24** | **5:32** | *1:28 de marge* |
+| 4. La prédiction confirmée | 100 | 44 s | **1:05** | 4:07 |
+| 5. La décision | 80 | 36 s | **1:09** | 5:16 |
+| Clôture | 31 | 14 s | **0:33** | **5:49** |
+| **Total** | **483** | **3:34** | **5:49** | *1:11 de marge* |
 
 ### Comment employer les 1:28 de marge
 

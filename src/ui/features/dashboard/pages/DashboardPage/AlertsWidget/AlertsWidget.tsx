@@ -5,6 +5,7 @@ import { alertService } from '@/infrastructure/api/services/alertService';
 import { aiPredictionsService } from '@/infrastructure/api/services/aiPredictionsService';
 import type { Alert, AlertSummary } from '@/domain/models/Alert';
 import type { UrgentRestock } from '@/domain/models/AiPredictions';
+import { translateAlertMessage } from '@/ui/features/alerts/alertMessage';
 
 const SEVERITY_DOT: Record<string, string> = {
   critical: 'bg-rose-500',
@@ -110,7 +111,7 @@ export function AlertsWidget() {
                 <span className={`mt-1.5 size-2 rounded-full shrink-0 ${SEVERITY_DOT[alert.severity] ?? 'bg-gray-400'}`} />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate text-foreground">{alert.product_name ?? '—'}</p>
-                  <p className="text-xs truncate text-muted-foreground mt-0.5">{alert.message}</p>
+                  <p className="text-xs truncate text-muted-foreground mt-0.5">{translateAlertMessage(alert.message)}</p>
                 </div>
                 <span className={`shrink-0 text-xs font-medium px-2 py-0.5 rounded-full border ${SEVERITY_BADGE[alert.severity]}`}>
                   {alert.severity}

@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/table';
 import type { Alert, AlertSummary, AlertStatus } from '@/domain/models/Alert';
 import type { UrgentRestock, PriceAnomaly, SalesAnomaly } from '@/domain/models/AiPredictions';
+import { translateAlertMessage } from '../../alertMessage';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -149,9 +150,9 @@ function AlertHistoryModal({
                     {t(`alerts.status.${a.status}`, a.status)}
                   </span>
                 </div>
-                <p className="mt-1 text-[13px] text-muted-foreground">{a.message}</p>
+                <p className="mt-1 text-[13px] text-muted-foreground">{translateAlertMessage(a.message)}</p>
                 {a.action_recommended && (
-                  <p className="mt-0.5 text-[12px] text-muted-foreground/70">→ {a.action_recommended}</p>
+                  <p className="mt-0.5 text-[12px] text-muted-foreground/70">→ {translateAlertMessage(a.action_recommended)}</p>
                 )}
                 <p className="mt-1 font-mono text-[11px] text-muted-foreground/70">{a.model_type}</p>
               </li>
@@ -277,9 +278,11 @@ export default function AlertsPage() {
 
   const filtered = useMemo(() => {
     return latestPerProduct.filter((a) => {
+      const needle = search.toLowerCase();
       const matchSearch = !search ||
-        a.message.toLowerCase().includes(search.toLowerCase()) ||
-        (a.product_name ?? '').toLowerCase().includes(search.toLowerCase());
+        a.message.toLowerCase().includes(needle) ||
+        translateAlertMessage(a.message).toLowerCase().includes(needle) ||
+        (a.product_name ?? '').toLowerCase().includes(needle);
       const matchSeverity = filterSeverity === 'all' || a.severity === filterSeverity;
       const matchStatus = filterStatus === 'all' || a.status === filterStatus;
       return matchSearch && matchSeverity && matchStatus;
@@ -496,9 +499,9 @@ export default function AlertsPage() {
                         </span>
                       </TableCell>
                       <TableCell className="px-6 text-muted-foreground max-w-72">
-                        <p className="truncate">{alert.message}</p>
+                        <p className="truncate">{translateAlertMessage(alert.message)}</p>
                         {alert.action_recommended && (
-                          <p className="text-xs text-muted-foreground/70 truncate mt-0.5">→ {alert.action_recommended}</p>
+                          <p className="text-xs text-muted-foreground/70 truncate mt-0.5">→ {translateAlertMessage(alert.action_recommended)}</p>
                         )}
                       </TableCell>
                       <TableCell className="px-6">
