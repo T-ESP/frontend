@@ -540,3 +540,176 @@ Si tu veux vraiment un écran de plus, prends **la facture PDF** depuis `/orders
 1. **Ne pas parler pendant les scans** (acte 3).
 2. **Ne jamais dire « IA » ailleurs que sur l'assistant.** Ni Insights, ni la page KPI produit, ni le bandeau de `/predictions`.
 3. **Ne jamais signaler ce qui n'a pas marché.** Pas de « normalement il y a… », pas de seconde tentative, pas d'excuse.
+
+---
+---
+
+# LE SCRIPT SEUL
+
+*Rien que les mots. Les gestes sont en italique. Total : ~5 min 49.*
+
+---
+
+## 1 · Le problème — *landing figée, la barre en main, on ne touche pas la souris*
+
+Sarah tient une épicerie fine à Lyon. Cette barre de céréales, elle en vend tous les jours.
+
+> *(poser la barre — compter 2 secondes)*
+
+Mais si elle est en rupture jeudi prochain, elle lui coûte trois clients. Et ces trois clients-là, ils ne reviennent pas forcément.
+
+Aujourd'hui, Sarah gère son stock sur un tableur.
+
+> *(reprendre la barre)*
+
+Pendant les sept prochaines minutes, vous allez suivre cette barre de céréales. Du scan en caisse, jusqu'à la commande fournisseur que le système va préparer tout seul.
+
+---
+
+## 2 · La routine
+
+**Huit heures. Sarah ouvre sa boutique.**
+
+> *(taper les identifiants, valider — se taire pendant le chargement)*
+
+Elle n'a rien demandé, rien cliqué. StockS lui présente sa journée d'hier : son chiffre d'affaires, ses commandes, son panier moyen, et la croissance comparée à l'avant-veille.
+
+> *(clic sur « Voir le tableau de bord ». Ne pas scroller.)*
+
+Son tableau de bord. Ces indicateurs, c'est elle qui les a choisis — un caviste et un fleuriste ne suivent pas les mêmes chiffres. Sept jours, trente jours, un an.
+
+> *(lâcher la souris, regarder le public)*
+
+Dix secondes. Elle sait où elle en est. Et elle n'a ouvert aucun fichier.
+
+> *(silence — 2 secondes)*
+
+**Neuf heures. La première cliente entre.**
+
+---
+
+## 3 · Le geste
+
+> *(prendre la douchette)*
+
+Elle prend trois barres de céréales, une tablette fleur de sel, et un paquet de biscuits.
+
+> ***(SCAN ×5. NE RIEN DIRE. Laisser les bips et le panier se remplir.)***
+
+Je n'ai pas touché le clavier. La douchette lit la référence, StockS retrouve le produit, son prix, son stock restant.
+
+> *(taper « Aur » dans la recherche client)*
+
+Aurore est une cliente fidèle. Sarah la retrouve, et son solde de points s'affiche.
+
+> *(attendre que la remise apparaisse, PUIS la montrer du doigt)*
+
+Et regardez cette ligne, qui vient d'apparaître toute seule. Elle en prend trois : le moteur de promotions voit passer le seuil, et le troisième est offert. Personne n'a eu à y penser.
+
+Elle paie en espèces, elle me tend cinquante euros.
+
+> *(saisir le montant reçu)*
+
+Le rendu de monnaie est calculé.
+
+> *(valider — se taire, attendre la confirmation. Ne pas commenter le montant.)*
+
+Une validation. La vente est enregistrée, le stock est décrémenté, les points sont crédités.
+
+> *(silence — 2 secondes)*
+
+Dans un tableur, ça, c'est trois fichiers et dix minutes.
+
+---
+
+## 4 · La prédiction confirmée
+
+> *(la barre toujours en main, avant de toucher la souris)*
+
+Cette barre que je viens de vendre, c'était la dernière.
+
+> *(Inventaire — chercher « Cranberry »)*
+
+Stock : zéro. Statut : rupture. Personne n'a rien saisi. La vente a suffi.
+
+> *(Insights)*
+
+Et voilà ce que ça change. Une rupture de plus dans la santé du stock. Ici, StockS classe les références par valeur immobilisée — vingt pour cent d'entre elles portent l'essentiel du stock de Sarah. C'est du calcul. Immédiat, explicable, aucune boîte noire.
+
+> *(descendre sur le tableau des produits critiques)*
+
+Et en bas, les produits critiques. La barre, en tête.
+
+> *(Alertes — filtrer sur « Cranberry »)*
+
+Maintenant, regardez l'heure de cette alerte.
+
+> *(pointer l'horodatage, pas le message)*
+
+Deux heures du matin. Avant que j'ouvre la caisse. Le modèle avait prévu la rupture pour dans sept jours.
+
+> *(silence — 2 secondes)*
+
+Ce matin, une seule cliente a suffi.
+
+---
+
+## 5 · La décision
+
+Le modèle avait raison. Alors, qu'est-ce qu'il conseille ?
+
+> *(clic sur la barre → page KPI produit. Ne pas scroller sous le bloc « Recommandation IA ».)*
+
+Sarah clique. Et le système lui dit quoi faire.
+
+> *(pointer les trois chiffres du bloc — relire les vraies valeurs le matin même, elles changent avec le stock à 3)*
+
+Rupture imminente. Les jours de couverture. Le point de commande.
+
+Sa commande fournisseur est prête. Elle n'a plus qu'à l'envoyer.
+
+> *(ouvrir l'assistant flottant, l'agrandir)*
+
+Mais Sarah n'a pas le temps de lire des tableaux. Alors elle demande.
+
+> *(taper)* **« Combien de produits sont en rupture aujourd'hui ? »**
+
+> *(parler PENDANT que « Recherche… » défile)*
+
+Là, c'est un vrai modèle de langage, branché sur les données de son commerce. Il ne récite pas un catalogue : il cherche, il interroge, il répond.
+
+> *(se taire pour la fin de la réponse)*
+
+Un. Celui que je viens de vendre.
+
+---
+
+## 6 · Clôture
+
+> *(reprendre la barre dans la main)*
+
+Scanné. Vendu. Le stock à zéro. L'alerte, levée avant la vente. Et la commande fournisseur, prête.
+
+> *(silence — 2 secondes)*
+
+Sept minutes. Sarah, elle, n'a rien fait d'autre que passer un produit devant une douchette.
+
+> *(silence — 2 secondes, puis poser la barre)*
+
+Combien de ruptures avez-vous eues le mois dernier ?
+
+> *(silence — laisser la question flotter)*
+
+Vous ne savez pas. C'est exactement le problème.
+
+> *(retour sur la landing, section Tarifs)*
+
+---
+
+## Les 5 réflexes
+
+1. **Ne pas parler pendant les scans.**
+2. **Ne jamais dire « IA »** ailleurs que sur l'assistant.
+3. **Ne pas scroller** le dashboard, ni sous le bloc « Recommandation IA ».
+4. **Ne jamais signaler ce qui n'a pas marché.** Pas de « normalement… », pas de seconde tentative.
+5. **Si l'assistant se trompe** : fermer le chat, dire « et si l'assistant hésite, les données, elles, ne mentent pas », reprendre la barre, clôturer.
