@@ -12,27 +12,27 @@
 
 ## La trame
 
-> **Une tablette de chocolat traverse le système, du scan jusqu'à la commande fournisseur.**
+> **Une barre de céréales traverse le système, du scan jusqu'à la commande fournisseur.**
 
 Tout ce qu'on montre est la conséquence de ce qu'on vient de montrer. Le prospect ne voit pas sept modules, il voit une chaîne de réaction déclenchée par un geste physique.
 
 | Acte | Durée | Contenu | Ce que ça prouve |
 |---|---|---|---|
-| 1. Le problème | 0:36 | Landing figée, la tablette en main | Le tableur est l'ennemi |
+| 1. Le problème | 0:36 | Landing figée, la barre en main | Le tableur est l'ennemi |
 | 2. La routine | 0:53 | Login → récap auto → dashboard | L'information vient à Sarah |
 | 3. Le geste | 1:33 | Scan, fidélité, promo auto, monnaie | Un geste, quatre actions |
 | 4. La prédiction confirmée | 1:05 | Inventory → Insights → Alerts | Le modèle avait prévu |
 | 5. La décision | 1:09 | KPI produit → assistant IA | La commande fournisseur est prête |
-| 6. Clôture | 0:33 | Retour à la tablette | Contrat rempli |
+| 6. Clôture | 0:33 | Retour à la barre | Contrat rempli |
 
 ### Les quatre charnières
 
 Ce sont les phrases de passage. Elles constituent la vraie trame — à apprendre par cœur, le reste peut s'improviser.
 
 1. **Routine → geste** : « Neuf heures. La première cliente entre. » *(passage au présent)*
-2. **Geste → conséquence** : « Cette tablette que je viens de vendre, c'était la dernière. Regardez. » *(la plus importante)*
+2. **Geste → conséquence** : « Cette barre que je viens de vendre, c'était la dernière. Regardez. » *(la plus importante)*
 3. **Conséquence → décision** : « Le modèle avait raison. Alors, qu'est-ce qu'il conseille ? »
-4. **Décision → clôture** : reprendre la tablette en main. Le geste annonce la fin avant les mots.
+4. **Décision → clôture** : reprendre la barre en main. Le geste annonce la fin avant les mots.
 
 ### Modules traversés sans jamais faire le tour du propriétaire
 
@@ -54,27 +54,37 @@ Multi-magasin par sous-domaine · gestion des employés · export de facture PDF
 
 | Élément | Valeur |
 |---|---|
-| **Produit héros** | `id_pro = 62` — « Noir equitable 85% Pérou ». Acheter une **tablette de chocolat noir 85 %**, mettre son code-barres dans `reference_pro`, **stock = 3**. Aucun renommage. |
+| **Produit héros** | `id_pro = 51` — « Cranberry saveur amande », Snacks, prix d'achat 4,62 €, SKU actuel `3175681257542`. Acheter une **barre de céréales cranberry-amande**, mettre son code-barres dans `reference_pro`, **stock = 3**. Aucun renommage. |
 | **Cliente fidèle** | `id_usr = 34` — **Aurore Peltier**, 260 commandes, 7 268 € dépensés. Créditer **+240 points** via `/loyalty` (ajustement manuel). En caisse, taper « Aur ». |
 | **Promotion** | **« 2 + 1 gratuit »** (Qté totale ≥ 3). **Désactiver les 9 autres.** |
 | **2ᵉ produit** | `id_pro = 65` — « Excellence Noir à la Pointe de Fleur de Sel » → une **tablette Lindt Excellence fleur de sel** |
 | **3ᵉ produit** | `id_pro = 98` — « Granola L'original Gros éclats de chocolat » → un **paquet de biscuits LU Granola** |
 | **Base** | `tenant_shopdemo` · conteneur `backend-master-db-1` |
 
-Les trois noms en base correspondent à des produits réels et courants : ce que le public lit à l'écran correspond à ce qu'on pose sur la table. **Trois produits distincts, cinq articles au panier** (la tablette ×3).
+Les trois noms en base correspondent à des produits réels et courants : ce que le public lit à l'écran correspond à ce qu'on pose sur la table. **Trois produits distincts, cinq articles au panier** (la barre ×3).
+
+### Pourquoi le 51 et pas un autre
+
+Il coche **les trois cases** à la fois, ce qu'aucun autre produit ne fait :
+
+1. **4ᵉ du tableau des produits critiques d'Insights** (filtre `stock < 15`, tri par `buying_price` desc, top 5). À 4,62 € il y reste même avec un stock de 3 — le tri porte sur le prix, pas sur le stock.
+2. **Alerte `CRITICAL` du batch de 2h** : « Rupture prévue dans ~7 jours. Commander 110 unités. »
+3. **Écart de prix serré** : ses prix facturés vont de 3,48 € à 5,90 €, autour d'un prix d'achat de 4,62 €. Panier et commande enregistrée diront à peu près la même chose.
+
+*(Le 48 « Goûter 4S » facture entre 7,10 € et 14,71 € pour un prix d'achat de 4,74 € — le panier afficherait 14 € et la commande en enregistrerait 21 à 44. Le 52 « Goûter aux raisins » descend à 1,05 €. Écartés pour cette raison.)*
 
 ```sql
-UPDATE products_pro SET reference_pro = '<code tablette 85%>' WHERE id_pro = 62;
+UPDATE products_pro SET reference_pro = '<code barre cranberry>' WHERE id_pro = 51;
 UPDATE products_pro SET reference_pro = '<code Lindt>'        WHERE id_pro = 65;
 UPDATE products_pro SET reference_pro = '<code Granola>'      WHERE id_pro = 98;
-UPDATE products_pro SET stock_quantity_pro = 3 WHERE id_pro = 62;
+UPDATE products_pro SET stock_quantity_pro = 3 WHERE id_pro = 51;
 ```
 
 ### Pourquoi « 2 + 1 gratuit »
 
 Trois promotions se déclenchent à `Montant ≥ 0 €` et s'appliqueraient à n'importe quel panier ; « 3 + 1 gratuit » (Qté ≥ 4) se déclencherait aussi. La caisse coche les remises applicables **par défaut** : sans ménage, le panier affiche une pile illisible.
 
-« 2 + 1 gratuit » se déclenche sur les **trois tablettes** — les mêmes trois qui vident le stock. Le chiffre 3 du récit sert alors à deux choses.
+« 2 + 1 gratuit » se déclenche sur les **trois barres** — les mêmes trois qui vident le stock. Le chiffre 3 du récit sert alors à deux choses.
 
 > « Elle en prend trois. Le moteur de promotions voit passer le seuil, et le troisième est offert. Sarah n'a rien eu à faire. »
 
@@ -93,7 +103,7 @@ Trois promotions se déclenchent à `Montant ≥ 0 €` et s'appliqueraient à n
 
 Logs du **10/07 à 02:00** : `Classification complete: A=73, B=29, C=16` · `Clustered 1391 products into 8 clusters` · `Demand forecast completed: 118 successful, 0 failed` · `Generated 118 price suggestions` · `All jobs completed: 7 successful, 0 failed`.
 
-Prophet s'entraîne réellement (`cmdstanpy - Chain [1] done processing`). `/alerts` affiche **174 alertes, dont 31 critiques**, et le produit 62 en fait partie.
+Prophet s'entraîne réellement (`cmdstanpy - Chain [1] done processing`). `/alerts` affiche **174 alertes, dont 31 critiques**, et le produit 51 en fait partie.
 
 Deux trous connus, à savoir si on demande : `SupplierScoringHandler - No suppliers found` (table fournisseurs vide) et `0 anomalies detected`.
 
@@ -115,7 +125,7 @@ Le service Python écrit ses messages **en anglais** et les stocke tels quels (`
 - **Scanner une unité de trop = erreur 422** `INSUFFICIENT_STOCK` (`orders/handlers.rs:147-160`). Le backend rejette **la commande entière**.
 - **Le ticket email passe par SendGrid, pas SMTP.** `SENDGRID_API_KEY` est **absente** du `.env` → toast d'erreur rouge (`common/email.rs:12-44`). Le champ est optionnel : **le laisser vide.**
 - **Insights n'utilise AUCUNE IA.** Trois `if` avec seuils en dur + un tri, calculés dans le navigateur. **Ne jamais dire « IA » sur Insights.**
-- **L'ABC d'Insights classe par valeur immobilisée** (`buying_price × stock_quantity`). La tablette à 0 tombe en classe C. Ne jamais dire qu'elle est en classe A.
+- **L'ABC d'Insights classe par valeur immobilisée** (`buying_price × stock_quantity`). La barre à 0 tombe en classe C. Ne jamais dire qu'elle est en classe A.
 - **Le seul vrai moment d'IA de la démo est l'assistant** (Groq + tool-calling + streaming, indépendant du batch).
 
 ---
@@ -123,9 +133,9 @@ Le service Python écrit ses messages **en anglais** et les stocke tels quels (`
 ## Checklist de préparation (le matin même)
 
 1. Créer des commandes datées **d'hier** et **d'avant-hier** (sinon pas de récap, pas de badge de croissance).
-2. **Stock de la tablette = 3.** Compter le stock exact = nombre d'unités qu'on va scanner. **Toute la trame repose sur ce chiffre.**
-3. Donner à la tablette un **prix d'achat supérieur** aux autres produits en stock bas, pour qu'elle soit en tête du tableau des produits critiques d'Insights.
-4. **Vérifier la page KPI de la tablette** (`/inventory/62/kpis`) : elle doit afficher une date de rupture estimée et une quantité de réappro, pas des tirets.
+2. **Stock de la barre = 3.** Compter le stock exact = nombre d'unités qu'on va scanner. **Toute la trame repose sur ce chiffre.**
+3. Donner à la barre un **prix d'achat supérieur** aux autres produits en stock bas, pour qu'elle soit en tête du tableau des produits critiques d'Insights.
+4. **Vérifier la page KPI de la barre** (`/inventory/51/kpis`) : elle doit afficher une date de rupture estimée et une quantité de réappro, pas des tirets.
 5. **Tester l'assistant IA** avec la question exacte, trois fois de suite.
 6. Vider `localStorage` → clé `stocks:daily-recap:<email>` (sinon le récap ne se rouvre pas).
 7. Passer l'interface **en français** (elle est en anglais par défaut).
@@ -142,7 +152,7 @@ Le service Python écrit ses messages **en anglais** et les stocke tels quels (`
 ### Mise en scène
 
 - **Écran** : landing page, immobile. On ne la présente pas, on ne la scrolle pas.
-- **Mains** : la tablette de chocolat. On ne touche pas la souris.
+- **Mains** : la barre de céréales. On ne touche pas la souris.
 
 ### Objectifs
 
@@ -153,21 +163,21 @@ Le service Python écrit ses messages **en anglais** et les stocke tels quels (`
 
 ### Script
 
-> Sarah tient une épicerie fine à Lyon. Cette tablette de chocolat, elle en vend presque deux par jour.
+> Sarah tient une épicerie fine à Lyon. Cette barre de céréales, elle en vend tous les jours.
 >
-> ***(poser la tablette sur la table — 2 secondes de silence)***
+> ***(poser la barre sur la table — 2 secondes de silence)***
 >
 > Mais si elle est en rupture jeudi prochain, elle lui coûte trois clients. Et ces trois clients-là, ils ne reviennent pas forcément.
 >
 > Aujourd'hui, Sarah gère son stock sur un tableur.
 >
-> ***(reprendre la tablette)***
+> ***(reprendre la barre)***
 >
-> Pendant les sept prochaines minutes, vous allez suivre cette tablette de chocolat. Du scan en caisse, jusqu'à la commande fournisseur que le système va préparer tout seul.
+> Pendant les sept prochaines minutes, vous allez suivre cette barre de céréales. Du scan en caisse, jusqu'à la commande fournisseur que le système va préparer tout seul.
 
 ### Notes de jeu
 
-- **Le silence après « deux par jour »** n'est pas décoratif. Tant qu'on parle, la tablette est un accessoire ; quand on se tait et qu'on la pose, elle devient le sujet. Compter deux secondes dans sa tête.
+- **Le silence après « tous les jours »** n'est pas décoratif. Tant qu'on parle, la barre est un accessoire ; quand on se tait et qu'on la pose, elle devient le sujet. Compter deux secondes dans sa tête.
 - **« Sarah gère son stock sur un tableur »** : cinq mots, dits une seule fois, sans commentaire. Ne pas expliquer. On y reviendra une seule autre fois, à la caisse.
 - **La dernière phrase est un engagement chiffré.** On promet les deux extrémités de la chaîne. Il faudra les tenir.
 
@@ -244,12 +254,12 @@ Le récap ne s'ouvre que si (1) l'email est chargé, (2) la clé `localStorage` 
 
 Le cœur de la démo. Seul moment de manipulation physique, seul acte où l'on *utilise* le produit au lieu de le regarder.
 
-### ⚙️ La décision qui commande tout : stock de la tablette = 3
+### ⚙️ La décision qui commande tout : stock de la barre = 3
 
 - **Stock 1** → le batch calcule `days_until_stockout = 0`, l'alerte dit « rupture dans ~0 jours ». La ligne de l'acte 4 tombe à l'eau.
-- **Stock 3** → la cliente achète les 3 dernières tablettes, le stock tombe à 0, le backend bascule le statut en `out_of_stock`. C'est ce zéro que l'acte 4 montre en direct.
+- **Stock 3** → la cliente achète les 3 dernières barres, le stock tombe à 0, le backend bascule le statut en `out_of_stock`. C'est ce zéro que l'acte 4 montre en direct.
 
-→ **La cliente prend 3 tablettes + 2 autres produits** (pour que le panier déclenche la promotion « 2 + 1 gratuit », seuil Qté ≥ 3).
+→ **La cliente prend 3 barres + 2 autres produits** (pour que le panier déclenche la promotion « 2 + 1 gratuit », seuil Qté ≥ 3).
 
 ### ✉️ Ticket email : NE PAS remplir le champ
 
@@ -259,7 +269,7 @@ Le cœur de la démo. Seul moment de manipulation physique, seul acte où l'on *
 
 > *(prendre la douchette en main)*
 >
-> Elle prend trois tablettes de chocolat noir, une tablette fleur de sel, et un paquet de biscuits.
+> Elle prend trois barres de céréales, une tablette fleur de sel, et un paquet de biscuits.
 >
 > ***(SCAN — bip, bip, bip, bip, bip. Ne rien dire. Laisser le panier se remplir à l'écran.)***
 >
@@ -293,13 +303,13 @@ Le cœur de la démo. Seul moment de manipulation physique, seul acte où l'on *
 
 - **NE PAS PARLER PENDANT LES SCANS.** Le conseil le plus important de la démo. Cinq bips dans le silence valent mieux que n'importe quelle phrase. L'erreur du débutant est de commenter par-dessus son propre effet. On scanne, on se tait, on regarde l'écran avec le public. Puis « Je n'ai pas touché le clavier » — au passé, une fois que c'est fait.
 - **Attendre que la promotion apparaisse avant de la pointer.** Le recalcul a un debounce de 400 ms après le dernier changement du panier. Pointer trop tôt = montrer du vide.
-- **⚠️ NE PAS MODIFIER LES PRIX DE VENTE EN BASE.** Le panier de la caisse est calculé côté navigateur à partir de `product.buying_price` (le modèle `Product` ignore le prix de vente). Le backend, lui, facture au `price_prp` de `productprices_prp` s'il existe (`orders/handlers.rs:162-167`). Aujourd'hui l'écart est d'un centime, donc invisible. **Donner une « vraie » marge au produit ferait diverger le total du panier et le montant de la commande enregistrée, en pleine démo.**
+- **⚠️ NE PAS MODIFIER LES PRIX DE VENTE EN BASE.** Le panier de la caisse est calculé côté navigateur à partir de `product.buying_price` (le modèle `Product` ignore le prix de vente). Le backend, lui, facture au `price_prp` de `productprices_prp` — **sans `ORDER BY` ni `LIMIT`**, donc une ligne quelconque parmi celles du produit (`orders/handlers.rs:162-167`). Le 51 a été choisi parce que ses prix encadrent son prix d'achat : l'écart reste invisible. **Ne pas commenter le montant après validation.**
 - **« Dans un tableur »** = seconde et dernière mention du concurrent, comme promis à l'acte 1.
 
 ### Pièges matériels
 
 1. **Tester tous les codes-barres la veille.** Chaque produit physique doit avoir sa `reference` en base. Un produit non trouvé au scan = la démo s'arrête net, en public, sur le geste le plus important.
-2. **Ne JAMAIS scanner une 4ᵉ tablette.** Le backend rejette **la commande entière** en 422 `INSUFFICIENT_STOCK` (`orders/handlers.rs:147-160`). Pas une ligne : la commande.
+2. **Ne JAMAIS scanner une 4ᵉ barre.** Le backend rejette **la commande entière** en 422 `INSUFFICIENT_STOCK` (`orders/handlers.rs:147-160`). Pas une ligne : la commande.
 3. **Créer la cliente fidèle à l'avance, avec des points.** La création à la volée existe mais coûte 20 s de formulaire pour un bénéfice nul.
 
 ### Plan B
@@ -325,23 +335,23 @@ Si un code-barres ne passe pas : **ne pas le rescanner trois fois.** Basculer im
 
 ### L'alerte existe — vérifié
 
-Le batch a tourné à **02:00:00** ce matin (`Demand forecast completed: 118 successful, 0 failed`) et a créé une notification `low_stock_warning` de sévérité `CRITICAL` pour le produit 62 :
+Le batch a tourné à **02:00:00** ce matin (`Demand forecast completed: 118 successful, 0 failed`) et a créé une notification `low_stock_warning` de sévérité `CRITICAL` pour le produit 51 :
 
-> **Noir equitable 85% Pérou** — « Rupture prévue dans ~4 jours. Commander 135 unités. »
+> **Cranberry saveur amande** — « Rupture prévue dans ~7 jours. Commander 110 unités. »
 
 Le message est écrit en anglais dans le Python et stocké tel quel ; le front le **retraduit à l'affichage** (`src/ui/features/alerts/alertMessage.ts`). Sur `/alerts`, filtrer avec « Noir ».
 
-### ⚠️ Piège Insights : ne JAMAIS dire que la tablette est en classe A
+### ⚠️ Piège Insights : ne JAMAIS dire que la barre est en classe A
 
-L'ABC d'Insights classe par **valeur immobilisée** = `buying_price × stock_quantity`. La tablette vient de tomber à 0 → valeur 0 → **dernière du classement, classe C**. La désigner comme classe A, c'est être contredit par son propre écran.
+L'ABC d'Insights classe par **valeur immobilisée** = `buying_price × stock_quantity`. La barre vient de tomber à 0 → valeur 0 → **dernière du classement, classe C**. La désigner comme classe A, c'est être contredit par son propre écran.
 
-→ Parler de l'ABC **en général** (« vingt pour cent des références portent l'essentiel de la valeur ») et laisser la tablette apparaître dans le **tableau des produits à risque** en dessous (qui filtre `stock < 15` et trie par `buying_price` desc, top 5).
+→ Parler de l'ABC **en général** (« vingt pour cent des références portent l'essentiel de la valeur ») et laisser la barre apparaître dans le **tableau des produits à risque** en dessous (qui filtre `stock < 15` et trie par `buying_price` desc, top 5).
 
 ### Script
 
-> Cette tablette que je viens de vendre, c'était la dernière.
+> Cette barre que je viens de vendre, c'était la dernière.
 >
-> *(Inventory — chercher la tablette)*
+> *(Inventory — chercher la barre)*
 >
 > Stock : zéro. Statut : rupture. Personne n'a rien saisi. La vente a suffi.
 >
@@ -351,7 +361,7 @@ L'ABC d'Insights classe par **valeur immobilisée** = `buying_price × stock_qua
 >
 > *(descendre sur le tableau des produits à risque)*
 >
-> Et en bas, les produits critiques. La tablette, en tête.
+> Et en bas, les produits critiques. La barre, en tête.
 >
 > *(Alerts — filtrer sur « Noir »)*
 >
@@ -359,7 +369,7 @@ L'ABC d'Insights classe par **valeur immobilisée** = `buying_price × stock_qua
 >
 > *(pointer l'horodatage)*
 >
-> Deux heures du matin. Avant que j'ouvre la caisse. Le modèle avait prévu la rupture pour dans quatre jours.
+> Deux heures du matin. Avant que j'ouvre la caisse. Le modèle avait prévu la rupture pour dans sept jours.
 >
 > *(silence — 2 secondes)*
 >
@@ -367,7 +377,7 @@ L'ABC d'Insights classe par **valeur immobilisée** = `buying_price × stock_qua
 
 ### Notes de jeu
 
-- **La première phrase se dit la tablette à la main, avant de toucher la souris.** On ne l'a pas reposée depuis la caisse. C'est l'objet physique qui fait le lien. Le dire en cliquant, c'est en faire une légende de capture d'écran.
+- **La première phrase se dit la barre à la main, avant de toucher la souris.** On ne l'a pas reposée depuis la caisse. C'est l'objet physique qui fait le lien. Le dire en cliquant, c'est en faire une légende de capture d'écran.
 - **« C'est du calcul. Immédiat, explicable, aucune boîte noire. »** Cette phrase protège : on dit explicitement qu'Insights n'est pas de l'IA, à un moment où personne ne le demande. Devant un examinateur qui connaît le code, c'est de la crédibilité gratuite — et ça rend le contraste avec l'alerte plus fort.
 - **Pointer l'horodatage, pas le message.** Ce que le public doit lire, c'est l'heure : 2h du matin, avant la vente.
 - **Le silence avant « Ce matin, une seule cliente a suffi. »** C'est la meilleure phrase des sept minutes : le modèle avait raison, la réalité va plus vite que les modèles, et Sarah était prévenue dans les deux cas. Ne pas l'enchaîner, ne pas la commenter.
@@ -376,7 +386,7 @@ L'ABC d'Insights classe par **valeur immobilisée** = `buying_price × stock_qua
 
 > « Le modèle avait raison. Alors, qu'est-ce qu'il conseille ? »
 
-*(On clique sur la tablette depuis le tableau des produits critiques — le lien `ProductKpiLink` existe déjà.)*
+*(On clique sur la barre depuis le tableau des produits critiques — le lien `ProductKpiLink` existe déjà.)*
 
 ---
 
@@ -404,19 +414,19 @@ Le script s'arrête aux quatre chiffres du haut. **Aucune raison de descendre.**
 
 ### Le choix de la question à l'assistant
 
-❌ **« Quels produits sont en rupture aujourd'hui ? »** → tombe sur un **raccourci déterministe** (`shortcuts.py:77`) qui appelle `get_alerts(severity=CRITICAL)`. Réponse instantanée, aucun « Recherche… », et surtout : ce sont les **alertes du batch de 2h**, pas les produits à stock zéro. La tablette n'y sera pas.
+❌ **« Quels produits sont en rupture aujourd'hui ? »** → tombe sur un **raccourci déterministe** (`shortcuts.py:77`) qui appelle `get_alerts(severity=CRITICAL)`. Réponse instantanée, aucun « Recherche… », et surtout : ce sont les **alertes du batch de 2h**, pas les produits à stock zéro. La barre n'y sera pas.
 
 ⚠️ **Aucun outil ne liste les produits en rupture.** `get_low_stock` filtre `stock > 0` (`stocks/services.rs:41`), `get_soon_out_of_stock` liste les stocks faibles, `get_alerts` lit la table du batch.
 
-✅ **« Combien de produits sont en rupture aujourd'hui ? »** → « Combien » n'est dans aucun raccourci : la question part dans la **vraie boucle d'agent**. Le LLM choisit `get_stock_summary` → `/stocks/summary` → un `COUNT` en direct sur `products_pro`. On voit le « Recherche… » défiler, et le compteur inclut la tablette qu'on vient de vendre.
+✅ **« Combien de produits sont en rupture aujourd'hui ? »** → « Combien » n'est dans aucun raccourci : la question part dans la **vraie boucle d'agent**. Le LLM choisit `get_stock_summary` → `/stocks/summary` → un `COUNT` en direct sur `products_pro`. On voit le « Recherche… » défiler, et le compteur inclut la barre qu'on vient de vendre.
 
 **La chute nous appartient.** Le modèle répond « 1 produit en rupture ». On dit : « Un. Celui que je viens de vendre. » Le modèle donne le fait, on donne le sens — et rien ne dépend de sa capacité à citer un nom.
 
-**Repli** : « Quel est le stock du Noir equitable 85% Pérou ? » → réponse factuelle, « zéro ».
+**Repli** : « Quel est le stock du Cranberry saveur amande ? » → réponse factuelle, « zéro ».
 
 ### Script
 
-> *(clic sur la tablette → page KPI produit)*
+> *(clic sur la barre → page KPI produit)*
 >
 > Sarah clique. Et le système lui dit quoi faire.
 >
@@ -449,12 +459,12 @@ Le script s'arrête aux quatre chiffres du haut. **Aucune raison de descendre.**
 
 ### Plan B (indispensable)
 
-**Sur la page KPI** : si les chiffres s'affichent en tirets, ne pas la montrer. Rester sur Insights, dire « la tablette, en tête des produits critiques », et passer directement à l'assistant. → **C'est l'étape 4 de la checklist.**
+**Sur la page KPI** : si les chiffres s'affichent en tirets, ne pas la montrer. Rester sur Insights, dire « la barre, en tête des produits critiques », et passer directement à l'assistant. → **C'est l'étape 4 de la checklist.**
 
 **Sur l'assistant** : seul moment dont on ne contrôle pas la sortie.
 
-1. **Tester la question exacte, trois fois de suite, avant la démo.** Vérifier qu'elle déclenche bien la boucle d'agent (« Recherche… » visible) et non un raccourci. Sinon, basculer sur : « Quel est le stock du Noir equitable 85% Pérou ? »
-2. **Si ça échoue en direct : ne JAMAIS relancer une deuxième fois.** Fermer le chat, enchaîner sur « Et si l'assistant hésite, les données, elles, ne mentent pas. » Revenir sur la page KPI, reprendre la tablette, passer à la clôture.
+1. **Tester la question exacte, trois fois de suite, avant la démo.** Vérifier qu'elle déclenche bien la boucle d'agent (« Recherche… » visible) et non un raccourci. Sinon, basculer sur : « Quel est le stock du Cranberry saveur amande ? »
+2. **Si ça échoue en direct : ne JAMAIS relancer une deuxième fois.** Fermer le chat, enchaîner sur « Et si l'assistant hésite, les données, elles, ne mentent pas. » Revenir sur la page KPI, reprendre la barre, passer à la clôture.
 
 > Le risque vaut la peine d'être pris : un streaming en direct sur les vraies données du commerce, c'est le seul moment de la démo qui ne peut pas être truqué, et tout le monde dans la salle le sait.
 
@@ -471,7 +481,7 @@ L'acte 1 promet « la commande fournisseur que le système va **préparer** tout
 
 ### Script
 
-> *(reprendre la tablette dans la main)*
+> *(reprendre la barre dans la main)*
 >
 > Scanné. Vendu. Le stock à zéro. L'alerte, levée avant la vente. Et la commande fournisseur, prête.
 >
@@ -489,7 +499,7 @@ La dernière phrase fait le reste : tout ce qui a été montré (ML, streaming, 
 
 ### Le CTA — recommandation : la question retournée, puis le prix
 
-> *(poser la tablette)*
+> *(poser la barre)*
 > « Combien de ruptures avez-vous eues le mois dernier ? »
 > *(silence)*
 > « Vous ne savez pas. C'est exactement le problème. »
