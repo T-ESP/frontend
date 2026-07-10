@@ -77,6 +77,7 @@ export default function InsightsPage() {
   const [stockHealth, setStockHealth] = useState<{ key: StockHealthKey; value: number }[]>([]);
   const [abcStats, setAbcStats] = useState<{ key: AbcKey; count: number; valuePct: number }[]>([]);
   const [riskProducts, setRiskProducts] = useState<Product[]>([]);
+  const [selectedHealth, setSelectedHealth] = useState<StockHealthKey | null>(null);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { loadInsights(); }, []);
@@ -104,6 +105,24 @@ export default function InsightsPage() {
 
   const stockHealthLabel = (key: StockHealthKey) => t(`insights.status.${key}`);
   const abcLabel = (key: AbcKey) => t(`insights.abc.${ABC_LABEL_KEY[key]}`);
+
+  // Mêmes seuils que processStockHealth : un produit appartient à un seul état.
+  const healthOf = (p: Product): StockHealthKey => {
+    if (p.stock_quantity === 0) return "stockout";
+    if (p.stock_quantity < 10) return "low";
+    if (p.stock_quantity > 100) return "overstock";
+    return "healthy";
+  };
+
+  const selectedProducts = useMemo(
+    () =>
+      selectedHealth
+        ? products
+            .filter((p) => healthOf(p) === selectedHealth)
+            .sort((a, b) => a.stock_quantity - b.stock_quantity)
+        : [],
+    [selectedHealth, products],
+  );
 
   const loadInsights = async () => {
     try {
@@ -248,19 +267,77 @@ export default function InsightsPage() {
                     <div className="flex flex-col justify-center">
                       <h4 className="text-sm font-semibold text-muted-foreground mb-4">{t("insights.health_card.detail")}</h4>
                       <div className="space-y-2">
-                        {stockHealth.map((item) => (
-                          <div key={item.key} className="flex items-center gap-3 p-3 rounded-xl border border-border bg-card hover:bg-muted transition-colors">
-                            <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: `var(--color-${item.key}, ${STOCK_HEALTH_COLOR[item.key]})` }} />
-                            <span className="flex-1 text-sm font-medium text-muted-foreground">{stockHealthLabel(item.key)}</span>
-                            <span className="text-sm font-semibold text-foreground tabular-nums">{item.value}</span>
-                            <span className="text-xs text-muted-foreground/70 tabular-nums w-12 text-right">
-                              {products.length > 0 ? Math.round((item.value / products.length) * 100) : 0}%
-                            </span>
-                          </div>
-                        ))}
+                        {stockHealth.map((item) => {
+                          const isSelected = selectedHealth === item.key;
+                          return (
+                            <button
+                              key={item.key}
+                              type="button"
+                              disabled={item.value === 0}
+                              onClick={() => setSelectedHealth(isSelected ? null : item.key)}
+                              aria-pressed={isSelected}
+                              className={`w-full flex items-center gap-3 p-3 rounded-xl border text-left transition-colors disabled:opacity-50 disabled:cursor-default ${
+                                isSelected
+                                  ? "border-primary bg-muted"
+                                  : "border-border bg-card hover:bg-muted"
+                              }`}
+                            >
+                              <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: `var(--color-${item.key}, ${STOCK_HEALTH_COLOR[item.key]})` }} />
+                              <span className="flex-1 text-sm font-medium text-muted-foreground">{stockHealthLabel(item.key)}</span>
+                              <span className="text-sm font-semibold text-foreground tabular-nums">{item.value}</span>
+                              <span className="text-xs text-muted-foreground/70 tabular-nums w-12 text-right">
+                                {products.length > 0 ? Math.round((item.value / products.length) * 100) : 0}%
+                              </span>
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
+
+                  {selectedHealth && (
+                    <div className="mt-6 overflow-hidden rounded-xl border">
+                      <div className="flex items-center justify-between px-4 py-2.5 bg-muted/40">
+                        <p className="text-sm font-medium text-foreground">
+                          {stockHealthLabel(selectedHealth)}
+                          <span className="ml-2 text-xs text-muted-foreground">
+                            {t("insights.health_card.products", { value: selectedProducts.length })}
+                          </span>
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => setSelectedHealth(null)}
+                          className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          {t("common.close", "Fermer")}
+                        </button>
+                      </div>
+                      <div className="max-h-72 overflow-y-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead className="px-4">{t("insights.critical.col_product")}</TableHead>
+                              <TableHead className="px-4">{t("insights.critical.col_category")}</TableHead>
+                              <TableHead className="px-4 text-right">{t("insights.critical.col_stock")}</TableHead>
+                              <TableHead className="px-4 text-right">{t("insights.critical.col_value")}</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {selectedProducts.map((p) => (
+                              <TableRow key={p.id}>
+                                <TableCell className="px-4 py-2.5">
+                                  <ProductKpiLink productId={p.id} name={p.name} className="text-sm" />
+                                </TableCell>
+                                <TableCell className="px-4 py-2.5 text-sm text-muted-foreground">{p.category || "—"}</TableCell>
+                                <TableCell className="px-4 py-2.5 text-right text-sm font-semibold tabular-nums text-foreground">{p.stock_quantity}</TableCell>
+                                <TableCell className="px-4 py-2.5 text-right text-sm tabular-nums text-muted-foreground">{formatCurrency(p.buying_price * p.stock_quantity)}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 

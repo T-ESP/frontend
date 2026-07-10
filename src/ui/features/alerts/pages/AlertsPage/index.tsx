@@ -18,6 +18,14 @@ import { translateAlertMessage } from '../../alertMessage';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
+// Sert à choisir l'alerte à retenir quand un produit en a plusieurs.
+const SEVERITY_RANK: Record<string, number> = {
+  CRITICAL: 4,
+  HIGH: 3,
+  MEDIUM: 2,
+  LOW: 1,
+};
+
 const SEVERITY_DOT: Record<string, string> = {
   critical: 'bg-rose-500',
   high: 'bg-orange-500',
@@ -260,19 +268,25 @@ export default function AlertsPage() {
     setSelectedIds(new Set());
   };
 
-  // Ne conserver que l'alerte la plus récente par produit.
+  // Ne conserver qu'une alerte par produit : la plus grave, puis la plus récente.
+  // Une rupture de stock prime sur une suggestion de prix émise une minute plus tard.
   const latestPerProduct = useMemo(() => {
+    const rank = (a: Alert) => SEVERITY_RANK[a.severity?.toUpperCase() ?? ''] ?? 0;
+    const time = (a: Alert) => new Date(a.created_at).getTime();
+
     const byProduct = new Map<string, Alert>();
     for (const a of alerts) {
       // Clé par produit ; les alertes sans produit restent distinctes (clé = id).
       const key = a.product_id != null ? `id:${a.product_id}` : `alert:${a.id}`;
       const existing = byProduct.get(key);
-      if (!existing || new Date(a.created_at).getTime() > new Date(existing.created_at).getTime()) {
-        byProduct.set(key, a);
-      }
+      const wins =
+        !existing ||
+        rank(a) > rank(existing) ||
+        (rank(a) === rank(existing) && time(a) > time(existing));
+      if (wins) byProduct.set(key, a);
     }
     return [...byProduct.values()].sort(
-      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      (a, b) => rank(b) - rank(a) || time(b) - time(a),
     );
   }, [alerts]);
 
