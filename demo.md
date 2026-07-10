@@ -12,7 +12,7 @@
 
 ## La trame
 
-> **Une barre de céréales traverse le système, du scan jusqu'à la commande fournisseur.**
+> **Une barre de céréales traverse le système, du scan jusqu'à la quantité à recommander.**
 
 Tout ce qu'on montre est la conséquence de ce qu'on vient de montrer. Le prospect ne voit pas sept modules, il voit une chaîne de réaction déclenchée par un geste physique.
 
@@ -22,7 +22,7 @@ Tout ce qu'on montre est la conséquence de ce qu'on vient de montrer. Le prospe
 | 2. La routine | 0:53 | Login → récap auto → dashboard | L'information vient à Sarah |
 | 3. Le geste | 1:33 | Scan, fidélité, promo auto, monnaie | Un geste, quatre actions |
 | 4. La prédiction confirmée | 1:05 | Inventory → Insights → Alerts | Le modèle avait prévu |
-| 5. La décision | 1:09 | KPI produit → assistant IA | La commande fournisseur est prête |
+| 5. La décision | 1:09 | KPI produit → assistant IA | Le système dit quoi commander |
 | 6. Clôture | 0:33 | Retour à la barre | Contrat rempli |
 
 ### Les quatre charnières
@@ -173,7 +173,7 @@ Le service Python écrit ses messages **en anglais** et les stocke tels quels (`
 >
 > ***(reprendre la barre)***
 >
-> Pendant les sept prochaines minutes, vous allez suivre cette barre de céréales. Du scan en caisse, jusqu'à la commande fournisseur que le système va préparer tout seul.
+> Pendant les sept prochaines minutes, vous allez suivre cette barre de céréales. Du scan en caisse, jusqu'à la quantité exacte qu'elle devra recommander — calculée toute seule.
 
 ### Notes de jeu
 
@@ -401,7 +401,7 @@ Deux temps : la page KPI du produit tient la promesse de l'acte 1, puis l'assist
 
 `/inventory/:id/kpis` affiche la **date de rupture estimée**, le **point de commande optimal**, la **quantité de réappro recommandée**, les **jours de couverture** et le **statut d'alerte**. Tout est calculé en direct par le backend Rust à partir des ventes réelles.
 
-Ce sont des **heuristiques**, pas du ML. Mais c'est calculé, c'est réel, c'est instantané — et ça tient exactement la promesse de l'acte 1 : « la commande fournisseur que le système va préparer tout seul ».
+Ce sont des **heuristiques**, pas du ML. Mais c'est calculé, c'est réel, c'est instantané — et ça tient exactement la promesse de l'acte 1 : « la quantité exacte qu'elle devra recommander, calculée toute seule ».
 
 ⚠️ **Ne pas dire « IA » sur cet écran.** Le seul moment d'IA de la démo, c'est l'assistant.
 *(L'interface, elle, affiche « Recommandation IA ». Si on demande : « ce bloc-là, c'est un calcul de point de commande classique ; le vrai ML est dans le batch, et il n'a pas assez d'historique pour tourner. »)*
@@ -434,7 +434,7 @@ Le script s'arrête aux quatre chiffres du haut. **Aucune raison de descendre.**
 >
 > Date de rupture estimée. Point de commande. Quantité recommandée. Jours de couverture.
 >
-> Sa commande fournisseur est prête. Elle n'a plus qu'à l'envoyer.
+> Combien commander, et à partir de quel seuil. Sarah n'a plus qu'à passer la commande.
 >
 > *(ouvrir l'assistant — widget flottant, PAS la page /ai-assistant)*
 >
@@ -452,7 +452,7 @@ Le script s'arrête aux quatre chiffres du haut. **Aucune raison de descendre.**
 
 ### Notes de jeu
 
-- **« Sa commande fournisseur est prête. Elle n'a plus qu'à l'envoyer. »** Le verbe est **préparer**, pas **passer** — l'app ne passe pas de commande fournisseur. C'est le contrat de l'acte 1, tenu au mot près.
+- **« Combien commander, et à partir de quel seuil. Sarah n'a plus qu'à passer la commande. »** L'app **calcule** la quantité, elle ne passe rien : estock_res est vide et il n'y a aucun fournisseur en base. Ne jamais laisser entendre qu'un bon de commande existe quelque part.
 - **Ouvrir l'assistant via le widget flottant**, présent sur toutes les pages. Naviguer vers `/ai-assistant` coûterait un chargement et ferait perdre le décor de la page KPI derrière la conversation.
 - **Parler PENDANT le streaming, pas avant.** 18 secondes de silence total, c'est trop long. La phrase commente exactement ce qui se passe à l'écran. Puis se taire pour la fin de la réponse.
 - **« Un. Celui que je viens de vendre. »** Le modèle donne le chiffre, on donne le sens. La boucle se referme sur un fait qu'il vient de lire dans la base, pas sur un nom qu'il aurait pu inventer.
@@ -477,13 +477,13 @@ Le script s'arrête aux quatre chiffres du haut. **Aucune raison de descendre.**
 
 ### ⚠️ Le verbe « préparer », pas « passer »
 
-L'acte 1 promet « la commande fournisseur que le système va **préparer** tout seul ». L'app ne *passe* pas de commande fournisseur, elle en recommande la quantité exacte. « Préparer » est vrai, « passer » serait un mensonge — et offrirait la question la plus facile de la soutenance.
+L'acte 1 promet « la quantité exacte qu'elle devra recommander, calculée toute seule ». C'est exactement ce que fait la page KPI. **Ne jamais dire « commande fournisseur »** : l'app n'en crée aucune, `restock_res` est vide et il n'y a pas de fournisseur en base. Ce serait la question la plus facile de la soutenance.
 
 ### Script
 
 > *(reprendre la barre dans la main)*
 >
-> Scanné. Vendu. Le stock à zéro. L'alerte, levée avant la vente. Et la commande fournisseur, prête.
+> Scanné. Vendu. Le stock à zéro. L'alerte, levée avant la vente. Et la quantité à commander, calculée.
 >
 > *(silence — 2 secondes)*
 >
@@ -562,7 +562,7 @@ Aujourd'hui, Sarah gère son stock sur un tableur.
 
 > *(reprendre la barre)*
 
-Pendant les sept prochaines minutes, vous allez suivre cette barre de céréales. Du scan en caisse, jusqu'à la commande fournisseur que le système va préparer tout seul.
+Pendant les sept prochaines minutes, vous allez suivre cette barre de céréales. Du scan en caisse, jusqu'à la quantité exacte qu'elle devra recommander — calculée toute seule.
 
 ---
 
@@ -666,7 +666,7 @@ Sarah clique. Et le système lui dit quoi faire.
 
 Rupture imminente. Les jours de couverture. Le point de commande.
 
-Sa commande fournisseur est prête. Elle n'a plus qu'à l'envoyer.
+Combien commander, et à partir de quel seuil. Sarah n'a plus qu'à passer la commande.
 
 > *(ouvrir l'assistant flottant, l'agrandir)*
 
@@ -688,7 +688,7 @@ Un. Celui que je viens de vendre.
 
 > *(reprendre la barre dans la main)*
 
-Scanné. Vendu. Le stock à zéro. L'alerte, levée avant la vente. Et la commande fournisseur, prête.
+Scanné. Vendu. Le stock à zéro. L'alerte, levée avant la vente. Et la quantité à commander, calculée.
 
 > *(silence — 2 secondes)*
 
