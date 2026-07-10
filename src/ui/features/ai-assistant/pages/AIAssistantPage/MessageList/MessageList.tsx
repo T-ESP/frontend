@@ -93,11 +93,15 @@ function BotContent({ content }: { content: string }) {
       continue;
     }
 
-    if (trimmed.startsWith("- ")) {
+    // Le modèle alterne entre `-`, `*` et `+` pour ses listes, et indente les
+    // sous-listes avec `+`.
+    const bullet = /^([-*+])\s+/.exec(trimmed);
+    if (bullet) {
+      const isNested = bullet[1] === "+";
       blocks.push(
-        <div key={index} className="flex pl-4">
-          <span className="mr-2">•</span>
-          <FormattedInline content={translateAlertMessage(trimmed.slice(2))} />
+        <div key={index} className={isNested ? "flex pl-8" : "flex pl-4"}>
+          <span className="mr-2">{isNested ? "◦" : "•"}</span>
+          <FormattedInline content={translateAlertMessage(trimmed.slice(bullet[0].length))} />
         </div>
       );
       continue;

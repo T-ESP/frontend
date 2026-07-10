@@ -414,15 +414,18 @@ Le script s'arrête aux quatre chiffres du haut. **Aucune raison de descendre.**
 
 ### Le choix de la question à l'assistant
 
-❌ **« Quels produits sont en rupture aujourd'hui ? »** → tombe sur un **raccourci déterministe** (`shortcuts.py:77`) qui appelle `get_alerts(severity=CRITICAL)`. Réponse instantanée, aucun « Recherche… », et surtout : ce sont les **alertes du batch de 2h**, pas les produits à stock zéro. La barre n'y sera pas.
+L'orchestrateur intercepte les questions courantes **avant** le LLM, par deux mécanismes : `shortcuts.py` (expressions régulières) et `semantic_shortcuts.py` (similarité avec des formulations canoniques). Les réponses arrivent donc **instantanément, sans « Recherche… »**. Ne pas construire l'acte sur un streaming qui n'aura pas lieu.
 
-⚠️ **Aucun outil ne liste les produits en rupture.** `get_low_stock` filtre `stock > 0` (`stocks/services.rs:41`), `get_soon_out_of_stock` liste les stocks faibles, `get_alerts` lit la table du batch.
+❌ **« Quels produits sont en rupture ? »** → `get_alerts(severity=CRITICAL)` : ce sont les **alertes du batch de 2h**, pas les produits à stock zéro.
+❌ **« Combien de produits sont en rupture ? »** → capté par similarité vers `get_soon_out_of_stock`, dont la requête est `stock > 0 AND stock <= 5` (`stocks/services.rs:73`). **Un produit à zéro en est exclu.**
 
-✅ **« Combien de produits sont en rupture aujourd'hui ? »** → « Combien » n'est dans aucun raccourci : la question part dans la **vraie boucle d'agent**. Le LLM choisit `get_stock_summary` → `/stocks/summary` → un `COUNT` en direct sur `products_pro`. On voit le « Recherche… » défiler, et le compteur inclut la barre qu'on vient de vendre.
+⚠️ **Aucun outil ne liste les produits à stock zéro.** `get_low_stock` filtre `> 0`, `get_soon_out_of_stock` aussi, `get_alerts` lit la table du batch.
 
-**La chute nous appartient.** Le modèle répond « 1 produit en rupture ». On dit : « Un. Celui que je viens de vendre. » Le modèle donne le fait, on donne le sens — et rien ne dépend de sa capacité à citer un nom.
+✅ **« Fais-moi une synthèse de l'état du stock. »** → canonique `« synthèse de l'état du stock » → get_stock_summary` → `/stocks/summary`, un `COUNT` **en direct** sur `products_pro`. **Vérifié :** la réponse liste 118 produits, **1 en rupture**, 23 en stock bas, 10 392,72 € de valeur.
 
-**Repli** : « Quel est le stock du Cranberry saveur amande ? » → réponse factuelle, « zéro ».
+**La chute nous appartient.** Le modèle donne le fait, on donne le sens : « Un. Celui que je viens de vendre. »
+
+**Repli** : « Quel est le stock du Cranberry saveur amande ? » → `get_product_by_name`, réponse factuelle « zéro », et le modèle prononce le nom du produit.
 
 ### Script
 
@@ -440,13 +443,13 @@ Le script s'arrête aux quatre chiffres du haut. **Aucune raison de descendre.**
 >
 > Mais Sarah n'a pas le temps de lire des tableaux. Alors elle demande.
 >
-> *(taper)* « Combien de produits sont en rupture aujourd'hui ? »
+> *(taper)* « Fais-moi une synthèse de l'état du stock. »
 >
-> *(le streaming démarre — parler PENDANT que « Recherche… » défile)*
+> *(la réponse arrive vite — parler par-dessus)*
 >
-> Là, c'est un vrai modèle de langage, branché sur les données de son commerce. Il ne récite pas un catalogue : il cherche, il interroge, il répond.
+> Là, c'est un vrai modèle de langage. Il ne récite pas un catalogue : il va lire dans les données de son commerce, en direct.
 >
-> *(la réponse arrive : « 1 produit en rupture »)*
+> *(la réponse arrive : « Produits en rupture de stock : 1 »)*
 >
 > Un. Celui que je viens de vendre.
 
@@ -463,7 +466,7 @@ Le script s'arrête aux quatre chiffres du haut. **Aucune raison de descendre.**
 
 **Sur l'assistant** : seul moment dont on ne contrôle pas la sortie.
 
-1. **Tester la question exacte, trois fois de suite, avant la démo.** Vérifier qu'elle déclenche bien la boucle d'agent (« Recherche… » visible) et non un raccourci. Sinon, basculer sur : « Quel est le stock du Cranberry saveur amande ? »
+1. **Tester la question exacte, trois fois de suite, avant la démo.** La réponse doit annoncer « Produits en rupture de stock : 1 ». Sinon, basculer sur : « Quel est le stock du Cranberry saveur amande ? »
 2. **Si ça échoue en direct : ne JAMAIS relancer une deuxième fois.** Fermer le chat, enchaîner sur « Et si l'assistant hésite, les données, elles, ne mentent pas. » Revenir sur la page KPI, reprendre la barre, passer à la clôture.
 
 > Le risque vaut la peine d'être pris : un streaming en direct sur les vraies données du commerce, c'est le seul moment de la démo qui ne peut pas être truqué, et tout le monde dans la salle le sait.
@@ -672,11 +675,11 @@ Combien commander, et à partir de quel seuil. Sarah n'a plus qu'à passer la co
 
 Mais Sarah n'a pas le temps de lire des tableaux. Alors elle demande.
 
-> *(taper)* **« Combien de produits sont en rupture aujourd'hui ? »**
+> *(taper)* **« Fais-moi une synthèse de l'état du stock. »**
 
-> *(parler PENDANT que « Recherche… » défile)*
+> *(la réponse arrive vite — parler par-dessus)*
 
-Là, c'est un vrai modèle de langage, branché sur les données de son commerce. Il ne récite pas un catalogue : il cherche, il interroge, il répond.
+Là, c'est un vrai modèle de langage. Il ne récite pas un catalogue : il va lire dans les données de son commerce, en direct.
 
 > *(se taire pour la fin de la réponse)*
 
