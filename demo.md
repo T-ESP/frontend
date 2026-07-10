@@ -48,6 +48,26 @@ Multi-magasin par sous-domaine · gestion des employés · export de facture PDF
 
 ---
 
+## Le jeu de démo — choix arrêtés
+
+| Élément | Valeur |
+|---|---|
+| **Produit héros** | `id_pro = 62` — « Noir equitable 85% Pérou », catégorie Snacks. À renommer en café, SKU = code-barres réel, **stock = 3**. |
+| **Cliente fidèle** | `id_usr = 34` — **Aurore Peltier**, 260 commandes, 7 268 € dépensés. Créditer **+240 points** via `/loyalty` (ajustement manuel). En caisse, taper « Aur ». |
+| **Promotion** | **« 2 + 1 gratuit »** (Qté totale ≥ 3). **Désactiver les 9 autres.** |
+| **Autres produits à scanner** | `98` Granola · `110` Cranberries · `29` Sablé coco · `65` Excellence Noir |
+| **Base** | `tenant_shopdemo` · conteneur `backend-master-db-1` |
+
+### Pourquoi « 2 + 1 gratuit »
+
+Trois promotions se déclenchent à `Montant ≥ 0 €` et s'appliqueraient à n'importe quel panier ; « 3 + 1 gratuit » (Qté ≥ 4) se déclencherait aussi. La caisse coche les remises applicables **par défaut** : sans ménage, le panier affiche une pile illisible.
+
+« 2 + 1 gratuit » se déclenche sur les **trois cafés** — les mêmes trois qui vident le stock. Le chiffre 3 du récit sert alors à deux choses.
+
+> « Elle en prend trois. Le moteur de promotions voit passer le seuil, et le troisième est offert. Sarah n'a rien eu à faire. »
+
+---
+
 ## Vérifications techniques (faites, code à l'appui)
 
 ### Ce qui marche vraiment
@@ -232,13 +252,13 @@ Le cœur de la démo. Seul moment de manipulation physique, seul acte où l'on *
 >
 > Je n'ai pas touché le clavier. La douchette lit la référence, StockS retrouve le produit, son prix, son stock restant.
 >
-> *(rechercher la cliente)*
+> *(taper « Aur » dans la recherche client)*
 >
-> Cette cliente-là est fidèle. Sarah la retrouve, et son solde de points s'affiche.
+> Aurore est une cliente fidèle. Sarah la retrouve, et son solde de points s'affiche.
 >
 > *(montrer le panier du doigt — APRÈS l'apparition de la remise)*
 >
-> Et regardez cette ligne, qui vient d'apparaître toute seule. Le moteur de promotions a vu que le panier dépassait le seuil que Sarah a configuré. Remise appliquée. Personne n'a eu à y penser.
+> Et regardez cette ligne, qui vient d'apparaître toute seule. Elle en prend trois : le moteur de promotions voit passer le seuil, et le troisième est offert. Personne n'a eu à y penser.
 >
 > *(paiement)*
 >
