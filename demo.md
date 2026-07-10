@@ -54,14 +54,14 @@ Multi-magasin par sous-domaine · gestion des employés · export de facture PDF
 
 | Élément | Valeur |
 |---|---|
-| **Produit héros** | `id_pro = 51` — « Cranberry saveur amande », Snacks, prix d'achat 4,62 €, SKU actuel `3175681257542`. Acheter une **barre de céréales cranberry-amande**, mettre son code-barres dans `reference_pro`, **stock = 3**. Aucun renommage. |
+| **Produit héros** | `id_pro = 51` → renommé **Grany Pomme**, Snacks, prix d'achat 4,62 €, SKU `3392460510050`, **stock = 3**. Physique : une barre de céréales Grany pomme. |
 | **Cliente fidèle** | `id_usr = 34` — **Aurore Peltier**, 260 commandes, 7 268 € dépensés. Créditer **+240 points** via `/loyalty` (ajustement manuel). En caisse, taper « Aur ». |
 | **Promotion** | **« 2 + 1 gratuit »** (Qté totale ≥ 3). **Désactiver les 9 autres.** |
-| **2ᵉ produit** | `id_pro = 65` — « Excellence Noir à la Pointe de Fleur de Sel » → une **tablette Lindt Excellence fleur de sel** |
-| **3ᵉ produit** | `id_pro = 98` — « Granola L'original Gros éclats de chocolat » → un **paquet de biscuits LU Granola** |
+| **2ᵉ produit** | `id_pro = 65` → renommé **Muesli croustillant fruits rouges**, SKU `3596710548835` |
+| **3ᵉ produit** | `id_pro = 98` → renommé **Sucre en poudre**, SKU `3596710466597` |
 | **Base** | `tenant_shopdemo` · conteneur `backend-master-db-1` |
 
-Les trois noms en base correspondent à des produits réels et courants : ce que le public lit à l'écran correspond à ce qu'on pose sur la table. **Trois produits distincts, cinq articles au panier** (la barre ×3).
+Les trois produits sont **renommés en base** pour porter le nom de l'objet physique : ce que le public lit à l'écran correspond à ce qu'on pose sur la table. Le nom est joint en direct partout — caisse, Insights, table d'alertes, réponses du chatbot. **Trois produits distincts, cinq articles au panier** (la barre ×3).
 
 ### Pourquoi le 51 et pas un autre
 
@@ -73,11 +73,15 @@ Il coche **les trois cases** à la fois, ce qu'aucun autre produit ne fait :
 
 *(Le 48 « Goûter 4S » facture entre 7,10 € et 14,71 € pour un prix d'achat de 4,74 € — le panier afficherait 14 € et la commande en enregistrerait 21 à 44. Le 52 « Goûter aux raisins » descend à 1,05 €. Écartés pour cette raison.)*
 
-```sql
-UPDATE products_pro SET reference_pro = '<code barre cranberry>' WHERE id_pro = 51;
-UPDATE products_pro SET reference_pro = '<code Lindt>'        WHERE id_pro = 65;
-UPDATE products_pro SET reference_pro = '<code Granola>'      WHERE id_pro = 98;
-UPDATE products_pro SET stock_quantity_pro = 3 WHERE id_pro = 51;
+```bash
+sudo docker exec -i backend-master-db-1 psql -U user -d tenant_shopdemo <<'SQL'
+UPDATE products_pro SET name_pro = 'Grany Pomme',
+       reference_pro = '3392460510050', stock_quantity_pro = 3 WHERE id_pro = 51;
+UPDATE products_pro SET name_pro = 'Muesli croustillant fruits rouges',
+       reference_pro = '3596710548835' WHERE id_pro = 65;
+UPDATE products_pro SET name_pro = 'Sucre en poudre',
+       reference_pro = '3596710466597' WHERE id_pro = 98;
+SQL
 ```
 
 ### Pourquoi « 2 + 1 gratuit »
@@ -269,7 +273,7 @@ Le cœur de la démo. Seul moment de manipulation physique, seul acte où l'on *
 
 > *(prendre la douchette en main)*
 >
-> Elle prend trois barres de céréales, une tablette fleur de sel, et un paquet de biscuits.
+> Elle prend trois barres de céréales, un paquet de muesli, et un paquet de sucre.
 >
 > ***(SCAN — bip, bip, bip, bip, bip. Ne rien dire. Laisser le panier se remplir à l'écran.)***
 >
@@ -337,7 +341,7 @@ Si un code-barres ne passe pas : **ne pas le rescanner trois fois.** Basculer im
 
 Le batch a tourné à **02:00:00** ce matin (`Demand forecast completed: 118 successful, 0 failed`) et a créé une notification `low_stock_warning` de sévérité `CRITICAL` pour le produit 51 :
 
-> **Cranberry saveur amande** — « Rupture prévue dans ~7 jours. Commander 110 unités. »
+> **Grany Pomme** — « Rupture prévue dans ~7 jours. Commander 110 unités. »
 
 Le message est écrit en anglais dans le Python et stocké tel quel ; le front le **retraduit à l'affichage** (`src/ui/features/alerts/alertMessage.ts`). Sur `/alerts`, filtrer avec « Noir ».
 
@@ -425,7 +429,7 @@ L'orchestrateur intercepte les questions courantes **avant** le LLM, par deux m�
 
 **La chute nous appartient.** Le modèle donne le fait, on donne le sens : « Un. Celui que je viens de vendre. »
 
-**Repli** : « Quel est le stock du Cranberry saveur amande ? » → `get_product_by_name`, réponse factuelle « zéro », et le modèle prononce le nom du produit.
+**Repli** : « Quel est le stock du Grany Pomme ? » → `get_product_by_name`, réponse factuelle « zéro », et le modèle prononce le nom du produit.
 
 ### Script
 
@@ -455,7 +459,8 @@ L'orchestrateur intercepte les questions courantes **avant** le LLM, par deux m�
 
 ### Notes de jeu
 
-- **« Combien commander, et à partir de quel seuil. Sarah n'a plus qu'à passer la commande. »** L'app **calcule** la quantité, elle ne passe rien : `restock_res` est vide et il n'y a aucun fournisseur en base. Ne jamais laisser entendre qu'un bon de commande existe quelque part.
+- **« Combien commander, et à partir de quel seuil. Sarah n'a plus qu'à passer la commande. »** L'app **calcule** la quantité, elle ne passe rien : 
+`restock_res` est vide et il n'y a aucun fournisseur en base. Ne jamais laisser entendre qu'un bon de commande existe quelque part.
 - **Ouvrir l'assistant via le widget flottant**, présent sur toutes les pages. Naviguer vers `/ai-assistant` coûterait un chargement et ferait perdre le décor de la page KPI derrière la conversation.
 - **Parler PENDANT le streaming, pas avant.** 18 secondes de silence total, c'est trop long. La phrase commente exactement ce qui se passe à l'écran. Puis se taire pour la fin de la réponse.
 - **« Un. Celui que je viens de vendre. »** Le modèle donne le chiffre, on donne le sens. La boucle se referme sur un fait qu'il vient de lire dans la base, pas sur un nom qu'il aurait pu inventer.
@@ -466,7 +471,7 @@ L'orchestrateur intercepte les questions courantes **avant** le LLM, par deux m�
 
 **Sur l'assistant** : seul moment dont on ne contrôle pas la sortie.
 
-1. **Tester la question exacte, trois fois de suite, avant la démo.** La réponse doit annoncer « Produits en rupture de stock : 1 ». Sinon, basculer sur : « Quel est le stock du Cranberry saveur amande ? »
+1. **Tester la question exacte, trois fois de suite, avant la démo.** La réponse doit annoncer « Produits en rupture de stock : 1 ». Sinon, basculer sur : « Quel est le stock du Grany Pomme ? »
 2. **Si ça échoue en direct : ne JAMAIS relancer une deuxième fois.** Fermer le chat, enchaîner sur « Et si l'assistant hésite, les données, elles, ne mentent pas. » Revenir sur la page KPI, reprendre la barre, passer à la clôture.
 
 > Le risque vaut la peine d'être pris : un streaming en direct sur les vraies données du commerce, c'est le seul moment de la démo qui ne peut pas être truqué, et tout le monde dans la salle le sait.
@@ -595,7 +600,7 @@ Dix secondes. Elle sait où elle en est. Et elle n'a ouvert aucun fichier.
 
 > *(prendre la douchette)*
 
-Elle prend trois barres de céréales, une tablette fleur de sel, et un paquet de biscuits.
+Elle prend trois barres de céréales, un paquet de muesli, et un paquet de sucre.
 
 > ***(SCAN ×5. NE RIEN DIRE. Laisser les bips et le panier se remplir.)***
 
@@ -631,7 +636,7 @@ Dans un tableur, ça, c'est trois fichiers et dix minutes.
 
 Cette barre que je viens de vendre, c'était la dernière.
 
-> *(Inventaire — chercher « Cranberry »)*
+> *(Inventaire — chercher « Grany »)*
 
 Stock : zéro. Statut : rupture. Personne n'a rien saisi. La vente a suffi.
 
@@ -643,7 +648,7 @@ Et voilà ce que ça change. Une rupture de plus dans la santé du stock. Ici, S
 
 Et en bas, les produits critiques. La barre, en tête.
 
-> *(Alertes — filtrer sur « Cranberry »)*
+> *(Alertes — filtrer sur « Grany »)*
 
 Maintenant, regardez l'heure de cette alerte.
 
@@ -680,7 +685,7 @@ Mais Sarah n'a pas le temps de lire des tableaux. Alors elle demande.
 > *(la réponse arrive vite — parler par-dessus)*
 
 Là, c'est un vrai modèle de langage. Il ne récite pas un catalogue : il va lire dans les données de son commerce, en direct.
-
+    
 > *(se taire pour la fin de la réponse)*
 
 Un. Celui que je viens de vendre.
