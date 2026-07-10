@@ -9,13 +9,19 @@ import type {
   ProductSearchParams,
 } from '../../../domain/models/Product';
 
+// Sans `limit`, l'API n'en renvoie que 50 (products/services.rs). Les écrans qui
+// agrègent sur le catalogue (inventaire, valeur du stock, santé du stock, ABC)
+// comptaient donc sur un sous-ensemble.
+const CATALOG_LIMIT = 1000;
+
 export const productService = {
   async getAll(params?: ProductSearchParams): Promise<Product[]> {
-    const queryString = params
-      ? '?' + new URLSearchParams(params as Record<string, string>).toString()
-      : '';
+    const search = new URLSearchParams({
+      limit: String(CATALOG_LIMIT),
+      ...(params as Record<string, string> | undefined),
+    });
     const response = await apiClient.get<ApiResponse<Product[]>>(
-      `${API_ENDPOINTS.products.getAll}${queryString}`
+      `${API_ENDPOINTS.products.getAll}?${search.toString()}`
     );
     return response.data;
   },
