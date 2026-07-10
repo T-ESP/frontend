@@ -260,7 +260,7 @@ Le cœur de la démo. Seul moment de manipulation physique, seul acte où l'on *
 
 - **NE PAS PARLER PENDANT LES SCANS.** Le conseil le plus important de la démo. Cinq bips dans le silence valent mieux que n'importe quelle phrase. L'erreur du débutant est de commenter par-dessus son propre effet. On scanne, on se tait, on regarde l'écran avec le public. Puis « Je n'ai pas touché le clavier » — au passé, une fois que c'est fait.
 - **Attendre que la promotion apparaisse avant de la pointer.** Le recalcul a un debounce de 400 ms après le dernier changement du panier. Pointer trop tôt = montrer du vide.
-- **Ne pas zoomer sur les marges.** Le prix affiché est le `buying_price` (l'app vend au prix d'achat, pas de prix de vente dans le modèle `Product`). Invisible si on ne s'y attarde pas.
+- **⚠️ NE PAS MODIFIER LES PRIX DE VENTE EN BASE.** Le panier de la caisse est calculé côté navigateur à partir de `product.buying_price` (le modèle `Product` ignore le prix de vente). Le backend, lui, facture au `price_prp` de `productprices_prp` s'il existe (`orders/handlers.rs:162-167`). Aujourd'hui l'écart est d'un centime, donc invisible. **Donner une « vraie » marge au produit ferait diverger le total du panier et le montant de la commande enregistrée, en pleine démo.**
 - **« Dans un tableur »** = seconde et dernière mention du concurrent, comme promis à l'acte 1.
 
 ### Pièges matériels
@@ -338,6 +338,13 @@ Deux temps : la page KPI du produit tient la promesse de l'acte 1, puis l'assist
 Ce sont des **heuristiques**, pas du ML. Mais c'est calculé, c'est réel, c'est instantané — et ça tient exactement la promesse de l'acte 1 : « la commande fournisseur que le système va préparer tout seul ».
 
 ⚠️ **Ne pas dire « IA » sur cet écran.** Le seul moment d'IA de la démo, c'est l'assistant.
+*(L'interface, elle, affiche « Recommandation IA ». Si on demande : « ce bloc-là, c'est un calcul de point de commande classique ; le vrai ML est dans le batch, et il n'a pas assez d'historique pour tourner. »)*
+
+### ⚠️ Ne pas scroller sous le bloc « Recommandation IA »
+
+Plus bas, la page affiche des `N/A` (aucun réappro enregistré), « Aucun historique de prix » (`productprices_prp` vide pour ce produit — seul `seed.rs` l'écrit, aucune route d'API), et un « Rang #1 / Part de marché 100 % » absurde parce que le produit est seul dans sa catégorie.
+
+Le script s'arrête aux quatre chiffres du haut. **Aucune raison de descendre.**
 
 ### Le choix de la question à l'assistant
 
