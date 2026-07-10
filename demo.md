@@ -452,7 +452,7 @@ Le script s'arrête aux quatre chiffres du haut. **Aucune raison de descendre.**
 
 ### Notes de jeu
 
-- **« Combien commander, et à partir de quel seuil. Sarah n'a plus qu'à passer la commande. »** L'app **calcule** la quantité, elle ne passe rien : estock_res est vide et il n'y a aucun fournisseur en base. Ne jamais laisser entendre qu'un bon de commande existe quelque part.
+- **« Combien commander, et à partir de quel seuil. Sarah n'a plus qu'à passer la commande. »** L'app **calcule** la quantité, elle ne passe rien : `restock_res` est vide et il n'y a aucun fournisseur en base. Ne jamais laisser entendre qu'un bon de commande existe quelque part.
 - **Ouvrir l'assistant via le widget flottant**, présent sur toutes les pages. Naviguer vers `/ai-assistant` coûterait un chargement et ferait perdre le décor de la page KPI derrière la conversation.
 - **Parler PENDANT le streaming, pas avant.** 18 secondes de silence total, c'est trop long. La phrase commente exactement ce qui se passe à l'écran. Puis se taire pour la fin de la réponse.
 - **« Un. Celui que je viens de vendre. »** Le modèle donne le chiffre, on donne le sens. La boucle se referme sur un fait qu'il vient de lire dans la base, pas sur un nom qu'il aurait pu inventer.
