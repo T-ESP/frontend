@@ -93,8 +93,8 @@ export function FloatingChat() {
         className={`absolute bottom-16 right-0 bg-card rounded-lg shadow-2xl border border-border flex flex-col overflow-hidden origin-bottom-right transition-all duration-300 ease-out ${
           // Taille étendue ou normale, toujours plafonnée au viewport (jamais plein écran)
           isExpanded
-            ? "w-[calc(100vw-2rem)] sm:w-[640px] h-[680px] max-h-[calc(100vh-6rem)]"
-            : "w-[calc(100vw-2rem)] sm:w-[380px] h-[520px] max-h-[calc(100vh-6rem)]"
+            ? "w-[calc(100vw-2rem)] sm:w-[900px] max-w-[calc(100vw-2rem)] h-[720px] max-h-[calc(100vh-6rem)]"
+            : "w-[calc(100vw-2rem)] sm:w-[440px] h-[560px] max-h-[calc(100vh-6rem)]"
         } ${
           isOpen
             ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
