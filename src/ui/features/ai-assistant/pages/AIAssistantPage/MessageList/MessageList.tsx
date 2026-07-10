@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import botAvatar from "@/assets/images/BOT.png";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { translateAlertMessage } from "@/ui/features/alerts/alertMessage";
 import type { ChatMessage } from "@/ui/features/ai-assistant/types";
 
 type MessageListProps = {
@@ -64,7 +65,8 @@ function MarkdownTable({ lines }: { lines: string[] }) {
             <tr key={rowIndex} className="border-t border-border align-top">
               {cells.map((cell, i) => (
                 <td key={i} className="px-2 py-1.5">
-                  <FormattedInline content={cell} />
+                  {/* Les messages du batch ML arrivent en anglais depuis la base. */}
+                  <FormattedInline content={translateAlertMessage(cell)} />
                 </td>
               ))}
             </tr>
@@ -95,7 +97,7 @@ function BotContent({ content }: { content: string }) {
       blocks.push(
         <div key={index} className="flex pl-4">
           <span className="mr-2">•</span>
-          <FormattedInline content={trimmed.slice(2)} />
+          <FormattedInline content={translateAlertMessage(trimmed.slice(2))} />
         </div>
       );
       continue;
