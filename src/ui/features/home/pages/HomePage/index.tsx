@@ -82,7 +82,7 @@ function AppMockup() {
           className="ml-3 hidden h-7 flex-1 items-center rounded-md px-3 text-xs sm:flex"
           style={{ background: "rgba(255,255,255,0.04)", color: "#9ca3af" }}
         >
-          app.stocks.io/dashboard
+          stock-s.fr
         </div>
       </div>
 
