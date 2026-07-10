@@ -150,7 +150,7 @@ Les 25 228 € affichés = CA quotidien moyen × 30. Montrer cet écran en disan
 
 ### Script
 
-> Sarah tient une épicerie fine à Lyon. Cette tablette de chocolat, elle lui rapporte quatre euros.
+> Sarah tient une épicerie fine à Lyon. Cette tablette de chocolat, elle en vend presque deux par jour.
 >
 > ***(poser la tablette sur la table — 2 secondes de silence)***
 >
@@ -164,7 +164,7 @@ Les 25 228 € affichés = CA quotidien moyen × 30. Montrer cet écran en disan
 
 ### Notes de jeu
 
-- **Le silence après « quatre euros »** n'est pas décoratif. Tant qu'on parle, la tablette est un accessoire ; quand on se tait et qu'on la pose, elle devient le sujet. Compter deux secondes dans sa tête.
+- **Le silence après « deux par jour »** n'est pas décoratif. Tant qu'on parle, la tablette est un accessoire ; quand on se tait et qu'on la pose, elle devient le sujet. Compter deux secondes dans sa tête.
 - **« Sarah gère son stock sur un tableur »** : cinq mots, dits une seule fois, sans commentaire. Ne pas expliquer. On y reviendra une seule autre fois, à la caisse.
 - **La dernière phrase est un engagement chiffré.** On promet les deux extrémités de la chaîne. Il faudra les tenir.
 
