@@ -21,7 +21,6 @@ const COLUMNS = [
     title: "Produit",
     links: [
       { label: "Fonctionnalités", href: "/fonctionnalites" },
-      { label: "Tarifs", href: "/tarifs" },
       { label: "Démo", href: "/demo" },
     ],
   },
