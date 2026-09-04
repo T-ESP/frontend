@@ -8,7 +8,6 @@ import {
   useMotionValue,
   type MotionValue,
 } from "framer-motion";
-import { ClientLogos } from "./ClientLogos";
 import { HorizonSection } from "./HorizonSection";
 import { Features2Col } from "./Features2Col";
 import { SmartIndicators } from "./SmartIndicators";
@@ -16,7 +15,6 @@ import { HowItWorks } from "./HowItWorks";
 import { TableExperience } from "./TableExperience";
 import { Stats } from "./Stats";
 import { Testimonials } from "./Testimonials";
-import { Pricing } from "./Pricing";
 import { FAQ } from "./FAQ";
 import { FinalCTA } from "./FinalCTA";
 import { Footer } from "./Footer";
@@ -360,7 +358,6 @@ export default function HomePage() {
   return (
     <MarketingLayout hideFooter>
       <Hero />
-      <ClientLogos />
       <HorizonSection />
       <Features2Col />
       <SmartIndicators />
@@ -368,7 +365,6 @@ export default function HomePage() {
       <TableExperience />
       <Stats />
       <Testimonials />
-      <Pricing />
       <FAQ />
       <FinalCTA />
       <Footer />
